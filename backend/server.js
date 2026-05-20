@@ -31,8 +31,6 @@ const corsOptions = {
     if (isAllowed) {
       callback(null, true);
     } else {
-      // Reject origin silently by passing false to callback instead of an Error object
-      // This prevents Express from throwing a 500 error and cleanly blocks CORS
       callback(null, false);
     }
   },
@@ -70,7 +68,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 5. Routes
+// Root endpoint for simple checks
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -105,8 +103,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Register API Routes
-app.use('/api', apiRoutes);
+// 5. Register API Routes under /api/forms
+app.use('/api/forms', apiRoutes);
 
 // 6. Not Found Route Fallback
 app.use(notFound);
@@ -121,5 +119,6 @@ app.listen(PORT, () => {
   console.log(`Connplex B2B Backend Server running in ${process.env.NODE_ENV || 'development'} mode`);
   console.log(`Local URL: http://localhost:${PORT}`);
   console.log(`Health Check: http://localhost:${PORT}/api/health`);
+  console.log(`Test Endpoint: http://localhost:${PORT}/api/forms/test`);
   console.log(`=================================================`);
 });

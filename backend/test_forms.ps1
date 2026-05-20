@@ -1,4 +1,5 @@
 $baseUrl = "http://localhost:5000/api"
+$rand = Get-Random -Minimum 1000 -Maximum 9999
 
 # Helper function to submit form
 function Submit-Form($endpoint, $payload, $name) {
@@ -28,7 +29,7 @@ Submit-Form "/forms/book-event" @{
     endTime = "17:00"
     expectedGuests = 150
     fullName = "Alice Smith"
-    email = "alice@example.com"
+    email = "alice$rand@example.com"
     phone = "9876543210"
     company = "Google DeepMind"
     message = "Looking forward to hosting our annual conference."
@@ -36,29 +37,29 @@ Submit-Form "/forms/book-event" @{
 
 # 2. Conn Events Waitlist
 Submit-Form "/forms/connevents-waitlist" @{
-    email = "connevents_test@example.com"
+    email = "connevents_test$rand@example.com"
 } "Conn Events Waitlist"
 
 # 3. Connflix Notify
 Submit-Form "/forms/connflix-subscribers" @{
-    email = "connflix_test@example.com"
+    email = "connflix_test$rand@example.com"
 } "Connflix Notify"
 
 # 4. Connmusic Waitlist
 Submit-Form "/forms/connmusic-waitlist" @{
-    email = "connmusic_test@example.com"
+    email = "connmusic_test$rand@example.com"
 } "Connmusic Waitlist"
 
 # 5. Connplex Studio Invite
 Submit-Form "/forms/studio-invitations" @{
     name = "Bob Martin"
-    email = "bob@example.com"
+    email = "bob$rand@example.com"
 } "Connplex Studio Invite"
 
 # 6. Contact Form
 Submit-Form "/forms/contact-messages" @{
     fullName = "Charlie Brown"
-    email = "charlie@example.com"
+    email = "charlie$rand@example.com"
     phone = "9988776655"
     state = "California"
     city = "San Jose"
@@ -72,14 +73,14 @@ Submit-Form "/forms/contact-messages" @{
 # 7. Downtown VIP Invite
 Submit-Form "/forms/downtown-invitations" @{
     name = "Downtown VIP Guest"
-    email = "downtown_vip@example.com"
+    email = "downtown_vip$rand@example.com"
     consent = $true
 } "Downtown VIP Invite"
 
 # 8. Franchise Inquiry
 Submit-Form "/forms/franchise-applications" @{
     fullName = "David Green"
-    email = "david@example.com"
+    email = "david$rand@example.com"
     phone = "9112233445"
     state = "Texas"
     city = "Austin"
@@ -92,10 +93,10 @@ Submit-Form "/forms/franchise-applications" @{
 
 # 9. Pure-X Subscribe
 Submit-Form "/forms/purex-subscribers" @{
-    email = "purex_test@example.com"
+    email = "purex_test$rand@example.com"
 } "Pure-X Subscribe"
 
 # 10. Sky-Inn VIP Reservation
 Submit-Form "/forms/skyinn-reservations" @{
-    email = "skyinn_test@example.com"
+    email = "skyinn_test$rand@example.com"
 } "Sky-Inn VIP Reservation"

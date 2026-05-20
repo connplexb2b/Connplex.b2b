@@ -14,16 +14,23 @@ import {
 
 const router = express.Router();
 
+// GET /api/forms/test
+router.get('/test', (req, res) => {
+  res.status(200).json({
+    success: true
+  });
+});
+
 // Define API post endpoints for each form collection
-router.post('/forms/book-event', bookEvent);
-router.post('/forms/connevents-waitlist', joinConnEventsWaitlist);
-router.post('/forms/connflix-subscribers', joinConnflixWaitlist);
-router.post('/forms/connmusic-waitlist', joinConnmusicWaitlist);
-router.post('/forms/studio-invitations', requestStudioInvitation);
-router.post('/forms/contact-messages', submitContactInquiry);
-router.post('/forms/downtown-invitations', requestDowntownInvitation);
-router.post('/forms/franchise-applications', submitFranchiseApplication);
-router.post('/forms/purex-subscribers', subscribePurex);
-router.post('/forms/skyinn-reservations', reserveSkyinn);
+router.post('/book-event', bookEvent);
+router.post('/connevents-waitlist', joinConnEventsWaitlist);
+router.post('/connflix-subscribers', joinConnflixWaitlist);
+router.post('/connmusic-waitlist', joinConnmusicWaitlist);
+router.post('/studio-invitations', requestStudioInvitation);
+router.post('/contact-messages', submitContactInquiry);
+router.post('/downtown-invitations', requestDowntownInvitation);
+router.post('/franchise-applications', submitFranchiseApplication);
+router.post('/purex-subscribers', subscribePurex);
+router.post('/skyinn-reservations', reserveSkyinn);
 
 export default router;
