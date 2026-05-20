@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './book-event.css';
 
 export default function BookEventPage() {
@@ -21,7 +22,7 @@ export default function BookEventPage() {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const apiUrl = getApiUrl();
       const response = await fetch(`${apiUrl}/api/forms/book-event`, {
         method: 'POST',
         headers: {

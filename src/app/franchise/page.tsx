@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './franchise.css';
 
 const AnimatedNumber = ({ value, duration = 2000 }: { value: string; duration?: number }) => {
@@ -233,10 +234,39 @@ const FAQSection = () => {
 
 export default function FranchisePage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSubmitted(true);
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/franchise-applications`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setIsSubmitted(true);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to submit enquiry. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -457,16 +487,16 @@ export default function FranchisePage() {
                     ) : (
                         <form className="fra-form" onSubmit={handleSubmit}>
                             <div className="fra-form-row">
-                                <input type="text" className="fra-input" placeholder="Full Name" required />
-                                <input type="email" className="fra-input" placeholder="Email Address" required />
+                                <input name="fullName" type="text" className="fra-input" placeholder="Full Name" required />
+                                <input name="email" type="email" className="fra-input" placeholder="Email Address" required />
                             </div>
                             <div className="fra-form-row">
-                                <input type="tel" className="fra-input" placeholder="Phone Number" required />
-                                <input type="text" className="fra-input" placeholder="State" required />
+                                <input name="phone" type="tel" className="fra-input" placeholder="Phone Number" required />
+                                <input name="state" type="text" className="fra-input" placeholder="State" required />
                             </div>
                             <div className="fra-form-row">
-                                <input type="text" className="fra-input" placeholder="City" required />
-                                <select className="fra-input" required defaultValue="">
+                                <input name="city" type="text" className="fra-input" placeholder="City" required />
+                                <select name="preferredInvestment" className="fra-input" required defaultValue="">
                                     <option value="" disabled>Preferred investment range?</option>
                                     <option value="1.5-2cr">1.5 to 2 cr</option>
                                     <option value="2-2.5cr">2cr to 2.5 cr</option>
@@ -475,18 +505,25 @@ export default function FranchisePage() {
                                 </select>
                             </div>
                             <div className="fra-form-row">
-                                <input type="text" className="fra-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                                <input type="text" className="fra-input" placeholder="Do you have a property or location for cinema?" required />
+                                <input name="preferredCity" type="text" className="fra-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
+                                <input name="hasProperty" type="text" className="fra-input" placeholder="Do you have a property or location for cinema?" required />
                             </div>
-                            <select className="fra-input" required defaultValue="" style={{ marginBottom: '20px' }}>
+                            <select name="timeframe" className="fra-input" required defaultValue="" style={{ marginBottom: '20px' }}>
                                 <option value="" disabled>How soon do you plan to start this investment?</option>
                                 <option value="immediately">Immediately</option>
                                 <option value="1-month">1 month</option>
                                 <option value="1-3-months">1-3 months</option>
                                 <option value="3plus-months">3+ months</option>
                             </select>
-                            <textarea className="fra-input" placeholder="Message" rows={4}></textarea>
-                            <button type="submit" className="fra-btn-solid">SUBMIT ENQUIRY <span>→</span></button>
+                            <textarea name="message" className="fra-input" placeholder="Message" rows={4}></textarea>
+                            {submitError && (
+                                <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '20px', fontWeight: 500 }}>
+                                    ⚠️ {submitError}
+                                </div>
+                            )}
+                            <button type="submit" className="fra-btn-solid" disabled={isSubmitting}>
+                                {isSubmitting ? 'SUBMITTING...' : <>SUBMIT ENQUIRY <span>→</span></>}
+                            </button>
                         </form>
                     )}
                 </div>

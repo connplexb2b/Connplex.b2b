@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import './connplex-studio.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const ConnplexStudioPage = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -12,6 +13,7 @@ const ConnplexStudioPage = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -33,19 +35,39 @@ const ConnplexStudioPage = () => {
             setFormSubmitted(false);
             setEmail('');
             setName('');
+            setSubmitError(null);
         }, 600);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!name || !email) return;
 
         setIsSubmitting(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false);
+        setSubmitError(null);
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/studio-invitations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
             setFormSubmitted(true);
-        }, 1500);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to submit request. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -167,6 +189,11 @@ const ConnplexStudioPage = () => {
                                     <label htmlFor="user-email">Email Address</label>
                                     <span className="studio-bar"></span>
                                 </div>
+                                {submitError && (
+                                    <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '15px', fontWeight: 500 }}>
+                                        ⚠️ {submitError}
+                                    </div>
+                                )}
                                 <button type="submit" className="studio-submit-button" disabled={isSubmitting}>
                                     <span>{isSubmitting ? 'REQUESTING ACCESS...' : 'REQUEST ACCESS'}</span>
                                     {!isSubmitting && (

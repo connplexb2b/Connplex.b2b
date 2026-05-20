@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './pure-x.css';
 
 const PureXPage = () => {
@@ -12,7 +13,7 @@ const PureXPage = () => {
   const [formStatus, setFormStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
@@ -22,16 +23,35 @@ const PureXPage = () => {
     }
 
     setIsSubmitting(true);
-    // Fake network request
-    setTimeout(() => {
+    setFormStatus({ type: null, message: '' });
+
+    try {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/forms/purex-subscribers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong. Please try again.');
+      }
+
       setFormStatus({ type: 'success', message: 'SUCCESS! YOU ARE NOW ON THE VIP NOTIFICATION LIST.' });
       setEmail('');
-      setIsSubmitting(false);
       
       setTimeout(() => {
         setFormStatus({ type: null, message: '' });
       }, 5000);
-    }, 1200);
+    } catch (error: any) {
+      setFormStatus({ type: 'error', message: error.message || 'Unable to join waitlist. Please try again later.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

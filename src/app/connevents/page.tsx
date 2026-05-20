@@ -1,16 +1,51 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './connevents.css';
 
 export default function ConnEvents() {
     const containerRef = useRef<HTMLDivElement>(null);
     const ticketRef = useRef<HTMLDivElement>(null);
     const glareRef = useRef<HTMLDivElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const email = e.currentTarget.email.value;
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/connevents-waitlist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setIsSubmitted(true);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to join waitlist. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
     const [isHovering, setIsHovering] = useState(false);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -116,15 +151,45 @@ export default function ConnEvents() {
                     <span className="connevents-waitlist-subtitle">Be the first to know</span>
                     <h2>Exclusive access. Unmissable moments.</h2>
                     <p>Join the waitlist and be the first to experience CONN EVENTS.</p>
-                    <form className="connevents-waitlist-form" onSubmit={(e) => e.preventDefault()}>
-                        <input type="email" placeholder="Enter your email address" required />
-                        <button type="submit" className="connevents-btn-primary">
-                            Notify Me 
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="m9 18 6-6-6-6"/>
-                            </svg>
-                        </button>
-                    </form>
+                    {isSubmitted ? (
+                        <div style={{ textAlign: 'center', padding: '25px', border: '1px solid #c99f4a', borderRadius: '8px', background: 'rgba(201, 159, 74, 0.05)', maxWidth: '480px', margin: '20px auto 0 auto' }}>
+                            <div style={{
+                                width: '40px',
+                                height: '40px',
+                                background: '#c99f4a',
+                                color: '#000',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 15px'
+                            }}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '20px', height: '20px' }}>
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <h3 style={{ color: '#c99f4a', fontSize: '1.2rem', marginBottom: '8px', fontWeight: 600, fontFamily: 'Outfit, sans-serif' }}>VIP WAITLIST JOINED!</h3>
+                            <p style={{ color: '#aaa', fontSize: '0.85rem', lineHeight: '1.5', margin: '0 auto 15px auto', maxWidth: '320px' }}>
+                                Thank you! Your email has been added to the exclusive VIP waitlist for CONN EVENTS. We will contact you soon.
+                            </p>
+                            <button onClick={() => setIsSubmitted(false)} style={{ background: 'transparent', border: '1px solid rgba(201, 159, 74, 0.3)', color: '#c99f4a', padding: '6px 15px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>Join again</button>
+                        </div>
+                    ) : (
+                        <form className="connevents-waitlist-form" onSubmit={handleSubmit}>
+                            <input name="email" type="email" placeholder="Enter your email address" required />
+                            <button type="submit" className="connevents-btn-primary" disabled={isSubmitting}>
+                                {isSubmitting ? 'Adding...' : 'Notify Me'}
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </form>
+                    )}
+                    {submitError && (
+                        <p style={{ color: '#ff5252', fontSize: '0.85rem', marginTop: '15px', textAlign: 'center', fontWeight: 500 }}>
+                            ⚠️ {submitError}
+                        </p>
+                    )}
                     <p className="connevents-spam-notice">No spam. Just exclusive updates.</p>
                 </div>
             </main>

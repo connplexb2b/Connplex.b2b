@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { X, CheckCircle } from 'lucide-react';
+import { getApiUrl } from '@/utils/api';
 import './sky-inn.css';
 
 const STARS = [
@@ -22,13 +23,41 @@ const SkyInnPage = () => {
     const [email, setEmail] = useState('');
     const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const openModal = () => { setModalOpen(true); setSubmitted(false); };
-    const closeModal = () => { setModalOpen(false); setTimeout(() => setSubmitted(false), 400); };
+    const openModal = () => { setModalOpen(true); setSubmitted(false); setSubmitError(null); };
+    const closeModal = () => { setModalOpen(false); setTimeout(() => { setSubmitted(false); setSubmitError(null); }, 400); };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (email) setSubmitted(true);
+        if (!email) return;
+
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/skyinn-reservations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setSubmitted(true);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to join waitlist. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const toggleSound = () => {
@@ -183,11 +212,18 @@ const SkyInnPage = () => {
                                     />
                                     <span className="sky-inn-input-line" />
                                 </div>
-                                <button type="submit" className="sky-inn-btn-submit">
-                                    <span>SUBSCRIBE NOW</span>
-                                    <svg className="sky-inn-submit-arrow" viewBox="0 0 18 10">
-                                        <path d="M1 5h16M12 1l5 4-5 4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
+                                {submitError && (
+                                    <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '15px', fontWeight: 500 }}>
+                                        ⚠️ {submitError}
+                                    </div>
+                                )}
+                                <button type="submit" className="sky-inn-btn-submit" disabled={isSubmitting}>
+                                    <span>{isSubmitting ? 'SUBSCRIBING...' : 'SUBSCRIBE NOW'}</span>
+                                    {!isSubmitting && (
+                                        <svg className="sky-inn-submit-arrow" viewBox="0 0 18 10">
+                                            <path d="M1 5h16M12 1l5 4-5 4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    )}
                                 </button>
                             </form>
                         </div>

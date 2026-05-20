@@ -5,9 +5,45 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './connflix.css';
 
 export default function Connflix() {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const email = e.currentTarget.email.value;
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/connflix-subscribers`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setIsSubmitted(true);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to register subscription. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     const [timeLeft, setTimeLeft] = useState({
         days: 25,
         hours: 14,
@@ -124,12 +160,42 @@ export default function Connflix() {
                             </svg>
                         </div>
                         <h3 className="connflix-notify-title">BE THE FIRST TO KNOW</h3>
-                        <form className="connflix-notify-form" onSubmit={e => e.preventDefault()}>
-                            <input type="email" placeholder="Enter your email address" required className="connflix-notify-input" />
-                            <button type="submit" className="connflix-notify-btn">
-                                Notify Me <span className="connflix-arrow">→</span>
-                            </button>
-                        </form>
+                        {isSubmitted ? (
+                            <div style={{ textAlign: 'center', padding: '20px', border: '1px solid #d32f2f', borderRadius: '8px', background: 'rgba(211, 47, 47, 0.05)', maxWidth: '480px', margin: '20px auto 0 auto' }}>
+                                <div style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    background: '#d32f2f',
+                                    color: '#fff',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    margin: '0 auto 12px'
+                                }}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '20px', height: '20px' }}>
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <h3 style={{ color: '#d32f2f', fontSize: '1.1rem', marginBottom: '8px', fontWeight: 600, fontFamily: 'Outfit, sans-serif' }}>NOTIFICATIONS ACTIVATED!</h3>
+                                <p style={{ color: '#aaa', fontSize: '0.8rem', lineHeight: '1.5', margin: '0 auto 12px auto', maxWidth: '320px' }}>
+                                    You will be the absolute first to know when CONNFLIX launches. Get ready for premium streaming!
+                                </p>
+                                <button onClick={() => setIsSubmitted(false)} style={{ background: 'transparent', border: '1px solid rgba(211, 47, 47, 0.3)', color: '#d32f2f', padding: '5px 12px', borderRadius: '4px', fontSize: '10px', cursor: 'pointer' }}>Subscribe again</button>
+                            </div>
+                        ) : (
+                            <form className="connflix-notify-form" onSubmit={handleSubmit}>
+                                <input name="email" type="email" placeholder="Enter your email address" required className="connflix-notify-input" />
+                                <button type="submit" className="connflix-notify-btn" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Registering...' : 'Notify Me'} <span className="connflix-arrow">→</span>
+                                </button>
+                            </form>
+                        )}
+                        {submitError && (
+                            <p style={{ color: '#ff5252', fontSize: '0.85rem', marginTop: '12px', textAlign: 'center', fontWeight: 500 }}>
+                                ⚠️ {submitError}
+                            </p>
+                        )}
                         <p className="connflix-spam-notice">No spam. Just exclusive updates.</p>
                     </div>
                 </footer>

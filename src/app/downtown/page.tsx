@@ -4,24 +4,57 @@ import { useState } from 'react';
 import './downtown.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 export default function DowntownPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [showToast, setShowToast] = useState(false);
 
     const handleNotifyClick = () => {
         setIsModalOpen(true);
+        setSubmitError(null);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setSubmitError(null);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsModalOpen(false);
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const name = e.currentTarget.elements.namedItem('name') ? (e.currentTarget.elements.namedItem('name') as HTMLInputElement).value : '';
+        const email = e.currentTarget.elements.namedItem('email') ? (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value : '';
+        const consent = e.currentTarget.elements.namedItem('consent') ? (e.currentTarget.elements.namedItem('consent') as HTMLInputElement).checked : true;
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/downtown-invitations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, consent }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setIsModalOpen(false);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to submit invite request. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -89,22 +122,29 @@ export default function DowntownPage() {
 
                         <form id="notify-form" className="dt-modal-form" onSubmit={handleSubmit}>
                             <div className="dt-form-group">
-                                <input type="text" id="user-name" placeholder="Full Name" required autoComplete="name" />
+                                <input name="name" type="text" id="user-name" placeholder="Full Name" required autoComplete="name" />
                                 <label htmlFor="user-name">Full Name</label>
                             </div>
                             <div className="dt-form-group">
-                                <input type="email" id="user-email" placeholder="Email Address" required autoComplete="email" />
+                                <input name="email" type="email" id="user-email" placeholder="Email Address" required autoComplete="email" />
                                 <label htmlFor="user-email">Email Address</label>
                             </div>
                             <div className="dt-form-group dt-checkbox-group">
-                                <input type="checkbox" id="user-consent" required defaultChecked />
+                                <input name="consent" type="checkbox" id="user-consent" required defaultChecked />
                                 <label htmlFor="user-consent">I agree to receive VIP updates and exclusive invites from Connplex Downtown.</label>
                             </div>
-                            <button type="submit" className="dt-btn-submit">
-                                <span>REQUEST EXCLUSIVE INVITE</span>
-                                <svg viewBox="0 0 24 24" width="18" height="18">
-                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                            {submitError && (
+                                <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '15px', fontWeight: 500 }}>
+                                    ⚠️ {submitError}
+                                </div>
+                            )}
+                            <button type="submit" className="dt-btn-submit" disabled={isSubmitting}>
+                                <span>{isSubmitting ? 'REQUESTING...' : 'REQUEST EXCLUSIVE INVITE'}</span>
+                                {!isSubmitting && (
+                                    <svg viewBox="0 0 24 24" width="18" height="18">
+                                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                )}
                             </button>
                         </form>
                     </div>

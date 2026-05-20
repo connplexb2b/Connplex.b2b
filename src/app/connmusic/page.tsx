@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './connmusic.css';
 
 export default function Connmusic() {
@@ -14,6 +15,41 @@ export default function Connmusic() {
         minutes: 42,
         seconds: 58
     });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitError(null);
+
+        const email = e.currentTarget.email.value;
+
+        try {
+            const apiUrl = getApiUrl();
+            const response = await fetch(`${apiUrl}/api/forms/connmusic-waitlist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
+
+            setIsSubmitted(true);
+        } catch (error: any) {
+            setSubmitError(error.message || 'Unable to join waitlist. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     const containerRef = useRef<HTMLDivElement>(null);
     const systemRef = useRef<HTMLDivElement>(null);
@@ -198,13 +234,26 @@ export default function Connmusic() {
                         <h2 className="connmusic-notify-main-title">Exclusive access. First listen. Only for you.</h2>
                         <p className="connmusic-notify-desc">Join the waitlist and be the first to experience CONNMUSIC.</p>
 
-                        <form className="connmusic-notify-form" onSubmit={(e) => e.preventDefault()}>
-                            <input type="email" placeholder="Enter your email address" required className="connmusic-notify-input" />
-                            <button type="submit" className="connmusic-notify-btn">
-                                Notify Me <span className="arrow">&gt;</span>
-                            </button>
-                        </form>
-                        <p className="connmusic-spam-notice">No spam. Just exclusive updates.</p>
+                        {isSubmitted ? (
+                            <p className="connmusic-success-msg" style={{ color: '#d4af37', marginTop: '20px', fontSize: '1.1rem', fontWeight: 500 }}>
+                                🎉 Thank you! You have been successfully added to the waitlist.
+                            </p>
+                        ) : (
+                            <>
+                                <form className="connmusic-notify-form" onSubmit={handleSubmit}>
+                                    <input name="email" type="email" placeholder="Enter your email address" required className="connmusic-notify-input" />
+                                    <button type="submit" className="connmusic-notify-btn" disabled={isSubmitting}>
+                                        {isSubmitting ? 'Sending...' : <>Notify Me <span className="arrow">&gt;</span></>}
+                                    </button>
+                                </form>
+                                {submitError && (
+                                    <p className="connmusic-error-notice" style={{ color: '#ff5252', marginTop: '10px', fontSize: '0.9rem' }}>
+                                        ⚠️ {submitError}
+                                    </p>
+                                )}
+                                <p className="connmusic-spam-notice">No spam. Just exclusive updates.</p>
+                            </>
+                        )}
                     </div>
                 </main>
                 <Footer />

@@ -5,14 +5,44 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 import './contact.css';
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/forms/contact-messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong. Please try again.');
+      }
+
+      setIsSubmitted(true);
+    } catch (error: any) {
+      setSubmitError(error.message || 'Unable to submit enquiry. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -133,16 +163,16 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className="ct-form-row">
-                    <input type="text" className="ct-input" placeholder="Full Name" required />
-                    <input type="email" className="ct-input" placeholder="Email Address" required />
+                    <input name="fullName" type="text" className="ct-input" placeholder="Full Name" required />
+                    <input name="email" type="email" className="ct-input" placeholder="Email Address" required />
                   </div>
                   <div className="ct-form-row">
-                    <input type="tel" className="ct-input" placeholder="Phone Number" required />
-                    <input type="text" className="ct-input" placeholder="State" required />
+                    <input name="phone" type="tel" className="ct-input" placeholder="Phone Number" required />
+                    <input name="state" type="text" className="ct-input" placeholder="State" required />
                   </div>
                   <div className="ct-form-row">
-                    <input type="text" className="ct-input" placeholder="City" required />
-                    <select className="ct-input" required defaultValue="">
+                    <input name="city" type="text" className="ct-input" placeholder="City" required />
+                    <select name="preferredInvestment" className="ct-input" required defaultValue="">
                       <option value="" disabled>Preferred investment range?</option>
                       <option value="1.5-2cr">1.5 to 2 cr</option>
                       <option value="2-2.5cr">2cr to 2.5 cr</option>
@@ -151,11 +181,11 @@ export default function ContactPage() {
                     </select>
                   </div>
                   <div className="ct-form-row">
-                    <input type="text" className="ct-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                    <input type="text" className="ct-input" placeholder="Do you have a property or location for cinema?" required />
+                    <input name="preferredCity" type="text" className="ct-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
+                    <input name="hasProperty" type="text" className="ct-input" placeholder="Do you have a property or location for cinema?" required />
                   </div>
                   <div style={{ marginBottom: '24px' }}>
-                    <select className="ct-input" required defaultValue="">
+                    <select name="timeframe" className="ct-input" required defaultValue="">
                       <option value="" disabled>How soon do you plan to start this investment?</option>
                       <option value="immediately">Immediately</option>
                       <option value="1-month">1 month</option>
@@ -164,10 +194,17 @@ export default function ContactPage() {
                     </select>
                   </div>
                   <div style={{ marginBottom: '24px' }}>
-                    <textarea className="ct-input" style={{ minHeight: '120px', resize: 'none' }} placeholder="Message" rows={4} required></textarea>
+                    <textarea name="message" className="ct-input" style={{ minHeight: '120px', resize: 'none' }} placeholder="Message" rows={4} required></textarea>
                   </div>
+                  {submitError && (
+                    <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '20px', fontWeight: 500 }}>
+                      ⚠️ {submitError}
+                    </div>
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '30px', flexWrap: 'wrap' }}>
-                    <button type="submit" className="ct-submit-btn">SUBMIT ENQUIRY →</button>
+                    <button type="submit" className="ct-submit-btn" disabled={isSubmitting}>
+                      {isSubmitting ? 'SUBMITTING...' : 'SUBMIT ENQUIRY →'}
+                    </button>
                     <p style={{ fontSize: '12.5px', color: 'var(--ct-text-secondary)' }}>We usually respond within 24 hours.</p>
                   </div>
                 </form>
