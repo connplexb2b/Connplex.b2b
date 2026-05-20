@@ -11,20 +11,20 @@ router.get("/test", (req, res) => {
 
 router.post("/contact-messages", async (req, res) => {
   try {
-    console.log("BODY:", req.body);
+    console.log("BODY RECEIVED:", req.body);
 
     return res.status(201).json({
       success: true,
       message: "Form submitted successfully",
-      data: req.body
+      data: req.body,
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("FULL ERROR:", error);
 
     return res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 });
