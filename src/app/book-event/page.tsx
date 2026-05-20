@@ -297,7 +297,4 @@ export default function BookEventPage() {
       <Footer />
     </div>
   );
-}/>
-    </div>
-  );
 }
