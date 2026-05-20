@@ -8,6 +8,42 @@ import Footer from '@/components/Footer';
 import './book-event.css';
 
 export default function BookEventPage() {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/forms/book-event`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong. Please try again.');
+      }
+
+      setIsSubmitted(true);
+    } catch (error: any) {
+      setSubmitError(error.message || 'Unable to submit request. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="book-event-page">
       {/* Header Overlay */}
@@ -129,89 +165,122 @@ export default function BookEventPage() {
         <div className="be-form-container">
           <h2 className="be-form-title"><span style={{ color: '#D4AF37' }}>✨</span> LET&apos;S PLAN YOUR EVENT</h2>
 
-          <form onSubmit={(e) => { e.preventDefault(); alert('Request submitted!'); }}>
-            {/* Event Details */}
-            <div className="be-form-section">
-              <h3 className="be-form-section-title">EVENT DETAILS</h3>
-              <div className="be-form-group">
-                <label className="be-label">EVENT TYPE</label>
-                <div className="be-input-wrap">
-                  <select className="be-input" required defaultValue="">
-                    <option value="" disabled>Select Event Type</option>
-                    <option value="premiere">Film Premiere</option>
-                    <option value="private">Private Screening</option>
-                    <option value="corporate">Corporate Event</option>
-                  </select>
-                  <span className="be-input-icon">▼</span>
-                </div>
+          {isSubmitted ? (
+            <div style={{ textAlign: 'center', padding: '40px 0' }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                background: '#D4AF37',
+                color: '#000',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 20px'
+              }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '28px', height: '28px' }}>
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
               </div>
-              <div className="be-form-group">
-                <label className="be-label">EVENT NAME</label>
-                <input type="text" className="be-input" placeholder="e.g. Film Premiere, Private Screening" required />
-              </div>
-              <div className="be-form-group">
-                <label className="be-label">SELECT DATE</label>
-                <div className="be-input-wrap">
-                  <input type="text" className="be-input" placeholder="Select Date" onFocus={(e) => (e.target.type = "date")} required />
-                  <span className="be-input-icon">📅</span>
-                </div>
-              </div>
-              <div className="be-form-row">
+              <h3 style={{ color: '#D4AF37', fontSize: '1.6rem', marginBottom: '15px', fontWeight: 600, fontFamily: 'Outfit, sans-serif' }}>SUCCESSFULLY RESERVED!</h3>
+              <p style={{ color: '#aaa', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '25px', maxWidth: '420px', margin: '0 auto 25px auto' }}>
+                Thank you. Your event booking request has been successfully recorded. Our events team will review your details and contact you shortly.
+              </p>
+              <button onClick={() => setIsSubmitted(false)} className="be-btn-submit" style={{ padding: '12px 30px', fontSize: '12px', width: 'auto', display: 'inline-block' }}>Submit another request</button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              {/* Event Details */}
+              <div className="be-form-section">
+                <h3 className="be-form-section-title">EVENT DETAILS</h3>
                 <div className="be-form-group">
-                  <label className="be-label">START TIME</label>
-                  <input type="text" className="be-input" placeholder="Select Time" onFocus={(e) => (e.target.type = "time")} required />
+                  <label className="be-label">EVENT TYPE</label>
+                  <div className="be-input-wrap">
+                    <select name="eventType" className="be-input" required defaultValue="">
+                      <option value="" disabled>Select Event Type</option>
+                      <option value="premiere">Film Premiere</option>
+                      <option value="private">Private Screening</option>
+                      <option value="corporate">Corporate Event</option>
+                    </select>
+                    <span className="be-input-icon">▼</span>
+                  </div>
                 </div>
                 <div className="be-form-group">
-                  <label className="be-label">END TIME</label>
-                  <input type="text" className="be-input" placeholder="Select Time" onFocus={(e) => (e.target.type = "time")} required />
+                  <label className="be-label">EVENT NAME</label>
+                  <input name="eventName" type="text" className="be-input" placeholder="e.g. Film Premiere, Private Screening" required />
+                </div>
+                <div className="be-form-group">
+                  <label className="be-label">SELECT DATE</label>
+                  <div className="be-input-wrap">
+                    <input name="eventDate" type="text" className="be-input" placeholder="Select Date" onFocus={(e) => (e.target.type = "date")} required />
+                    <span className="be-input-icon">📅</span>
+                  </div>
+                </div>
+                <div className="be-form-row">
+                  <div className="be-form-group">
+                    <label className="be-label">START TIME</label>
+                    <input name="startTime" type="text" className="be-input" placeholder="Select Time" onFocus={(e) => (e.target.type = "time")} required />
+                  </div>
+                  <div className="be-form-group">
+                    <label className="be-label">END TIME</label>
+                    <input name="endTime" type="text" className="be-input" placeholder="Select Time" onFocus={(e) => (e.target.type = "time")} required />
+                  </div>
+                </div>
+                <div className="be-form-group">
+                  <label className="be-label">EXPECTED GUESTS</label>
+                  <div className="be-input-wrap">
+                    <select name="expectedGuests" className="be-input" required defaultValue="">
+                      <option value="" disabled>Number of Guests</option>
+                      <option value="1-50">1 - 50</option>
+                      <option value="51-100">51 - 100</option>
+                      <option value="100+">100+</option>
+                    </select>
+                    <span className="be-input-icon">▼</span>
+                  </div>
                 </div>
               </div>
-              <div className="be-form-group">
-                <label className="be-label">EXPECTED GUESTS</label>
-                <div className="be-input-wrap">
-                  <select className="be-input" required defaultValue="">
-                    <option value="" disabled>Number of Guests</option>
-                    <option value="1-50">1 - 50</option>
-                    <option value="51-100">51 - 100</option>
-                    <option value="100+">100+</option>
-                  </select>
-                  <span className="be-input-icon">▼</span>
+
+              {/* Your Details */}
+              <div className="be-form-section" style={{ marginTop: '40px' }}>
+                <h3 className="be-form-section-title">YOUR DETAILS</h3>
+                <div className="be-form-group">
+                  <label className="be-label">FULL NAME</label>
+                  <input name="fullName" type="text" className="be-input" placeholder="Enter your full name" required />
+                </div>
+                <div className="be-form-group">
+                  <label className="be-label">EMAIL ADDRESS</label>
+                  <input name="email" type="email" className="be-input" placeholder="Enter your email" required />
+                </div>
+                <div className="be-form-group">
+                  <label className="be-label">PHONE NUMBER</label>
+                  <input name="phone" type="tel" className="be-input" placeholder="Enter your phone number" required />
+                </div>
+                <div className="be-form-group">
+                  <label className="be-label">COMPANY / ORGANIZATION (OPTIONAL)</label>
+                  <input name="company" type="text" className="be-input" placeholder="Enter company name" />
                 </div>
               </div>
-            </div>
 
-            {/* Your Details */}
-            <div className="be-form-section" style={{ marginTop: '40px' }}>
-              <h3 className="be-form-section-title">YOUR DETAILS</h3>
-              <div className="be-form-group">
-                <label className="be-label">FULL NAME</label>
-                <input type="text" className="be-input" placeholder="Enter your full name" required />
+              {/* Additional Info */}
+              <div className="be-form-section" style={{ marginTop: '40px' }}>
+                <h3 className="be-form-section-title">ADDITIONAL INFORMATION</h3>
+                <div className="be-form-group">
+                  <label className="be-label">TELL US ABOUT YOUR EVENT</label>
+                  <textarea name="message" className="be-input" placeholder="Share your vision, special requests, technical needs..." rows={4}></textarea>
+                </div>
               </div>
-              <div className="be-form-group">
-                <label className="be-label">EMAIL ADDRESS</label>
-                <input type="email" className="be-input" placeholder="Enter your email" required />
-              </div>
-              <div className="be-form-group">
-                <label className="be-label">PHONE NUMBER</label>
-                <input type="tel" className="be-input" placeholder="Enter your phone number" required />
-              </div>
-              <div className="be-form-group">
-                <label className="be-label">COMPANY / ORGANIZATION (OPTIONAL)</label>
-                <input type="text" className="be-input" placeholder="Enter company name" />
-              </div>
-            </div>
 
-            {/* Additional Info */}
-            <div className="be-form-section" style={{ marginTop: '40px' }}>
-              <h3 className="be-form-section-title">ADDITIONAL INFORMATION</h3>
-              <div className="be-form-group">
-                <label className="be-label">TELL US ABOUT YOUR EVENT</label>
-                <textarea className="be-input" placeholder="Share your vision, special requests, technical needs..." rows={4}></textarea>
-              </div>
-            </div>
+              {submitError && (
+                <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '20px', fontWeight: 500 }}>
+                  ⚠️ {submitError}
+                </div>
+              )}
 
-            <button type="submit" className="be-btn-submit">SUBMIT REQUEST →</button>
-          </form>
+              <button type="submit" className="be-btn-submit" disabled={isSubmitting}>
+                {isSubmitting ? 'SUBMITTING REQUEST...' : 'SUBMIT REQUEST →'}
+              </button>
+            </form>
+          )}
 
           <div className="be-form-footer">
             <div className="be-footer-text">
@@ -226,6 +295,9 @@ export default function BookEventPage() {
         </div>
       </section>
       <Footer />
+    </div>
+  );
+}/>
     </div>
   );
 }
