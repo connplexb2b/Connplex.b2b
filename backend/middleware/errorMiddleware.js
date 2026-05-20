@@ -2,9 +2,8 @@
 export const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   
-  // Log full error stack in development
-  if (process.env.NODE_ENV !== 'test') {
-    console.error(`[Error Middleware] Caught error: ${err.message}`);
+  console.error(`[Error] ${req.method} ${req.originalUrl} - Status: ${statusCode} - Message: ${err.message}`);
+  if (err.stack) {
     console.error(err.stack);
   }
 

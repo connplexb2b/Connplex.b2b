@@ -14,36 +14,63 @@ connectDB();
 
 const app = express();
 
-// Configure CORS
+// Configure CORS Allowed Origins
 const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',')
+  ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
   : ['http://localhost:3000', 'http://localhost:3001', 'https://connplex-b2b.vercel.app'];
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // Permit requests with no origin (like mobile apps, curl requests, or postman)
     if (!origin) return callback(null, true);
     
     const isAllowed = allowedOrigins.some(allowedOrigin => {
-      return allowedOrigin.trim() === origin || allowedOrigin.trim() === '*';
+      return allowedOrigin === origin || allowedOrigin === '*';
     });
 
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Cross-Origin Request Blocked by CORS Policy'));
+      // Reject origin silently by passing false to callback instead of an Error object
+      // This prevents Express from throwing a 500 error and cleanly blocks CORS
+      callback(null, false);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 // Responds with 200 for preflight OPTIONS requests
+};
 
-// Body parser middleware
+// 1. CORS middleware configuration (Must be first)
+app.use(cors(corsOptions));
+
+// 2. Preflight request handling for all routes
+app.options('*', cors(corsOptions));
+
+// 3. Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets if any
+// 4. Request Logging Middleware (Incoming requests, request body, etc.)
+app.use((req, res, next) => {
+  const start = Date.now();
+  const origin = req.headers.origin || 'No Origin';
+  console.log(`[Request] ${req.method} ${req.originalUrl} - Origin: ${origin} - IP: ${req.ip}`);
+  
+  if (req.method === 'POST' || req.method === 'PUT') {
+    console.log(`[Request Body]`, JSON.stringify(req.body, null, 2));
+  }
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`[Response] ${req.method} ${req.originalUrl} - Status: ${res.statusCode} - Time: ${duration}ms`);
+  });
+
+  next();
+});
+
+// 5. Routes
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -51,7 +78,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Production-ready Health Check Endpoint
+// Health check endpoint
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState;
   const dbStates = {
@@ -81,10 +108,10 @@ app.get('/api/health', (req, res) => {
 // Register API Routes
 app.use('/api', apiRoutes);
 
-// Not Found Route Fallback
+// 6. Not Found Route Fallback
 app.use(notFound);
 
-// Global Error Handler Middleware
+// 7. Global Error Handler Middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
