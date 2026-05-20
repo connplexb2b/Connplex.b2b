@@ -1,0 +1,439 @@
+/* src/app/connflix/connflix.css */
+.connflix-page {
+    --bg-color: #050505;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --red-accent: #d32f2f;
+    --red-glow: rgba(211, 47, 47, 0.4);
+    --gold-accent: #d4af37;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-outfit), sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.connflix-app-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at 30% 60%, rgba(20, 5, 5, 1) 0%, var(--bg-color) 70%);
+}
+
+/* Header */
+.connflix-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    position: relative;
+    z-index: 10;
+}
+
+.connflix-logo-container {
+    width: 200px;
+}
+
+.connflix-logo {
+    max-width: 100%;
+    height: auto;
+}
+
+.connflix-nav-links {
+    display: flex;
+    gap: 3rem;
+}
+
+.connflix-nav-item {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.connflix-nav-item:hover,
+.connflix-nav-item.active {
+    color: var(--text-primary);
+}
+
+.connflix-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: var(--gold-accent);
+    border-radius: 50%;
+}
+
+.connflix-btn-outline {
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.connflix-btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Main Content */
+.connflix-main-content {
+    flex: 1;
+    display: flex;
+    position: relative;
+    padding: 4rem;
+    z-index: 5;
+}
+
+.connflix-vertical-watermark {
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: right center;
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.02);
+    letter-spacing: 1rem;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.connflix-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Posters Section (Left Side) */
+.connflix-posters-section {
+    position: relative;
+    perspective: 1500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.connflix-posters-perspective {
+    display: flex;
+    gap: 1.5rem;
+    transform: rotateY(25deg) rotateX(5deg) scale(0.9);
+    transform-style: preserve-3d;
+}
+
+.connflix-poster-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.connflix-poster-col.col-1 { transform: translateY(-30px); }
+.connflix-poster-col.col-2 { transform: translateY(20px); }
+.connflix-poster-col.col-3 { transform: translateY(-10px); }
+
+.connflix-poster-card {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.connflix-poster-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.connflix-poster-card:hover {
+    transform: scale(1.05) translateZ(20px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+}
+
+.connflix-poster-card:hover img {
+    opacity: 1;
+}
+
+.connflix-active-poster {
+    border: 1px solid var(--red-accent);
+    box-shadow: 0 0 30px var(--red-glow), inset 0 0 20px var(--red-glow);
+}
+
+.connflix-active-poster img {
+    opacity: 0.9;
+}
+
+.connflix-poster-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    text-align: center;
+}
+
+.connflix-poster-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 0.2rem;
+    line-height: 1;
+}
+
+.connflix-poster-subtitle {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+}
+
+.connflix-red-title {
+    color: var(--red-accent);
+}
+
+.connflix-floor-reflection {
+    position: absolute;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(to bottom, rgba(211, 47, 47, 0.15) 0%, transparent 100%);
+    filter: blur(20px);
+    transform: perspective(1000px) rotateX(70deg);
+    pointer-events: none;
+}
+
+/* Info Section (Right Side) */
+.connflix-info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2rem;
+}
+
+.connflix-sub-brand {
+    color: var(--red-accent);
+    font-size: 1rem;
+    letter-spacing: 6px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.connflix-main-title {
+    font-size: 7rem;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.connflix-red-divider {
+    width: 40px;
+    height: 3px;
+    background-color: var(--red-accent);
+    margin-bottom: 2rem;
+}
+
+.connflix-tagline {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    letter-spacing: 0.5px;
+}
+
+.connflix-countdown-container {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    width: fit-content;
+}
+
+.connflix-countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.connflix-countdown-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.connflix-countdown-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.connflix-countdown-label {
+    font-size: 0.65rem;
+    color: var(--red-accent);
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+.connflix-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Footer / Notification */
+.connflix-footer {
+    position: relative;
+    padding: 3rem 0;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.connflix-footer-gradient {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: radial-gradient(circle, rgba(211,47,47,0.8) 0%, rgba(211,47,47,0) 70%);
+    box-shadow: 0 -10px 40px rgba(211, 47, 47, 0.4);
+}
+
+.connflix-footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+}
+
+.connflix-bell-icon {
+    margin-bottom: 1rem;
+}
+
+.connflix-notify-title {
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.connflix-notify-form {
+    display: flex;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 400px;
+    max-width: 90vw;
+    margin-bottom: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s ease;
+}
+
+.connflix-notify-form:focus-within {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.connflix-notify-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 1rem 1.5rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.connflix-notify-btn {
+    background: transparent;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0 1.5rem;
+    color: var(--red-accent);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.connflix-notify-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.connflix-spam-notice {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .connflix-content-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .connflix-posters-section { padding-top: 0; }
+    .connflix-vertical-watermark { display: none; }
+    .connflix-info-section {
+        padding-left: 0;
+        align-items: center;
+        text-align: center;
+    }
+    .connflix-red-divider { margin: 0 auto 2rem auto; }
+}
+
+@media (max-width: 768px) {
+    .connflix-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+    .connflix-nav-links {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .connflix-posters-perspective { transform: scale(0.7); }
+    .connflix-main-title { font-size: 4rem; }
+    .connflix-countdown-container { gap: 1rem; padding: 1rem; }
+    .connflix-countdown-value { font-size: 1.5rem; }
+}

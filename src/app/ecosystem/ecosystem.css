@@ -1,0 +1,354 @@
+.ecosystem-page {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-color: #d4af37; /* Gold */
+    --accent-gradient: linear-gradient(135deg, #f9d423 0%, #ff4e50 100%);
+    --gold-gradient: linear-gradient(90deg, #d4af37, #f7e08a, #d4af37);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(212, 175, 55, 0.2);
+    --container-width: 1200px;
+    --transition: all 0.3s ease;
+
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    padding-top: 80px; /* Leave space for sticky header */
+}
+
+.ecosystem-page .container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.ecosystem-page .hero {
+    position: relative;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.ecosystem-page .hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/ecosystem-assets/hero-bg.png');
+    background-size: cover;
+    background-position: center bottom;
+    opacity: 0.4; /* Darken the background */
+    z-index: 1;
+}
+
+.ecosystem-page .hero-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, var(--bg-color), transparent);
+    z-index: 2;
+}
+
+.ecosystem-page .hero-content {
+    max-width: 800px;
+    position: relative;
+    z-index: 5;
+}
+
+.ecosystem-page .hero .subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 4px;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.ecosystem-page .hero h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+}
+
+.ecosystem-page .hero h1 span {
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.ecosystem-page .hero .description {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid Section */
+.ecosystem-page .ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 60px 20px 80px;
+    position: relative;
+    z-index: 10;
+}
+
+.ecosystem-page .ecosystem-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 15px;
+    padding: 40px;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.ecosystem-page #connflix { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/connflix-bg.png'); }
+.ecosystem-page #connmusic { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/card-bg-2.png'); }
+.ecosystem-page #connevents { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/card-bg-3.png'); }
+.ecosystem-page #conntube { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/conntube-bg.png'); }
+.ecosystem-page #purex { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/purex-bg.png'); }
+.ecosystem-page #spectrax { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/spectrax-bg.png'); }
+.ecosystem-page #downtown { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/downtown-bg.png'); }
+.ecosystem-page #skyinn { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/skyinn-bg.png'); }
+.ecosystem-page #connplex-studio { background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('/ecosystem-assets/studio-bg.png'); }
+
+.ecosystem-page .ecosystem-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+}
+
+.ecosystem-page .card-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    color: var(--accent-color);
+    transition: var(--transition);
+}
+
+.ecosystem-page .ecosystem-card:hover .card-icon {
+    background: rgba(212, 175, 55, 0.25);
+    transform: scale(1.05);
+}
+
+.ecosystem-page .card-icon svg {
+    width: 35px;
+    height: 35px;
+}
+
+.ecosystem-page .custom-icon {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.ecosystem-page .ecosystem-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.ecosystem-page .ecosystem-card p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.ecosystem-page .explore-link {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.ecosystem-page .explore-link .arrow {
+    transition: var(--transition);
+}
+
+.ecosystem-page .explore-link:hover {
+    color: #ffffff;
+}
+
+.ecosystem-page .explore-link:hover .arrow {
+    transform: translateX(5px);
+}
+
+/* Banner Section */
+.ecosystem-page .banner {
+    padding: 20px 0 80px;
+    position: relative;
+    z-index: 10;
+}
+
+.ecosystem-page .banner-content {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ecosystem-page .banner-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.ecosystem-page .interlocking-rings {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.ecosystem-page .interlocking-rings span {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border: 3px solid var(--accent-color);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.ecosystem-page .interlocking-rings span:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+.ecosystem-page .interlocking-rings span:nth-child(2) { bottom: 0; left: 0; }
+.ecosystem-page .interlocking-rings span:nth-child(3) { bottom: 0; right: 0; }
+
+.ecosystem-page .banner-subtitle {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.ecosystem-page .banner-text h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.ecosystem-page .banner-text p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ecosystem-page .btn-learn-more {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--accent-color);
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: var(--accent-color);
+    font-weight: 600;
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ecosystem-page .btn-learn-more:hover {
+    background: var(--accent-color);
+    color: #000000;
+}
+
+/* Animations support */
+.ecosystem-page .reveal-init {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
+}
+
+.ecosystem-page .reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+    .ecosystem-page .hero {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .ecosystem-page {
+        padding-top: 60px;
+    }
+
+    .ecosystem-page .hero {
+        height: auto;
+        padding: 60px 0;
+    }
+
+    .ecosystem-page .hero h1 {
+        font-size: 3rem;
+    }
+    
+    .ecosystem-page .ecosystem-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .ecosystem-page .banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+        padding: 40px;
+    }
+    
+    .ecosystem-page .banner-left {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ecosystem-page .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .ecosystem-page .ecosystem-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ecosystem-page .ecosystem-card {
+        min-height: 300px;
+        padding: 30px;
+    }
+}

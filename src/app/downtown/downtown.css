@@ -1,0 +1,1244 @@
+/* Custom CSS for Connplex Downtown Landing Page */
+
+/* --- CSS Variables & Design System --- */
+:root {
+    /* Color Palette */
+    --color-bg-deep: #050505;
+    --color-bg-dark: #0a0a0a;
+    --color-bg-card: rgba(18, 18, 18, 0.75);
+    
+    /* Elegant Champagne Gold Shades */
+    --color-gold-bright: #f5dfbb;
+    --color-gold-primary: #d4af37;
+    --color-gold-muted: #c5a880;
+    --color-gold-dark: #8c6e43;
+    --color-gold-deep: #594427;
+    
+    /* Text colors */
+    --text-white: #ffffff;
+    --text-cream: #f3ece3;
+    --text-muted: #a5a29d;
+    --text-dim: #73716d;
+    
+    /* Typography */
+    --font-heading: 'Cinzel', serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    
+    /* Animations */
+    --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.25s ease;
+}
+
+/* --- Base Reset & Setup --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-deep);
+    color: var(--text-cream);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar for premium feel */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--color-bg-deep);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--color-gold-dark);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold-primary);
+}
+
+/* --- Ambient Backdrops --- */
+.dt-ambient-glow {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 0;
+}
+.dt-glow-1 {
+    top: -10%;
+    left: -10%;
+    background: radial-gradient(circle, var(--color-gold-primary) 0%, transparent 80%);
+}
+.dt-glow-2 {
+    bottom: -10%;
+    right: -10%;
+    background: radial-gradient(circle, var(--color-gold-dark) 0%, transparent 80%);
+}
+
+/* --- Header & Navigation --- */
+.dt-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1.8rem 0;
+    background: linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.7) 50%, rgba(5,5,5,0) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(197, 168, 128, 0.05);
+    transition: var(--transition-smooth);
+}
+
+/* Header scrolled state */
+.dt-header.dt-scrolled {
+    padding: 1.1rem 0;
+    background: rgba(5, 5, 5, 0.95);
+    border-bottom: 1px solid rgba(197, 168, 128, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dt-header-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Styling */
+.dt-logo-container {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--color-gold-muted);
+    transition: var(--transition-smooth);
+}
+.dt-logo-container:hover {
+    filter: brightness(1.2);
+}
+.dt-logo-main {
+    font-family: var(--font-sans);
+    font-size: 1.8rem;
+    font-weight: 200;
+    letter-spacing: 0.35em;
+    line-height: 1.1;
+    color: var(--color-gold-bright);
+    text-shadow: 0 0 15px rgba(197, 168, 128, 0.2);
+}
+.dt-logo-tagline {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    color: var(--color-gold-dark);
+    margin-top: 0.2rem;
+}
+
+/* Navigation Links */
+.dt-nav-menu {
+    display: flex;
+    align-items: center;
+}
+.dt-nav-list {
+    display: flex;
+    list-style: none;
+    gap: 3.5rem;
+}
+.dt-nav-link {
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--text-cream);
+    opacity: 0.75;
+    position: relative;
+    padding: 0.5rem 0;
+    transition: var(--transition-fast);
+}
+.dt-nav-link:hover, .dt-nav-link.dt-active {
+    opacity: 1;
+    color: var(--color-gold-muted);
+}
+
+/* Subtle Link Underline Slide Animation */
+.dt-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-gold-primary), transparent);
+    transition: var(--transition-smooth);
+}
+.dt-nav-link:hover::after, .dt-nav-link.dt-active::after {
+    width: 100%;
+}
+
+/* Navigation Dropdown */
+.dt-dropdown {
+    position: relative;
+}
+.dt-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.dt-chevron-icon {
+    transition: transform 0.3s ease;
+}
+.dt-dropdown:hover .dt-chevron-icon {
+    transform: rotate(180deg);
+}
+
+/* Elegant Glassmorphism Dropdown Menu */
+.dt-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(15px);
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(197, 168, 128, 0.15);
+    backdrop-filter: blur(25px);
+    list-style: none;
+    padding: 1rem 0;
+    min-width: 220px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    transition: var(--transition-smooth);
+    z-index: 100;
+}
+.dt-dropdown:hover .dt-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(5px);
+}
+.dt-dropdown-menu li a {
+    display: block;
+    padding: 0.7rem 2rem;
+    text-decoration: none;
+    color: var(--text-cream);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    transition: var(--transition-fast);
+}
+.dt-dropdown-menu li a:hover {
+    background: rgba(197, 168, 128, 0.1);
+    color: var(--color-gold-bright);
+    padding-left: 2.3rem; /* Tiny micro-shift */
+}
+.dt-dropdown-menu li a.dt-active-brand {
+    color: var(--color-gold-primary);
+    font-weight: 700;
+}
+
+/* Hamburger Menu Toggle Button */
+.dt-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1100;
+}
+.dt-menu-toggle .dt-bar {
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-gold-muted);
+    transition: var(--transition-smooth);
+}
+
+/* --- Main Layout Grid --- */
+.dt-main-layout {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    min-height: 750px;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- Left Column: Hero Content & Typography --- */
+.dt-hero-content {
+    flex: 0 0 43%;
+    background-color: var(--color-bg-deep);
+    display: flex;
+    align-items: center;
+    padding: 7rem 4rem 4rem 6rem;
+    position: relative;
+    z-index: 20;
+}
+
+.dt-hero-content-inner {
+    max-width: 580px;
+    width: 100%;
+}
+
+.dt-brand-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: var(--color-gold-dark);
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 1s ease both;
+}
+
+.dt-hero-title {
+    font-family: var(--font-sans);
+    font-size: clamp(3rem, 5vw, 5.2rem);
+    font-weight: 200;
+    letter-spacing: 0.28em;
+    color: var(--color-gold-bright);
+    text-shadow: 0 0 25px rgba(245, 223, 187, 0.15);
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    margin-right: -0.28em; /* Offset trailing letter space for proper alignment */
+    animation: fadeInUp 1s ease 0.2s both;
+}
+
+.dt-gold-divider {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(to right, var(--color-gold-primary), transparent);
+    margin-bottom: 2.2rem;
+    animation: scaleRight 1s ease 0.4s both;
+}
+
+.dt-hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    font-weight: 300;
+    letter-spacing: 0.38em;
+    color: var(--text-white);
+    margin-bottom: 2rem;
+    margin-right: -0.38em;
+    animation: fadeInUp 1s ease 0.5s both;
+}
+
+.dt-hero-description {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 3.5rem;
+    animation: fadeInUp 1s ease 0.7s both;
+}
+
+/* Premium Interactive CTA Button */
+.dt-cta-container {
+    margin-bottom: 4.5rem;
+    animation: fadeInUp 1s ease 0.9s both;
+}
+
+.dt-btn-notify {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid rgba(197, 168, 128, 0.4);
+    color: var(--color-gold-bright);
+    padding: 1.1rem 3rem 1.1rem 2.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    cursor: pointer;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.dt-btn-notify::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(245, 223, 187, 0.08), transparent);
+    transition: var(--transition-smooth);
+}
+
+.dt-btn-arrow {
+    display: flex;
+    align-items: center;
+    margin-left: 1.2rem;
+    transition: var(--transition-smooth);
+}
+
+/* Button Hover State */
+.dt-btn-notify:hover {
+    border-color: var(--color-gold-bright);
+    box-shadow: 0 0 25px rgba(245, 223, 187, 0.15);
+    background: rgba(197, 168, 128, 0.02);
+}
+
+.dt-btn-notify:hover::before {
+    left: 100%;
+    transition: 0.8s ease-in-out;
+}
+
+.dt-btn-notify:hover .dt-btn-arrow {
+    transform: translateX(6px);
+    color: var(--color-gold-primary);
+}
+
+/* Feature Bullet Highlights */
+.dt-feature-highlights {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--color-gold-muted);
+    opacity: 0.85;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 1s ease 1.1s both;
+}
+
+.dt-bullet {
+    color: var(--color-gold-dark);
+    font-size: 0.8rem;
+}
+
+/* Social Footer */
+.dt-social-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    animation: fadeInUp 1s ease 1.3s both;
+}
+
+.dt-follow-us {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+}
+
+.dt-social-divider {
+    width: 35px;
+    height: 1px;
+    background-color: var(--color-gold-deep);
+}
+
+.dt-social-icons {
+    display: flex;
+    gap: 1.4rem;
+}
+
+.dt-social-icon-link {
+    color: var(--color-gold-muted);
+    opacity: 0.6;
+    transition: var(--transition-fast);
+}
+
+.dt-social-icon-link:hover {
+    color: var(--color-gold-bright);
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* --- Right Column: Cinema Visual Showcase --- */
+.dt-hero-visual {
+    flex: 1;
+    background-image: url('/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png');
+    background-position: 84% center; /* Shift to center entrance, crop baked-in left text */
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 100px 0 120px rgba(5,5,5,0.95);
+    animation: zoomOutEffect 1.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Seamless mask blending the two columns */
+.dt-visual-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, 
+        var(--color-bg-deep) 0%, 
+        rgba(5, 5, 5, 0.98) 5%, 
+        rgba(5, 5, 5, 0.8) 18%, 
+        rgba(5, 5, 5, 0.25) 45%, 
+        rgba(5, 5, 5, 0) 100%
+    );
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* --- Interactive Pulsating Hotspots --- */
+.dt-hotspots-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.dt-hotspot {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-smooth);
+}
+
+.dt-hotspot-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-gold-primary);
+    box-shadow: 0 0 15px var(--color-gold-primary);
+    opacity: 0.6;
+    animation: ripple 2s infinite ease-out;
+}
+
+.dt-hotspot-icon {
+    position: relative;
+    z-index: 2;
+    color: var(--color-bg-deep);
+    font-weight: 700;
+    font-size: 11px;
+    background-color: var(--color-gold-bright);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-fast);
+    box-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+
+.dt-hotspot:hover .dt-hotspot-icon {
+    background-color: var(--text-white);
+    transform: scale(1.2);
+    box-shadow: 0 0 15px var(--color-gold-primary);
+}
+
+.dt-hotspot:hover .dt-hotspot-pulse {
+    animation-duration: 0.8s;
+}
+
+/* Highlight Card for Hotspots */
+.dt-feature-info-card {
+    position: absolute;
+    bottom: 3.5rem;
+    left: 4rem;
+    background: rgba(10, 10, 10, 0.82);
+    border: 1px solid rgba(197, 168, 128, 0.2);
+    backdrop-filter: blur(25px);
+    border-radius: 6px;
+    padding: 1.5rem 2rem;
+    max-width: 380px;
+    width: calc(100% - 8rem);
+    z-index: 50;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    transform: translateY(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+}
+
+.dt-feature-info-card.dt-active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.dt-card-title {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--color-gold-bright);
+    margin-bottom: 0.5rem;
+}
+
+.dt-card-desc {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.dt-card-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition-fast);
+}
+
+.dt-card-close:hover {
+    color: var(--color-gold-bright);
+}
+
+
+/* --- Notify Me Modal Design --- */
+.dt-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(3, 3, 3, 0.85);
+    backdrop-filter: blur(15px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+}
+
+.dt-modal-overlay.dt-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dt-modal-card {
+    background: radial-gradient(circle at top left, #121212 0%, #080808 100%);
+    border: 1px solid rgba(197, 168, 128, 0.25);
+    border-radius: 4px;
+    padding: 3.5rem;
+    max-width: 550px;
+    width: calc(100% - 3rem);
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(197, 168, 128, 0.05);
+    transform: scale(0.9) translateY(20px);
+    transition: var(--transition-smooth);
+}
+
+.dt-modal-overlay.dt-open .dt-modal-card {
+    transform: scale(1) translateY(0);
+}
+
+.dt-modal-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.dt-modal-close:hover {
+    color: var(--color-gold-bright);
+}
+
+.dt-modal-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+.dt-modal-header .dt-logo-main {
+    font-size: 1.5rem;
+    letter-spacing: 0.3em;
+}
+.dt-modal-header .dt-logo-tagline {
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    margin-top: 0.3rem;
+}
+
+.dt-modal-body h3 {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: var(--color-gold-bright);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.dt-modal-body p {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+/* Premium Form Styling */
+.dt-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.dt-form-group {
+    position: relative;
+}
+
+.dt-form-group input[type="text"],
+.dt-form-group input[type="email"] {
+    width: 100%;
+    padding: 0.8rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(197, 168, 128, 0.25);
+    color: var(--text-cream);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.dt-form-group input[type="text"]::placeholder,
+.dt-form-group input[type="email"]::placeholder {
+    color: transparent; /* Used for label animation */
+}
+
+/* Input label floating animation */
+.dt-form-group label {
+    position: absolute;
+    top: 0.8rem;
+    left: 0;
+    color: var(--text-dim);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    pointer-events: none;
+    transition: var(--transition-fast);
+}
+
+.dt-form-group input:focus ~ label,
+.dt-form-group input:not(:placeholder-shown) ~ label {
+    top: -1.2rem;
+    font-size: 0.65rem;
+    color: var(--color-gold-primary);
+    font-weight: 600;
+}
+
+.dt-form-group input:focus {
+    border-bottom-color: var(--color-gold-primary);
+    box-shadow: 0 1px 0 var(--color-gold-primary);
+}
+
+/* Custom Styled Checkbox */
+.dt-checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+.dt-checkbox-group input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--color-gold-dark);
+    border-radius: 2px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+}
+.dt-checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--color-gold-primary);
+    border-color: var(--color-gold-primary);
+}
+.dt-checkbox-group input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    border: solid var(--color-bg-deep);
+    border-width: 0 2px 2px 0;
+    top: 1px;
+    left: 5px;
+    transform: rotate(45deg);
+}
+.dt-checkbox-group label {
+    position: static;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    pointer-events: auto;
+    letter-spacing: normal;
+}
+
+/* Form Submission Button */
+.dt-btn-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-gold-primary);
+    color: var(--color-bg-deep);
+    border: none;
+    padding: 1.1rem;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 10px 20px rgba(197, 168, 128, 0.15);
+    transition: var(--transition-smooth);
+}
+
+.dt-btn-submit:hover {
+    background-color: var(--color-gold-bright);
+    box-shadow: 0 15px 30px rgba(197, 168, 128, 0.3);
+    transform: translateY(-2px);
+}
+
+.dt-btn-submit svg {
+    transition: var(--transition-fast);
+}
+.dt-btn-submit:hover svg {
+    transform: translateX(4px);
+}
+
+/* --- Mobile Drawer Menu --- */
+.dt-mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 320px;
+    height: 100%;
+    background-color: var(--color-bg-dark);
+    border-left: 1px solid rgba(197, 168, 128, 0.15);
+    z-index: 1500;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-smooth);
+    box-shadow: -15px 0 35px rgba(0, 0, 0, 0.8);
+}
+
+.dt-mobile-drawer.dt-open {
+    right: 0;
+}
+
+.dt-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3.5rem;
+}
+
+.dt-drawer-close {
+    background: transparent;
+    border: none;
+    color: var(--text-cream);
+    font-size: 2.2rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.dt-drawer-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.dt-drawer-link {
+    text-decoration: none;
+    color: var(--text-cream);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    display: block;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dt-drawer-link.dt-active {
+    color: var(--color-gold-primary);
+    border-bottom-color: rgba(197, 168, 128, 0.3);
+}
+
+.dt-drawer-sublist {
+    list-style: none;
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dt-drawer-sublist a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+}
+
+.dt-drawer-sublist a.dt-active-brand {
+    color: var(--color-gold-primary);
+    font-weight: bold;
+}
+
+.dt-drawer-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 2rem;
+}
+
+.dt-drawer-socials {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+
+/* --- Success Toast Notification --- */
+.dt-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid var(--color-gold-primary);
+    border-radius: 4px;
+    padding: 1.2rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    z-index: 3000;
+    transform: translateY(100px) scale(0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+}
+
+.dt-toast.dt-show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.dt-toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(197, 168, 128, 0.1);
+    color: var(--color-gold-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dt-toast-title {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-gold-bright);
+}
+
+.dt-toast-desc {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+
+
+/* --- Keyframes & Animations --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleRight {
+    from {
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    to {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+}
+
+@keyframes zoomOutEffect {
+    from {
+        transform: scale(1.08);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(197, 168, 128, 0.7);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(1.8);
+        box-shadow: 0 0 0 10px rgba(197, 168, 128, 0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+}
+
+
+/* --- Responsive Breakpoints (Mobile First/Adaptation) --- */
+
+/* Huge Desktops */
+@media screen and (min-width: 1800px) {
+    .dt-header-container {
+        padding: 0 8rem;
+    }
+    .dt-hero-content {
+        padding-left: 10rem;
+    }
+}
+
+/* Medium Laptops & Desktops */
+@media screen and (max-width: 1400px) {
+    .dt-hero-content {
+        flex: 0 0 46%;
+        padding-left: 4rem;
+        padding-right: 3rem;
+    }
+}
+
+/* Tablets (landscape) and small laptops */
+@media screen and (max-width: 1100px) {
+    .dt-header-container {
+        padding: 0 2.5rem;
+    }
+    .dt-nav-list {
+        gap: 2rem;
+    }
+    .dt-hero-content {
+        flex: 0 0 50%;
+        padding-left: 3rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Tablets (portrait) & Smaller Screen Layout Shift */
+@media screen and (max-width: 900px) {
+    .dt-nav-menu {
+        display: none; /* Hide standard nav list on tablet/mobile */
+    }
+    .dt-menu-toggle {
+        display: flex; /* Show Hamburger Drawer Toggle */
+    }
+    
+    .dt-main-layout {
+        flex-direction: column; /* Stack visual and text vertically */
+        height: auto;
+        min-height: auto;
+    }
+    
+    /* Top portion: Cinema Visual Banner */
+    .dt-hero-visual {
+        width: 100%;
+        height: 48vh; /* Fixed height landscape banner on mobile */
+        min-height: 380px;
+        box-shadow: inset 0 -40px 40px rgba(5,5,5,0.95);
+        order: 1; /* Visual is at the top on mobile/tablet */
+    }
+    
+    .dt-visual-overlay {
+        background: linear-gradient(to top, 
+            var(--color-bg-deep) 0%, 
+            rgba(5, 5, 5, 0.95) 10%, 
+            rgba(5, 5, 5, 0) 50%
+        );
+    }
+    
+    /* Hotspot positions slightly adjusted for the mobile aspect ratio if needed, or disabled for touch */
+    .dt-hotspot {
+        width: 32px; /* Bigger touch target on tablets */
+        height: 32px;
+    }
+    
+    .dt-feature-info-card {
+        bottom: 1.5rem;
+        left: 2rem;
+        right: 2rem;
+        width: auto;
+        max-width: none;
+    }
+    
+    /* Bottom portion: Text details */
+    .dt-hero-content {
+        width: 100%;
+        flex: none;
+        padding: 3.5rem 2.5rem 5rem 2.5rem;
+        display: block;
+        order: 2; /* Text description is stacked below visual */
+    }
+    
+    .dt-hero-content-inner {
+        max-width: 100%;
+    }
+    
+    .dt-hero-title {
+        margin-bottom: 1.5rem;
+    }
+    
+    .dt-gold-divider {
+        margin-bottom: 1.8rem;
+    }
+}
+
+/* Mobile Screens (Phones) */
+@media screen and (max-width: 600px) {
+    .dt-header-container {
+        padding: 0 1.5rem;
+    }
+    .dt-logo-main {
+        font-size: 1.4rem;
+        letter-spacing: 0.3em;
+    }
+    
+    .dt-hero-visual {
+        height: 40vh; /* Shorter header visual on phones */
+        min-height: 300px;
+    }
+    
+    .dt-hero-content {
+        padding: 3rem 1.5rem 4rem 1.5rem;
+    }
+    
+    .dt-brand-eyebrow {
+        font-size: 0.65rem;
+        letter-spacing: 0.25em;
+        margin-bottom: 1rem;
+    }
+    
+    .dt-hero-title {
+        font-size: 2.8rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .dt-hero-subtitle {
+        font-size: 1.3rem;
+        letter-spacing: 0.25em;
+    }
+    
+    .dt-hero-description {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+    }
+    
+    .dt-btn-notify {
+        width: 100%;
+        justify-content: center;
+        padding: 1.1rem 2rem;
+    }
+    
+    .dt-feature-highlights {
+        gap: 0.8rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 3.5rem;
+    }
+    
+    .dt-social-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    .dt-social-divider {
+        display: none; /* Hide horizontal divider when stacked vertically */
+    }
+    
+    .dt-modal-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .dt-modal-close {
+        top: 1.2rem;
+        right: 1.2rem;
+    }
+    
+    .dt-modal-body h3 {
+        font-size: 1rem;
+    }
+    
+    .dt-modal-body p {
+        font-size: 0.8rem;
+        margin-bottom: 2rem;
+    }
+    
+    .dt-modal-form {
+        gap: 1.5rem;
+    }
+    
+    .dt-toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        padding: 1rem;
+    }
+}

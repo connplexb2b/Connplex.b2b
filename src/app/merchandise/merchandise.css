@@ -1,0 +1,396 @@
+/* =============================================
+   PREMIUM MERCHANDISE – CONNPLEX | Page Styles
+   ============================================= */
+
+.merchandise-page {
+    --bg-main: #000000;
+    --bg-card: #000000;
+    --text-main: #ffffff;
+    --text-muted: #8a8a8a;
+    --gold-primary: #c9a365;
+    --gold-light: #ebd09c;
+    --gold-dark: #8c6a2e;
+    --border-color: #1a1a1a;
+    --border-gold: rgba(201, 163, 101, 0.2);
+
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+.merchandise-page .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.merchandise-page .hero {
+    position: relative;
+    padding: 120px 0 80px;
+    background-color: #0b0a08;
+    background-image: 
+        linear-gradient(to right, #0b0a08 35%, rgba(11, 10, 8, 0.8) 45%, transparent 60%),
+        url('/merchandise/top_image.png');
+    background-size: 100% 100%, auto 100%;
+    background-position: left top, right center;
+    background-repeat: no-repeat, no-repeat;
+    display: flex;
+    align-items: center;
+    min-height: 700px;
+}
+
+.merchandise-page .hero-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.merchandise-page .hero-content {
+    flex: 1;
+    max-width: 500px;
+}
+
+.merchandise-page .badge {
+    color: var(--gold-primary);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.merchandise-page .hero-title {
+    font-size: 56px;
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-main);
+}
+
+.merchandise-page .gold-text {
+    color: var(--gold-primary);
+}
+
+.merchandise-page .hero-desc {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 40px;
+}
+
+.merchandise-page .btn-explore {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    border: 1px solid var(--gold-primary);
+    color: var(--gold-primary);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 60px;
+    text-decoration: none;
+}
+
+.merchandise-page .btn-explore:hover {
+    background-color: var(--gold-primary);
+    color: var(--bg-main);
+}
+
+.merchandise-page .hero-features {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.merchandise-page .feature {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.merchandise-page .feature .icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
+
+.merchandise-page .feature h4 {
+    font-size: 12px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.merchandise-page .feature p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.merchandise-page .feature-divider {
+    height: 40px;
+    width: 1px;
+    background-color: var(--border-gold);
+    opacity: 0.5;
+}
+
+/* Collection Section */
+.merchandise-page .collection {
+    padding: 80px 0;
+}
+
+.merchandise-page .section-header {
+    margin-bottom: 50px;
+}
+
+.merchandise-page .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 16px;
+    color: var(--gold-primary);
+    letter-spacing: 3px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.merchandise-page .section-title::before,
+.merchandise-page .section-title::after {
+    content: '';
+    width: 150px;
+    height: 1px;
+    background-color: var(--border-gold);
+}
+
+.merchandise-page .text-center {
+    text-align: center;
+}
+
+.merchandise-page .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.merchandise-page .collection-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-gold);
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.merchandise-page .collection-card:hover {
+    border-color: var(--gold-primary);
+    background: #080808;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(201, 163, 101, 0.08);
+}
+
+.merchandise-page .card-image {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.merchandise-page .card-image::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 25px 20px #000000;
+    pointer-events: none;
+}
+
+.merchandise-page .card-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.merchandise-page .card-content h3 {
+    font-size: 11px;
+    color: var(--gold-primary);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.merchandise-page .card-content p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Bonus Inclusions & Features Section */
+.merchandise-page .bonus-features-section {
+    padding: 40px 0 80px;
+}
+
+.merchandise-page .border-gold-subtle {
+    border: 1px solid rgba(201, 163, 101, 0.2);
+    border-radius: 8px;
+    background-color: #0b0a08;
+}
+
+.merchandise-page .bonus-box {
+    display: flex;
+    align-items: stretch;
+}
+
+.merchandise-page .bonus-left {
+    flex: 0 0 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    position: relative;
+    border-right: 1px solid rgba(201, 163, 101, 0.1);
+}
+
+.merchandise-page .bonus-left::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 40px 40px #0b0a08;
+    pointer-events: none;
+}
+
+.merchandise-page .golden-ticket-img {
+    max-width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.merchandise-page .bonus-right {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.merchandise-page .bonus-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.merchandise-page .bonus-header h3 {
+    font-size: 13px;
+    color: var(--gold-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.merchandise-page .bonus-header .line {
+    width: 30px;
+    height: 1px;
+    background-color: var(--gold-primary);
+}
+
+.merchandise-page .bonus-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.merchandise-page .bonus-item {
+    display: flex;
+    gap: 15px;
+}
+
+.merchandise-page .bonus-icon {
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.merchandise-page .bonus-text h4 {
+    font-size: 12px;
+    color: var(--text-main);
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.merchandise-page .bonus-text p {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.merchandise-page .features-box {
+    padding: 30px 40px;
+}
+
+.merchandise-page .mt-4 {
+    margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .merchandise-page .collection-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .merchandise-page .hero {
+        background-image: 
+            linear-gradient(to bottom, rgba(11, 10, 8, 0.9) 0%, #0b0a08 100%),
+            url('/merchandise/top_image.png');
+        background-size: cover;
+        background-position: center;
+        padding-top: 80px;
+    }
+    
+    .merchandise-page .hero-container {
+        flex-direction: column;
+    }
+    
+    .merchandise-page .collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .merchandise-page .bonus-box {
+        flex-direction: column;
+    }
+    
+    .merchandise-page .bonus-left {
+        border-right: none;
+        border-bottom: 1px solid rgba(201, 163, 101, 0.1);
+        flex: auto;
+    }
+    
+    .merchandise-page .bonus-grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .merchandise-page .hero-title {
+        font-size: 36px;
+    }
+
+    .merchandise-page .collection-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .merchandise-page .hero-features {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

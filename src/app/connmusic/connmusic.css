@@ -1,0 +1,599 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&family=Bebas+Neue&display=swap');
+
+:root {
+    --connmusic-bg-color: #050505;
+    --connmusic-text-primary: #ffffff;
+    --connmusic-text-secondary: #a0a0a0;
+    --connmusic-gold: #d4af37;
+    --connmusic-gold-dim: #cba258;
+    --connmusic-green-accent: #10B981;
+    --connmusic-font-main: 'Inter', sans-serif;
+}
+
+.connmusic-page {
+    background-color: var(--connmusic-bg-color);
+    color: var(--connmusic-text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: var(--connmusic-font-main);
+}
+
+.connmusic-app-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.connmusic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.connmusic-logo {
+    height: 95px;
+    width: auto;
+    object-fit: contain;
+}
+
+.connmusic-nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.connmusic-nav-item {
+    color: var(--connmusic-text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.connmusic-nav-item:hover, .connmusic-nav-item.active {
+    color: var(--connmusic-text-primary);
+}
+
+.connmusic-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background-color: var(--connmusic-gold);
+    border-radius: 50%;
+}
+
+.connmusic-btn-outline {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 24px;
+    border-radius: 30px;
+    color: var(--connmusic-text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.connmusic-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Content Grid Layout */
+.connmusic-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 80px;
+    min-height: 500px;
+    position: relative;
+    z-index: 2;
+}
+
+.connmusic-visual-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.connmusic-info-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.connmusic-sub-brand {
+    font-size: 18px;
+    letter-spacing: 6px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.connmusic-main-title {
+    font-size: 100px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 0.9;
+    margin-bottom: 0;
+}
+
+.connmusic-green-title {
+    color: var(--connmusic-green-accent) !important;
+}
+
+.connmusic-green-divider {
+    width: 60px;
+    height: 3px;
+    background-color: var(--connmusic-green-accent);
+    margin: 30px 0;
+}
+
+.connmusic-tagline {
+    font-size: 20px;
+    color: var(--connmusic-text-secondary);
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.connmusic-countdown-container {
+    display: flex;
+    gap: 0;
+    margin-top: 30px;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 20px 0;
+    width: fit-content;
+    background: linear-gradient(180deg, rgba(30,30,30,0.3) 0%, rgba(10,10,10,0.5) 100%);
+}
+
+.connmusic-countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 30px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.connmusic-countdown-item:last-child {
+    border-right: none;
+}
+
+.connmusic-countdown-value {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+    margin-bottom: 5px;
+    color: var(--connmusic-text-primary);
+}
+
+.connmusic-countdown-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Interactive 3D Music System */
+.connmusic-hero-image-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    height: 400px;
+    perspective: 1200px;
+}
+
+.connmusic-golden-ring {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 80px rgba(212, 175, 55, 0.1), inset 0 0 80px rgba(212, 175, 55, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.connmusic-music-system-3d {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.1s ease-out;
+}
+
+.connmusic-album-sleeve {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, #151515 0%, #050505 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: -10px 10px 30px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05);
+    border-radius: 4px;
+    z-index: 5;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.connmusic-sleeve-glare {
+    position: absolute;
+    top: 0; left: -150%; width: 50%; height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.connmusic-hero-image-wrapper:hover .connmusic-sleeve-glare {
+    left: 150%;
+    transition: left 1.5s ease;
+}
+
+.connmusic-waveform {
+    width: 70%;
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(212,175,55,0.5));
+    transition: transform 0.4s ease;
+}
+
+.connmusic-sleeve-title {
+    margin-top: 30px;
+    color: var(--connmusic-gold);
+    letter-spacing: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.connmusic-vinyl-record {
+    position: absolute;
+    top: 5px; left: 5px; right: 5px; bottom: 5px;
+    background: #0a0a0a;
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid #1a1a1a;
+}
+
+.connmusic-vinyl-record::before {
+    content: '';
+    position: absolute;
+    top: 2%; left: 2%; right: 2%; bottom: 2%;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        #111 0px,
+        #111 2px,
+        #1a1a1a 3px,
+        #0a0a0a 4px
+    );
+    opacity: 0.8;
+}
+
+.connmusic-vinyl-record::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 0deg,
+        rgba(255,255,255,0.05) 0deg,
+        rgba(255,255,255,0) 45deg,
+        rgba(255,255,255,0.05) 90deg,
+        rgba(255,255,255,0) 135deg,
+        rgba(255,255,255,0.05) 180deg,
+        rgba(255,255,255,0) 225deg,
+        rgba(255,255,255,0.05) 270deg,
+        rgba(255,255,255,0) 315deg,
+        rgba(255,255,255,0.05) 360deg
+    );
+    pointer-events: none;
+}
+
+.connmusic-vinyl-spin-container {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.8s ease;
+    animation: connmusic-spin-vinyl 4s linear infinite;
+    animation-play-state: paused;
+}
+
+.connmusic-vinyl-center {
+    position: relative;
+    width: 33%; height: 33%;
+    background: linear-gradient(135deg, var(--connmusic-gold) 0%, var(--connmusic-gold-dim) 100%);
+    border-radius: 50%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #111;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.connmusic-vinyl-center::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: inset 0 0 2px rgba(255,255,255,0.3);
+}
+
+.connmusic-center-text {
+    font-size: 8px;
+    font-weight: 700;
+    color: #000;
+    letter-spacing: 1px;
+    transform: translateY(-15px);
+}
+
+/* Hover Effects */
+.connmusic-hero-image-wrapper:hover .connmusic-album-sleeve {
+    transform: translateX(-40px) rotateY(-10deg);
+    box-shadow: -20px 20px 40px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+.connmusic-hero-image-wrapper:hover .connmusic-waveform {
+    transform: scale(1.05);
+}
+
+.connmusic-hero-image-wrapper:hover .connmusic-vinyl-record {
+    transform: translateX(120px) rotateY(10deg);
+}
+
+.connmusic-hero-image-wrapper:hover .connmusic-vinyl-spin-container {
+    animation-play-state: running;
+}
+
+@keyframes connmusic-spin-vinyl {
+    100% { transform: rotate(360deg); }
+}
+
+/* Music Notes Animation */
+.connmusic-music-notes {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.connmusic-note {
+    position: absolute;
+    color: var(--connmusic-gold);
+    font-size: 24px;
+    opacity: 0;
+    transform: translate(0, 0);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.connmusic-hero-image-wrapper:hover .connmusic-note {
+    animation: connmusic-float-note 2s ease-out infinite;
+}
+
+.connmusic-note-1 { top: 20%; left: 60%; animation-delay: 0s !important; }
+.connmusic-note-2 { top: 40%; left: 70%; animation-delay: 0.6s !important; font-size: 18px; }
+.connmusic-note-3 { top: 60%; left: 80%; animation-delay: 1.2s !important; font-size: 28px; }
+
+@keyframes connmusic-float-note {
+    0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.8); }
+    20% { opacity: 1; transform: translate(20px, -20px) rotate(15deg) scale(1.1); }
+    80% { opacity: 0.8; transform: translate(60px, -60px) rotate(-10deg) scale(1); }
+    100% { opacity: 0; transform: translate(80px, -80px) rotate(5deg) scale(0.9); }
+}
+
+/* Features Grid */
+.connmusic-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-bottom: 60px;
+    background: linear-gradient(180deg, rgba(30,30,30,0.3) 0%, rgba(10,10,10,0.5) 100%);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.connmusic-feature-card {
+    padding: 40px 20px;
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.connmusic-feature-card:last-child {
+    border-right: none;
+}
+
+.connmusic-feature-icon {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.connmusic-feature-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--connmusic-text-primary);
+}
+
+.connmusic-feature-desc {
+    font-size: 14px;
+    color: var(--connmusic-text-secondary);
+    line-height: 1.5;
+}
+
+/* Notify Section */
+.connmusic-notify-section {
+    text-align: center;
+    padding: 60px 40px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 16px;
+    margin-bottom: 60px;
+    background: radial-gradient(circle at top, rgba(212, 175, 55, 0.05) 0%, rgba(0,0,0,0) 70%);
+    position: relative;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.02);
+}
+
+.connmusic-bell-icon-wrapper {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.connmusic-notify-subtitle {
+    color: var(--connmusic-gold);
+    font-size: 12px;
+    letter-spacing: 4px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.connmusic-notify-main-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.connmusic-notify-desc {
+    font-size: 16px;
+    color: var(--connmusic-text-secondary);
+    margin-bottom: 40px;
+}
+
+.connmusic-notify-form {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto 20px;
+}
+
+.connmusic-notify-input {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 15px 24px;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.connmusic-notify-input:focus {
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.connmusic-notify-btn {
+    background-color: var(--connmusic-gold-dim);
+    color: #000;
+    border: none;
+    padding: 0 30px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+
+.connmusic-notify-btn:hover {
+    background-color: #e6c56b;
+}
+
+.connmusic-spam-notice {
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .connmusic-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .connmusic-feature-card:nth-child(2) {
+        border-right: none;
+    }
+    .connmusic-feature-card:nth-child(1), .connmusic-feature-card:nth-child(2) {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+}
+
+@media (max-width: 768px) {
+    .connmusic-main-title {
+        font-size: 60px;
+    }
+    .connmusic-tagline {
+        font-size: 18px;
+    }
+    .connmusic-golden-ring {
+        width: 400px;
+        height: 400px;
+    }
+    .connmusic-music-system-3d {
+        width: 220px;
+        height: 220px;
+    }
+    .connmusic-hero-image-wrapper:hover .connmusic-album-sleeve {
+        transform: translateX(-20px) rotateY(-5deg);
+    }
+    .connmusic-hero-image-wrapper:hover .connmusic-vinyl-record {
+        transform: translateX(60px);
+    }
+    .connmusic-features-grid {
+        grid-template-columns: 1fr;
+    }
+    .connmusic-feature-card {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .connmusic-feature-card:last-child {
+        border-bottom: none;
+    }
+    .connmusic-notify-form {
+        flex-direction: column;
+    }
+    .connmusic-notify-btn {
+        padding: 15px 30px;
+        justify-content: center;
+    }
+    .connmusic-nav-links {
+        display: none;
+    }
+}

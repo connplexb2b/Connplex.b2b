@@ -1,0 +1,365 @@
+/* Connplex Gallery — exact port from static reference */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.gallery-page-container {
+    --gold: #c5a059;
+    --black: #000000;
+    --white: #ffffff;
+    --text-muted: #a4a4a4;
+    --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+.gallery-page-container ::-webkit-scrollbar { width: 8px; }
+.gallery-page-container ::-webkit-scrollbar-track { background: var(--black); }
+.gallery-page-container ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+/* Hero Section */
+.gallery-hero {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+    overflow: hidden;
+}
+
+.gallery-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.gallery-hero-bg img,
+.gallery-hero-bg > span > img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    filter: brightness(0.4);
+}
+
+.gallery-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.gallery-hero-content h1 {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-hero-content h1 span {
+    display: block;
+}
+
+.gallery-hero-content h1 .gallery-gold-text {
+    color: var(--gold);
+}
+
+.gallery-hero-content p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    max-width: 450px;
+}
+
+.gallery-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 2rem;
+    border: 1px solid var(--gold);
+    color: var(--white);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.gallery-btn-primary:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.gallery-btn-primary span {
+    font-size: 0.9rem;
+}
+
+/* Gallery Section */
+.gallery-section-content {
+    padding: 100px 5%;
+    background-color: var(--black);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 300px;
+    gap: 20px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Next/Image fill container fix */
+.gallery-item > span,
+.gallery-item > div {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.6);
+}
+
+.gallery-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2;
+}
+
+.gallery-overlay h3 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 5px;
+}
+
+.gallery-overlay .gallery-line {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+}
+
+/* Grid Layout — exact match to source */
+.gallery-item-luxuriance  { grid-column: span 8; grid-row: span 2; }
+.gallery-item-downtown    { grid-column: span 4; grid-row: span 2; }
+.gallery-item-sky-inn     { grid-column: span 4; grid-row: span 1; }
+.gallery-item-signature   { grid-column: span 4; grid-row: span 1; }
+.gallery-item-spectra-x   { grid-column: span 4; grid-row: span 1; }
+.gallery-item-behind-magic  { grid-column: span 6; }
+.gallery-item-grand-opening { grid-column: span 6; }
+
+/* Small Thumbnails */
+.gallery-small-thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.gallery-thumb-item {
+    height: 150px;
+    overflow: hidden;
+}
+
+.gallery-thumb-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Stats Section */
+.gallery-stats-section {
+    padding: 80px 5%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid rgba(197, 160, 89, 0.2);
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.gallery-stat-box {
+    text-align: center;
+    padding: 0 40px;
+    position: relative;
+}
+
+.gallery-stat-box:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60px;
+    background: var(--gold);
+}
+
+.gallery-stat-icon {
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.gallery-stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+}
+
+.gallery-stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+}
+
+/* Visual Experience Section */
+.gallery-visual-experience {
+    padding: 100px 5%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 50px;
+    align-items: center;
+    background-color: var(--black);
+}
+
+.gallery-experience-text h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-experience-text h2 .gallery-gold-text {
+    color: var(--gold);
+}
+
+.gallery-experience-text .gallery-line {
+    width: 60px;
+    height: 2px;
+    background: var(--gold);
+}
+
+.gallery-experience-img {
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery-experience-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Footer Promo Section */
+.gallery-footer-section {
+    padding: 100px 5%;
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.gallery-footer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.gallery-footer-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.3);
+}
+
+.gallery-footer-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.gallery-footer-content h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+
+.gallery-footer-content h2 .gallery-gold-text {
+    color: var(--gold);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .gallery-hero-content h1 { font-size: 3.5rem; }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: auto;
+    }
+
+    .gallery-item-luxuriance,
+    .gallery-item-downtown,
+    .gallery-item-sky-inn,
+    .gallery-item-signature,
+    .gallery-item-spectra-x,
+    .gallery-item-behind-magic,
+    .gallery-item-grand-opening {
+        grid-column: span 1;
+        height: 300px;
+    }
+
+    .gallery-visual-experience { grid-template-columns: 1fr; }
+
+    .gallery-stats-section {
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .gallery-stat-box { width: 45%; }
+    .gallery-stat-box:nth-child(2)::after { display: none; }
+}
+
+@media (max-width: 768px) {
+    .gallery-hero-content h1 { font-size: 2.5rem; }
+
+    .gallery-grid { grid-template-columns: 1fr; }
+
+    .gallery-small-thumbs { grid-template-columns: repeat(3, 1fr); }
+
+    .gallery-stat-box { width: 100%; }
+    .gallery-stat-box::after { display: none; }
+
+    .gallery-footer-content h2 { font-size: 2.5rem; }
+}

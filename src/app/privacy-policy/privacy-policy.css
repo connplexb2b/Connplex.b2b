@@ -1,0 +1,283 @@
+/* Privacy Policy Page — exact port from static reference */
+
+.privacy-policy-page {
+    --primary-gold: #C5A059;
+    --gold-glow: rgba(197, 160, 89, 0.4);
+    --text-white: #FFFFFF;
+    --text-gray: #A0A0A0;
+    --bg-black: #000000;
+    --bg-dark: #0A0A0A;
+    --border-gold: rgba(197, 160, 89, 0.2);
+
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* Hero Section */
+.pp-hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 10%;
+    overflow: hidden;
+}
+
+.pp-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* gradient overlay replicating the source */
+.pp-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.92) 30%, rgba(0,0,0,0.25) 65%, rgba(0,0,0,0.82) 100%);
+    z-index: 1;
+}
+
+.pp-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.pp-breadcrumb {
+    font-size: 0.8rem;
+    color: var(--text-gray);
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.pp-breadcrumb span {
+    color: var(--primary-gold);
+}
+
+.pp-hero h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 0.85;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.pp-hero h1 .pp-gold {
+    color: var(--primary-gold);
+    display: block;
+    text-shadow: 0 0 20px var(--gold-glow);
+    filter: brightness(1.2);
+}
+
+.pp-hero-text {
+    max-width: 550px;
+    color: var(--text-gray);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    border-left: 2px solid var(--primary-gold);
+    padding-left: 30px;
+    animation: ppFadeIn 1s ease-out 0.5s both;
+}
+
+@keyframes ppFadeIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Privacy Grid Section */
+.pp-sections {
+    padding: 120px 10%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 100px 120px;
+    background-color: var(--bg-black);
+    position: relative;
+}
+
+.pp-sections::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+    pointer-events: none;
+}
+
+.pp-item {
+    display: flex;
+    gap: 35px;
+    transition: transform 0.4s ease;
+}
+
+.pp-item:hover {
+    transform: translateY(-5px);
+}
+
+.pp-icon-box {
+    min-width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid var(--border-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-gold);
+    background: radial-gradient(circle, rgba(197,160,89,0.05) 0%, rgba(0,0,0,0) 100%);
+    box-shadow: inset 0 0 15px rgba(197,160,89,0.1);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.pp-item:hover .pp-icon-box {
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 20px var(--gold-glow);
+    transform: scale(1.05);
+}
+
+.pp-content h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-white);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.pp-item:hover .pp-content h3 {
+    color: var(--primary-gold);
+}
+
+.pp-content h3 span {
+    color: var(--primary-gold);
+    margin-right: 10px;
+}
+
+.pp-content p {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+/* Contact Banner */
+.pp-contact-banner {
+    margin: 80px 10% 120px;
+    padding: 80px;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(197,160,89,0.05);
+}
+
+.pp-contact-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.pp-contact-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #0A0A0A 40%, rgba(10,10,10,0.2) 70%, rgba(10,10,10,0.9) 100%);
+    z-index: 1;
+}
+
+.pp-contact-info {
+    position: relative;
+    z-index: 2;
+    max-width: 65%;
+}
+
+.pp-contact-info h2 {
+    color: var(--primary-gold);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.pp-contact-info h3 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.pp-contact-info > p {
+    color: var(--text-gray);
+    font-size: 1rem;
+    margin-bottom: 40px;
+}
+
+.pp-contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.pp-detail-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--text-white);
+    font-size: 1rem;
+}
+
+.pp-detail-icon {
+    color: var(--primary-gold);
+    flex-shrink: 0;
+}
+
+.pp-detail-item span {
+    font-weight: 500;
+}
+
+.pp-detail-item a {
+    color: var(--text-white);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.pp-detail-item a:hover {
+    color: var(--primary-gold);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .pp-hero h1 { font-size: 4rem; }
+    .pp-sections {
+        grid-template-columns: 1fr;
+        gap: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pp-hero { padding: 0 5%; }
+    .pp-hero h1 { font-size: 3rem; }
+    .pp-sections { padding: 80px 5%; }
+    .pp-contact-banner {
+        flex-direction: column;
+        padding: 30px;
+        margin: 40px 5% 80px;
+    }
+    .pp-contact-info { max-width: 100%; }
+}

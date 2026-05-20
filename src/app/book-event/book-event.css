@@ -1,0 +1,315 @@
+/* Book an Event Page Styles */
+:root {
+    --be-bg: #050505;
+    --be-card: rgba(15, 15, 15, 0.7);
+    --be-gold: #D4AF37;
+    --be-gold-dim: rgba(212, 175, 55, 0.5);
+    --be-text-white: #ffffff;
+    --be-text-gray: #a0a0a0;
+}
+
+.book-event-page {
+    background-color: var(--be-bg);
+    color: var(--be-text-white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Hero */
+.be-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 100px 5%;
+}
+
+.be-hero-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+}
+
+.be-hero-bg img {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.6;
+}
+
+.be-hero-gradient {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, rgba(5,5,5,1) 0%, rgba(5,5,5,0.7) 40%, rgba(5,5,5,0.2) 100%);
+}
+
+.be-hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+}
+
+.be-pre-title {
+    color: var(--be-gold);
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.be-hero h1 {
+    font-size: clamp(48px, 10vw, 88px);
+    line-height: 1;
+    margin-bottom: 30px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.be-text-gold { color: var(--be-gold); }
+
+/* Spaces Grid */
+.be-spaces-section {
+    padding: 100px 5%;
+}
+
+.be-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.be-spaces-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.be-space-card {
+    background: rgba(15,15,15,0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.be-space-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--be-gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.be-section-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.be-space-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+}
+
+.be-space-content {
+    padding: 25px;
+}
+
+/* Experiences */
+.be-exp-section {
+    padding: 100px 5%;
+    background: #050505;
+}
+
+.be-exp-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+}
+
+.be-exp-card {
+    padding: 30px 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.be-exp-card:hover {
+    background: rgba(255,255,255,0.02);
+    border-color: rgba(212, 175, 55, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.be-exp-icon {
+    font-size: 2rem;
+    color: var(--be-gold);
+    margin-bottom: 20px;
+}
+
+/* Booking Form */
+.be-booking-section {
+    padding: 100px 5%;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+}
+
+.be-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgba(10,10,10,0.6);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 60px 80px;
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.be-form-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.be-form-section-title {
+    color: var(--be-gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+}
+
+.be-form-group {
+    margin-bottom: 25px;
+}
+
+.be-form-row {
+    display: flex;
+    gap: 25px;
+}
+
+.be-form-row .be-form-group {
+    flex: 1;
+}
+
+.be-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--be-text-gray);
+    margin-bottom: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.be-input-wrap {
+    position: relative;
+}
+
+.be-input {
+    width: 100%;
+    background: rgba(20,20,20,0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 15px 20px;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.be-input:focus {
+    outline: none;
+    border-color: var(--be-gold);
+    background: rgba(30,30,30,0.9);
+}
+
+.be-input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--be-gold);
+    pointer-events: none;
+}
+
+select.be-input {
+    appearance: none;
+    cursor: pointer;
+}
+
+.be-btn-submit {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    color: var(--be-gold);
+    border: 1px solid var(--be-gold);
+    border-radius: 6px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 30px;
+    text-transform: uppercase;
+}
+
+.be-btn-submit:hover {
+    background: var(--be-gold);
+    color: #000;
+    box-shadow: 0 0 20px var(--be-gold-dim);
+}
+
+.be-form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.be-footer-text p {
+    font-size: 0.8rem;
+    color: var(--be-text-gray);
+    margin-bottom: 5px;
+}
+
+.be-footer-contact {
+    text-align: right;
+}
+
+.be-footer-contact a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    transition: color 0.3s;
+}
+
+.be-footer-contact a:hover {
+    color: var(--be-gold);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .be-spaces-grid, .be-exp-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .be-spaces-grid, .be-exp-grid {
+        grid-template-columns: 1fr;
+    }
+    .be-form-container {
+        padding: 40px 25px;
+    }
+    .be-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
