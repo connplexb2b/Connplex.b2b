@@ -10,8 +10,12 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "https://connplex-b2b.vercel.app",
+  origin: [
+    "https://connplex-b2b.vercel.app",
+    "https://connplex-b2b-89ab.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
 
