@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
-import './franchise.css';
 
 const AnimatedNumber = ({ value, duration = 2000 }: { value: string; duration?: number }) => {
     const [count, setCount] = useState(0);
@@ -112,20 +111,20 @@ const TestimonialSlider = () => {
     const displayCards = [...cards, ...cards];
 
     return (
-        <div className="fra-testimonials-infinite-container">
-            <div className="fra-testimonials-scroll-track">
+        <div className="w-full overflow-hidden py-8 relative [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+            <div className="flex w-max animate-fra-scroll hover:[animation-play-state:paused]">
                 {displayCards.map((c, i) => (
-                    <div className="fra-testimonial-card-infinite" key={i}>
-                        <div className="fra-testimonial-card-inner">
-                            <div style={{ fontSize: '3rem', color: '#c19b62', lineHeight: 1 }}>“</div>
-                            <p style={{ fontStyle: 'italic', margin: '15px 0', opacity: 0.8, fontSize: '0.9rem', lineHeight: '1.5' }}>{c.text}</p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
-                                    <img src={c.img} alt={c.name} width="40" height="40" />
+                    <div className="w-[320px] sm:w-[400px] px-3 sm:px-5 box-border shrink-0" key={i}>
+                        <div className="bg-[#191919]/60 border border-[#c19b62]/20 p-8 rounded-2xl h-full flex flex-col justify-between">
+                            <div className="text-5xl text-[#c19b62] font-serif leading-none h-6 font-semibold">“</div>
+                            <p className="italic text-xs sm:text-sm leading-relaxed text-white/80 my-5">{c.text}</p>
+                            <div className="flex items-center gap-3.5 mt-auto pt-4 border-t border-white/5">
+                                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
+                                    <img src={c.img} alt={c.name} width="40" height="40" className="object-cover" />
                                 </div>
                                 <div>
-                                    <h4 style={{ color: '#c19b62', fontSize: '0.85rem', fontWeight: 600 }}>{c.name}</h4>
-                                    <span style={{ fontSize: '0.65rem', opacity: 0.5, display: 'block' }}>{c.location}</span>
+                                    <h4 className="text-[#c19b62] text-xs sm:text-sm font-semibold">{c.name}</h4>
+                                    <span className="text-[10px] sm:text-xs text-white/50 block">{c.location}</span>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +134,6 @@ const TestimonialSlider = () => {
         </div>
     );
 };
-
-// Using global Footer component now
 
 const FAQSection = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -205,23 +202,30 @@ const FAQSection = () => {
     ];
 
     return (
-        <section className="fra-faq-section">
-            <div className="fra-section-heading">
-                <span className="fra-subtitle">ANY QUESTIONS?</span>
-                <h2>FREQUENTLY ASKED <span className="fra-gold-text">QUESTIONS</span></h2>
-                <div style={{ width: '40px', height: '2px', background: '#c19b62', margin: '15px auto' }}></div>
+        <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 max-w-[1400px] mx-auto w-full">
+            <div className="text-center mb-12 sm:mb-16">
+                <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">ANY QUESTIONS?</span>
+                <h2 className="font-outfit text-2xl sm:text-3xl md:text-4xl font-light uppercase tracking-wide">
+                  FREQUENTLY ASKED <span className="text-[#c19b62] font-normal">QUESTIONS</span>
+                </h2>
+                <div className="w-10 h-[2px] bg-[#c19b62] mx-auto mt-4"></div>
             </div>
-            <div className="fra-faq-container">
+            <div className="max-w-[900px] mx-auto flex flex-col gap-4">
                 {faqs.map((faq, i) => (
-                    <div key={i} className={`fra-faq-item ${activeIndex === i ? 'active' : ''}`}>
-                        <div className="fra-faq-question" onClick={() => setActiveIndex(activeIndex === i ? null : i)}>
-                            <h3>{faq.q}</h3>
-                            <span className="fra-faq-icon">{activeIndex === i ? '−' : '+'}</span>
+                    <div key={i} className={`bg-[#191919]/60 border border-[#c19b62]/20 rounded-lg overflow-hidden transition-all duration-300 ${activeIndex === i ? 'border-[#c19b62] shadow-[0_5px_20px_rgba(0,0,0,0.3)]' : ''}`}>
+                        <div 
+                          className="py-5 px-6 sm:py-6 sm:px-8 flex justify-between items-center cursor-pointer transition-colors duration-200 hover:bg-[#c19b62]/5 min-h-[48px]" 
+                          onClick={() => setActiveIndex(activeIndex === i ? null : i)}
+                        >
+                            <h3 className="text-sm sm:text-base font-semibold m-0 text-white pr-5">{faq.q}</h3>
+                            <span className="text-xl text-[#c19b62] font-light transition-transform duration-300 select-none">
+                              {activeIndex === i ? '−' : '+'}
+                            </span>
                         </div>
-                        <div className="fra-faq-answer">
-                            <div className="fra-faq-answer-inner">
+                        <div className={`transition-all duration-500 ease-[cubic-bezier(0,1,0,1)] overflow-hidden ${activeIndex === i ? 'max-h-[1000px] ease-in-out' : 'max-h-0'}`}>
+                            <div className="px-6 pb-6 sm:px-8 sm:pb-8 border-t border-white/5">
                                 {faq.a.split('\n').map((line, j) => (
-                                    <p key={j}>{line}</p>
+                                    <p key={j} className="text-xs sm:text-sm text-text-secondary leading-relaxed mt-4 first:mt-6">{line}</p>
                                 ))}
                             </div>
                         </div>
@@ -278,33 +282,35 @@ export default function FranchisePage() {
     };
 
     return (
-        <div className="franchise-page">
+        <div className="bg-[#070707] text-white font-inter overflow-x-hidden min-h-screen">
             {/* Navbar Overlay */}
             <Header />
 
             {/* Hero */}
-            <section className="fra-hero">
-                <video className="fra-hero-video" autoPlay muted loop playsInline>
+            <section className="relative min-h-screen flex items-center px-4 sm:px-6 md:px-10 lg:px-20 py-24 md:py-32 overflow-hidden justify-center sm:justify-start">
+                <video className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-110 object-cover z-1" autoPlay muted loop playsInline>
                     <source src="/img/franchise/top_video.mp4" type="video/mp4" />
                 </video>
-                <div className="fra-hero-overlay"></div>
-                <div className="fra-hero-content">
-                    <h1>OWN YOUR<br /><span className="fra-gold-text">OWN CINEMA</span></h1>
-                    <p className="fra-hero-p">
-                        Partner with Connplex — India's fastest-growing<br />
-                        Cinema chain — and bring a <br />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent z-2"></div>
+                <div className="max-w-[650px] w-full z-10 relative text-center sm:text-left mt-10">
+                    <h1 className="font-outfit text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.1] mb-6 uppercase text-white">
+                      OWN YOUR<br /><span className="text-[#c19b62]">OWN CINEMA</span>
+                    </h1>
+                    <p className="text-base sm:text-lg md:text-xl font-light mb-10 leading-relaxed text-white/90">
+                        Partner with Connplex — India&apos;s fastest-growing<br className="hidden sm:inline" />
+                        Cinema chain — and bring a <br className="hidden sm:inline" />
                         world-class cinema experience to your city.
                     </p>
-                    <div className="fra-hero-buttons">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center sm:justify-start items-center mt-2.5">
                         <button
                             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                            className="fra-btn-solid"
+                            className="w-full sm:w-auto px-8 py-4 bg-[#c19b62] hover:bg-[#a88554] text-black font-outfit text-xs font-bold tracking-widest uppercase rounded shadow-[0_5px_15px_rgba(193,155,98,0.3)] hover:-translate-y-0.5 transition-all duration-300 min-h-[48px] flex items-center justify-center gap-2 cursor-pointer"
                         >
                             Explore Franchise Opportunities  →
                         </button>
                         <button
                             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                            className="fra-btn-outline"
+                            className="w-full sm:w-auto px-8 py-4 bg-transparent hover:bg-[#c19b62]/10 border border-[#c19b62] hover:border-[#a88554] text-white font-outfit text-xs font-bold tracking-widest uppercase rounded transition-all duration-300 min-h-[48px] flex items-center justify-center cursor-pointer"
                         >
                             Talk to Our Franchise Team
                         </button>
@@ -313,20 +319,23 @@ export default function FranchisePage() {
             </section>
 
             {/* Models */}
-            <section className="fra-models-section" id="models">
-                <div className="fra-section-heading">
-                    <span className="fra-subtitle">FLEXIBLE MODELS</span>
-                    <h2 className="fra-section-title">CHOOSE YOUR PATH TO OWNERSHIP</h2>
-                    <div style={{ width: '40px', height: '2px', background: '#c19b62', margin: '15px auto' }}></div>
+            <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 max-w-[1400px] mx-auto w-full" id="models">
+                <div className="text-center mb-12 sm:mb-16">
+                    <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">FLEXIBLE MODELS</span>
+                    <h2 className="font-outfit text-2xl sm:text-3xl md:text-4xl font-light uppercase tracking-wide">
+                      CHOOSE YOUR PATH TO OWNERSHIP
+                    </h2>
+                    <div className="w-10 h-[2px] bg-[#c19b62] mx-auto mt-4"></div>
                 </div>
-                <div className="fra-models-grid">
+                
+                <div className="flex flex-col gap-10 md:gap-12">
                     {[
                         {
                             title: "LUXURIANCE",
                             subtitle: "The full-scale luxury cinema franchise — built for maximum impact.",
                             idealFor: "Metro & Tier 1 markets",
                             description: [
-                                "The Connplex Luxuriance is our flagship luxury cinema franchise format — a full-scale multiplex experience designed for high-footfall urban markets where audiences expect nothing less than world-class. With 4 to 6 premium auditoriums, recliner seating, Dolby Atmos sound, Spectrax , premium lounge/ cafe,and a Premium lobby experience, Luxuriance sets the benchmark for premium cinema in India.",
+                                "The Connplex Luxuriance is our flagship luxury cinema franchise format — a full-scale multiplex experience designed for high-footfall urban markets where audiences expect nothing less than world-class. With 4 to 6 premium auditoriums, recliner seating, Dolby Atmos sound, Spectrax, premium lounge/cafe, and a Premium lobby experience, Luxuriance sets the benchmark for premium cinema in India.",
                                 "Built across 10,000–14,000 sq ft and more, this format is engineered for developers and investors seeking a high-revenue cinema franchise anchor in malls, mixed-use developments, and large commercial properties in metro and Tier 1 markets."
                             ],
                             features: [
@@ -385,38 +394,42 @@ export default function FranchisePage() {
                             ]
                         }
                     ].map((m, i) => (
-                        <div className="fra-model-card" key={i}>
-                            <div className="model-header">
-                                <h3 style={{ fontSize: '2rem', color: '#c19b62', marginBottom: '10px' }}>{m.title}</h3>
-                                <p style={{ fontSize: '1.2rem', fontWeight: 600, color: '#fff', marginBottom: '5px' }}>{m.subtitle}</p>
-                                <span style={{ color: '#a0a0a0', fontSize: '0.9rem', fontStyle: 'italic' }}>Ideal for: {m.idealFor}</span>
+                        <div className="bg-[#191919]/60 border border-[#c19b62]/20 hover:border-[#c19b62] rounded-2xl p-6 sm:p-10 md:p-12 transition-all duration-400 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 flex flex-col gap-8 md:gap-10" key={i}>
+                            <div>
+                                <h3 className="font-outfit text-3xl sm:text-4xl text-[#c19b62] font-light tracking-wide mb-2.5">{m.title}</h3>
+                                <p className="text-lg sm:text-xl font-semibold text-white mb-1.5">{m.subtitle}</p>
+                                <span className="text-xs sm:text-sm text-text-secondary italic block">Ideal for: {m.idealFor}</span>
                             </div>
 
-                            <div className="model-body">
-                                <div className="model-desc">
-                                    {m.description.map((p, j) => <p key={j} style={{ fontSize: '0.95rem', color: '#ddd', marginBottom: '15px', lineHeight: 1.6 }}>{p}</p>)}
-                                    <ul className="fra-features-list" style={{ marginTop: '20px' }}>
+                            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-12 lg:gap-16">
+                                <div>
+                                    {m.description.map((p, j) => (
+                                      <p key={j} className="text-sm sm:text-base text-white/80 leading-relaxed mb-4">{p}</p>
+                                    ))}
+                                    <ul className="flex flex-col gap-3 text-left mt-6">
                                         {m.features.map((f, j) => (
-                                            <li key={j} style={{ marginBottom: '10px', alignItems: 'flex-start' }}><svg viewBox="0 0 24 24" fill="none" stroke="#c19b62" width="20" height="20" style={{ marginRight: '10px', flexShrink: 0, marginTop: '2px' }}><polyline points="20 6 9 17 4 12"></polyline></svg> <span style={{ fontSize: '0.95rem' }}>{f}</span></li>
+                                            <li key={j} className="flex gap-3 items-start text-sm text-white/90">
+                                              <svg viewBox="0 0 24 24" fill="none" stroke="#c19b62" width="20" height="20" className="mr-2.5 shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 
+                                              <span>{f}</span>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
 
-                                <div className="model-specs" style={{ background: 'rgba(0,0,0,0.3)', padding: '30px', borderRadius: '8px', border: '1px solid rgba(193, 155, 98, 0.1)', height: 'fit-content' }}>
-                                    <h4 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>Technical Specifications</h4>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                <div className="bg-black/35 border border-[#c19b62]/10 p-6 sm:p-8 rounded-xl h-fit w-full flex flex-col">
+                                    <h4 className="text-white font-outfit text-base font-semibold mb-6 border-b border-white/10 pb-3 uppercase tracking-wider">Technical Specifications</h4>
+                                    <div className="grid grid-cols-2 gap-6">
                                         {m.specs.map((s, j) => (
-                                            <div key={j} className="spec-item">
-                                                <span style={{ display: 'block', fontSize: '0.75rem', color: '#a0a0a0', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '5px' }}>{s.label}</span>
-                                                <strong style={{ display: 'block', fontSize: '1.1rem', color: '#c19b62', marginBottom: '3px' }}>{s.value}</strong>
-                                                <span style={{ fontSize: '0.8rem', color: '#888' }}>{s.desc}</span>
+                                            <div key={j} className="flex flex-col gap-1">
+                                                <span className="text-[9px] sm:text-[10px] tracking-wider text-text-secondary uppercase">{s.label}</span>
+                                                <strong className="text-sm sm:text-base font-bold text-[#c19b62] font-outfit">{s.value}</strong>
+                                                <span className="text-[10px] sm:text-xs text-text-secondary">{s.desc}</span>
                                             </div>
                                         ))}
                                     </div>
                                     <button
                                         onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                                        className="fra-btn-solid"
-                                        style={{ display: 'inline-block', marginTop: '30px', width: '100%', textAlign: 'center', boxSizing: 'border-box' }}
+                                        className="w-full mt-8 py-3.5 bg-[#c19b62] hover:bg-[#a88554] text-black font-outfit text-xs font-bold tracking-widest uppercase rounded shadow-[0_4px_12px_rgba(193,155,98,0.2)] hover:-translate-y-0.5 transition-all duration-300 min-h-[44px] cursor-pointer"
                                     >
                                         EXPLORE {m.title}
                                     </button>
@@ -428,32 +441,37 @@ export default function FranchisePage() {
             </section>
 
             {/* Why Partner */}
-            <section className="fra-why-section">
-                <div className="fra-why-grid">
+            <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 bg-[#040404] max-w-[1400px] mx-auto w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 md:gap-16 lg:gap-20 items-center">
                     <div>
-                        <h2 className="fra-why-title">WHY PARTNER WITH<br /><span className="fra-gold-text">CONNPLEX?</span></h2>
-                        <p style={{ margin: '20px 0', opacity: 0.7 }}>Joining Connplex means more than just business – it&apos;s becoming a part of a legacy.</p>
-                        <ul className="fra-features-list">
-                            {["India&apos;s Most Premium Cinema Brand", "Cutting-edge Technology & Immersive Experience", "End-to-End Support & Training", "Proven Business Model with Strong ROI", "Marketing Power of a Trusted Brand"].map((item, i) => (
-                                <li key={i} style={{ alignItems: 'center', gap: '15px' }}>
-                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(193,155,98,0.2)', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'rgba(193,155,98,0.05)' }}>
+                        <h2 className="font-outfit text-3xl sm:text-4xl md:text-5xl font-light leading-[1.1] mb-6 uppercase text-white">
+                          WHY PARTNER WITH<br /><span className="text-[#c19b62] font-normal">CONNPLEX?</span>
+                        </h2>
+                        <p className="text-sm sm:text-base text-white/70 font-light mb-8 max-w-[500px]">Joining Connplex means more than just business – it&apos;s becoming a part of a legacy.</p>
+                        <ul className="flex flex-col gap-4 text-left">
+                            {["India's Most Premium Cinema Brand", "Cutting-edge Technology & Immersive Experience", "End-to-End Support & Training", "Proven Business Model with Strong ROI", "Marketing Power of a Trusted Brand"].map((item, i) => (
+                                <li key={i} className="flex gap-4 items-center text-sm sm:text-base text-white/90">
+                                    <div className="w-10 h-10 shrink-0 rounded-full border border-[#c19b62]/20 flex items-center justify-center bg-[#c19b62]/5 text-[#c19b62]">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c19b62" strokeWidth="1.5"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"></path></svg>
                                     </div>
-                                    <span dangerouslySetInnerHTML={{ __html: item }}></span>
+                                    <span>{item}</span>
                                 </li>
                             ))}
                         </ul>
                     </div>
-                    <div className="fra-stats-grid">
+                    
+                    <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
                         {[
                             { val: "42+", lbl: "Cinemas Nationwide" },
                             { val: "10M+", lbl: "Happy Moviegoers" },
                             { val: "40+", lbl: "Cities Covered" },
                             { val: "98%", lbl: "Partner Satisfaction" }
                         ].map((s, i) => (
-                            <div className="fra-stat-card" key={i}>
-                                <div className="fra-stat-value"><AnimatedNumber value={s.val} /></div>
-                                <p style={{ fontSize: '0.9rem', opacity: 0.6 }}>{s.lbl}</p>
+                            <div className="bg-[#191919]/60 border border-[#c19b62]/20 hover:border-[#c19b62] p-6 sm:p-8 rounded-2xl text-center hover:bg-[#c19b62]/5 transition-all duration-300 flex flex-col justify-center items-center" key={i}>
+                                <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#c19b62] font-outfit mb-2">
+                                  <AnimatedNumber value={s.val} />
+                                </div>
+                                <p className="text-xs sm:text-sm text-white/60 font-light">{s.lbl}</p>
                             </div>
                         ))}
                     </div>
@@ -461,10 +479,12 @@ export default function FranchisePage() {
             </section>
 
             {/* Testimonials */}
-            <section className="fra-testimonials">
-                <div className="fra-section-heading">
-                    <h2>FRANCHISE OWNER <span className="fra-gold-text">TESTIMONIALS</span></h2>
-                    <div style={{ width: '40px', height: '2px', background: '#c19b62', margin: '15px auto' }}></div>
+            <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 max-w-[1400px] mx-auto w-full">
+                <div className="text-center mb-12 sm:mb-16">
+                    <h2 className="font-outfit text-2xl sm:text-3xl md:text-4xl font-light uppercase tracking-wide">
+                      FRANCHISE OWNER <span className="text-[#c19b62] font-normal">TESTIMONIALS</span>
+                    </h2>
+                    <div className="w-10 h-[2px] bg-[#c19b62] mx-auto mt-4"></div>
                 </div>
                 <TestimonialSlider />
             </section>
@@ -473,63 +493,100 @@ export default function FranchisePage() {
             <FAQSection />
 
             {/* Contact */}
-            <section className="fra-contact-section" id="contact">
-                <div className="fra-contact-left">
-                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill style={{ objectFit: 'cover' }} />
+            <section className="grid grid-cols-1 lg:grid-cols-2 bg-[#040404] min-h-[600px] w-full max-w-[1400px] mx-auto border-t border-white/5" id="contact">
+                <div className="relative w-full min-h-[300px] sm:min-h-[400px] lg:min-h-full">
+                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill className="object-cover" />
                 </div>
-                <div className="fra-contact-right">
-                    <span className="fra-subtitle">TAKE THE FIRST STEP</span>
-                    <h2 className="fra-contact-title">LET&apos;S BUILD TOGETHER</h2>
-                    <p style={{ margin: '15px 0 35px 0', opacity: 0.7 }}>Fill in your details and our team will get in touch with you shortly.</p>
+                <div className="p-6 sm:p-10 md:p-16 lg:p-20 xl:p-24 flex flex-col justify-center">
+                    <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">TAKE THE FIRST STEP</span>
+                    <h2 className="font-outfit text-3xl sm:text-4xl font-light text-[#c19b62] mb-3 uppercase">LET&apos;S BUILD TOGETHER</h2>
+                    <p className="text-sm sm:text-base text-white/70 font-light mb-8 max-w-[500px]">Fill in your details and our team will get in touch with you shortly.</p>
+                    
                     {isSubmitted ? (
-                        <div className="fra-success-message">
-                            <div className="fra-success-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <div className="text-center p-8 bg-[#c19b62]/5 border border-[#c19b62]/20 rounded-xl">
+                            <div className="w-14 h-14 bg-[#c19b62] text-black rounded-full flex items-center justify-center mx-auto mb-5">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
                                     <polyline points="20 6 9 17 4 12"></polyline>
                                 </svg>
                             </div>
-                            <h3>SUCCESSFULLY SUBMITTED!</h3>
-                            <p>Thank you for your interest in Connplex Cinemas. Our franchise team will review your details and contact you shortly.</p>
-                            <button onClick={() => setIsSubmitted(false)} className="fra-btn-outline" style={{ marginTop: '20px', background: 'transparent', border: '1px solid #c19b62', color: '#c19b62', padding: '10px 25px', borderRadius: '4px', cursor: 'pointer' }}>Send another enquiry</button>
+                            <h3 className="text-[#c19b62] text-xl font-bold mb-4 font-outfit">SUCCESSFULLY SUBMITTED!</h3>
+                            <p className="text-white/80 text-sm leading-relaxed mb-6 max-w-[400px] mx-auto">Thank you for your interest in Connplex Cinemas. Our franchise team will review your details and contact you shortly.</p>
+                            <button 
+                              onClick={() => setIsSubmitted(false)} 
+                              className="px-6 py-2.5 bg-transparent border border-[#c19b62] text-[#c19b62] rounded font-outfit text-xs font-semibold tracking-wider hover:bg-[#c19b62]/10 transition-all duration-300 min-h-[44px]"
+                            >
+                              Send another enquiry
+                            </button>
                         </div>
                     ) : (
-                        <form className="fra-form" onSubmit={handleSubmit}>
-                            <div className="fra-form-row">
-                                <input name="fullName" type="text" className="fra-input" placeholder="Full Name" required />
-                                <input name="email" type="email" className="fra-input" placeholder="Email Address" required />
+                        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <input name="fullName" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Full Name" required />
+                                <input name="email" type="email" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Email Address" required />
                             </div>
-                            <div className="fra-form-row">
-                                <input name="phone" type="tel" className="fra-input" placeholder="Phone Number" required />
-                                <input name="state" type="text" className="fra-input" placeholder="State" required />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <input name="phone" type="tel" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Phone Number" required />
+                                <input name="state" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="State" required />
                             </div>
-                            <div className="fra-form-row">
-                                <input name="city" type="text" className="fra-input" placeholder="City" required />
-                                <select name="preferredInvestment" className="fra-input" required defaultValue="">
-                                    <option value="" disabled>Preferred investment range?</option>
-                                    <option value="1.5-2cr">1.5 to 2 cr</option>
-                                    <option value="2-2.5cr">2cr to 2.5 cr</option>
-                                    <option value="2.5-3cr">2.5 to 3cr</option>
-                                    <option value="3cr+">3cr and above</option>
-                                </select>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <input name="city" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="City" required />
+                                
+                                <div className="relative">
+                                  <select 
+                                    name="preferredInvestment" 
+                                    className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer" 
+                                    required 
+                                    defaultValue=""
+                                    style={{
+                                      backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                      backgroundRepeat: 'no-repeat',
+                                      backgroundPosition: 'right 18px center',
+                                      backgroundSize: '14px',
+                                    }}
+                                  >
+                                      <option value="" disabled className="bg-[#111] text-white">Preferred investment range?</option>
+                                      <option value="1.5-2cr" className="bg-[#111] text-white">1.5 to 2 cr</option>
+                                      <option value="2-2.5cr" className="bg-[#111] text-white">2cr to 2.5 cr</option>
+                                      <option value="2.5-3cr" className="bg-[#111] text-white">2.5 to 3cr</option>
+                                      <option value="3cr+" className="bg-[#111] text-white">3cr and above</option>
+                                  </select>
+                                </div>
                             </div>
-                            <div className="fra-form-row">
-                                <input name="preferredCity" type="text" className="fra-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                                <input name="hasProperty" type="text" className="fra-input" placeholder="Do you have a property or location for cinema?" required />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <input name="preferredCity" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Which city do you prefer for Connplex Cinema?" required />
+                                <input name="hasProperty" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Do you have a property or location for cinema?" required />
                             </div>
-                            <select name="timeframe" className="fra-input" required defaultValue="" style={{ marginBottom: '20px' }}>
-                                <option value="" disabled>How soon do you plan to start this investment?</option>
-                                <option value="immediately">Immediately</option>
-                                <option value="1-month">1 month</option>
-                                <option value="1-3-months">1-3 months</option>
-                                <option value="3plus-months">3+ months</option>
-                            </select>
-                            <textarea name="message" className="fra-input" placeholder="Message" rows={4}></textarea>
+                            
+                            <div className="relative">
+                              <select 
+                                name="timeframe" 
+                                className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer" 
+                                required 
+                                defaultValue=""
+                                style={{
+                                  backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                  backgroundRepeat: 'no-repeat',
+                                  backgroundPosition: 'right 18px center',
+                                  backgroundSize: '14px',
+                                }}
+                              >
+                                  <option value="" disabled className="bg-[#111] text-white">How soon do you plan to start this investment?</option>
+                                  <option value="immediately" className="bg-[#111] text-white">Immediately</option>
+                                  <option value="1-month" className="bg-[#111] text-white">1 month</option>
+                                  <option value="1-3-months" className="bg-[#111] text-white">1-3 months</option>
+                                  <option value="3plus-months" className="bg-[#111] text-white">3+ months</option>
+                              </select>
+                            </div>
+                            
+                            <textarea name="message" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[120px] resize-none" placeholder="Message" rows={4}></textarea>
+                            
                             {submitError && (
-                                <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '20px', fontWeight: 500 }}>
+                                <div className="text-[#ff5252] text-xs font-semibold">
                                     ⚠️ {submitError}
                                 </div>
                             )}
-                            <button type="submit" className="fra-btn-solid" disabled={isSubmitting}>
+                            
+                            <button type="submit" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-[#c19b62] hover:bg-[#a88554] text-black font-outfit text-xs font-bold tracking-widest rounded transition-all duration-300 hover:shadow-[0_5px_15px_rgba(193,155,98,0.3)] hover:-translate-y-0.5 active:translate-y-0 min-h-[48px] w-full sm:w-auto cursor-pointer" disabled={isSubmitting}>
                                 {isSubmitting ? 'SUBMITTING...' : <>SUBMIT ENQUIRY <span>→</span></>}
                             </button>
                         </form>

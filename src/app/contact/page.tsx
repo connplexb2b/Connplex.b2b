@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
-import './contact.css';
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -54,37 +53,56 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="contact-page">
+    <div className="bg-[#050505] text-white font-inter overflow-x-hidden min-h-screen relative">
       {/* Atmospheric Glows */}
-      <div className="ct-glow ct-glow-left"></div>
-      <div className="ct-glow ct-glow-right"></div>
+      <div className="absolute rounded-full pointer-events-none z-1 filter blur-[140px] w-[500px] h-[500px] bg-gold-primary/5 top-[15%] -left-[150px] hidden lg:block"></div>
+      <div className="absolute rounded-full pointer-events-none z-1 filter blur-[140px] w-[600px] h-[600px] bg-gold-primary/3 bottom-[25%] -right-[200px] hidden lg:block"></div>
 
       {/* Header Overlay */}
       <Header />
 
       {/* Hero */}
-      <section className="ct-hero">
-        <div className="ct-hero-content">
-          <span className="ct-category-tag">CONTACT US</span>
-          <h1 className="ct-main-heading">
+      <section 
+        className="relative w-full min-h-screen px-4 sm:px-6 md:px-10 lg:px-20 py-28 md:py-36 flex flex-col lg:flex-row lg:items-center justify-between z-2 bg-[#050505] gap-10"
+        style={{
+          backgroundImage: `linear-gradient(to right, #050505 0%, #050505 25%, rgba(5, 5, 5, 0.9) 35%, rgba(5, 5, 5, 0.0) 45%, rgba(5, 5, 5, 0.0) 85%, rgba(5, 5, 5, 0.4) 100%), url('/img/contact/hero_bg.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'right center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="max-w-[550px] w-full z-10">
+          <span className="font-outfit text-gold-primary text-xs sm:text-sm font-semibold tracking-[0.25em] mb-6 inline-block uppercase">CONTACT US</span>
+          <h1 className="font-outfit text-4xl sm:text-5xl md:text-6xl font-light leading-[1.15] tracking-[0.03em] mb-6 uppercase text-white">
             LET&apos;S CREATE<br />
-            <span className="ct-gold-text">CINEMA IMPACT.</span>
+            <span className="text-gold-primary font-normal text-shadow-[0_0_15px_rgba(201,159,74,0.25)]">CINEMA IMPACT.</span>
           </h1>
-          <div className="ct-hero-divider"></div>
-          <p className="ct-hero-tagline">
+          <div className="w-[45px] h-[2px] bg-gold-primary mb-8"></div>
+          <p className="font-inter text-sm sm:text-base text-text-secondary font-light leading-relaxed max-w-[500px]">
             Whether you&apos;re a brand, agency, or business looking to advertise with us or explore partnership opportunities, we&apos;d love to hear from you. Our team is here to help you connect with the right audiences, in the right way.
           </p>
         </div>
 
+        {/* Cinematic Movie Screen Overlay inside the Hero */}
+        <div className="relative lg:absolute lg:right-20 lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[45%] mt-8 lg:mt-0 flex justify-center items-center pointer-events-none z-10">
+          <div className="flex flex-col items-center justify-center text-center w-full transform perspective-1000 rotate-y-[-1.5deg] rotate-x-[1deg] lg:-mt-[5%]">
+            <span className="font-outfit text-xl sm:text-2xl md:text-3xl lg:text-[34px] font-light text-white tracking-[0.08em] uppercase leading-none text-shadow-[0_0_10px_rgba(255,255,255,0.25)]">YOUR BRAND.</span>
+            <span className="font-outfit text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-semibold text-gold-primary tracking-[0.06em] uppercase my-2.5 leading-none text-shadow-[0_0_15px_rgba(201,159,74,0.45),0_0_35px_rgba(201,159,74,0.2)]">THE BIG SCREEN.</span>
+            <span className="font-outfit text-[10px] sm:text-xs md:text-sm lg:text-[16px] font-normal text-white/70 tracking-[0.35em] uppercase text-shadow-[0_0_6px_rgba(255,255,255,0.4)]">CONNPLEX</span>
+          </div>
+        </div>
       </section>
 
       {/* Main Grid */}
-      <section className="ct-grid-section">
-        <div className="ct-layout-grid">
+      <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 relative z-10 max-w-[1400px] mx-auto w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 md:gap-16 lg:gap-20">
           {/* Info Column */}
-          <div className="ct-info-column">
-            <h2 className="ct-section-heading">GET <span className="ct-gold-text">IN TOUCH</span></h2>
-            <div className="ct-info-cards-stack">
+          <div className="flex flex-col">
+            <h2 className="font-outfit text-2xl sm:text-3xl font-light tracking-wide uppercase mb-10 text-white">
+              GET <span className="text-gold-primary font-normal">IN TOUCH</span>
+            </h2>
+            
+            <div className="flex flex-col gap-4">
               {[
                 {
                   sub: "FRANCHISE ENQUIRIES",
@@ -117,103 +135,144 @@ export default function ContactPage() {
                   icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 }
               ].map((item, i) => (
-                <div className="ct-info-card" key={i}>
-                  <div className="ct-card-icon-container">
+                <div 
+                  className="flex gap-5 py-4 border-b border-white/5 last:border-0 hover:translate-x-1 transition-transform duration-300 group" 
+                  key={i}
+                >
+                  <div className="flex items-center justify-center w-14 h-14 shrink-0 rounded border border-gold-primary/30 text-gold-primary transition-all duration-300 group-hover:bg-[linear-gradient(135deg,#c99f4a_0%,#ffd885_50%,#b3852d_100%)] group-hover:text-black group-hover:border-gold-primary group-hover:shadow-[0_0_15px_rgba(201,159,74,0.35)]">
                     {item.icon}
                   </div>
-                  <div className="ct-card-text">
-                    <span className="ct-card-subtitle">{item.sub}</span>
-                    {item.type === 'email' ? <a href={`mailto:${item.link}`} className="ct-card-link">{item.link}</a> :
-                      item.type === 'tel' ? <a href={`tel:${item.link.replace(/\s/g, '')}`} className="ct-card-link">{item.link}</a> :
-                        <p className="ct-card-address" style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)', margin: 0, fontWeight: 300 }}>{item.link}</p>}
+                  <div className="flex flex-col justify-center">
+                    <span className="font-outfit text-[10px] md:text-[11px] font-semibold tracking-widest text-text-secondary uppercase mb-1.5">{item.sub}</span>
+                    {item.type === 'email' ? (
+                      <a href={`mailto:${item.link}`} className="text-sm sm:text-base text-white hover:text-gold-bright transition-colors font-medium break-all min-h-[44px] flex items-center">{item.link}</a>
+                    ) : item.type === 'tel' ? (
+                      <a href={`tel:${item.link.replace(/\s/g, '')}`} className="text-sm sm:text-base text-white hover:text-gold-bright transition-colors font-medium break-all min-h-[44px] flex items-center">{item.link}</a>
+                    ) : (
+                      <p className="text-xs sm:text-sm text-white/85 font-light leading-relaxed m-0">{item.link}</p>
+                    )}
                   </div>
                 </div>
               ))}
-              <div className="ct-info-card ct-glow-card">
-                <div className="ct-card-icon-container">
+              
+              <div className="flex gap-5 border border-gold-primary/30 bg-gold-primary/[0.02] p-6 rounded-lg mt-6 hover:border-gold-primary hover:bg-gold-primary/[0.04] transition-all duration-300">
+                <div className="flex items-center justify-center w-14 h-14 shrink-0 rounded border border-gold-primary/30 text-gold-primary">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
                 </div>
-                <div className="ct-card-text">
-                  <span className="ct-card-subtitle" style={{ color: 'var(--ct-gold-hover)' }}>LOOKING FOR CINEMA LOCATIONS?</span>
-                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', margin: 0 }}>Call us or drop a message, our team will get back to you shortly.</p>
+                <div className="flex flex-col justify-center">
+                  <span className="font-outfit text-[10px] md:text-[11px] font-semibold tracking-widest text-gold-bright uppercase mb-1.5">LOOKING FOR CINEMA LOCATIONS?</span>
+                  <p className="text-xs sm:text-sm text-white/70 font-light leading-relaxed m-0">Call us or drop a message, our team will get back to you shortly.</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Form Column */}
-          <div className="ct-form-column">
-            <h2 className="ct-section-heading">SEND US <span className="ct-gold-text">A MESSAGE</span></h2>
-            <div className="ct-form-panel">
+          <div className="flex flex-col">
+            <h2 className="font-outfit text-2xl sm:text-3xl font-light tracking-wide uppercase mb-10 text-white">
+              SEND US <span className="text-gold-primary font-normal">A MESSAGE</span>
+            </h2>
+            
+            <div className="border border-gold-primary/20 rounded-lg p-6 sm:p-8 md:p-10 lg:p-12 bg-black/40 backdrop-blur-md">
               {isSubmitted ? (
-                <div style={{ textAlign: 'center', padding: '30px 0' }}>
-                  <div style={{
-                    width: '60px',
-                    height: '60px',
-                    background: 'var(--ct-gold-primary)',
-                    color: '#000',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px'
-                  }}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: '28px', height: '28px' }}>
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-gold-primary text-black rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
                   </div>
-                  <h3 style={{ color: 'var(--ct-gold-primary)', fontSize: '1.6rem', marginBottom: '15px', fontWeight: 600, fontFamily: 'Outfit, sans-serif' }}>SUCCESSFULLY SUBMITTED!</h3>
-                  <p style={{ color: 'var(--ct-text-secondary)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '25px', maxWidth: '420px', margin: '0 auto 25px auto' }}>
+                  <h3 className="text-gold-primary text-xl sm:text-2xl font-semibold mb-4 tracking-wide font-outfit uppercase">
+                    SUCCESSFULLY SUBMITTED!
+                  </h3>
+                  <p className="text-text-secondary text-sm leading-relaxed mb-8 max-w-[420px] mx-auto font-light">
                     Thank you for your interest in Connplex Cinemas. Our team will review your details and get in touch with you shortly.
                   </p>
-                  <button onClick={() => setIsSubmitted(false)} className="ct-submit-btn" style={{ padding: '12px 30px', fontSize: '12px' }}>Send another enquiry</button>
+                  <button 
+                    onClick={() => setIsSubmitted(false)} 
+                    className="px-8 py-3 bg-[linear-gradient(135deg,#c99f4a_0%,#ffd885_50%,#b3852d_100%)] text-black font-outfit text-xs font-bold tracking-widest rounded uppercase hover:shadow-[0_8px_30px_rgba(201,159,74,0.35)] transition-all duration-300 cursor-pointer min-h-[44px]"
+                  >
+                    Send another enquiry
+                  </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
-                  <div className="ct-form-row">
-                    <input name="fullName" type="text" className="ct-input" placeholder="Full Name" required />
-                    <input name="email" type="email" className="ct-input" placeholder="Email Address" required />
+                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input name="fullName" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Full Name" required />
+                    <input name="email" type="email" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Email Address" required />
                   </div>
-                  <div className="ct-form-row">
-                    <input name="phone" type="tel" className="ct-input" placeholder="Phone Number" required />
-                    <input name="state" type="text" className="ct-input" placeholder="State" required />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input name="phone" type="tel" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Phone Number" required />
+                    <input name="state" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="State" required />
                   </div>
-                  <div className="ct-form-row">
-                    <input name="city" type="text" className="ct-input" placeholder="City" required />
-                    <select name="preferredInvestment" className="ct-input" required defaultValue="">
-                      <option value="" disabled>Preferred investment range?</option>
-                      <option value="1.5-2cr">1.5 to 2 cr</option>
-                      <option value="2-2.5cr">2cr to 2.5 cr</option>
-                      <option value="2.5-3cr">2.5 to 3cr</option>
-                      <option value="3cr+">3cr and above</option>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input name="city" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="City" required />
+                    
+                    <div className="relative">
+                      <select 
+                        name="preferredInvestment" 
+                        className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
+                        required 
+                        defaultValue=""
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 16px center',
+                          backgroundSize: '14px',
+                        }}
+                      >
+                        <option value="" disabled className="bg-[#0a0a0a] text-white">Preferred investment range?</option>
+                        <option value="1.5-2cr" className="bg-[#0a0a0a] text-white">1.5 to 2 cr</option>
+                        <option value="2-2.5cr" className="bg-[#0a0a0a] text-white">2cr to 2.5 cr</option>
+                        <option value="2.5-3cr" className="bg-[#0a0a0a] text-white">2.5 to 3cr</option>
+                        <option value="3cr+" className="bg-[#0a0a0a] text-white">3cr and above</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input name="preferredCity" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Which city do you prefer for Connplex Cinema?" required />
+                    <input name="hasProperty" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Do you have a property or location for cinema?" required />
+                  </div>
+                  
+                  <div className="relative">
+                    <select 
+                      name="timeframe" 
+                      className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
+                      required 
+                      defaultValue=""
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'right 16px center',
+                        backgroundSize: '14px',
+                      }}
+                    >
+                      <option value="" disabled className="bg-[#0a0a0a] text-white">How soon do you plan to start this investment?</option>
+                      <option value="immediately" className="bg-[#0a0a0a] text-white">Immediately</option>
+                      <option value="1-month" className="bg-[#0a0a0a] text-white">1 month</option>
+                      <option value="1-3-months" className="bg-[#0a0a0a] text-white">1-3 months</option>
+                      <option value="3plus-months" className="bg-[#0a0a0a] text-white">3+ months</option>
                     </select>
                   </div>
-                  <div className="ct-form-row">
-                    <input name="preferredCity" type="text" className="ct-input" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                    <input name="hasProperty" type="text" className="ct-input" placeholder="Do you have a property or location for cinema?" required />
+                  
+                  <div>
+                    <textarea name="message" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[120px] resize-none" placeholder="Message" rows={4} required></textarea>
                   </div>
-                  <div style={{ marginBottom: '24px' }}>
-                    <select name="timeframe" className="ct-input" required defaultValue="">
-                      <option value="" disabled>How soon do you plan to start this investment?</option>
-                      <option value="immediately">Immediately</option>
-                      <option value="1-month">1 month</option>
-                      <option value="1-3-months">1-3 months</option>
-                      <option value="3plus-months">3+ months</option>
-                    </select>
-                  </div>
-                  <div style={{ marginBottom: '24px' }}>
-                    <textarea name="message" className="ct-input" style={{ minHeight: '120px', resize: 'none' }} placeholder="Message" rows={4} required></textarea>
-                  </div>
+                  
                   {submitError && (
-                    <div style={{ color: '#ff5252', fontSize: '0.85rem', marginBottom: '20px', fontWeight: 500 }}>
+                    <div className="text-[#ff5252] text-xs font-semibold">
                       ⚠️ {submitError}
                     </div>
                   )}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '30px', flexWrap: 'wrap' }}>
-                    <button type="submit" className="ct-submit-btn" disabled={isSubmitting}>
+                  
+                  <div className="flex flex-col sm:flex-row items-center gap-6 mt-2">
+                    <button 
+                      type="submit" 
+                      className="inline-flex items-center justify-center gap-3.5 px-10 py-4 bg-[linear-gradient(135deg,#c99f4a_0%,#ffd885_50%,#b3852d_100%)] text-black font-outfit text-xs font-bold tracking-widest rounded transition-all duration-300 hover:shadow-[0_8px_30px_rgba(201,159,74,0.35)] hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 min-h-[48px] w-full sm:w-auto cursor-pointer"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? 'SUBMITTING...' : 'SUBMIT ENQUIRY →'}
                     </button>
-                    <p style={{ fontSize: '12.5px', color: 'var(--ct-text-secondary)' }}>We usually respond within 24 hours.</p>
+                    <p className="text-[12.5px] text-text-secondary m-0">We usually respond within 24 hours.</p>
                   </div>
                 </form>
               )}
@@ -221,6 +280,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+      
       <Footer />
     </div>
   );

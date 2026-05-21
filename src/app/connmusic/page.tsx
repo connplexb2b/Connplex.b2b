@@ -1,12 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
-import './connmusic.css';
 
 export default function Connmusic() {
     const [timeLeft, setTimeLeft] = useState({
@@ -108,103 +105,103 @@ export default function Connmusic() {
 
     const handleMouseLeave = () => {
         if (!systemRef.current) return;
-        systemRef.current.style.transform = `rotateX(0) rotateY(0)`;
+        systemRef.current.style.transform = `rotateX(0deg) rotateY(0deg)`;
         systemRef.current.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
     };
 
     return (
-        <div className="connmusic-page">
-            <div className="connmusic-app-container">
+        <div className="bg-[#050505] text-white min-h-screen overflow-x-hidden font-sans">
+            <div className="w-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col min-h-screen">
                 {/* Navigation */}
                 <Header />
 
                 {/* Main Content */}
-                <main className="connmusic-main-content">
-                    <div className="connmusic-content-grid">
+                <main className="grow flex flex-col pt-8 pb-20">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center my-10 lg:my-16 min-h-[500px] relative z-2">
                         {/* Left Side: 3D System */}
-                        <div className="connmusic-visual-section">
+                        <div className="relative flex justify-center items-center">
                             <div
-                                className="connmusic-hero-image-wrapper"
+                                className="relative flex justify-center items-center h-[260px] sm:h-[400px] w-full max-w-[400px] mx-auto perspective-[1200px] group"
                                 ref={containerRef}
                                 onMouseMove={handleMouseMove}
                                 onMouseLeave={handleMouseLeave}
                             >
-                                <div className="connmusic-golden-ring"></div>
-                                <div className="connmusic-music-system-3d" ref={systemRef}>
-                                    <div className="connmusic-vinyl-record">
-                                        <div className="connmusic-vinyl-spin-container">
-                                            <div className="connmusic-vinyl-center">
-                                                <span className="connmusic-center-text">CONNMUSIC</span>
+                                <div className="absolute w-[260px] sm:w-[600px] h-[260px] sm:h-[600px] rounded-full border border-[rgba(212,175,55,0.3)] shadow-[0_0_80px_rgba(212,175,55,0.1),_inset_0_0_80px_rgba(212,175,55,0.1)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[-1] pointer-events-none"></div>
+                                <div className="relative w-[160px] sm:w-[300px] h-[160px] sm:h-[300px] cursor-pointer z-10 transition-transform duration-100 ease-out" style={{ transformStyle: 'preserve-3d' }} ref={systemRef}>
+                                    <div className="absolute inset-[5px] bg-[#0a0a0a] rounded-full z-3 shadow-[0_0_20px_rgba(0,0,0,0.8)] border border-[#1a1a1a] transition-all duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:translate-x-[50px] sm:group-hover:translate-x-[120px] before:content-[''] before:absolute before:inset-[2%] before:rounded-full before:bg-[repeating-radial-gradient(#111_0px,#111_2px,#1a1a1a_3px,#0a0a0a_4px)] before:opacity-80 after:content-[''] after:absolute after:inset-0 after:rounded-full after:bg-[conic-gradient(from_0deg,rgba(255,255,255,0.05)_0deg,rgba(255,255,255,0)_45deg,rgba(255,255,255,0.05)_90deg,rgba(255,255,255,0)_135deg,rgba(255,255,255,0.05)_180deg,rgba(255,255,255,0)_225deg,rgba(255,255,255,0.05)_270deg,rgba(255,255,255,0)_315deg,rgba(255,255,255,0.05)_360deg)] after:pointer-events-none" style={{ transform: 'rotateY(10deg)' }}>
+                                        <div className="absolute inset-0 rounded-full flex items-center justify-center transition-transform duration-[800ms] animate-[spinVinyl_4s_linear_infinite] [animation-play-state:paused] group-hover:[animation-play-state:running]">
+                                            <div className="relative w-1/3 h-1/3 bg-gradient-to-br from-[#d4af37] to-[#cba258] rounded-full z-4 flex items-center justify-center border-3 border-[#111] shadow-[inset_0_0_10px_rgba(0,0,0,0.5)] after:content-[''] after:absolute after:w-3 after:h-3 after:bg-black after:rounded-full after:shadow-[inset_0_0_2px_rgba(255,255,255,0.3)]">
+                                                <span className="text-[6px] sm:text-[8px] font-bold text-black tracking-wider -translate-y-[10px] sm:-translate-y-[15px]">CONNMUSIC</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="connmusic-album-sleeve">
-                                        <div className="connmusic-sleeve-glare"></div>
-                                        <svg className="connmusic-waveform" viewBox="0 0 100 30" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#151515] to-[#050505] border border-[rgba(212,175,55,0.3)] shadow-[-10px_10px_30px_rgba(0,0,0,0.8),_inset_0_0_0_1px_rgba(255,255,255,0.05)] rounded-md z-5 transition-all duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:-translate-x-[15px] sm:group-hover:-translate-x-[40px] group-hover:shadow-[-20px_20px_40px_rgba(0,0,0,0.9),_inset_0_0_0_1px_rgba(255,255,255,0.1)] flex flex-col items-center justify-center overflow-hidden" style={{ transformStyle: 'preserve-3d', transform: 'rotateY(-10deg)' }}>
+                                        <div className="absolute top-0 left-[-150%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent skew-x-[-20deg] transition-all duration-[600ms] ease-out pointer-events-none group-hover:left-[150%] group-hover:duration-[1500ms]"></div>
+                                        <svg className="w-[70%] h-auto filter drop-shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-transform duration-300 group-hover:scale-105" viewBox="0 0 100 30" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M5 15 L10 15 L15 5 L20 25 L25 15 L30 15 L35 10 L40 20 L45 15 L50 15 L55 5 L60 25 L65 10 L70 20 L75 15 L80 15 L85 10 L90 20 L95 15"></path>
                                         </svg>
-                                        <p className="connmusic-sleeve-title">CONNMUSIC</p>
+                                        <p className="mt-8 text-[#d4af37] tracking-[6px] text-xs sm:text-sm font-semibold">CONNMUSIC</p>
                                     </div>
-                                    <div className="connmusic-music-notes">
-                                        <span className="connmusic-note connmusic-note-1">♪</span>
-                                        <span className="connmusic-note connmusic-note-2">♫</span>
-                                        <span className="connmusic-note connmusic-note-3">♬</span>
+                                    <div className="absolute top-1/2 left-1/2 w-full h-full pointer-events-none z-1">
+                                        <span className="absolute text-[#d4af37] text-2xl opacity-0 translate-0 text-shadow-[0_0_10px_rgba(212,175,55,0.5)] top-[20%] left-[60%] [animation-delay:0s] group-hover:animate-[floatNote_2s_ease-out_infinite]">♪</span>
+                                        <span className="absolute text-[#d4af37] text-lg opacity-0 translate-0 text-shadow-[0_0_10px_rgba(212,175,55,0.5)] top-[40%] left-[70%] [animation-delay:0.6s] group-hover:animate-[floatNote_2s_ease-out_infinite]">♫</span>
+                                        <span className="absolute text-[#d4af37] text-3xl opacity-0 translate-0 text-shadow-[0_0_10px_rgba(212,175,55,0.5)] top-[60%] left-[80%] [animation-delay:1.2s] group-hover:animate-[floatNote_2s_ease-out_infinite]">♬</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Right Side: Info & Countdown */}
-                        <div className="connmusic-info-section">
-                            <h2 className="connmusic-sub-brand connmusic-green-title">C O N N M U S I C</h2>
-                            <h1 className="connmusic-main-title">COMING<br />SOON</h1>
-                            <div className="connmusic-green-divider"></div>
-                            <p className="connmusic-tagline">Sound that moves you.</p>
+                        <div className="flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
+                            <h2 className="text-[#10B981] text-lg tracking-[6px] font-semibold mb-4 uppercase">C O N N M U S I C</h2>
+                            <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-black tracking-wider leading-[0.9] text-white">COMING<br />SOON</h1>
+                            <div className="w-[60px] h-[3px] bg-[#10B981] my-8"></div>
+                            <p className="text-lg sm:text-xl text-[#a0a0a0] font-normal mb-8">Sound that moves you.</p>
 
-                            <div className="connmusic-countdown-container">
-                                <div className="connmusic-countdown-item">
-                                    <span className="connmusic-countdown-value">{timeLeft.days}</span>
-                                    <span className="connmusic-countdown-label connmusic-green-title">DAYS</span>
+                            <div className="flex flex-wrap md:flex-nowrap justify-center gap-0 my-6 border border-white/5 rounded-xl py-6 bg-gradient-to-b from-white/[0.03] to-black/50 backdrop-blur-md w-fit mx-auto lg:mx-0">
+                                <div className="flex flex-col items-center px-6 md:px-8 border-r border-white/10">
+                                    <span className="text-3xl md:text-4xl font-bold font-oswald mb-1">{timeLeft.days}</span>
+                                    <span className="text-[10px] md:text-[11px] text-[#10B981] tracking-[2px] font-semibold uppercase">DAYS</span>
                                 </div>
-                                <div className="connmusic-countdown-item">
-                                    <span className="connmusic-countdown-value">{String(timeLeft.hours).padStart(2, '0')}</span>
-                                    <span className="connmusic-countdown-label connmusic-green-title">HOURS</span>
+                                <div className="flex flex-col items-center px-6 md:px-8 border-r border-white/10">
+                                    <span className="text-3xl md:text-4xl font-bold font-oswald mb-1">{String(timeLeft.hours).padStart(2, '0')}</span>
+                                    <span className="text-[10px] md:text-[11px] text-[#10B981] tracking-[2px] font-semibold uppercase">HOURS</span>
                                 </div>
-                                <div className="connmusic-countdown-item">
-                                    <span className="connmusic-countdown-value">{String(timeLeft.minutes).padStart(2, '0')}</span>
-                                    <span className="connmusic-countdown-label connmusic-green-title">MINUTES</span>
+                                <div className="flex flex-col items-center px-6 md:px-8 border-r border-white/10">
+                                    <span className="text-3xl md:text-4xl font-bold font-oswald mb-1">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                                    <span className="text-[10px] md:text-[11px] text-[#10B981] tracking-[2px] font-semibold uppercase">MINUTES</span>
                                 </div>
-                                <div className="connmusic-countdown-item">
-                                    <span className="connmusic-countdown-value">{String(timeLeft.seconds).padStart(2, '0')}</span>
-                                    <span className="connmusic-countdown-label connmusic-green-title">SECONDS</span>
+                                <div className="flex flex-col items-center px-6 md:px-8">
+                                    <span className="text-3xl md:text-4xl font-bold font-oswald mb-1">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                                    <span className="text-[10px] md:text-[11px] text-[#10B981] tracking-[2px] font-semibold uppercase">SECONDS</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="connmusic-features-grid">
-                        <div className="connmusic-feature-card">
-                            <div className="connmusic-feature-icon">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 mb-16 bg-gradient-to-b from-white/[0.03] to-black/50 border border-white/5 rounded-2xl overflow-hidden">
+                        <div className="p-8 md:p-10 text-center border-r border-b lg:border-b-0 border-white/5">
+                            <div className="mb-6 flex justify-center">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M9 18V5l12-2v13"></path>
                                     <circle cx="6" cy="18" r="3"></circle>
                                     <circle cx="18" cy="16" r="3"></circle>
                                 </svg>
                             </div>
-                            <h3 className="connmusic-feature-title">Immersive Sound</h3>
-                            <p className="connmusic-feature-desc">Experience music like<br />never before.</p>
+                            <h3 className="text-base font-semibold mb-3 text-white">Immersive Sound</h3>
+                            <p className="text-[#a0a0a0] text-sm leading-relaxed">Experience music like<br />never before.</p>
                         </div>
-                        <div className="connmusic-feature-card">
-                            <div className="connmusic-feature-icon">
+                        <div className="p-8 md:p-10 text-center border-r border-b lg:border-b-0 border-white/5">
+                            <div className="mb-6 flex justify-center">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                 </svg>
                             </div>
-                            <h3 className="connmusic-feature-title">Made for You</h3>
-                            <p className="connmusic-feature-desc">Discover tracks that<br />match your mood.</p>
+                            <h3 className="text-base font-semibold mb-3 text-white">Made for You</h3>
+                            <p className="text-[#a0a0a0] text-sm leading-relaxed">Discover tracks that<br />match your mood.</p>
                         </div>
-                        <div className="connmusic-feature-card">
-                            <div className="connmusic-feature-icon">
+                        <div className="p-8 md:p-10 text-center border-r border-b sm:border-b-0 border-white/5">
+                            <div className="mb-6 flex justify-center">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                                     <circle cx="9" cy="7" r="4"></circle>
@@ -212,11 +209,11 @@ export default function Connmusic() {
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </div>
-                            <h3 className="connmusic-feature-title">All in One</h3>
-                            <p className="connmusic-feature-desc">Your library, your artists,<br />your world.</p>
+                            <h3 className="text-base font-semibold mb-3 text-white">All in One</h3>
+                            <p className="text-[#a0a0a0] text-sm leading-relaxed">Your library, your artists,<br />your world.</p>
                         </div>
-                        <div className="connmusic-feature-card">
-                            <div className="connmusic-feature-icon">
+                        <div className="p-8 md:p-10 text-center">
+                            <div className="mb-6 flex justify-center">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M12 2v20"></path>
                                     <path d="M17 5v14"></path>
@@ -225,42 +222,42 @@ export default function Connmusic() {
                                     <path d="M2 10v4"></path>
                                 </svg>
                             </div>
-                            <h3 className="connmusic-feature-title">Beyond Streaming</h3>
-                            <p className="connmusic-feature-desc">More than music.<br />It&apos;s an experience.</p>
+                            <h3 className="text-base font-semibold mb-3 text-white">Beyond Streaming</h3>
+                            <p className="text-[#a0a0a0] text-sm leading-relaxed">More than music.<br />It&apos;s an experience.</p>
                         </div>
                     </div>
 
                     {/* Notify Section */}
-                    <div className="connmusic-notify-section">
-                        <div className="connmusic-bell-icon-wrapper">
+                    <div className="text-center p-10 md:p-16 border border-[#d4af37]/30 rounded-2xl mb-16 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.05)_0%,rgba(0,0,0,0)_70%)] relative shadow-[0_0_30px_rgba(212,175,55,0.02)]">
+                        <div className="mb-4 flex justify-center">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                             </svg>
                         </div>
-                        <h3 className="connmusic-notify-subtitle">BE THE FIRST TO KNOW</h3>
-                        <h2 className="connmusic-notify-main-title">Exclusive access. First listen. Only for you.</h2>
-                        <p className="connmusic-notify-desc">Join the waitlist and be the first to experience CONNMUSIC.</p>
+                        <h3 className="text-xs text-[#d4af37] tracking-[4px] font-semibold mb-4 uppercase">BE THE FIRST TO KNOW</h3>
+                        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-white">Exclusive access. First listen. Only for you.</h2>
+                        <p className="text-[#a0a0a0] text-base mb-10">Join the waitlist and be the first to experience CONNMUSIC.</p>
 
                         {isSubmitted ? (
-                            <p className="connmusic-success-msg" style={{ color: '#d4af37', marginTop: '20px', fontSize: '1.1rem', fontWeight: 500 }}>
+                            <p className="text-[#d4af37] mt-5 text-lg font-semibold">
                                 🎉 Thank you! You have been successfully added to the waitlist.
                             </p>
                         ) : (
-                            <>
-                                <form className="connmusic-notify-form" onSubmit={handleSubmit}>
-                                    <input name="email" type="email" placeholder="Enter your email address" required className="connmusic-notify-input" />
-                                    <button type="submit" className="connmusic-notify-btn" disabled={isSubmitting}>
-                                        {isSubmitting ? 'Sending...' : <>Notify Me <span className="arrow">&gt;</span></>}
+                            <div className="max-w-[500px] mx-auto">
+                                <form className="flex flex-col md:flex-row gap-4 mb-4" onSubmit={handleSubmit}>
+                                    <input name="email" type="email" placeholder="Enter your email address" required className="flex-1 bg-transparent border border-white/10 py-4 px-6 rounded-lg text-white text-sm outline-none focus:border-[#d4af37]/50 transition-colors" />
+                                    <button type="submit" className="bg-[#cba258] hover:bg-[#e6c56b] text-black py-4 px-8 rounded-lg text-sm font-semibold cursor-pointer flex items-center justify-center gap-2 transition-colors" disabled={isSubmitting}>
+                                        {isSubmitting ? 'Sending...' : <>Notify Me <span>&gt;</span></>}
                                     </button>
                                 </form>
                                 {submitError && (
-                                    <p className="connmusic-error-notice" style={{ color: '#ff5252', marginTop: '10px', fontSize: '0.9rem' }}>
+                                    <p className="text-[#ff5252] mt-3 text-sm">
                                         ⚠️ {submitError}
                                     </p>
                                 )}
-                                <p className="connmusic-spam-notice">No spam. Just exclusive updates.</p>
-                            </>
+                                <p className="text-xs text-white/30">No spam. Just exclusive updates.</p>
+                            </div>
                         )}
                     </div>
                 </main>

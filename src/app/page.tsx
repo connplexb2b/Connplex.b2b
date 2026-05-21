@@ -209,88 +209,96 @@ export default function Home() {
     <>
       <Header />
       {/* ── HERO ── */}
-      <main className="hero">
-        <div className="hero-bg">
+      <main className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 py-32 overflow-hidden bg-bg-dark">
+        <div className="absolute inset-0 z-0">
           <video
             autoPlay
             muted
             loop
             playsInline
-            className="hero-video"
+            className="w-full h-full object-cover opacity-40"
           >
             <source src="/video/hero-bg.mp4" type="video/mp4" />
           </video>
-          <div className="hero-bg-overlay"></div>
+          <div className="absolute inset-0 bg-black/60 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.85)_100%)]"></div>
         </div>
 
-        <h1 className="hero-title">
+        <h1 className="text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[1.1] mb-6 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
           Unbox your Own<br />
-          <span className="text-gold">Cinema.</span>
+          <span className="text-primary-gold">Cinema.</span>
         </h1>
 
-        <p className="hero-subtitle">Luxury. Technology. Cinema.</p>
+        <p className="text-[clamp(1rem,2vw,1.4rem)] text-text-secondary mb-12 font-normal tracking-wide relative z-10 animate-fade-in-up [animation-delay:0.4s]">
+          Luxury. Technology. Cinema.
+        </p>
 
-        <div className="hero-actions">
-          <a href="https://theconnplex.com/" target="_blank" rel="noopener noreferrer" className="btn-secondary">
-            Franchise With Us <span>&rarr;</span>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-24 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
+          <a 
+            href="https://theconnplex.com/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+          >
+            Franchise With Us <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
           </a>
-          <a href="https://ticketing.theconnplex.com/" target="_blank" rel="noopener noreferrer" className="btn-secondary">
-            Book tickets <span>&rarr;</span>
+          <a 
+            href="https://ticketing.theconnplex.com/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+          >
+            Book tickets <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
           </a>
         </div>
 
-        <div className="features-grid">
-          <div className="feature-item">
-            <h3 className="feature-title">Pan-India Reach </h3>
-            <p className="feature-desc">115+ screens operational</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+          <div className="text-center flex flex-col gap-2">
+            <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
+            <p className="text-sm text-text-secondary">115+ screens operational</p>
           </div>
-          <div className="feature-item">
-            <h3 className="feature-title">High Cinema Footfall</h3>
-            <p className="feature-desc">Connect with thousands of daily viewers</p>
+          <div className="text-center flex flex-col gap-2">
+            <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
+            <p className="text-sm text-text-secondary">Connect with thousands of daily viewers</p>
           </div>
-          <div className="feature-item">
-            <h3 className="feature-title">Next-Generation Cinema Screens</h3>
-            <p className="feature-desc">Luxury movie experiences across India</p>
+          <div className="text-center flex flex-col gap-2">
+            <h3 className="text-[1.1rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
+            <p className="text-sm text-text-secondary">Luxury movie experiences across India</p>
           </div>
         </div>
       </main>
 
       {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
-      <section className="suite-section">
-        <div className="suite-header">
-          <div className="suite-left">
-            <p className="suite-eyebrow">THE CONNPLEX SUITE</p>
-            <h2 className="suite-title">
-              One Ecosystem. <span>Infinite Experiences.</span>
+      <section className="bg-bg-dark py-20 px-[4%] sm:px-[6%] border-t border-white/5">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="flex flex-col text-left">
+            <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">THE CONNPLEX SUITE</p>
+            <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white leading-tight">
+              One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
             </h2>
           </div>
-          <Link href="/ecosystem" className="suite-scroll-btn">Scroll →</Link>
+          <Link href="/ecosystem" className="text-sm text-text-secondary font-medium tracking-wider hover:text-white transition-colors duration-300 whitespace-nowrap mb-1 inline-block text-left">
+            Scroll →
+          </Link>
         </div>
 
-        <div className="apps-scroll-wrapper">
-          <div className="apps-track">
+        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
+          <div className="flex gap-10 pb-4 w-max">
             {apps.map((app) => (
-              <div className="app-card" key={app.name}>
-                <div className="app-icon-circle" style={{ backgroundColor: 'transparent' }}>
+              <div className="flex flex-col items-center gap-4 cursor-pointer group" key={app.name}>
+                <div className="w-[110px] h-[110px] rounded-full flex items-center justify-center border border-white/10 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                   <div
-                    className="app-icon-inner"
+                    className="w-[65px] h-[65px] rounded-[22px] flex items-center justify-center border transition-all duration-300"
                     style={{
-                      width: '65px',
-                      height: '65px',
-                      borderRadius: '22px',
                       background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
                       boxShadow: `0 0 25px ${app.glow}, inset 0 0 15px ${app.glow}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                       color: app.color,
-                      border: `1px solid ${app.glow}`
+                      borderColor: app.glow
                     }}
                   >
                     {app.icon}
                   </div>
                 </div>
-                <p className="app-name">{app.name}</p>
+                <p className="text-xs text-text-secondary text-center transition-colors duration-200 group-hover:text-white">{app.name}</p>
               </div>
             ))}
           </div>
@@ -298,16 +306,13 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2: PREMIUM LOUNGERS SLIDESHOW ── */}
-
-
-      <section className="lounger-section">
-
+      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end px-[4%] sm:px-[6%] py-20 overflow-hidden bg-bg-dark">
         {/* Slide images stacked, crossfade */}
         {slides.map((s, i) => (
           <div
             key={s.src}
-            className="lounger-bg"
-            style={{ opacity: i === current ? 1 : 0, transition: "opacity 0.7s ease" }}
+            className="absolute inset-0 z-0 transition-opacity duration-700"
+            style={{ opacity: i === current ? 1 : 0 }}
           >
             <Image
               src={s.src}
@@ -316,126 +321,123 @@ export default function Home() {
               style={{ objectFit: "cover" }}
               priority={i === 0}
             />
-            <div className="lounger-overlay"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/20 max-md:bg-gradient-to-t max-md:from-black/95 max-md:via-black/80 max-md:to-black/30"></div>
           </div>
         ))}
 
         <div
-          className="lounger-content"
-          style={{ opacity: animating ? 0 : 1, transition: "opacity 0.4s ease" }}
+          className="relative z-10 max-w-[520px] w-full text-left transition-opacity duration-500"
+          style={{ opacity: animating ? 0 : 1 }}
         >
-          <p className="lounger-eyebrow">{slide.eyebrow}</p>
-          <h2 className="lounger-title">
+          <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-4 uppercase">{slide.eyebrow}</p>
+          <h2 className="text-[clamp(1.8rem,5vw,3.5rem)] font-bold text-white leading-tight mb-4 font-outfit uppercase">
             {slide.title.split("\n").map((line, i) => (
               <span key={i}>{line}<br /></span>
             ))}
           </h2>
-          <p className="lounger-tags">{slide.tags}</p>
-          <p className="lounger-desc">
+          <p className="text-sm text-text-secondary mb-5 font-normal tracking-wide">{slide.tags}</p>
+          <p className="text-sm sm:text-[0.95rem] text-white/60 leading-relaxed font-normal">
             {slide.desc.split("\n").map((line, i) => (
               <span key={i}>{line}<br /></span>
             ))}
           </p>
         </div>
 
-        <div className="lounger-nav">
+        <div className="absolute right-[6%] bottom-12 z-10 hidden md:flex flex-col items-end gap-3">
           {slides.map((_, i) => (
             <button
               key={i}
-              className={`lounger-dot${i === current ? " lounger-dot-active" : ""}`}
+              className="flex items-center gap-2 bg-transparent border-none cursor-pointer group"
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
             >
-              <span className="lounger-dot-line"></span>
-              <span className="lounger-dot-num">{i + 1}</span>
+              <span className={`block h-[1px] transition-all duration-300 ${i === current ? 'w-10 bg-white' : 'w-7 bg-white/25 group-hover:bg-white/50'}`}></span>
+              <span className={`text-[0.78rem] font-medium transition-colors duration-300 ${i === current ? 'text-white' : 'text-white/35 group-hover:text-white/70'}`}>{i + 1}</span>
             </button>
           ))}
         </div>
       </section>
-      <section className="products-section">
-        <div className="products-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+
+      {/* ── SECTION 3: PRODUCTS ── */}
+      <section className="bg-bg-dark px-[4%] sm:px-[6%] pt-20 pb-0 overflow-x-hidden border-t border-white/5">
+        <div className="flex flex-row justify-between items-end gap-6 mb-12 text-left">
           <div>
-            <p className="products-eyebrow">OUR PRODUCTS</p>
-            <h2 className="products-title">
-              A platform built <span>for</span>
-              <span className="products-title-muted">every screen</span>
+            <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">OUR PRODUCTS</p>
+            <h2 className="text-[clamp(1.8rem,5vw,3rem)] font-bold text-white leading-tight uppercase font-outfit">
+              A platform built <span className="text-text-secondary">for</span><br />
+              <span className="text-text-secondary font-bold">every screen</span>
             </h2>
           </div>
-          <Link href="/products">
-            <button
-              className="product-btn-circle"
-              style={{ marginBottom: '10px' }}
-            >
+          <Link href="/products" className="mb-2">
+            <button className="bg-white text-black rounded-full px-6 py-2.5 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105 whitespace-nowrap">
               Explore More
             </button>
           </Link>
         </div>
 
         <div 
-          className="products-grid"
+          className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-0 w-full overflow-x-auto md:overflow-visible scroll-snap-x mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           ref={productsGridRef}
           onScroll={handleProductsScroll}
         >
-          <div className="product-card product-card-dark">
-            <p className="product-name">Connflix</p>
-            <p className="product-tagline">Stream cinema-grade originals.</p>
-            <div className="product-actions">
+          <div className="relative flex flex-col items-center pt-12 px-8 pb-0 min-h-[480px] overflow-hidden bg-[#0a0a0a] border border-white/5 flex-shrink-0 w-full md:w-auto md:flex-shrink">
+            <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">Connflix</p>
+            <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Stream cinema-grade originals.</p>
+            <div className="flex items-center gap-5 mb-8">
               <Link href="/connflix">
-                <button className="product-btn-circle">Explore</button>
+                <button className="bg-white text-black rounded-full px-6 py-2 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105">Explore</button>
               </Link>
             </div>
-            <div className="product-image-wrap">
+            <div className="relative w-full flex-1 min-h-[260px] rounded-t-xl overflow-hidden">
               <Image src="/connflix_hero_mockup.png" alt="Connflix" fill style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
-          <div className="product-card product-card-dark">
-            <p className="product-name">Conntube</p>
-            <p className="product-tagline">Your channel. Your audience.</p>
-            <div className="product-actions">
-
+          <div className="relative flex flex-col items-center pt-12 px-8 pb-0 min-h-[480px] overflow-hidden bg-[#0a0a0a] border border-white/5 flex-shrink-0 w-full md:w-auto md:flex-shrink">
+            <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">Conntube</p>
+            <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Your channel. Your audience.</p>
+            <div className="flex items-center gap-5 mb-8">
               <Link href="/conntube">
-                <button className="product-btn-circle">Explore</button>
+                <button className="bg-white text-black rounded-full px-6 py-2 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105">Explore</button>
               </Link>
             </div>
-            <div className="product-image-wrap">
+            <div className="relative w-full flex-1 min-h-[260px] rounded-t-xl overflow-hidden">
               <Image src="/conntube_hero_mockup.png" alt="Conntube" fill style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
-          <div className="product-card product-card-dark">
-            <p className="product-name">SpectraX</p>
-            <p className="product-tagline">Experience beyond the screen.</p>
-            <div className="product-actions">
-
+          <div className="relative flex flex-col items-center pt-12 px-8 pb-0 min-h-[480px] overflow-hidden bg-[#0a0a0a] border border-white/5 flex-shrink-0 w-full md:w-auto md:flex-shrink">
+            <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">SpectraX</p>
+            <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Experience beyond the screen.</p>
+            <div className="flex items-center gap-5 mb-8">
               <Link href="/spectra-x">
-                <button className="product-btn-circle">Explore</button>
+                <button className="bg-white text-black rounded-full px-6 py-2 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105">Explore</button>
               </Link>
             </div>
-            <div className="product-image-wrap">
+            <div className="relative w-full flex-1 min-h-[260px] rounded-t-xl overflow-hidden">
               <Image src="/spectra-x-hero.png" alt="SpectraX" fill style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
-          <div className="product-card product-card-dark">
-            <p className="product-name">DownTown</p>
-            <p className="product-tagline">Design for modern crowd.</p>
-            <div className="product-actions">
+          <div className="relative flex flex-col items-center pt-12 px-8 pb-0 min-h-[480px] overflow-hidden bg-[#0a0a0a] border border-white/5 flex-shrink-0 w-full md:w-auto md:flex-shrink">
+            <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">DownTown</p>
+            <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Design for modern crowd.</p>
+            <div className="flex items-center gap-5 mb-8">
               <Link href="/downtown">
-                <button className="product-btn-circle">Explore</button>
+                <button className="bg-white text-black rounded-full px-6 py-2 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105">Explore</button>
               </Link>
             </div>
-            <div className="product-image-wrap">
+            <div className="relative w-full flex-1 min-h-[260px] rounded-t-xl overflow-hidden">
               <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
         </div>
 
-        <div className="products-nav">
+        <div className="flex md:hidden justify-center items-center gap-3 mt-6 mb-8 w-full">
           {[0, 1, 2, 3].map((idx) => (
             <button
               key={idx}
-              className={`products-dot ${idx === activeProductIdx ? 'products-dot-active' : ''}`}
+              className={`h-2 rounded-full transition-all duration-350 ${idx === activeProductIdx ? 'w-6 bg-primary-gold' : 'w-2 bg-white/25 hover:bg-white/50'}`}
               onClick={() => scrollToProduct(idx)}
               aria-label={`Go to product ${idx + 1}`}
             />
@@ -443,10 +445,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="why-section" ref={whyRef}>
-
-        <div className="why-image-wrapper">
-          <div className="why-bg-layer">
+      {/* ── SECTION 4: WHY CONNPLEX ── */}
+      <section className="bg-black px-[4%] sm:px-[6%] py-20 border-t border-white/5" ref={whyRef}>
+        <div className="relative w-full md:w-[calc(100%+8%)] md:-ml-[4%] aspect-square md:aspect-[16/8] overflow-hidden mb-20 bg-black flex items-center justify-center rounded-2xl md:rounded-none">
+          <div className="absolute inset-0 opacity-60 z-10">
             <Image
               src="/assets/cinema_bg.png"
               alt="Luxury Cinema Background"
@@ -456,26 +458,30 @@ export default function Home() {
             />
           </div>
 
-          <div className={`why-popcorn-layer ${isWhyVisible ? "animate-up" : ""}`}>
+          <div className={`absolute left-1/2 -translate-x-1/2 z-20 w-[80%] md:w-[55%] max-w-[650px] pointer-events-none mix-blend-screen transition-all duration-1000 ease-out [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)] ${isWhyVisible ? 'bottom-0 md:bottom-[-10%] translate-y-0 opacity-100' : 'bottom-[-20%] translate-y-[100px] opacity-0'}`}>
             <Image
               src="/assets/popcorn.png"
               alt="Popcorn Bucket"
               width={600}
               height={600}
-              className="why-popcorn-bucket"
+              className="transition-transform duration-100 ease-linear"
               style={{ objectFit: "contain" }}
             />
           </div>
 
-          <div className="why-image-overlay">
-            <div className="why-image-content">
-              <div className="why-logo-wrap">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-6 pt-12 pb-24 md:pb-[15rem] bg-gradient-to-b from-black/50 via-transparent to-black/75">
+            <div className="max-w-[800px] w-full -translate-y-5">
+              <div className="mb-6 flex justify-center drop-shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain" }} />
               </div>
-              <h3 className="why-image-text">Where cinema becomes an experience.</h3>
-              <div className="why-image-btns">
-
-                <a href="https://ticketing.theconnplex.com/" target="_blank" rel="noopener noreferrer" className="why-btn why-btn-outline">
+              <h3 className="text-white/85 text-[clamp(0.9rem,1.5vw,1.25rem)] font-light mb-6 tracking-wide">Where cinema becomes an experience.</h3>
+              <div className="flex gap-6 justify-center">
+                <a 
+                  href="https://ticketing.theconnplex.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 bg-transparent text-white border border-white/45 hover:bg-white hover:text-black hover:border-white hover:-translate-y-1"
+                >
                   Book Your Tickets
                 </a>
               </div>
@@ -483,56 +489,62 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="why-stats">
-          <div className="why-stat">
-            <span className="why-stat-num">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-t border-white/10 pt-14 text-left">
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
               <Counter target={10} isVisible={isWhyVisible} suffix="M+" />
             </span>
-            <span className="why-stat-label">Annual Footfall</span>
+            <span className="text-sm text-text-secondary font-normal">Annual Footfall</span>
           </div>
-          <div className="why-stat">
-            <span className="why-stat-num">
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
               <Counter target={115} isVisible={isWhyVisible} suffix="+" />
             </span>
-            <span className="why-stat-label">Premium Screens</span>
+            <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
-          <div className="why-stat">
-            <span className="why-stat-num">Tier 1 &amp; 2</span>
-            <span className="why-stat-label">Cities Covered</span>
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">Tier 1 &amp; 2</span>
+            <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
-          <div className="why-stat">
-            <span className="why-stat-num">Immersive</span>
-            <span className="why-stat-label">Cinema Experiences Delivered</span>
+          <div className="flex flex-col gap-2.5">
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">Immersive</span>
+            <span className="text-sm text-text-secondary font-normal">Cinema Experiences Delivered</span>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 6: CASE STUDIES ── */}
-      <section className="cases-section">
-        <div className="cases-header">
+      {/* ── SECTION 5: CASE STUDIES ── */}
+      <section className="bg-black px-[4%] sm:px-[6%] py-20 md:py-32 border-t border-white/5">
+        <div className="flex flex-row justify-between items-end gap-6 mb-12 text-left">
           <div>
-            <p className="cases-eyebrow">CASE STUDIES</p>
-            <h2 className="cases-title">
-              Work that moved <span>audiences.</span>
+            <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">CASE STUDIES</p>
+            <h2 className="text-[clamp(1.8rem,5vw,3rem)] font-bold text-white leading-tight font-outfit uppercase">
+              Work that moved <span className="text-text-secondary">audiences.</span>
             </h2>
           </div>
-          <div className="cases-nav">
+          <div className="flex gap-4">
             <button
-              className="cases-nav-btn"
+              className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-white flex items-center justify-center transition-all duration-300 hover:bg-white hover:text-black hover:border-white cursor-pointer text-lg"
               onClick={() => goToCase((currentCase - 1 + cases.length) % cases.length)}
-            >←</button>
+            >
+              ←
+            </button>
             <button
-              className="cases-nav-btn"
+              className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-white flex items-center justify-center transition-all duration-300 hover:bg-white hover:text-black hover:border-white cursor-pointer text-lg"
               onClick={() => goToCase((currentCase + 1) % cases.length)}
-            >→</button>
+            >
+              →
+            </button>
           </div>
         </div>
 
-        <div className="cases-slider">
-          <div className={`cases-track ${caseAnimating ? "fade-out" : ""}`}>
-            <div className="case-slide">
-              <span className="case-tag">{cases[currentCase].tag}</span>
-              <div className="case-image-wrap">
+        <div className="relative w-full">
+          <div className={`relative w-full aspect-[4/3] md:aspect-[21/9] rounded-2xl md:rounded-[2rem] overflow-hidden transition-opacity duration-500 bg-[#111] ${caseAnimating ? "opacity-0" : "opacity-100"}`}>
+            <div className="relative w-full h-full">
+              <span className="absolute top-4 left-4 md:top-10 md:left-10 z-10 bg-black/60 backdrop-blur-md text-white px-5 py-2 rounded-full text-xs font-bold tracking-wider border border-white/10 uppercase">
+                {cases[currentCase].tag}
+              </span>
+              <div className="w-full h-full relative">
                 <Image
                   src={cases[currentCase].src}
                   alt={cases[currentCase].title}
@@ -540,18 +552,18 @@ export default function Home() {
                   style={{ objectFit: "cover" }}
                 />
               </div>
-              <div className="case-info-overlay">
-                <h3 className="case-info-title">{cases[currentCase].title}</h3>
-                <p className="case-info-desc">{cases[currentCase].desc}</p>
+              <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 text-left">
+                <h3 className="text-xl md:text-4xl font-bold text-white mb-2 uppercase font-outfit">{cases[currentCase].title}</h3>
+                <p className="text-sm md:text-lg text-white/70 max-w-[500px] font-normal">{cases[currentCase].desc}</p>
               </div>
             </div>
           </div>
 
-          <div className="cases-indicators">
+          <div className="flex justify-center gap-4 mt-8">
             {cases.map((_, i) => (
               <div
                 key={i}
-                className={`case-dot ${i === currentCase ? "active" : ""}`}
+                className={`h-[3px] cursor-pointer transition-all duration-300 ${i === currentCase ? "w-10 bg-primary-gold" : "w-7 bg-white/10 hover:bg-white/20"}`}
                 onClick={() => goToCase(i)}
               />
             ))}
@@ -559,34 +571,46 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="movies-section">
-        <div className="movies-header">
-          <h2 className="movies-title">
-            <span className="movies-title-strong">Latest Releases</span>{" "}
-            <span className="movies-title-muted">now screening.</span>
+      {/* ── SECTION 6: LATEST RELEASES ── */}
+      <section className="bg-black px-[4%] sm:px-[6%] py-20 border-t border-white/5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-12 text-left">
+          <h2 className="text-[clamp(1.8rem,5vw,3rem)] font-bold leading-tight tracking-tight uppercase font-outfit">
+            <span className="text-white">Latest Releases</span>{" "}
+            <span className="text-text-secondary font-bold">now screening.</span>
           </h2>
-          <a href="https://ticketing.theconnplex.com/" target="_blank" rel="noopener noreferrer" className="movies-view-all">
+          <a 
+            href="https://ticketing.theconnplex.com/" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 bg-transparent text-primary-gold border border-primary-gold/30 hover:bg-primary-gold hover:text-black hover:border-primary-gold whitespace-nowrap"
+          >
             View All Movies →
           </a>
         </div>
 
-        <div className="movies-grid" role="list">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" role="list">
           {movies.map((m) => (
-            <div className="movie-card" key={m.title} role="listitem">
+            <div className="relative w-full aspect-[16/9] sm:aspect-[2/3] rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={m.title} role="listitem">
               <Image
                 src={m.src}
                 alt={m.alt}
                 fill
                 style={{ objectFit: "cover" }}
+                className="transition-transform duration-700 ease-out group-hover:scale-105"
               />
-              <div className="movie-card-overlay">
-                <div className="movie-info">
-                  <div className="movie-rating">
-                    <span className="star">★</span> {m.rating}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6 md:p-8 transition-colors duration-300 text-left">
+                <div className="transition-transform duration-500 ease-out translate-y-0 sm:translate-y-6 sm:group-hover:translate-y-0">
+                  <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-white mb-4 border border-white/10">
+                    <span className="text-primary-gold">★</span> {m.rating}
                   </div>
-                  <h3 className="movie-card-title">{m.title}</h3>
-                  <p className="movie-card-genre">{m.genre}</p>
-                  <a href="https://ticketing.theconnplex.com/" target="_blank" rel="noopener noreferrer" className="movie-book-btn">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1.5 tracking-wide font-outfit uppercase">{m.title}</h3>
+                  <p className="text-xs md:text-sm text-white/60 mb-5">{m.genre}</p>
+                  <a 
+                    href="https://ticketing.theconnplex.com/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="w-full bg-white text-black py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:bg-primary-gold hover:text-black block text-center opacity-100 sm:opacity-0 sm:scale-95 sm:group-hover:opacity-100 sm:group-hover:scale-100"
+                  >
                     Book Tickets
                   </a>
                 </div>
@@ -596,20 +620,22 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="partner-section">
-        <div className="partner-content">
-          <p className="partner-eyebrow">LET&apos;S CREATE TOGETHER</p>
-          <h2 className="partner-title">
-            Build  <span className="text-gold">high-impact</span><br />
+      {/* ── SECTION 7: CREATE TOGETHER ── */}
+      <section className="bg-black px-[4%] sm:px-[6%] py-24 md:py-32 text-center relative border-t border-white/5 before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-[200px] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-primary-gold before:to-transparent">
+        <div className="max-w-[900px] mx-auto">
+          <p className="text-[0.8rem] font-bold tracking-[4px] text-primary-gold mb-8 uppercase">LET&apos;S CREATE TOGETHER</p>
+          <h2 className="text-[clamp(2.2rem,6vw,4rem)] font-bold text-white leading-tight mb-8 tracking-tighter uppercase font-outfit">
+            Build <span className="text-primary-gold">high-impact</span><br />
             brand experiences.
           </h2>
-          <p className="partner-subtitle">
-            Tell us your vision. We'll handle the rest.
+          <p className="text-[clamp(1rem,2vw,1.25rem)] text-text-secondary leading-relaxed mb-12">
+            Tell us your vision. We&apos;ll handle the rest.
           </p>
-          <div className="partner-action">
-            <Link href="/contact" className="btn-get-touch">Get in Touch</Link>
+          <div className="mb-16">
+            <Link href="/contact" className="bg-[#111] text-white px-10 py-4 rounded-full text-base font-semibold border border-white/10 transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 shadow-[0_0_20px_rgba(234,179,8,0.05)] hover:shadow-[0_10px_30px_rgba(234,179,8,0.15)] inline-block">
+              Get in Touch
+            </Link>
           </div>
-
         </div>
       </section>
 
