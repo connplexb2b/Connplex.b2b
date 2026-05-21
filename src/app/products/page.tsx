@@ -1,127 +1,88 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const ProductsPage = () => {
-  const [activeProductIdx, setActiveProductIdx] = useState(0);
-  const productsGridRef = useRef<HTMLDivElement>(null);
-
-  const handleProductsScroll = () => {
-    if (productsGridRef.current) {
-      const scrollLeft = productsGridRef.current.scrollLeft;
-      const width = productsGridRef.current.clientWidth;
-      if (width > 0) {
-        const index = Math.round(scrollLeft / width);
-        setActiveProductIdx(index);
-      }
+  const products = [
+    {
+      name: "Connflix",
+      tagline: "Stream cinema-grade originals.",
+      href: "/connflix",
+      img: "/connflix_hero_mockup.png",
+      alt: "Connflix Mockup"
+    },
+    {
+      name: "Conntube",
+      tagline: "Your channel. Your audience.",
+      href: "/conntube",
+      img: "/conntube_hero_mockup.png",
+      alt: "Conntube Mockup"
+    },
+    {
+      name: "SpectraX",
+      tagline: "Experience beyond the screen.",
+      href: "/spectra-x",
+      img: "/spectra-x-hero.png",
+      alt: "SpectraX Screen"
+    },
+    {
+      name: "DownTown",
+      tagline: "Design for modern crowd.",
+      href: "/downtown",
+      img: "/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png",
+      alt: "DownTown District"
+    },
+    {
+      name: "PureX",
+      tagline: "Breathe cinema-grade air.",
+      href: "/pure-x",
+      img: "/purex_landscape_hero.png",
+      alt: "PureX Air Purifier"
     }
-  };
-
-  const scrollToProduct = (idx: number) => {
-    if (productsGridRef.current) {
-      const width = productsGridRef.current.clientWidth;
-      productsGridRef.current.scrollTo({
-        left: idx * width,
-        behavior: "smooth"
-      });
-      setActiveProductIdx(idx);
-    }
-  };
+  ];
 
   return (
     <>
       <Header />
-      <main style={{ backgroundColor: '#050505', paddingTop: '120px' }}>
-        <section className="products-section">
-          <div className="products-header" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 4rem' }}>
-            <h2 className="products-title">
-              The Connplex Cinema <span className="products-title-muted">Ecosystem</span>
+      <main className="bg-[#050505] pt-32 pb-24 px-4 sm:px-6 md:px-10 lg:px-20 min-h-screen">
+        <section className="max-w-[1600px] mx-auto w-full">
+          <div className="text-center mb-16 md:mb-24">
+            <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">OUR ENTERTAINMENT PRODUCTS</span>
+            <h2 className="font-outfit text-3xl sm:text-4xl md:text-5xl font-light uppercase tracking-wide text-white">
+              The Connplex Cinema <span className="text-[#c19b62] font-normal">Ecosystem</span>
             </h2>
+            <div className="w-10 h-[2px] bg-[#c19b62] mx-auto mt-5"></div>
           </div>
 
-          <div 
-            className="products-grid"
-            ref={productsGridRef}
-            onScroll={handleProductsScroll}
-          >
-            <div className="product-card product-card-dark">
-              <p className="product-name">Connflix</p>
-              <p className="product-tagline">Stream cinema-grade originals.</p>
-              <div className="product-actions">
-                <Link href="/connflix">
-                  <button className="product-btn-circle">Explore</button>
-                </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 w-full">
+            {products.map((p) => (
+              <div 
+                key={p.name}
+                className="relative flex flex-col items-center pt-12 px-6 pb-0 min-h-[500px] overflow-hidden bg-[#0a0a0a] border border-white/5 hover:border-[#c19b62] rounded-2xl transition-all duration-300 hover:shadow-[0_10px_30px_rgba(193,155,98,0.15)] group"
+              >
+                <p className="text-2xl font-bold text-white text-center mb-2 font-outfit uppercase group-hover:text-[#c19b62] transition-colors duration-300">{p.name}</p>
+                <p className="text-sm text-text-secondary text-center mb-6 min-h-[40px] px-2">{p.tagline}</p>
+                <div className="flex items-center gap-5 mb-8">
+                  <Link href={p.href}>
+                    <button className="bg-white text-black hover:bg-[#c19b62] hover:text-black rounded-full px-6 py-2.5 text-[0.88rem] font-semibold transition-all duration-300 hover:scale-105 cursor-pointer">
+                      Explore
+                    </button>
+                  </Link>
+                </div>
+                <div className="relative w-full flex-1 min-h-[280px] rounded-t-xl overflow-hidden mt-auto">
+                  <Image 
+                    src={p.img} 
+                    alt={p.alt} 
+                    fill 
+                    style={{ objectFit: "cover", objectPosition: p.name === "PureX" ? "center" : "top" }} 
+                    className="transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </div>
               </div>
-              <div className="product-image-wrap">
-                <Image src="/connflix_hero_mockup.png" alt="Connflix" fill style={{ objectFit: "cover", objectPosition: "top" }} />
-              </div>
-            </div>
-
-            <div className="product-card product-card-dark">
-              <p className="product-name">Conntube</p>
-              <p className="product-tagline">Your channel. Your audience.</p>
-              <div className="product-actions">
-                <Link href="/conntube">
-                  <button className="product-btn-circle">Explore</button>
-                </Link>
-              </div>
-              <div className="product-image-wrap">
-                <Image src="/conntube_hero_mockup.png" alt="Conntube" fill style={{ objectFit: "cover", objectPosition: "top" }} />
-              </div>
-            </div>
-
-            <div className="product-card product-card-dark">
-              <p className="product-name">SpectraX</p>
-              <p className="product-tagline">Experience beyond the screen.</p>
-              <div className="product-actions">
-                <Link href="/spectra-x">
-                  <button className="product-btn-circle">Explore</button>
-                </Link>
-              </div>
-              <div className="product-image-wrap">
-                <Image src="/spectra-x-hero.png" alt="SpectraX" fill style={{ objectFit: "cover", objectPosition: "top" }} />
-              </div>
-            </div>
-
-            <div className="product-card product-card-dark">
-              <p className="product-name">DownTown</p>
-              <p className="product-tagline">Design for modern crowd.</p>
-              <div className="product-actions">
-                <Link href="/downtown">
-                  <button className="product-btn-circle">Explore</button>
-                </Link>
-              </div>
-              <div className="product-image-wrap">
-                <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill style={{ objectFit: "cover", objectPosition: "top" }} />
-              </div>
-            </div>
-
-            <div className="product-card product-card-dark">
-              <p className="product-name">PureX</p>
-              <p className="product-tagline">Breathe cinema-grade air.</p>
-              <div className="product-actions">
-                <Link href="/pure-x">
-                  <button className="product-btn-circle">Explore</button>
-                </Link>
-              </div>
-              <div className="product-image-wrap">
-                <Image src="/purex_landscape_hero.png" alt="PureX Air Purifier" fill style={{ objectFit: "cover", objectPosition: "center" }} />
-              </div>
-            </div>
-          </div>
-
-          <div className="products-nav">
-            {[0, 1, 2, 3, 4].map((idx) => (
-              <button
-                key={idx}
-                className={`products-dot ${idx === activeProductIdx ? 'products-dot-active' : ''}`}
-                onClick={() => scrollToProduct(idx)}
-                aria-label={`Go to product ${idx + 1}`}
-              />
             ))}
           </div>
         </section>
