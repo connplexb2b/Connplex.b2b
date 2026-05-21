@@ -289,8 +289,8 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="relative bg-white/2 w-full h-[250px] sm:h-[400px] lg:h-full lg:min-h-[500px] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]" style={{ direction: 'ltr' }}>
-              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill style={{ objectFit: 'cover', objectPosition: 'top center' }} />
+            <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]" style={{ direction: 'ltr' }}>
+              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
@@ -323,8 +323,8 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="relative bg-white/2 w-full h-[250px] sm:h-[400px] lg:h-full lg:min-h-[500px] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]">
-              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill style={{ objectFit: 'cover', objectPosition: 'top center' }} />
+            <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]">
+              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
