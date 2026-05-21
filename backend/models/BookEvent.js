@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+?[1-9]\d{1,14}$|^[0-9]{10}$/; // E.164 standard phone format or standard 10 digit local format
+const phoneRegex = /^\+?[1-9]\d{1,14}$|^[0-9]{10}$/;
 
-const eventBookingSchema = new mongoose.Schema({
+const bookEventSchema = new mongoose.Schema({
   eventType: {
     type: String,
     required: [true, 'Event type is required'],
@@ -62,9 +62,9 @@ const eventBookingSchema = new mongoose.Schema({
     default: '',
   }
 }, {
-  timestamps: true, // Auto-inject createdAt & updatedAt fields
-  collection: 'event_bookings' // Explicitly specify database collection name
+  timestamps: true,
+  collection: 'bookevents'
 });
 
-const EventBooking = mongoose.model('EventBooking', eventBookingSchema);
-export default EventBooking;
+const BookEvent = mongoose.model('BookEvent', bookEventSchema);
+export default BookEvent;

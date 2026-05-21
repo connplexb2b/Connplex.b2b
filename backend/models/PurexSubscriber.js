@@ -13,7 +13,7 @@ const purexSubscriberSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'purex_subscribers'
+  collection: 'purexsubscribers'
 });
 
 const PurexSubscriber = mongoose.model('PurexSubscriber', purexSubscriberSchema);

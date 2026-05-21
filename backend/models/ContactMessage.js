@@ -59,7 +59,7 @@ const contactMessageSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'contact_messages'
+  collection: 'contactmessages'
 });
 
 const ContactMessage = mongoose.model('ContactMessage', contactMessageSchema);

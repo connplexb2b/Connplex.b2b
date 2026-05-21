@@ -13,7 +13,7 @@ const newsletterSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'newsletter_subscribers'
+  collection: 'newsletters'
 });
 
 const Newsletter = mongoose.model('Newsletter', newsletterSchema);

@@ -22,7 +22,7 @@ const downtownInvitationSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'downtown_invitations'
+  collection: 'downtowninvitations'
 });
 
 const DowntownInvitation = mongoose.model('DowntownInvitation', downtownInvitationSchema);

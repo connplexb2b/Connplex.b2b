@@ -1,52 +1,50 @@
-import express from "express";
+import express from 'express';
+import {
+  bookEvent,
+  joinConnEventsWaitlist,
+  joinConnflixWaitlist,
+  joinConnmusicWaitlist,
+  requestStudioInvitation,
+  submitContactInquiry,
+  requestDowntownInvitation,
+  submitFranchiseApplication,
+  subscribePurex,
+  reserveSkyinn,
+  subscribeNewsletter,
+  registerVendor,
+  bookConsultant,
+  applyCareer,
+  submitGeneralInquiry
+} from '../controllers/formController.js';
 
 const router = express.Router();
 
-router.get("/test", (req, res) => {
-  res.json({
+// GET /api/forms/test
+router.get('/test', (req, res) => {
+  res.status(200).json({
     success: true,
-    message: "API working",
+    message: "API working"
   });
 });
 
-router.post("/book-event", async (req, res) => {
-  try {
-    console.log("BODY RECEIVED:", req.body);
+// Define API post endpoints for each form collection
+router.post('/book-event', bookEvent);
+router.post('/connevents-waitlist', joinConnEventsWaitlist);
+router.post('/connflix-subscribers', joinConnflixWaitlist);
+router.post('/connmusic-waitlist', joinConnmusicWaitlist);
+router.post('/studio-invitations', requestStudioInvitation);
+router.post('/contact-messages', submitContactInquiry);
+router.post('/downtown-invitations', requestDowntownInvitation);
+router.post('/franchise-applications', submitFranchiseApplication);
+router.post('/purex-subscribers', subscribePurex);
+router.post('/skyinn-reservations', reserveSkyinn);
+router.post('/newsletter', subscribeNewsletter);
+router.post('/vendor-registration', registerVendor);
 
-    return res.status(201).json({
-      success: true,
-      message: "Book event form submitted successfully",
-      data: req.body,
-    });
-
-  } catch (error) {
-    console.error("ERROR:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
-
-router.post("/contact-messages", async (req, res) => {
-  try {
-    console.log("CONTACT BODY:", req.body);
-
-    return res.status(201).json({
-      success: true,
-      message: "Contact form submitted successfully",
-      data: req.body,
-    });
-
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+// Add the requested collection-specific routes
+router.post('/franchise-inquiry', submitFranchiseApplication);
+router.post('/consultant-booking', bookConsultant);
+router.post('/career-application', applyCareer);
+router.post('/general-inquiry', submitGeneralInquiry);
 
 export default router;

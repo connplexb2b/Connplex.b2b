@@ -1,22 +1,17 @@
 import mongoose from 'mongoose';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\+?[1-9]\d{1,14}$|^[0-9]{10}$/;
 
-const vendorRegistrationSchema = new mongoose.Schema({
-  companyName: {
+const generalInquirySchema = new mongoose.Schema({
+  fullName: {
     type: String,
-    required: [true, 'Company name is required'],
-    trim: true,
-  },
-  contactName: {
-    type: String,
-    required: [true, 'Contact name is required'],
+    required: [true, 'Full name is required'],
     trim: true,
   },
   email: {
     type: String,
     required: [true, 'Email address is required'],
-    unique: true,
     lowercase: true,
     trim: true,
     match: [emailRegex, 'Please provide a valid email address'],
@@ -25,19 +20,22 @@ const vendorRegistrationSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Phone number is required'],
     trim: true,
+    match: [phoneRegex, 'Please provide a valid phone number'],
   },
-  productCategory: {
+  subject: {
     type: String,
+    required: [true, 'Subject is required'],
     trim: true,
   },
   message: {
     type: String,
+    required: [true, 'Message is required'],
     trim: true,
   }
 }, {
   timestamps: true,
-  collection: 'vendorregistrations'
+  collection: 'generalinquiries'
 });
 
-const VendorRegistration = mongoose.model('VendorRegistration', vendorRegistrationSchema);
-export default VendorRegistration;
+const GeneralInquiry = mongoose.model('GeneralInquiry', generalInquirySchema);
+export default GeneralInquiry;

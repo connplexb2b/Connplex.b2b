@@ -17,7 +17,7 @@ const studioInvitationSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'studio_invitations'
+  collection: 'studioinvitations'
 });
 
 const StudioInvitation = mongoose.model('StudioInvitation', studioInvitationSchema);

@@ -13,7 +13,7 @@ const connEventsWaitlistSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'connevents_waitlist'
+  collection: 'conneventswaitlists'
 });
 
 const ConnEventsWaitlist = mongoose.model('ConnEventsWaitlist', connEventsWaitlistSchema);

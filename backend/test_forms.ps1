@@ -100,3 +100,63 @@ Submit-Form "/forms/purex-subscribers" @{
 Submit-Form "/forms/skyinn-reservations" @{
     email = "skyinn_test$rand@example.com"
 } "Sky-Inn VIP Reservation"
+
+# 11. Newsletter Subscribe
+Submit-Form "/forms/newsletter" @{
+    email = "newsletter_test$rand@example.com"
+} "Newsletter Subscribe"
+
+# 12. Vendor Registration
+Submit-Form "/forms/vendor-registration" @{
+    businessName = "Acme Goods Co."
+    contactPerson = "Edward Elric"
+    email = "edward$rand@example.com"
+    phone = "8887776665"
+    productCategory = "Concessions & Snacks"
+    message = "Interested in supplying organic popcorn."
+} "Vendor Registration"
+
+# 13. Franchise Inquiry (Specific Route)
+Submit-Form "/forms/franchise-inquiry" @{
+    fullName = "Franchise Prospect $rand"
+    email = "franchise_inq$rand@example.com"
+    phone = "7776665554"
+    state = "New York"
+    city = "Buffalo"
+    preferredInvestment = "2Cr - 5Cr"
+    preferredCity = "Rochester"
+    hasProperty = "Yes"
+    timeframe = "6 Months"
+    message = "Requesting information pack."
+} "Franchise Inquiry (Specific Route)"
+
+# 14. Consultant Booking
+Submit-Form "/forms/consultant-booking" @{
+    fullName = "Dr. Susan Stone"
+    email = "susan$rand@example.com"
+    phone = "6665554443"
+    appointmentDate = "2026-07-20"
+    subject = "Cinema Interior Design consultation"
+    message = "Seeking custom acoustic treatment consulting."
+} "Consultant Booking"
+
+# 15. Career Application
+Submit-Form "/forms/career-application" @{
+    fullName = "Jane Doe"
+    email = "jane_doe$rand@example.com"
+    phone = "5554443332"
+    position = "Operations Manager"
+    experience = "5 years in theater management"
+    cvUrl = "https://example.com/resumes/janedoe.pdf"
+    coverLetter = "I would love to join the Connplex Cinemas team."
+} "Career Application"
+
+# 16. General Inquiry
+Submit-Form "/forms/general-inquiry" @{
+    fullName = "John Smith"
+    email = "john_smith$rand@example.com"
+    phone = "4443332221"
+    subject = "Partnership Proposal"
+    message = "We would like to discuss co-branding opportunities."
+} "General Inquiry"
+

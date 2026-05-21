@@ -13,7 +13,7 @@ const connmusicWaitlistSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'connmusic_waitlist'
+  collection: 'connmusicwaitlists'
 });
 
 const ConnmusicWaitlist = mongoose.model('ConnmusicWaitlist', connmusicWaitlistSchema);

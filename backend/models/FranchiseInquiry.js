@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[1-9]\d{1,14}$|^[0-9]{10}$/;
 
-const franchiseApplicationSchema = new mongoose.Schema({
+const franchiseInquirySchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: [true, 'Full name is required'],
@@ -59,8 +59,8 @@ const franchiseApplicationSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'franchise_applications'
+  collection: 'franchiseinquiries'
 });
 
-const FranchiseApplication = mongoose.model('FranchiseApplication', franchiseApplicationSchema);
-export default FranchiseApplication;
+const FranchiseInquiry = mongoose.model('FranchiseInquiry', franchiseInquirySchema);
+export default FranchiseInquiry;

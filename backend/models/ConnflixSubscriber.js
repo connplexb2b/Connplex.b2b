@@ -13,7 +13,7 @@ const connflixSubscriberSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'connflix_subscribers'
+  collection: 'connflixsubscribers'
 });
 
 const ConnflixSubscriber = mongoose.model('ConnflixSubscriber', connflixSubscriberSchema);

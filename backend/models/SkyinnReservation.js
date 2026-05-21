@@ -13,7 +13,7 @@ const skyinnReservationSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'skyinn_reservations'
+  collection: 'skyinnreservations'
 });
 
 const SkyinnReservation = mongoose.model('SkyinnReservation', skyinnReservationSchema);
