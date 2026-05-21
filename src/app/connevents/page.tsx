@@ -25,7 +25,11 @@ export default function ConnEvents() {
 
         try {
             const apiUrl = getApiUrl();
-            const response = await fetch(`${apiUrl}/api/forms/connevents-waitlist`, {
+            const requestUrl = `${apiUrl}/api/forms/connevents-waitlist`;
+            console.log('API URL:', requestUrl);
+            console.log('Request Payload:', { email });
+
+            const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +37,10 @@ export default function ConnEvents() {
                 body: JSON.stringify({ email }),
             });
 
+            console.log('Response Status:', response.status);
+
             const result = await response.json();
+            console.log('Response Payload:', result);
 
             if (!response.ok) {
                 throw new Error(result.message || 'Something went wrong. Please try again.');
@@ -41,6 +48,7 @@ export default function ConnEvents() {
 
             setIsSubmitted(true);
         } catch (error: any) {
+            console.error('Submission Error:', error);
             setSubmitError(error.message || 'Unable to join waitlist. Please try again later.');
         } finally {
             setIsSubmitting(false);

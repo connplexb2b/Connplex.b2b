@@ -27,7 +27,11 @@ const PureXPage = () => {
 
     try {
       const apiUrl = getApiUrl();
-      const response = await fetch(`${apiUrl}/api/forms/purex-subscribers`, {
+      const requestUrl = `${apiUrl}/api/forms/purex-subscribers`;
+      console.log('API URL:', requestUrl);
+      console.log('Request Payload:', { email });
+
+      const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +39,10 @@ const PureXPage = () => {
         body: JSON.stringify({ email }),
       });
 
+      console.log('Response Status:', response.status);
+
       const result = await response.json();
+      console.log('Response Payload:', result);
 
       if (!response.ok) {
         throw new Error(result.message || 'Something went wrong. Please try again.');
@@ -48,6 +55,7 @@ const PureXPage = () => {
         setFormStatus({ type: null, message: '' });
       }, 5000);
     } catch (error: any) {
+      console.error('Submission Error:', error);
       setFormStatus({ type: 'error', message: error.message || 'Unable to join waitlist. Please try again later.' });
     } finally {
       setIsSubmitting(false);

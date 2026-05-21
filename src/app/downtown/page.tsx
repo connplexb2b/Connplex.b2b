@@ -33,7 +33,11 @@ export default function DowntownPage() {
 
         try {
             const apiUrl = getApiUrl();
-            const response = await fetch(`${apiUrl}/api/forms/downtown-invitations`, {
+            const requestUrl = `${apiUrl}/api/forms/downtown-invitations`;
+            console.log('API URL:', requestUrl);
+            console.log('Request Payload:', { name, email, consent });
+
+            const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,7 +45,10 @@ export default function DowntownPage() {
                 body: JSON.stringify({ name, email, consent }),
             });
 
+            console.log('Response Status:', response.status);
+
             const result = await response.json();
+            console.log('Response Payload:', result);
 
             if (!response.ok) {
                 throw new Error(result.message || 'Something went wrong. Please try again.');
@@ -51,6 +58,7 @@ export default function DowntownPage() {
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
         } catch (error: any) {
+            console.error('Submission Error:', error);
             setSubmitError(error.message || 'Unable to submit invite request. Please try again later.');
         } finally {
             setIsSubmitting(false);

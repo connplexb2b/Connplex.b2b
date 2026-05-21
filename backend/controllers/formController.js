@@ -8,6 +8,8 @@ import DowntownInvitation from '../models/DowntownInvitation.js';
 import FranchiseApplication from '../models/FranchiseApplication.js';
 import PurexSubscriber from '../models/PurexSubscriber.js';
 import SkyinnReservation from '../models/SkyinnReservation.js';
+import Newsletter from '../models/Newsletter.js';
+import VendorRegistration from '../models/VendorRegistration.js';
 
 // Helper to handle standard model creation and responses
 const handleSubmission = async (Model, req, res, next, successMessage) => {
@@ -143,5 +145,27 @@ export const reserveSkyinn = (req, res, next) => {
     res,
     next,
     'Success! You have been successfully added to the Sky-Inn Drive-In exclusive reservation list.'
+  );
+};
+
+// 11. Newsletter Form Controller
+export const subscribeNewsletter = (req, res, next) => {
+  return handleSubmission(
+    Newsletter,
+    req,
+    res,
+    next,
+    'Success! You are now subscribed to our newsletter.'
+  );
+};
+
+// 12. Vendor Registration Form Controller
+export const registerVendor = (req, res, next) => {
+  return handleSubmission(
+    VendorRegistration,
+    req,
+    res,
+    next,
+    'Success! Your vendor registration has been submitted.'
   );
 };

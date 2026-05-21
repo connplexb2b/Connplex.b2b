@@ -23,7 +23,11 @@ export default function ContactPage() {
 
     try {
       const apiUrl = getApiUrl();
-      const response = await fetch(`${apiUrl}/api/forms/contact-messages`, {
+      const requestUrl = `${apiUrl}/api/forms/contact-messages`;
+      console.log('API URL:', requestUrl);
+      console.log('Request Payload:', data);
+
+      const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +35,10 @@ export default function ContactPage() {
         body: JSON.stringify(data),
       });
 
+      console.log('Response Status:', response.status);
+
       const result = await response.json();
+      console.log('Response Payload:', result);
 
       if (!response.ok) {
         throw new Error(result.message || 'Something went wrong. Please try again.');
@@ -39,6 +46,7 @@ export default function ContactPage() {
 
       setIsSubmitted(true);
     } catch (error: any) {
+      console.error('Submission Error:', error);
       setSubmitError(error.message || 'Unable to submit enquiry. Please try again later.');
     } finally {
       setIsSubmitting(false);

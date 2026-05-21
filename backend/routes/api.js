@@ -9,7 +9,9 @@ import {
   requestDowntownInvitation,
   submitFranchiseApplication,
   subscribePurex,
-  reserveSkyinn
+  reserveSkyinn,
+  subscribeNewsletter,
+  registerVendor
 } from '../controllers/formController.js';
 
 const router = express.Router();
@@ -17,7 +19,8 @@ const router = express.Router();
 // GET /api/forms/test
 router.get('/test', (req, res) => {
   res.status(200).json({
-    success: true
+    success: true,
+    message: "API working"
   });
 });
 
@@ -32,5 +35,7 @@ router.post('/downtown-invitations', requestDowntownInvitation);
 router.post('/franchise-applications', submitFranchiseApplication);
 router.post('/purex-subscribers', subscribePurex);
 router.post('/skyinn-reservations', reserveSkyinn);
+router.post('/newsletter', subscribeNewsletter);
+router.post('/vendor-registration', registerVendor);
 
 export default router;

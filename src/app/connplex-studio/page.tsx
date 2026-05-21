@@ -48,7 +48,11 @@ const ConnplexStudioPage = () => {
 
         try {
             const apiUrl = getApiUrl();
-            const response = await fetch(`${apiUrl}/api/forms/studio-invitations`, {
+            const requestUrl = `${apiUrl}/api/forms/studio-invitations`;
+            console.log('API URL:', requestUrl);
+            console.log('Request Payload:', { name, email });
+
+            const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,7 +60,10 @@ const ConnplexStudioPage = () => {
                 body: JSON.stringify({ name, email }),
             });
 
+            console.log('Response Status:', response.status);
+
             const result = await response.json();
+            console.log('Response Payload:', result);
 
             if (!response.ok) {
                 throw new Error(result.message || 'Something went wrong. Please try again.');
@@ -64,6 +71,7 @@ const ConnplexStudioPage = () => {
 
             setFormSubmitted(true);
         } catch (error: any) {
+            console.error('Submission Error:', error);
             setSubmitError(error.message || 'Unable to submit request. Please try again later.');
         } finally {
             setIsSubmitting(false);
