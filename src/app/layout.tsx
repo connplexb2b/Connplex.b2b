@@ -13,8 +13,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Connplex Cinemas | Cinema Spaces for Brands",
-  description: "Launch. Engage. Convert on the Big Screen.",
+  title: "Connplex Cinemas | Premium Cinema Chain in India",
+  description: "Welcome to Connplex Cinemas, India's fastest-growing premium next-gen cinema chain. Explore premium smart cinema screens and B2B cinema screen partnerships, redefining entertainment.",
 };
 
 export default function RootLayout({

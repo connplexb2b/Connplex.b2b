@@ -2,11 +2,6 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata = {
-    title: 'Capex for Developers | Connplex Cinemas',
-    description: 'Scalable cinema infrastructure designed for premium experiences and long-term growth. Explore investment models with Connplex Cinemas.',
-};
-
 const CapexPage = () => {
     return (
         <div className="bg-black text-white font-outfit min-h-screen flex flex-col justify-between">
