@@ -240,6 +240,13 @@ export default function FranchisePage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.playbackRate = 1.5;
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -288,7 +295,7 @@ export default function FranchisePage() {
 
             {/* Hero */}
             <section className="relative min-h-screen flex items-center px-4 sm:px-6 md:px-10 lg:px-20 py-24 md:py-32 overflow-hidden justify-center sm:justify-start">
-                <video className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-110 object-cover z-1" autoPlay muted loop playsInline>
+                <video ref={videoRef} className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto -translate-x-1/2 -translate-y-1/2 scale-110 object-cover z-1" autoPlay muted loop playsInline>
                     <source src="/img/franchise/top_video.mp4" type="video/mp4" />
                 </video>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent z-2"></div>

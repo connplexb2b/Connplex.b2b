@@ -186,6 +186,13 @@ const ProjectorMotes = () => {
 export default function AdvertisePage() {
     const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
     const heroRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.playbackRate = 1.5;
+        }
+    }, []);
 
     // Intersection Observer for counting animations
     const setRef = useCallback((node: HTMLElement | null, id: string) => {
@@ -220,7 +227,7 @@ export default function AdvertisePage() {
 
             {/* Immersive Cinematic Wrapper */}
             <div className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-cover bg-[center_30%] bg-no-repeat bg-[url('/img/advertise/theater_bg.png')]" ref={heroRef}>
-                <video className="absolute top-0 left-0 w-full h-full object-cover z-0 pointer-events-none" autoPlay loop muted playsInline poster="/img/advertise/theater_bg.png">
+                <video ref={videoRef} className="absolute top-0 left-0 w-full h-full object-cover z-0 pointer-events-none" autoPlay loop muted playsInline poster="/img/advertise/theater_bg.png">
                     <source src="/video/advertise_lion.mp4" type="video/mp4" />
                 </video>
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-1 bg-[radial-gradient(circle_at_75%_45%,rgba(3,3,3,0)_0%,rgba(3,3,3,0.75)_100%)]"></div>

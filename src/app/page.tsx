@@ -130,6 +130,13 @@ export default function Home() {
   const [caseAnimating, setCaseAnimating] = useState(false);
   const [isWhyVisible, setIsWhyVisible] = useState(false);
   const whyRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 1.5;
+    }
+  }, []);
   
   const [activeProductIdx, setActiveProductIdx] = useState(0);
   const productsGridRef = useRef<HTMLDivElement>(null);
@@ -212,6 +219,7 @@ export default function Home() {
       <main className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
+            ref={videoRef}
             autoPlay
             muted
             loop
