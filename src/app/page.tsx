@@ -130,6 +130,31 @@ export default function Home() {
   const [caseAnimating, setCaseAnimating] = useState(false);
   const [isWhyVisible, setIsWhyVisible] = useState(false);
   const whyRef = useRef<HTMLElement>(null);
+  
+  const [activeProductIdx, setActiveProductIdx] = useState(0);
+  const productsGridRef = useRef<HTMLDivElement>(null);
+
+  const handleProductsScroll = () => {
+    if (productsGridRef.current) {
+      const scrollLeft = productsGridRef.current.scrollLeft;
+      const width = productsGridRef.current.clientWidth;
+      if (width > 0) {
+        const index = Math.round(scrollLeft / width);
+        setActiveProductIdx(index);
+      }
+    }
+  };
+
+  const scrollToProduct = (idx: number) => {
+    if (productsGridRef.current) {
+      const width = productsGridRef.current.clientWidth;
+      productsGridRef.current.scrollTo({
+        left: idx * width,
+        behavior: "smooth"
+      });
+      setActiveProductIdx(idx);
+    }
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -346,7 +371,11 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="products-grid">
+        <div 
+          className="products-grid"
+          ref={productsGridRef}
+          onScroll={handleProductsScroll}
+        >
           <div className="product-card product-card-dark">
             <p className="product-name">Connflix</p>
             <p className="product-tagline">Stream cinema-grade originals.</p>
@@ -400,6 +429,17 @@ export default function Home() {
               <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
+        </div>
+
+        <div className="products-nav">
+          {[0, 1, 2, 3].map((idx) => (
+            <button
+              key={idx}
+              className={`products-dot ${idx === activeProductIdx ? 'products-dot-active' : ''}`}
+              onClick={() => scrollToProduct(idx)}
+              aria-label={`Go to product ${idx + 1}`}
+            />
+          ))}
         </div>
       </section>
 

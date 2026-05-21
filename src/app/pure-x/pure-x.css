@@ -481,3 +481,15 @@
         height: 56px;
     }
 }
+
+@media (max-width: 480px) {
+    .pure-x-container .section-container {
+        padding: 0 15px;
+    }
+    .pure-x-container .main-heading {
+        font-size: 36px;
+    }
+    .pure-x-container .purifier-image-container {
+        max-width: 100%;
+    }
+}

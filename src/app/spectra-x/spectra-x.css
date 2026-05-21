@@ -817,6 +817,18 @@
 }
 
 @media(max-width: 480px) {
+    .spectra-x-page .container {
+        padding: 0 15px;
+    }
+    .spectra-x-page .hero-text {
+        padding: 40px 15px 24px;
+    }
+    .spectra-x-page .why-matters {
+        padding: 45px 15px;
+    }
+    .spectra-x-page .np-right {
+        padding: 30px 15px;
+    }
     .spectra-x-page .features-grid {
         grid-template-columns: 1fr;
     }

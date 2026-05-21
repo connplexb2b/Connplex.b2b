@@ -126,7 +126,7 @@
 }
 
 .connmusic-main-title {
-    font-size: 100px;
+    font-size: clamp(2.5rem, 8vw, 100px);
     font-weight: 800;
     letter-spacing: 2px;
     line-height: 0.9;
@@ -556,6 +556,26 @@
 }
 
 @media (max-width: 768px) {
+    .connmusic-app-container {
+        padding: 0 20px;
+    }
+    .connmusic-content-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        margin-top: 20px;
+    }
+    .connmusic-info-section {
+        padding-left: 0;
+        align-items: center;
+        text-align: center;
+    }
+    .connmusic-green-divider {
+        margin: 30px auto;
+    }
+    .connmusic-countdown-container {
+        margin-left: auto;
+        margin-right: auto;
+    }
     .connmusic-main-title {
         font-size: 60px;
     }
@@ -563,18 +583,18 @@
         font-size: 18px;
     }
     .connmusic-golden-ring {
-        width: 400px;
-        height: 400px;
+        width: 320px;
+        height: 320px;
     }
     .connmusic-music-system-3d {
-        width: 220px;
-        height: 220px;
+        width: 200px;
+        height: 200px;
     }
     .connmusic-hero-image-wrapper:hover .connmusic-album-sleeve {
-        transform: translateX(-20px) rotateY(-5deg);
+        transform: translateX(-15px) rotateY(-5deg);
     }
     .connmusic-hero-image-wrapper:hover .connmusic-vinyl-record {
-        transform: translateX(60px);
+        transform: translateX(50px);
     }
     .connmusic-features-grid {
         grid-template-columns: 1fr;
@@ -597,3 +617,35 @@
         display: none;
     }
 }
+
+@media (max-width: 480px) {
+    .connmusic-golden-ring {
+        width: 260px;
+        height: 260px;
+    }
+    .connmusic-music-system-3d {
+        width: 160px;
+        height: 160px;
+    }
+    .connmusic-hero-image-wrapper {
+        height: 220px;
+    }
+    .connmusic-main-title {
+        font-size: 40px;
+    }
+    .connmusic-countdown-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+    }
+    .connmusic-countdown-item {
+        padding: 0 10px;
+        border-right: none;
+    }
+    .connmusic-countdown-item:not(:last-child)::after {
+        content: '';
+        display: none;
+    }
+}
+

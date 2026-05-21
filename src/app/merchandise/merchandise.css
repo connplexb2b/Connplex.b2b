@@ -355,6 +355,7 @@
         background-size: cover;
         background-position: center;
         padding-top: 80px;
+        min-height: auto;
     }
     
     .merchandise-page .hero-container {
@@ -393,4 +394,12 @@
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .merchandise-page .bonus-right {
+        padding: 20px 15px;
+    }
+    .merchandise-page .features-box {
+        padding: 20px 15px;
+    }
 }
+

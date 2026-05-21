@@ -281,3 +281,29 @@
     }
     .pp-contact-info { max-width: 100%; }
 }
+
+@media (max-width: 480px) {
+    .pp-hero h1 {
+        font-size: 2.2rem;
+    }
+    .pp-hero-text {
+        font-size: 0.95rem;
+        padding-left: 15px;
+    }
+    .pp-item {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    .pp-icon-box {
+        min-width: 60px;
+        height: 60px;
+    }
+    .pp-contact-banner {
+        padding: 20px;
+    }
+    .pp-contact-info h3 {
+        font-size: 1.8rem;
+    }
+}
+

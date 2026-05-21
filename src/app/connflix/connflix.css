@@ -244,7 +244,7 @@
 }
 
 .connflix-main-title {
-    font-size: 7rem;
+    font-size: clamp(2.5rem, 8vw, 7rem);
     font-weight: 900;
     line-height: 0.9;
     letter-spacing: 2px;
@@ -432,8 +432,37 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+    .connflix-main-content {
+        padding: 2rem 1rem;
+    }
     .connflix-posters-perspective { transform: scale(0.7); }
     .connflix-main-title { font-size: 4rem; }
     .connflix-countdown-container { gap: 1rem; padding: 1rem; }
     .connflix-countdown-value { font-size: 1.5rem; }
 }
+
+@media (max-width: 480px) {
+    .connflix-posters-perspective {
+        transform: scale(0.5);
+        gap: 0.5rem;
+    }
+    .connflix-poster-card {
+        width: 100px;
+        height: 150px;
+    }
+    .connflix-main-title {
+        font-size: 3rem;
+    }
+    .connflix-countdown-container {
+        gap: 0.5rem;
+        padding: 0.8rem;
+    }
+    .connflix-countdown-value {
+        font-size: 1.2rem;
+    }
+    .connflix-tagline {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+}
+

@@ -63,6 +63,13 @@
     right: -200px;
 }
 
+@media (max-width: 768px) {
+    .case-studies-page-wrapper .glow-left,
+    .case-studies-page-wrapper .glow-right {
+        display: none !important;
+    }
+}
+
 .case-studies-page-wrapper .starfield {
     position: fixed;
     top: 0;
@@ -135,7 +142,7 @@
 
 .case-studies-page-wrapper .main-heading {
     font-family: var(--font-heading);
-    font-size: 72px;
+    font-size: clamp(2rem, 6vw + 1rem, 72px);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: 0.01em;
@@ -648,9 +655,31 @@
     .case-studies-page-wrapper .hero-info { align-items: center; }
     .case-studies-page-wrapper .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 40px 0; }
     .case-studies-page-wrapper .case-study-card { grid-template-columns: 1fr; }
+    .case-studies-page-wrapper .hero-visual { height: 350px; }
+    .case-studies-page-wrapper .card-visual { height: 220px; mask-image: none; -webkit-mask-image: none; }
 }
 
 @media (max-width: 768px) {
     .case-studies-page-wrapper .main-heading { font-size: 44px; }
     .case-studies-page-wrapper .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .case-studies-page-wrapper .app-container { padding: 0 24px; }
+    .case-studies-page-wrapper .main-content { padding: 80px 0 30px; gap: 40px; }
+    .case-studies-page-wrapper .stats-dashboard { padding: 30px 20px; }
+    .case-studies-page-wrapper .stat-card::after { display: none !important; }
+    .case-studies-page-wrapper .cta-section { padding: 60px 24px; margin-top: 60px; }
+    .case-studies-page-wrapper .cta-heading { font-size: 32px; }
+}
+
+@media (max-width: 480px) {
+    .case-studies-page-wrapper .app-container { padding: 0 16px; }
+    .case-studies-page-wrapper .main-heading { font-size: 36px; }
+    .case-studies-page-wrapper .hero-visual { height: 250px; }
+    .case-studies-page-wrapper .stats-grid { grid-template-columns: 1fr; gap: 24px; }
+    .case-studies-page-wrapper .filter-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .case-studies-page-wrapper .filter-options { gap: 8px; }
+    .case-studies-page-wrapper .filter-btn { padding: 8px 16px; font-size: 11px; }
+    .case-studies-page-wrapper .card-details,
+    .case-studies-page-wrapper .card-summary { padding: 24px 20px; }
+    .case-studies-page-wrapper .card-title { font-size: 20px; }
+    .case-studies-page-wrapper .card-visual { height: 180px; }
 }

@@ -1,16 +1,37 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Metadata } from "next";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export const metadata: Metadata = {
-  title: "Our Products | Connplex Cinemas",
-  description: "Explore our range of cinema-grade products and entertainment ecosystem.",
-};
-
 const ProductsPage = () => {
+  const [activeProductIdx, setActiveProductIdx] = useState(0);
+  const productsGridRef = useRef<HTMLDivElement>(null);
+
+  const handleProductsScroll = () => {
+    if (productsGridRef.current) {
+      const scrollLeft = productsGridRef.current.scrollLeft;
+      const width = productsGridRef.current.clientWidth;
+      if (width > 0) {
+        const index = Math.round(scrollLeft / width);
+        setActiveProductIdx(index);
+      }
+    }
+  };
+
+  const scrollToProduct = (idx: number) => {
+    if (productsGridRef.current) {
+      const width = productsGridRef.current.clientWidth;
+      productsGridRef.current.scrollTo({
+        left: idx * width,
+        behavior: "smooth"
+      });
+      setActiveProductIdx(idx);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -22,7 +43,11 @@ const ProductsPage = () => {
             </h2>
           </div>
 
-          <div className="products-grid">
+          <div 
+            className="products-grid"
+            ref={productsGridRef}
+            onScroll={handleProductsScroll}
+          >
             <div className="product-card product-card-dark">
               <p className="product-name">Connflix</p>
               <p className="product-tagline">Stream cinema-grade originals.</p>
@@ -87,6 +112,17 @@ const ProductsPage = () => {
                 <Image src="/purex_landscape_hero.png" alt="PureX Air Purifier" fill style={{ objectFit: "cover", objectPosition: "center" }} />
               </div>
             </div>
+          </div>
+
+          <div className="products-nav">
+            {[0, 1, 2, 3, 4].map((idx) => (
+              <button
+                key={idx}
+                className={`products-dot ${idx === activeProductIdx ? 'products-dot-active' : ''}`}
+                onClick={() => scrollToProduct(idx)}
+                aria-label={`Go to product ${idx + 1}`}
+              />
+            ))}
           </div>
         </section>
       </main>

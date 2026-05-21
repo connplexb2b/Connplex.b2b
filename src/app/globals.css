@@ -5,6 +5,13 @@
   --bg-color: #050505;
   --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
+  
+  /* Fluid typography clamp mappings (320px to 1440px) */
+  --fluid-h1: clamp(2.25rem, 5vw + 1rem, 5rem);
+  --fluid-h2: clamp(1.75rem, 4vw + 0.8rem, 3.5rem);
+  --fluid-h3: clamp(1.35rem, 2.5vw + 0.6rem, 2.25rem);
+  --fluid-body: clamp(0.875rem, 0.5vw + 0.75rem, 1rem);
+  --fluid-small: clamp(0.75rem, 0.3vw + 0.65rem, 0.875rem);
 }
 
 * {
@@ -17,6 +24,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  position: relative;
   font-family: 'Outfit', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
@@ -37,7 +45,7 @@ button {
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1rem, 4vw, 2rem);
 }
 
 /* Header Styles */
@@ -530,10 +538,6 @@ button {
 
   .lounger-nav {
     display: none;
-  }
-
-  .products-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1601,9 +1605,91 @@ button {
 @media (max-width: 480px) {
   .global-footer-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   .footer-brand {
     grid-column: span 1;
+  }
+  .footer-legal {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+/* Products Mobile Slider and Scroll Snap */
+@media (max-width: 768px) {
+  .products-section {
+    padding: 3rem 1.5rem 0 !important;
+    overflow-x: hidden;
+  }
+
+  .products-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth;
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+  }
+  
+  .products-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  .product-card {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    min-height: 480px !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
+    padding: 3rem 1.5rem 0 !important;
+  }
+
+  .product-image-wrap {
+    min-height: 280px !important;
+  }
+
+  /* Dots Navigation for Products Section */
+  .products-nav {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  .products-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.25);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+
+  .products-dot:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .products-dot-active {
+    background-color: var(--primary-gold) !important;
+    transform: scale(1.2);
+    width: 24px;
+    border-radius: 4px;
+  }
+}
+
+@media (min-width: 769px) {
+  .products-nav {
+    display: none !important;
   }
 }
 

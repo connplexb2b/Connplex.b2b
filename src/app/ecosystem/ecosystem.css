@@ -351,4 +351,13 @@
         min-height: 300px;
         padding: 30px;
     }
+    
+    .ecosystem-page .banner-content {
+        padding: 24px 16px;
+    }
+    
+    .ecosystem-page .btn-learn-more {
+        width: 100%;
+        justify-content: center;
+    }
 }

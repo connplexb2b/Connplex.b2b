@@ -117,7 +117,7 @@
 
 .main-heading {
     font-family: var(--font-heading);
-    font-size: 88px;
+    font-size: clamp(2.25rem, 7vw + 1rem, 88px);
     font-weight: 700;
     line-height: 0.92;
     letter-spacing: -0.5px;
@@ -450,7 +450,7 @@
 
 .advantage-heading {
     font-family: var(--font-heading);
-    font-size: 50px;
+    font-size: clamp(1.75rem, 4vw + 0.8rem, 50px);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: -0.2px;
@@ -1298,10 +1298,29 @@
     .advantage-cards-grid { grid-template-columns: repeat(2, 1fr); }
     .formats-layout-grid, .power-layout-grid, .audience-layout-grid, .cta-layout-grid { grid-template-columns: 1fr; gap: 40px; }
     .case-card { flex: 0 0 100%; }
+    .formats-cards-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media screen and (max-width: 768px) {
     .main-heading { font-size: 48px; }
     .advantage-cards-grid { grid-template-columns: 1fr; }
     .stat-value { font-size: 48px; }
+    .formats-cards-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content, .advantage-container, .formats-container, .power-container, .cases-container, .audience-container, .cta-container {
+        padding: 0 16px;
+    }
+    .main-heading { font-size: 34px; }
+    .advantage-heading { font-size: 30px; }
+    .formats-section-title, .cases-heading, .audience-main-heading, .cta-main-heading { font-size: 26px; }
+    .formats-cards-row { grid-template-columns: 1fr; }
+    .stats-matrix-grid { grid-template-columns: 1fr; gap: 20px; }
+    .map-metrics-row { flex-direction: column; gap: 20px; }
+    .map-metric-vertical-line { display: none; }
 }

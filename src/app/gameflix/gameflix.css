@@ -221,8 +221,12 @@
 }
 
 @media (max-width: 480px) {
+    .gameflix-page .gf-container {
+        padding: 0 1rem;
+    }
     .gameflix-page .gf-features-grid {
         grid-template-columns: 1fr;
+        padding: 2rem 1rem;
     }
     .gameflix-page .gf-hero-title {
         font-size: 2.8rem;

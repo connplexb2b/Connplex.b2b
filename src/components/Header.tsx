@@ -47,7 +47,10 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
             <div className="burger-bar"></div>
             <div className="burger-bar"></div>
           </div>
-          <a href="https://theconnplex.com/" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ display: isOpen ? 'none' : 'block' }}>Book a Call With Consultant</a>
+          <a href="https://theconnplex.com/" target="_blank" rel="noopener noreferrer" className="btn-primary header-btn" style={{ display: isOpen ? 'none' : 'block' }}>
+            <span className="desktop-text">Book a Call With Consultant</span>
+            <span className="mobile-text">Book a Call</span>
+          </a>
         </div>
       </header>
 

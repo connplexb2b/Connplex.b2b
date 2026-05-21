@@ -527,3 +527,33 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 480px) {
+    .connevents-ticket-container {
+        height: 520px;
+        max-width: 290px;
+    }
+    .connevents-ticket-middle {
+        padding: 1.5rem 1rem;
+    }
+    .connevents-ticket-event {
+        font-size: 1.8rem;
+    }
+    .connevents-ticket-tour {
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+    .connevents-ticket-info {
+        padding: 0.8rem;
+    }
+    .connevents-info-block p {
+        font-size: 0.95rem;
+    }
+    .connevents-ticket-top {
+        padding: 1rem;
+    }
+    .connevents-ticket-bottom {
+        padding: 1rem;
+    }
+}
+

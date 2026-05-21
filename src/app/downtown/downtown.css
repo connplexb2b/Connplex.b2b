@@ -1235,6 +1235,11 @@ html, body {
         gap: 1.5rem;
     }
     
+    .dt-mobile-drawer {
+        width: 100%;
+        max-width: 320px;
+    }
+    
     .dt-toast {
         left: 1rem;
         right: 1rem;

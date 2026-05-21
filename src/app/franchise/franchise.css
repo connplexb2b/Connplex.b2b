@@ -60,7 +60,7 @@ html {
 }
 
 .fra-hero-content h1 {
-    font-size: clamp(48px, 8vw, 88px);
+    font-size: clamp(32px, 8vw, 88px);
     line-height: 1.1;
     margin-bottom: 20px;
     font-weight: 700;
@@ -713,5 +713,34 @@ select.fra-input option {
     }
     .fra-faq-answer-inner {
         padding: 0 20px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fra-hero {
+        padding: 0 16px;
+    }
+    .fra-models-section, .fra-why-section, .fra-testimonials, .fra-faq-section {
+        padding: 40px 16px;
+    }
+    .fra-contact-right {
+        padding: 40px 16px;
+    }
+    .fra-model-card {
+        padding: 30px 16px;
+        gap: 20px;
+    }
+    .model-body {
+        gap: 20px;
+    }
+    .fra-testimonial-card-inner {
+        padding: 30px 16px;
+    }
+    .fra-section-title {
+        font-size: 1.8rem;
+    }
+    .fra-hero-p {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
     }
 }

@@ -267,3 +267,26 @@
         font-size: 40px;
     }
 }
+
+@media (max-width: 480px) {
+    .terms-hero h1 {
+        font-size: 32px;
+    }
+    .terms-hero p {
+        font-size: 15px;
+    }
+    .terms-commitment-card {
+        padding: 40px 20px;
+    }
+    .terms-help-section {
+        padding: 40px 15px;
+    }
+    .terms-help-container {
+        min-height: 400px;
+        border-radius: 15px;
+    }
+    .terms-help-content h2 {
+        font-size: 28px;
+    }
+}
+

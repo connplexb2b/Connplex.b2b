@@ -726,7 +726,7 @@ header {
         letter-spacing: 0.25em;
     }
     .sx-hero-title {
-        font-size: 40px;
+        font-size: clamp(32px, 8vw, 40px);
         letter-spacing: 0.1em;
         margin-bottom: 20px;
     }
@@ -734,8 +734,16 @@ header {
         font-size: 18px;
         letter-spacing: 0.3em;
     }
+    .sx-feature-card {
+        padding: 30px 15px;
+        height: auto;
+        min-height: 280px;
+    }
     .sx-showcase-title {
         font-size: 32px;
+    }
+    .sx-cta-box {
+        padding: 30px 15px;
     }
     .sx-cta-title {
         font-size: 16px;

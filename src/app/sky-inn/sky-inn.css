@@ -186,8 +186,9 @@
 
 .sky-inn-main-title {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.2em;
-    font-size: 7rem;
+    font-size: clamp(2.5rem, 8vw, 7rem);
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.01em;
@@ -568,12 +569,17 @@
 
 /* Responsive */
 @media (max-width: 991px) {
+    .sky-inn-page {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
     .sky-inn-hero {
         grid-template-columns: 1fr;
         padding: 130px 6% 60px;
     }
     .sky-inn-main-title { font-size: 5rem; }
-    .sky-inn-screen-panel { min-height: 250px; border: 1px dashed rgba(213,178,99,0.15); border-radius: 4px; }
+    .sky-inn-screen-panel { min-height: 250px; border: 1px dashed rgba(213, 178, 99, 0.15); border-radius: 4px; }
 }
 
 @media (max-width: 575px) {

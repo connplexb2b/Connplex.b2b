@@ -589,6 +589,10 @@
 }
 
 @media (max-width: 768px) {
+    .investor-page .container {
+        padding: 0 1rem;
+    }
+    
     .investor-page .hero-title {
         font-size: 2.5rem;
     }
@@ -615,11 +619,16 @@
         grid-template-columns: 1fr;
     }
     
+    .investor-page .contact-card {
+        padding: 1.5rem;
+    }
+    
     .investor-page .sub-nav-list {
         flex-wrap: wrap;
         gap: 1rem;
     }
 }
+
 
 @media (max-width: 480px) {
     .investor-page .highlights-grid {

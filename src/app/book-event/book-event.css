@@ -55,7 +55,7 @@
 }
 
 .be-hero h1 {
-    font-size: clamp(48px, 10vw, 88px);
+    font-size: clamp(32px, 10vw, 88px);
     line-height: 1;
     margin-bottom: 30px;
     font-family: 'Outfit', sans-serif;
@@ -82,6 +82,7 @@
 }
 
 .be-space-card {
+    position: relative;
     background: rgba(15,15,15,0.4);
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 12px;
@@ -296,12 +297,21 @@ select.be-input {
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .be-spaces-grid, .be-exp-grid {
+    .be-spaces-grid {
         grid-template-columns: 1fr 1fr;
+    }
+    .be-exp-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 768px) {
+    .be-hero {
+        padding: 120px 24px 60px;
+    }
+    .be-spaces-section, .be-exp-section, .be-booking-section {
+        padding: 60px 24px;
+    }
     .be-spaces-grid, .be-exp-grid {
         grid-template-columns: 1fr;
     }
@@ -311,5 +321,29 @@ select.be-input {
     .be-form-row {
         flex-direction: column;
         gap: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .be-form-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+    }
+    .be-footer-contact {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .be-hero {
+        padding: 100px 16px 40px;
+    }
+    .be-spaces-section, .be-exp-section, .be-booking-section {
+        padding: 40px 16px;
+    }
+    .be-form-container {
+        padding: 24px 16px;
     }
 }

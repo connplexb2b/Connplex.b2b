@@ -352,14 +352,24 @@
 }
 
 @media (max-width: 768px) {
-    .gallery-hero-content h1 { font-size: 2.5rem; }
-
+    .gallery-hero-content h1 { font-size: 2.8rem; }
     .gallery-grid { grid-template-columns: 1fr; }
-
     .gallery-small-thumbs { grid-template-columns: repeat(3, 1fr); }
-
     .gallery-stat-box { width: 100%; }
     .gallery-stat-box::after { display: none; }
-
     .gallery-footer-content h2 { font-size: 2.5rem; }
+    .gallery-section-content, .gallery-visual-experience, .gallery-footer-section { padding: 60px 24px; }
+    .gallery-experience-img { height: 350px; }
+    .gallery-stats-section { padding: 40px 24px; }
+}
+
+@media (max-width: 480px) {
+    .gallery-hero { padding: 0 16px; }
+    .gallery-hero-content h1 { font-size: 2.2rem; }
+    .gallery-section-content, .gallery-visual-experience, .gallery-footer-section { padding: 40px 16px; }
+    .gallery-experience-img { height: 250px; }
+    .gallery-stats-section { padding: 30px 16px; }
+    .gallery-experience-text h2 { font-size: 2rem; }
+    .gallery-footer-content h2 { font-size: 2rem; }
+    .gallery-btn-primary { width: 100%; justify-content: center; }
 }

@@ -64,11 +64,17 @@
     right: -150px;
 }
 
+@media (max-width: 768px) {
+    .glow-left, .glow-right {
+        display: none !important;
+    }
+}
+
 /* Standard Section Layout */
 .section-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 80px;
+    padding: 0 clamp(16px, 6vw, 80px);
     width: 100%;
 }
 
@@ -161,7 +167,7 @@
 .main-heading {
     font-family: var(--font-heading);
     font-weight: 200;
-    font-size: 64px;
+    font-size: clamp(2rem, 5vw + 1rem, 64px);
     line-height: 1.15;
     letter-spacing: 0.04em;
     color: var(--text-primary);
@@ -353,7 +359,7 @@
 .section-heading {
     font-family: var(--font-heading);
     font-weight: 300;
-    font-size: 42px;
+    font-size: clamp(1.75rem, 4vw + 0.5rem, 42px);
     line-height: 1.25;
     letter-spacing: 0.03em;
     color: var(--text-primary);
@@ -862,6 +868,19 @@
     .footer-grid {
         grid-template-columns: 1fr;
     }
+    .directors-visual {
+        height: 400px;
+        position: relative;
+        mask-image: none;
+        -webkit-mask-image: none;
+        width: 100%;
+    }
+    .visual-card {
+        mask-image: none;
+        -webkit-mask-image: none;
+        max-width: 100%;
+        margin-top: 30px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -876,5 +895,58 @@
     }
     .section-container {
         padding: 0 30px;
+    }
+    .hero-content-wrapper {
+        padding: 100px 24px 20px 24px;
+    }
+    .dashboard-wrapper {
+        padding: 0 24px 30px 24px;
+    }
+    .stats-dashboard {
+        padding: 24px 20px;
+    }
+    .stat-card::after {
+        display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content-wrapper {
+        padding: 90px 16px 20px 16px;
+    }
+    .dashboard-wrapper {
+        padding: 0 16px 20px 16px;
+    }
+    .stats-dashboard {
+        padding: 20px 12px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .drivers-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .section-container {
+        padding: 0 16px;
+    }
+    .main-heading {
+        font-size: 32px;
+    }
+    .section-heading {
+        font-size: 28px;
+    }
+    .directors-info {
+        padding: 30px 20px;
+    }
+    .directors-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+    .directors-visual {
+        height: 250px;
     }
 }

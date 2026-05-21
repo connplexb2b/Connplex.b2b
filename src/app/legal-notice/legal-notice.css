@@ -266,6 +266,7 @@
     .legal-notice-page .hero {
         padding: 0 5%;
         height: 60vh;
+        min-height: auto;
     }
     .legal-notice-page .hero h1 {
         font-size: 40px;
@@ -278,4 +279,8 @@
         padding: 30px;
         flex-direction: column;
     }
+    .legal-notice-page .full-width {
+        grid-column: auto;
+    }
 }
+
