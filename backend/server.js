@@ -35,7 +35,8 @@ const corsOptions = {
     
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       return allowedOrigin === origin || allowedOrigin === '*';
-    });
+    }) || /^https:\/\/connplex-b2b.*\.vercel\.app$/.test(origin)
+       || /^https:\/\/b2b-website.*\.vercel\.app$/.test(origin);
 
     if (isAllowed) {
       callback(null, true);
