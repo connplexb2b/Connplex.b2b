@@ -370,6 +370,10 @@ export default function AdvertisePage() {
                 <div className="max-w-[1440px] mx-auto px-4 sm:px-8 md:px-16 w-full">
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-20 items-center">
                         <div className="w-full">
+                            {/* Mobile/Tablet Title: Above picture */}
+                            <div className="lg:hidden mb-6">
+                                <span className="font-inter text-[11px] font-semibold tracking-[3px] text-gold-primary uppercase">THE POWER OF THE BIG SCREEN</span>
+                            </div>
                             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden relative border border-white/8 shadow-[0_25px_60px_rgba(0,0,0,0.75),0_0_40px_rgba(201,159,74,0.05)]">
                                 <Image src="/img/advertise/theater_bg.png" alt="Big Screen Power" fill style={{ objectFit: 'cover' }} className="w-full h-full object-cover block brightness-[0.65] contrast-[1.05]" />
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c99f4a]/6 via-transparent to-[#030303]/75 pointer-events-none z-10"></div>
@@ -377,8 +381,9 @@ export default function AdvertisePage() {
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-inter text-[11px] font-semibold tracking-[3px] text-gold-primary uppercase">THE POWER OF THE BIG SCREEN</span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 mt-9">
+                            {/* Desktop Title: Above stats */}
+                            <span className="font-inter text-[11px] font-semibold tracking-[3px] text-gold-primary uppercase hidden lg:block">THE POWER OF THE BIG SCREEN</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 mt-0 lg:mt-9">
                                 {[
                                     { val: "97%", lbl: "attention to ads on big screen" },
                                     { val: "2.5x", lbl: "higher brand recall than other media" },
