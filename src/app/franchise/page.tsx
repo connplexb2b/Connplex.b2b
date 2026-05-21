@@ -482,7 +482,7 @@ export default function FranchisePage() {
             <section className="py-16 md:py-24 px-4 sm:px-6 md:px-10 lg:px-20 max-w-[1400px] mx-auto w-full">
                 <div className="text-center mb-12 sm:mb-16">
                     <h2 className="font-outfit text-2xl sm:text-3xl md:text-4xl font-light uppercase tracking-wide">
-                      FRANCHISE OWNER <span className="text-[#c19b62] font-normal">TESTIMONIALS</span>
+                      <span className="text-[#c19b62] font-normal">TESTIMONIALS</span>
                     </h2>
                     <div className="w-10 h-[2px] bg-[#c19b62] mx-auto mt-4"></div>
                 </div>
