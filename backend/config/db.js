@@ -5,7 +5,10 @@ const connectDB = async () => {
 
   if (!mongoURI) {
     console.error('CRITICAL ERROR: MONGO_URI environment variable is missing in your configuration.');
-    process.exit(1);
+    if (process.env.NODE_ENV === 'development') {
+      process.exit(1);
+    }
+    return;
   }
 
   const options = {
