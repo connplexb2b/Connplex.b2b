@@ -13,6 +13,7 @@ import VendorRegistration from '../models/VendorRegistration.js';
 import ConsultantBooking from '../models/ConsultantBooking.js';
 import CareerApplication from '../models/CareerApplication.js';
 import GeneralInquiry from '../models/GeneralInquiry.js';
+import { syncFormToZoho } from '../services/zohoService.js';
 
 // Helper to handle standard model creation and responses
 const handleSubmission = async (Model, req, res, next) => {
@@ -21,6 +22,12 @@ const handleSubmission = async (Model, req, res, next) => {
     
     // Debug logging for insertion success
     console.log(`[Database Success] Inserted document into collection: ${Model.collection.name}`);
+    
+    // Non-blocking background sync to Zoho CRM
+    syncFormToZoho(Model.modelName, record)
+      .catch((zohoError) => {
+        console.error(`[Zoho Sync Failure] Failed to sync ${Model.modelName} to Zoho CRM. Error: ${zohoError.message}`);
+      });
     
     return res.status(201).json({
       success: true,

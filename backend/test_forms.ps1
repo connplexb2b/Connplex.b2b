@@ -1,3 +1,4 @@
+Start-Sleep -Seconds 3
 $baseUrl = "http://localhost:5000/api"
 $rand = Get-Random -Minimum 1000 -Maximum 9999
 
@@ -108,8 +109,8 @@ Submit-Form "/forms/newsletter" @{
 
 # 12. Vendor Registration
 Submit-Form "/forms/vendor-registration" @{
-    businessName = "Acme Goods Co."
-    contactPerson = "Edward Elric"
+    companyName = "Acme Goods Co."
+    contactName = "Edward Elric"
     email = "edward$rand@example.com"
     phone = "8887776665"
     productCategory = "Concessions & Snacks"
