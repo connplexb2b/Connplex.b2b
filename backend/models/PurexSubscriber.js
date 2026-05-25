@@ -1,0 +1,20 @@
+import mongoose from 'mongoose';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const purexSubscriberSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: [true, 'Email address is required'],
+    unique: true,
+    lowercase: true,
+    trim: true,
+    match: [emailRegex, 'Please provide a valid email address'],
+  }
+}, {
+  timestamps: true,
+  collection: 'purexsubscribers'
+});
+
+const PurexSubscriber = mongoose.model('PurexSubscriber', purexSubscriberSchema);
+export default PurexSubscriber;
