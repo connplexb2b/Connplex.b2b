@@ -1,0 +1,13 @@
+.admin-nav span.disabled {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.admin-nav span.disabled i {
+  width: 1rem;
+  text-align: center;
+}
