@@ -64,6 +64,7 @@ export default function BookEventPage() {
             src="/img/book-event/top_image.png" 
             alt="Hero" 
             fill 
+            sizes="100vw"
             className="object-cover opacity-60"
             priority 
           />
@@ -141,6 +142,7 @@ export default function BookEventPage() {
                   src={`/img/book-event/${s.img}`} 
                   alt={s.title} 
                   fill 
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover" 
                 />
               </div>

@@ -341,6 +341,7 @@ export default function Home() {
               src={s.src}
               alt={s.alt}
               fill
+              sizes="100vw"
               style={{ objectFit: "cover" }}
               priority={i === 0}
             />
@@ -418,7 +419,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/connflix_hero_mockup.png" alt="Connflix" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/connflix_hero_mockup.png" alt="Connflix" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -431,7 +432,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/conntube_hero_mockup.png" alt="Conntube" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/conntube_hero_mockup.png" alt="Conntube" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -444,7 +445,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/spectra-x-hero.png" alt="SpectraX" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/spectra-x-hero.png" alt="SpectraX" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -457,7 +458,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
         </div>
@@ -472,6 +473,7 @@ export default function Home() {
               src="/assets/cinema_bg.png"
               alt="Luxury Cinema Background"
               fill
+              sizes="100vw"
               style={{ objectFit: "cover" }}
               priority
             />
@@ -484,14 +486,14 @@ export default function Home() {
               width={500}
               height={500}
               className="transition-transform duration-100 ease-linear"
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", width: "100%", height: "auto" }}
             />
           </div>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-6 pt-12 pb-24 md:pb-[15rem] bg-gradient-to-b from-black/50 via-transparent to-black/75">
             <div className="max-w-[800px] w-full -translate-y-5">
               <div className="mb-6 flex justify-center drop-shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain" }} />
+                <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain", height: "auto" }} />
               </div>
               <h3 className="text-white/85 text-[clamp(0.9rem,1.35vw,1.2rem)] font-normal mb-6 tracking-[1px] font-outfit">Where cinema becomes an experience.</h3>
               <div className="flex gap-6 justify-center">
@@ -568,6 +570,7 @@ export default function Home() {
                   src={cases[currentCase].src}
                   alt={cases[currentCase].title}
                   fill
+                  sizes="100vw"
                   style={{ objectFit: "cover" }}
                 />
               </div>
@@ -614,6 +617,7 @@ export default function Home() {
                 src={m.src}
                 alt={m.alt}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 style={{ objectFit: "cover" }}
                 className="transition-transform duration-700 ease-out group-hover:scale-105"
               />

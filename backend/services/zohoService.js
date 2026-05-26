@@ -144,7 +144,7 @@ export const createZohoModuleEntry = async (moduleName, entryData) => {
  * @param {Object} payload The raw mapped payload.
  * @returns {Object} Cleaned payload containing only standard Lead fields.
  */
-export const validateZohoPayload = (payload) => {
+export const validateZohoFields = (payload) => {
   const allowedFields = [
     "First_Name",
     "Last_Name",
@@ -194,21 +194,81 @@ export const stripToMinimalSafe = (payload) => {
 };
 
 /**
- * Creates a Lead in Zoho CRM Leads module with a self-healing retry strategy.
- * @param {Object} leadData Mapped lead payload.
- * @returns {Promise<Object>} The API response details.
+ * Reusable universal synchronization function. Maps frontend fields dynamically
+ * to standard Lead parameters, serializes full form JSON in Description, and submits to Zoho.
+ * @param {Object} params Config object.
+ * @param {string} params.module Zoho CRM module (default "Leads").
+ * @param {Object} params.data Raw form data payload from request or DB document.
+ * @param {string} params.source Label identifier for Lead_Source tracking.
  */
-export const createZohoLead = async (leadData) => {
-  const primaryPayload = validateZohoPayload(leadData);
+export const syncToZoho = async ({ module = "Leads", data, source = "Website Inquiry" }) => {
+  if (!isZohoConfigured()) {
+    console.log(`[Zoho Sync] Skipping sync - Zoho CRM keys not configured in environment.`);
+    return;
+  }
+
+  console.log(`[Zoho Sync] Triggering background sync to module [${module}]...`);
+  
+  const rawData = data.toObject ? data.toObject() : data;
+
+  // 1. Map fields dynamically across standard naming variations
+  const emailVal = rawData.email || rawData.emailAddress || "";
+  const phoneVal = rawData.phone || rawData.phoneNumber || rawData.mobile || "";
+
+  // Parse names (Last Name is required)
+  let firstName = "";
+  let lastName = "Unknown";
+  const nameVal = rawData.fullName || rawData.name || rawData.contactName || rawData.contactPerson || "";
+  if (nameVal) {
+    const parts = nameVal.trim().split(/\s+/);
+    if (parts.length > 1) {
+      firstName = parts[0];
+      lastName = parts.slice(1).join(" ");
+    } else {
+      lastName = parts[0] || "Unknown";
+    }
+  } else if (emailVal) {
+    lastName = emailVal.split("@")[0];
+  }
+
+  // Company details
+  const companyVal = rawData.company || rawData.companyName || rawData.businessName || "Connplex";
+
+  // Location fields
+  const cityVal = rawData.city || rawData.preferredCity || "";
+  const stateVal = rawData.state || "";
+
+  // 2. Compile full JSON data structure inside Description box
+  let description = `Form Details\nSubmitted At: ${new Date().toISOString()}\n\nFull JSON Data:\n`;
+  description += JSON.stringify(rawData, null, 2);
+
+  // 3. Construct payload object
+  const leadPayload = {
+    First_Name: firstName,
+    Last_Name: lastName,
+    Email: emailVal,
+    Phone: phoneVal,
+    Company: companyVal,
+    City: cityVal,
+    State: stateVal,
+    Lead_Source: source,
+    Description: description,
+  };
+
+  if (rawData.disclaimer !== undefined) {
+    leadPayload.Disclaimer = String(rawData.disclaimer);
+  }
+
+  // 4. Validate fields and execute API sync with custom retry safety fallbacks
+  const validatedPayload = validateZohoFields(leadPayload);
   try {
-    console.log("[Zoho Sync] Attempting Lead creation with validated custom/full schema...");
-    return await createZohoModuleEntry("Leads", primaryPayload);
+    console.log(`[Zoho Sync] Attempting entry creation in module [${module}]...`);
+    return await createZohoModuleEntry(module, validatedPayload);
   } catch (primaryError) {
-    console.warn(`[Zoho Error] Primary schema lead creation failed: ${primaryError.message}. Details: ${JSON.stringify(primaryError.responseDetails || "")}`);
-    console.log("[Zoho Sync] Retrying with MINIMAL SAFE standard payload...");
-    const minimalPayload = stripToMinimalSafe(leadData);
+    console.warn(`[Zoho Error] Primary schema sync failed: ${primaryError.message}. Retrying with MINIMAL SAFE standard payload...`);
+    const minimalPayload = stripToMinimalSafe(leadPayload);
     try {
-      return await createZohoModuleEntry("Leads", minimalPayload);
+      return await createZohoModuleEntry(module, minimalPayload);
     } catch (fallbackError) {
       console.error(`[Zoho Error] Minimal safe payload retry failed: ${fallbackError.message}`);
       throw fallbackError;
@@ -217,118 +277,10 @@ export const createZohoLead = async (leadData) => {
 };
 
 /**
- * Standard utility mapping layer. Parses form names, maps standard Zoho fields,
- * and compiles additional fields into the Leads Description block.
- * @param {string} modelName The Mongoose Model name.
- * @param {Object} document The saved MongoDB document.
+ * Creates a Lead in Zoho CRM Leads module using universal sync.
+ * @param {Object} leadData Mapped lead payload.
+ * @returns {Promise<Object>} The API response details.
  */
-export const syncFormToZoho = async (modelName, document) => {
-  if (!isZohoConfigured()) {
-    console.log(`[Zoho Sync] Skipping sync for model [${modelName}] - Zoho CRM keys not configured in environment.`);
-    return;
-  }
-
-  console.log(`[Zoho Sync] Triggering background sync for model [${modelName}]...`);
-  
-  const rawData = document.toObject ? document.toObject() : document;
-
-  // 1. Parse full name into First Name & Last Name (Zoho Leads requires Last_Name)
-  let firstName = "";
-  let lastName = "Unknown";
-
-  const nameInput = rawData.fullName || rawData.name || rawData.contactName || "";
-  if (nameInput) {
-    const parts = nameInput.trim().split(/\s+/);
-    if (parts.length > 1) {
-      firstName = parts[0];
-      lastName = parts.slice(1).join(" ");
-    } else {
-      lastName = parts[0] || "Unknown";
-    }
-  } else if (rawData.email) {
-    // Fallback: use email prefix as last name
-    lastName = rawData.email.split("@")[0];
-  }
-
-  // 2. Determine lead source based on modelName
-  let leadSource = "Website Inquiry";
-  switch (modelName) {
-    case "BookEvent":
-      leadSource = "Website - Book Event Form";
-      break;
-    case "ConnEventsWaitlist":
-      leadSource = "Website - ConnEvents Waitlist";
-      break;
-    case "ConnflixSubscriber":
-      leadSource = "Website - Connflix Waitlist";
-      break;
-    case "ConnmusicWaitlist":
-      leadSource = "Website - Connmusic Waitlist";
-      break;
-    case "StudioInvitation":
-      leadSource = "Website - Studio Invitation";
-      break;
-    case "ContactMessage":
-      leadSource = "Website - Contact Message Form";
-      break;
-    case "DowntownInvitation":
-      leadSource = "Website - Downtown VIP Invitation";
-      break;
-    case "FranchiseInquiry":
-      leadSource = "Website - Franchise Inquiry Form";
-      break;
-    case "PurexSubscriber":
-      leadSource = "Website - Pure-X Waitlist";
-      break;
-    case "SkyinnReservation":
-      leadSource = "Website - Sky-Inn VIP Modal";
-      break;
-    case "Newsletter":
-      leadSource = "Website - Newsletter Subscriber";
-      break;
-    case "VendorRegistration":
-      leadSource = "Website - Vendor Registration Form";
-      break;
-    case "ConsultantBooking":
-      leadSource = "Website - Consultant Booking Form";
-      break;
-    case "CareerApplication":
-      leadSource = "Website - Career Application Form";
-      break;
-    case "GeneralInquiry":
-      leadSource = "Website - General Inquiry Form";
-      break;
-  }
-
-  // 3. Compile all keys into Lead Description block for full visibility
-  let description = `Form: ${modelName}\nSubmitted At: ${new Date().toISOString()}\n\nFull Details:\n`;
-  Object.keys(rawData).forEach((key) => {
-    // Exclude database metadata
-    if (key !== "_id" && key !== "__v" && key !== "createdAt" && key !== "updatedAt") {
-      const val = rawData[key];
-      const formattedVal = val instanceof Date ? val.toDateString() : val;
-      description += `${key}: ${formattedVal}\n`;
-    }
-  });
-
-  // 4. Construct standard Leads module payload
-  const leadPayload = {
-    First_Name: firstName,
-    Last_Name: lastName,
-    Email: rawData.email || "",
-    Phone: rawData.phone || rawData.phoneNumber || "",
-    City: rawData.city || rawData.preferredCity || "",
-    State: rawData.state || "",
-    Company: rawData.company || rawData.companyName || "Connplex",
-    Lead_Source: leadSource,
-    Description: description,
-  };
-
-  // 5. Handle optional custom layouts / fields if provided
-  if (rawData.disclaimer !== undefined) {
-    leadPayload.Disclaimer = String(rawData.disclaimer);
-  }
-
-  // 6. Execute Zoho CRM Leads creation with fallback handlers
-  await createZohoLead(leadPayload);
+export const createZohoLead = async (leadData) => {
+  return await syncToZoho({ module: "Leads", data: leadData });
 };

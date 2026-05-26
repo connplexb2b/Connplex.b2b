@@ -13,6 +13,7 @@ import VendorRegistration from '../models/VendorRegistration.js';
 import ConsultantBooking from '../models/ConsultantBooking.js';
 import CareerApplication from '../models/CareerApplication.js';
 import GeneralInquiry from '../models/GeneralInquiry.js';
+import { syncToZoho } from '../services/zohoService.js';
 
 // Helper to handle standard model creation and responses
 const handleSubmission = async (Model, req, res, next) => {
@@ -20,7 +21,23 @@ const handleSubmission = async (Model, req, res, next) => {
     const record = await Model.create(req.body);
     
     // Debug logging for insertion success
-    console.log(`[Database Success] Inserted document into collection: ${Model.collection.name}`);
+    console.log(`[MongoDB Success] Inserted document into collection: ${Model.collection.name}`);
+    
+    // Non-blocking background sync to Zoho CRM
+    syncToZoho({
+      module: "Leads",
+      data: record,
+      source: `Website - ${Model.modelName}`
+    })
+      .then(() => {
+        const hasZohoConfig = process.env.ZOHO_CLIENT_ID && process.env.ZOHO_CLIENT_ID !== "your_zoho_client_id_here";
+        if (hasZohoConfig) {
+          console.log(`[Zoho Success] Synced ${Model.modelName} successfully to Zoho CRM`);
+        }
+      })
+      .catch((zohoError) => {
+        console.error(`[Zoho Error] Failed to sync ${Model.modelName} to Zoho CRM. Error: ${zohoError.message}`);
+      });
     
     return res.status(201).json({
       success: true,

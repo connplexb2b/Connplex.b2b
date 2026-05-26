@@ -33,21 +33,21 @@
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translate3d(0, 30px, 0);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
   }
   @keyframes fadeInDown {
     from {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translate3d(0, -20px, 0);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
     }
   }
   @keyframes scaleRight {
@@ -80,9 +80,9 @@
     100% { transform: translateX(-50%); }
   }
   @keyframes floatTicket {
-    0% { transform: translateY(0px) rotateX(5deg) rotateY(-5deg); }
-    50% { transform: translateY(-20px) rotateX(-5deg) rotateY(5deg); }
-    100% { transform: translateY(0px) rotateX(5deg) rotateY(-5deg); }
+    0% { transform: translate3d(0, 0px, 0) rotateX(5deg) rotateY(-5deg); }
+    50% { transform: translate3d(0, -20px, 0) rotateX(-5deg) rotateY(5deg); }
+    100% { transform: translate3d(0, 0px, 0) rotateX(5deg) rotateY(-5deg); }
   }
   @keyframes spinVinyl {
     100% { transform: rotate(360deg); }
@@ -185,11 +185,11 @@ body {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(100px);
+    transform: translate3d(0, 100px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -216,12 +216,28 @@ body {
 /* Scroll Reveal Utilities */
 .reveal-init {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translate3d(0, 30px, 0);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 .reveal {
   opacity: 1 !important;
-  transform: translateY(0) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* GPU Hardware Acceleration & Performance Optimization */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
 }
 
 

@@ -360,7 +360,7 @@ export default function AdvertisePage() {
                             ].map((format, i) => (
                                 <div className="group/format bg-[#0f0f0f]/40 border border-white/5 p-3.5 rounded-lg transition-all duration-500 flex flex-col hover:border-[#c99f4a]/30 hover:bg-[#c99f4a]/[0.02] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)]" key={i}>
                                     <div className="w-full aspect-[4/3] rounded-md overflow-hidden relative mb-4 bg-black">
-                                        <Image src={format.img} alt={format.title} fill style={{ objectFit: 'cover' }} className="w-full h-full object-cover block transition-transform duration-700 group-hover/format:scale-108" />
+                                        <Image src={format.img} alt={format.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw" style={{ objectFit: 'cover' }} className="w-full h-full object-cover block transition-transform duration-700 group-hover/format:scale-108" />
                                         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-black/60 pointer-events-none"></div>
                                     </div>
                                     <h3 className="font-inter text-[11px] font-bold tracking-[1.5px] text-[#ebd59b] mb-2 uppercase">{format.title}</h3>
@@ -382,7 +382,7 @@ export default function AdvertisePage() {
                                 <span className="font-inter text-[11px] font-semibold tracking-[3px] text-gold-primary uppercase">THE POWER OF THE BIG SCREEN</span>
                             </div>
                             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden relative border border-white/8 shadow-[0_25px_60px_rgba(0,0,0,0.75),0_0_40px_rgba(201,159,74,0.05)]">
-                                <Image src="/img/advertise/theater_bg.png" alt="Big Screen Power" fill style={{ objectFit: 'cover' }} className="w-full h-full object-cover block brightness-[0.65] contrast-[1.05]" />
+                                <Image src="/img/advertise/theater_bg.png" alt="Big Screen Power" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} className="w-full h-full object-cover block brightness-[0.65] contrast-[1.05]" />
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c99f4a]/6 via-transparent to-[#030303]/75 pointer-events-none z-10"></div>
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-outfit text-base sm:text-xl font-semibold tracking-[3px] text-white/75 uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] z-20 text-center w-[90%]">YOUR BRAND ON THE BIG SCREEN</div>
                             </div>
@@ -485,7 +485,7 @@ export default function AdvertisePage() {
                         </div>
                         <div className="w-full">
                             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden relative border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.8),inset_0_0_30px_rgba(201,159,74,0.05)]">
-                                <Image src="/img/advertise/cta_theater_bg.png" alt="Theater Screen" fill style={{ objectFit: 'cover' }} />
+                                <Image src="/img/advertise/cta_theater_bg.png" alt="Theater Screen" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c99f4a]/2 via-transparent to-[#030303]/85 pointer-events-none"></div>
                             </div>
                         </div>

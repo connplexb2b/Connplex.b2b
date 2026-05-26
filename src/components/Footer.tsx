@@ -10,7 +10,7 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
                 <div className="col-span-1 sm:col-span-2 lg:col-span-1 max-w-full lg:max-w-[280px]">
                     <div className="mb-6">
-                        <Image src="/logo.png" alt="Connplex Cinemas" width={150} height={50} style={{ objectFit: "contain" }} />
+                        <Image src="/logo.png" alt="Connplex Cinemas" width={150} height={50} style={{ objectFit: "contain", height: "auto" }} />
                     </div>
                     <p className="text-sm text-text-secondary leading-relaxed">
                         A premium cinema network for advertising, experiential marketing, and brand events.

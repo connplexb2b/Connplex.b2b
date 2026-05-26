@@ -102,6 +102,7 @@ export default function AboutPage() {
             src="/img/about/About us top image.png"
             alt="Theater Background"
             fill
+            sizes="100vw"
             className="w-full h-full object-cover"
             priority
           />
@@ -290,7 +291,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]" style={{ direction: 'ltr' }}>
-              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
+              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
@@ -324,7 +325,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]">
-              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
+              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
@@ -426,6 +427,7 @@ export default function AboutPage() {
             src="/img/about/let's connect last cta image.png"
             alt="Lobby Background"
             fill
+            sizes="100vw"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,5,5,0.96)_0%,rgba(5,5,5,0.82)_40%,rgba(5,5,5,0.15)_70%,rgba(5,5,5,0.8)_100%)] z-2"></div>
