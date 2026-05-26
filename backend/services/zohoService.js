@@ -25,20 +25,23 @@ const isZohoConfigured = () => {
  * Uses accounts.zoho.in endpoints for the Indian region.
  * @returns {Promise<string|null>} The active access token or null if Zoho is unconfigured.
  */
-export const refreshZohoTokenIfExpired = async () => {
+export const refreshZohoAccessToken = async () => {
+  console.log("[Zoho Token] Checking credentials configuration...");
   if (!isZohoConfigured()) {
-    console.warn("[Zoho Warning] CRM is not configured. Skipping token refresh.");
+    console.warn("[Zoho Warning] CRM credentials are not configured or set to default placeholders. Skipping token refresh.");
     return null;
   }
 
   // Check if token in memory is still valid (with a 5-minute safety buffer)
   const isTokenValid = cachedAccessToken && Date.now() < tokenExpiryTime - 300 * 1000;
+  console.log(`[Zoho Token] Token validity check: Expiry = ${tokenExpiryTime > 0 ? new Date(tokenExpiryTime).toISOString() : "0"}, Valid = ${isTokenValid}`);
+  
   if (isTokenValid) {
     return cachedAccessToken;
   }
 
   try {
-    console.log("[Zoho Token] Refreshing Zoho access token...");
+    console.log("[Zoho Token] Refreshing token at accounts.zoho.in/oauth/v2/token...");
     
     const params = new URLSearchParams();
     params.append("refresh_token", process.env.ZOHO_REFRESH_TOKEN);
@@ -55,6 +58,8 @@ export const refreshZohoTokenIfExpired = async () => {
       },
     });
 
+    console.log(`[Zoho Token Response] Body: ${JSON.stringify(response.data)}`);
+
     if (response.data && response.data.access_token) {
       cachedAccessToken = response.data.access_token;
       const expiresIn = response.data.expires_in || 3600;
@@ -62,7 +67,7 @@ export const refreshZohoTokenIfExpired = async () => {
       console.log(`[Zoho Token Success] Cached new access token. Expires in: ${expiresIn}s`);
       return cachedAccessToken;
     } else {
-      throw new Error(`Invalid response body: ${JSON.stringify(response.data)}`);
+      throw new Error(`Refresh token response missing access_token parameter: ${JSON.stringify(response.data)}`);
     }
   } catch (error) {
     const errorMsg = error.response ? JSON.stringify(error.response.data) : error.message;
@@ -73,11 +78,10 @@ export const refreshZohoTokenIfExpired = async () => {
 
 /**
  * Returns a valid Zoho access token.
- * Alias wrapper around token refresh helper.
  * @returns {Promise<string|null>} The active access token.
  */
 export const getZohoAccessToken = async () => {
-  return await refreshZohoTokenIfExpired();
+  return await refreshZohoAccessToken();
 };
 
 /**
@@ -93,6 +97,9 @@ export const createZohoModuleEntry = async (moduleName, entryData) => {
     return { success: false, reason: "UNCONFIGURED" };
   }
 
+  console.log(`[Zoho Request] Endpoint: POST https://www.zohoapis.in/crm/v2/${moduleName}`);
+  console.log(`[Zoho Request] Payload: ${JSON.stringify({ data: [entryData] }, null, 2)}`);
+
   try {
     const response = await axios.post(
       `https://www.zohoapis.in/crm/v2/${moduleName}`,
@@ -105,31 +112,108 @@ export const createZohoModuleEntry = async (moduleName, entryData) => {
       }
     );
 
+    console.log(`[Zoho Response] Status Code: ${response.status}`);
+    console.log(`[Zoho Response] Body: ${JSON.stringify(response.data, null, 2)}`);
+
     if (response.data && response.data.data && response.data.data.length > 0) {
       const result = response.data.data[0];
       if (result.status === "success" || result.code === "SUCCESS") {
-        console.log(`[Zoho Sync Success] Inserted record into module [${moduleName}]. ID: ${result.details.id}`);
+        console.log(`[Zoho Success] Inserted record into module [${moduleName}]. ID: ${result.details.id}`);
         return { success: true, id: result.details.id };
       } else {
-        throw new Error(`API validation code: ${result.code}, Message: ${result.message}`);
+        const validationErr = new Error(`API Validation Code: ${result.code}, Message: ${result.message}`);
+        validationErr.zohoDetails = result;
+        throw validationErr;
       }
     } else {
       throw new Error(`Unexpected empty data response from Zoho: ${JSON.stringify(response.data)}`);
     }
   } catch (error) {
-    const errorMsg = error.response ? JSON.stringify(error.response.data) : error.message;
-    console.error(`[Zoho CRM Error] Failed insertion into module [${moduleName}]: ${errorMsg}`);
-    throw new Error(`Zoho CRM insertion failed: ${errorMsg}`);
+    const responseData = error.response ? error.response.data : (error.zohoDetails || error.message);
+    console.error(`[Zoho Error] HTTP failure or API exception: Status ${error.response?.status || "N/A"}. Response: ${JSON.stringify(responseData, null, 2)}`);
+    
+    const wrappedError = new Error(`Zoho CRM insertion failed: ${error.message}`);
+    wrappedError.responseDetails = responseData;
+    wrappedError.statusCode = error.response?.status;
+    throw wrappedError;
   }
 };
 
 /**
- * Creates a Lead in Zoho CRM Leads module.
+ * Filter out speculative custom fields, validate formats, and ensure required fields are present.
+ * @param {Object} payload The raw mapped payload.
+ * @returns {Object} Cleaned payload containing only standard Lead fields.
+ */
+export const validateZohoPayload = (payload) => {
+  const allowedFields = [
+    "First_Name",
+    "Last_Name",
+    "Company",
+    "Email",
+    "Phone",
+    "Mobile",
+    "City",
+    "State",
+    "Lead_Source",
+    "Description",
+    "Disclaimer"
+  ];
+
+  const validated = {};
+  Object.keys(payload).forEach((key) => {
+    if (allowedFields.includes(key) && payload[key] !== undefined && payload[key] !== null) {
+      validated[key] = payload[key];
+    }
+  });
+
+  // Apply safe fallback values for mandatory Lead fields
+  if (!validated.Last_Name || String(validated.Last_Name).trim() === "") {
+    validated.Last_Name = "Unknown";
+  }
+  if (!validated.Company || String(validated.Company).trim() === "") {
+    validated.Company = "Connplex";
+  }
+
+  return validated;
+};
+
+/**
+ * Strips payload to a minimal safe schema guaranteed to exist in standard layouts.
+ * @param {Object} payload Mapped lead payload.
+ * @returns {Object} Strictest minimal payload.
+ */
+export const stripToMinimalSafe = (payload) => {
+  return {
+    Last_Name: payload.Last_Name || "Unknown",
+    Company: payload.Company || "Connplex",
+    Email: payload.Email || "",
+    Phone: payload.Phone || "",
+    Description: payload.Description || "",
+    Lead_Source: payload.Lead_Source || "Website Inquiry"
+  };
+};
+
+/**
+ * Creates a Lead in Zoho CRM Leads module with a self-healing retry strategy.
  * @param {Object} leadData Mapped lead payload.
  * @returns {Promise<Object>} The API response details.
  */
 export const createZohoLead = async (leadData) => {
-  return await createZohoModuleEntry("Leads", leadData);
+  const primaryPayload = validateZohoPayload(leadData);
+  try {
+    console.log("[Zoho Sync] Attempting Lead creation with validated custom/full schema...");
+    return await createZohoModuleEntry("Leads", primaryPayload);
+  } catch (primaryError) {
+    console.warn(`[Zoho Error] Primary schema lead creation failed: ${primaryError.message}. Details: ${JSON.stringify(primaryError.responseDetails || "")}`);
+    console.log("[Zoho Sync] Retrying with MINIMAL SAFE standard payload...");
+    const minimalPayload = stripToMinimalSafe(leadData);
+    try {
+      return await createZohoModuleEntry("Leads", minimalPayload);
+    } catch (fallbackError) {
+      console.error(`[Zoho Error] Minimal safe payload retry failed: ${fallbackError.message}`);
+      throw fallbackError;
+    }
+  }
 };
 
 /**
@@ -152,7 +236,7 @@ export const syncFormToZoho = async (modelName, document) => {
   let firstName = "";
   let lastName = "Unknown";
 
-  const nameInput = rawData.fullName || rawData.name || "";
+  const nameInput = rawData.fullName || rawData.name || rawData.contactName || "";
   if (nameInput) {
     const parts = nameInput.trim().split(/\s+/);
     if (parts.length > 1) {
@@ -235,7 +319,7 @@ export const syncFormToZoho = async (modelName, document) => {
     Phone: rawData.phone || rawData.phoneNumber || "",
     City: rawData.city || rawData.preferredCity || "",
     State: rawData.state || "",
-    Company: rawData.company || rawData.companyName || "Individual",
+    Company: rawData.company || rawData.companyName || "Connplex",
     Lead_Source: leadSource,
     Description: description,
   };
@@ -245,6 +329,6 @@ export const syncFormToZoho = async (modelName, document) => {
     leadPayload.Disclaimer = String(rawData.disclaimer);
   }
 
-  // 6. Execute Zoho CRM Leads creation
+  // 6. Execute Zoho CRM Leads creation with fallback handlers
   await createZohoLead(leadPayload);
 };

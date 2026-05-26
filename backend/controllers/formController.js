@@ -21,12 +21,18 @@ const handleSubmission = async (Model, req, res, next) => {
     const record = await Model.create(req.body);
     
     // Debug logging for insertion success
-    console.log(`[Database Success] Inserted document into collection: ${Model.collection.name}`);
+    console.log(`[MongoDB Success] Inserted document into collection: ${Model.collection.name}`);
     
     // Non-blocking background sync to Zoho CRM
     syncFormToZoho(Model.modelName, record)
+      .then(() => {
+        const hasZohoConfig = process.env.ZOHO_CLIENT_ID && process.env.ZOHO_CLIENT_ID !== "your_zoho_client_id_here";
+        if (hasZohoConfig) {
+          console.log(`[Zoho Success] Synced ${Model.modelName} successfully to Zoho CRM`);
+        }
+      })
       .catch((zohoError) => {
-        console.error(`[Zoho Sync Failure] Failed to sync ${Model.modelName} to Zoho CRM. Error: ${zohoError.message}`);
+        console.error(`[Zoho Error] Failed to sync ${Model.modelName} to Zoho CRM. Error: ${zohoError.message}`);
       });
     
     return res.status(201).json({
