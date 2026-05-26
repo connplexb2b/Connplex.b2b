@@ -108,6 +108,7 @@ const PureXPage = () => {
                     width={480} 
                     height={600} 
                     className="w-full h-auto block"
+                    style={{ height: 'auto' }}
                   />
                 </div>
               </div>

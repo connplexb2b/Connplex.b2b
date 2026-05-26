@@ -104,6 +104,7 @@ const SkyInnPage = () => {
                     alt="Sky Inn Drive-In Cinema"
                     fill
                     priority
+                    sizes="100vw"
                     style={{ objectFit: 'cover', objectPosition: 'center' }}
                 />
                 <div 

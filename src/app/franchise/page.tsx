@@ -502,7 +502,7 @@ export default function FranchisePage() {
             {/* Contact */}
             <section className="grid grid-cols-1 lg:grid-cols-2 bg-[#040404] min-h-[600px] w-full max-w-[1400px] mx-auto border-t border-white/5" id="contact">
                 <div className="relative w-full min-h-[300px] sm:min-h-[400px] lg:min-h-full">
-                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill className="object-cover" />
+                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
                 </div>
                 <div className="p-6 sm:p-10 md:p-16 lg:p-20 xl:p-24 flex flex-col justify-center">
                     <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">TAKE THE FIRST STEP</span>

@@ -12,7 +12,7 @@ const TermsAndConditionsPage = () => {
             <nav className="fixed top-0 w-full z-[1000] bg-black/80 backdrop-blur-[10px] px-5 py-[20px] md:px-10">
                 <div className="flex justify-between items-center max-w-[1200px] mx-auto">
                     <Link href="/">
-                        <Image src="/logo.png" alt="Connplex Logo" width={150} height={45} style={{ objectFit: 'contain' }} />
+                        <Image src="/logo.png" alt="Connplex Logo" width={150} height={45} style={{ objectFit: 'contain', height: 'auto' }} />
                     </Link>
                 </div>
             </nav>

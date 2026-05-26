@@ -78,6 +78,7 @@ const ProductsPage = () => {
                     src={p.img} 
                     alt={p.alt} 
                     fill 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
                     style={{ objectFit: "cover", objectPosition: p.name === "PureX" ? "center" : "top" }} 
                     className="transition-transform duration-700 ease-out group-hover:scale-105"
                   />
