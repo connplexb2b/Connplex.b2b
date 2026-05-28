@@ -1447,4 +1447,8 @@
 
         grid-column: span 1;
     }
+.career-page .application-modal {
+
+        padding: 1rem;
+    }
 }
