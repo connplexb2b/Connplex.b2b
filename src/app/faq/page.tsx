@@ -301,9 +301,10 @@ const FaqPage = () => {
     }, []);
 
     return (
-        <div className="faq-page-wrapper">
+        <>
             <Header />
-            <main className="page-wrapper">
+            <div className="faq-page-wrapper">
+                <main className="page-wrapper">
                 <header className="faq-header">
                     <span className="subtitle">FREQUENTLY ASKED</span>
                     <h1>QUESTIONS</h1>
@@ -521,8 +522,9 @@ const FaqPage = () => {
                     </div>
                 </footer>
             </main>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 

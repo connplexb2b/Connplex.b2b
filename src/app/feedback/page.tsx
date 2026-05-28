@@ -117,9 +117,10 @@ const FeedbackPage = () => {
     }, []);
 
     return (
-        <div className="feedback-page-wrapper">
+        <>
             <Header />
-            <section className="hero-section" aria-label="Feedback Hero">
+            <div className="feedback-page-wrapper">
+                <section className="hero-section" aria-label="Feedback Hero">
                 <div className="hero-bg-wrapper">
                     <img src="/feedback/top_image_feedback.jpeg" alt="Connplex Premium Cinema Lounge Bar" className="hero-bg-img" />
                     <div className="hero-overlay"></div>
@@ -336,8 +337,9 @@ const FeedbackPage = () => {
 
                 </div>
             </main>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 

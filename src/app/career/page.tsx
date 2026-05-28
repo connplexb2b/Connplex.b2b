@@ -272,9 +272,10 @@ const CareerPage = () => {
     }, []);
 
     return (
-        <div className="career-page">
+        <>
             <Header />
-            {/* Hero Section */}
+            <div className="career-page">
+                {/* Hero Section */}
             <section className="hero-section" aria-label="Careers Hero">
                 <div className="hero-bg-wrapper">
                     <img src="/career/Top page image.jpeg" alt="Cinema film projector background" className="hero-bg-img" />
@@ -569,8 +570,9 @@ const CareerPage = () => {
                     </div>
                 </div>
             </div>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 
