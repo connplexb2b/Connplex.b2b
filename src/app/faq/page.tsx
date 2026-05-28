@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './faq.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const FRANCHISE_FAQS = [
     {
@@ -277,6 +278,27 @@ const FaqAnswerContent = ({ text }: { text: string }) => {
 
 const FaqPage = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [faqs, setFaqs] = useState<{q: string, a: string}[]>(FRANCHISE_FAQS);
+
+    useEffect(() => {
+        const fetchFaqs = async () => {
+            try {
+                const apiUrl = getApiUrl();
+                const response = await fetch(`${apiUrl}/api/forms/faqs`);
+                const result = await response.json();
+                if (response.ok && result.success && result.data && result.data.length > 0) {
+                    const mapped = result.data.map((item: any) => ({
+                        q: item.question,
+                        a: item.answer
+                    }));
+                    setFaqs(mapped);
+                }
+            } catch (err) {
+                console.error('Error fetching FAQs:', err);
+            }
+        };
+        fetchFaqs();
+    }, []);
 
     return (
         <div className="faq-page-wrapper">
@@ -335,7 +357,7 @@ const FaqPage = () => {
 
                     <div className="faq-accordion-column">
                         <div className="faq-flat-list">
-                            {FRANCHISE_FAQS.map((faq, i) => (
+                            {faqs.map((faq, i) => (
                                 <div
                                     key={i}
                                     className={`faq-flat-item ${activeIndex === i ? 'active' : ''}`}

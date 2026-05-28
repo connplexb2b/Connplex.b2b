@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import './career.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const CareerPage = () => {
     useEffect(() => {
@@ -202,7 +203,7 @@ const CareerPage = () => {
 
         // 5. INTERACTIVE FORM SUBMISSION HANDLER
         if (careerForm) {
-            careerForm.addEventListener('submit', (e) => {
+            careerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const submitBtn = careerForm.querySelector('.btn-submit-app') as HTMLButtonElement;
@@ -213,10 +214,34 @@ const CareerPage = () => {
                     submitBtn.style.opacity = '0.75';
                     submitBtn.innerHTML = 'PROCESSING APPLICATION <span class="loader-dots">...</span>';
 
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.style.opacity = '1';
-                        submitBtn.innerHTML = originalBtnContent;
+                    const formData = new FormData(careerForm);
+                    const fileInput = document.getElementById('applicant-resume') as HTMLInputElement;
+                    const fileName = fileInput?.files && fileInput.files.length > 0 ? fileInput.files[0].name : '';
+
+                    const payload = {
+                        fullName: formData.get('fullname'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        position: formData.get('job_title') || formData.get('department') || 'General Application',
+                        experience: formData.get('department') || '',
+                        coverLetter: formData.get('message') || '',
+                        cvUrl: fileName
+                    };
+
+                    try {
+                        const apiUrl = getApiUrl();
+                        const response = await fetch(`${apiUrl}/api/forms/career-application`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const result = await response.json();
+                        if (!response.ok) {
+                            throw new Error(result.message || 'Submission failed. Please try again.');
+                        }
                         
                         careerForm.style.display = 'none';
                         if (successScreen) successScreen.style.display = 'flex';
@@ -225,7 +250,14 @@ const CareerPage = () => {
                         if (modalContainer) {
                             modalContainer.scrollTo({ top: 0, behavior: 'smooth' });
                         }
-                    }, 1200);
+                    } catch (err: any) {
+                        console.error('Career application submission error:', err);
+                        alert(err.message || 'Unable to process your application at this time. Please try again.');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.innerHTML = originalBtnContent;
+                    }
                 }
             });
         }

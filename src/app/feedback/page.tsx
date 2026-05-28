@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import './feedback.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const FeedbackPage = () => {
     useEffect(() => {
@@ -37,7 +38,7 @@ const FeedbackPage = () => {
         const formHeaderBlock = document.querySelector('.form-header-block') as HTMLElement;
 
         if (mainForm && successBox) {
-            mainForm.addEventListener('submit', (e) => {
+            mainForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const submitBtn = mainForm.querySelector('.btn-submit-feedback') as HTMLButtonElement;
@@ -47,10 +48,30 @@ const FeedbackPage = () => {
                 submitBtn.style.opacity = '0.75';
                 submitBtn.innerHTML = 'TRANSMITTING FEEDBACK...';
 
-                setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.innerHTML = originalText;
+                const formData = new FormData(mainForm);
+                const payload = {
+                    fullName: formData.get('fullname'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone') || '',
+                    location: formData.get('location') || '',
+                    feedbackType: formData.get('feedback_type'),
+                    message: formData.get('message')
+                };
+
+                try {
+                    const apiUrl = getApiUrl();
+                    const response = await fetch(`${apiUrl}/api/forms/feedback`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Submission failed. Please try again.');
+                    }
 
                     mainForm.style.display = 'none';
                     if (formHeaderBlock) formHeaderBlock.style.display = 'none';
@@ -61,7 +82,14 @@ const FeedbackPage = () => {
                         const offsetTop = feedbackSection.getBoundingClientRect().top + window.scrollY - 120;
                         window.scrollTo({ top: offsetTop, behavior: 'smooth' });
                     }
-                }, 1200);
+                } catch (err: any) {
+                    console.error('Feedback submission error:', err);
+                    alert(err.message || 'Unable to transmit feedback at this time. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerHTML = originalText;
+                }
             });
         }
 

@@ -160,3 +160,23 @@ Submit-Form "/forms/general-inquiry" @{
     message = "We would like to discuss co-branding opportunities."
 } "General Inquiry"
 
+# 17. Feedback Submission
+Submit-Form "/forms/feedback" @{
+    fullName = "Feedback Submitter"
+    email = "feedback_test$rand@example.com"
+    phone = "1112223333"
+    location = "Connplex Luxe Mumbai"
+    feedbackType = "Suggestion"
+    message = "The seating comfort is amazing!"
+} "Feedback Submission"
+
+# 18. Get FAQs
+Write-Host "Testing Get FAQs at GET $baseUrl/forms/faqs..." -ForegroundColor Cyan
+try {
+    $response = Invoke-RestMethod -Uri "$baseUrl/forms/faqs" -Method GET -Headers @{ "Origin" = "https://connplex-b2b.vercel.app" }
+    Write-Host "Success: $($response.success), Found: $($response.data.Length) FAQs" -ForegroundColor Green
+    Write-Host "First FAQ: $($response.data[0].question)" -ForegroundColor Gray
+} catch {
+    Write-Error "Failed to fetch FAQs: $_"
+}
+

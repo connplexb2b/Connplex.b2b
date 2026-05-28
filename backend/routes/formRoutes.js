@@ -14,7 +14,9 @@ import {
   registerVendor,
   bookConsultant,
   applyCareer,
-  submitGeneralInquiry
+  submitGeneralInquiry,
+  submitFeedback,
+  getFAQs
 } from '../controllers/formController.js';
 
 const router = express.Router();
@@ -46,5 +48,7 @@ router.post('/franchise-inquiry', submitFranchiseApplication);
 router.post('/consultant-booking', bookConsultant);
 router.post('/career-application', applyCareer);
 router.post('/general-inquiry', submitGeneralInquiry);
+router.post('/feedback', submitFeedback);
+router.get('/faqs', getFAQs);
 
 export default router;
