@@ -80,9 +80,7 @@
       transition: var(--transition-smooth);
   }
   
-  input,
-  select,
-  textare& a {
+  & input, & select, & textarea {
       font-family: inherit;
   }
   
@@ -830,7 +828,7 @@
       width: 100%;
   }
   
-  .feedback-form textare& a {
+  .feedback-form textarea {
       width: 100%;
       background-color: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(223, 185, 115, 0.15);
@@ -1338,7 +1336,7 @@
   
   .connect-form input,
   .connect-form select,
-  .connect-form textare& a {
+  .connect-form textarea {
       background-color: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(223, 185, 115, 0.15);
       border-radius: 4px;

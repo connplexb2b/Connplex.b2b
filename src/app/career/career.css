@@ -82,9 +82,7 @@
       transition: var(--transition-smooth);
   }
   
-  input,
-  select,
-  textare& a {
+  & input, & select, & textarea {
       font-family: inherit;
   }
   
@@ -777,7 +775,7 @@
       color: var(--gold-light);
   }
   
-  .job-met& a {
+  .job-meta {
       font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 500;
@@ -1120,7 +1118,7 @@
       margin: 0.4rem 0 0.3rem;
   }
   
-  .modal-met& a {
+  .modal-meta {
       font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 500;
@@ -1156,7 +1154,7 @@
   
   .form-group input,
   .form-group select,
-  .form-group textare& a {
+  .form-group textarea {
       background: #11100f;
       border: 1px solid rgba(193, 155, 98, 0.15);
       border-radius: 6px;
