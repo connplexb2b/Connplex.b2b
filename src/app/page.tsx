@@ -481,7 +481,7 @@ export default function Home() {
             />
           </div>
 
-          <div className={`absolute left-1/2 -translate-x-1/2 z-20 w-[80%] md:w-[55%] max-w-[650px] pointer-events-none mix-blend-screen transition-all duration-1000 ease-out [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)] ${isWhyVisible ? 'bottom-[-12%] md:bottom-[-18%] translate-y-0 opacity-100' : 'bottom-[-25%] md:bottom-[-30%] translate-y-[100px] opacity-0'}`}>
+          <div className={`absolute left-1/2 -translate-x-1/2 z-20 w-[60%] md:w-[45%] max-w-[500px] pointer-events-none mix-blend-screen transition-all duration-1000 ease-out [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)] ${isWhyVisible ? 'bottom-[-15%] md:bottom-[-20%] translate-y-0 opacity-100' : 'bottom-[-25%] md:bottom-[-30%] translate-y-[100px] opacity-0'}`}>
             <Image
               src="/assets/popcorn.png"
               alt="Popcorn Bucket"
@@ -492,12 +492,12 @@ export default function Home() {
             />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-6 pt-12 pb-16 md:pb-28 bg-gradient-to-b from-black/50 via-transparent to-black/75">
-            <div className="max-w-[800px] w-full -translate-y-12 md:-translate-y-20">
+          <div className="absolute inset-0 flex flex-col items-center justify-start text-center z-30 px-6 pt-4 md:pt-8 pb-0 bg-gradient-to-b from-black/50 via-transparent to-black/75">
+            <div className="max-w-[800px] w-full">
               <div className="mb-6 flex justify-center drop-shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
                 <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain", height: "auto" }} />
               </div>
-              <h3 className="text-white/85 text-[clamp(0.9rem,1.35vw,1.2rem)] font-normal mb-6 tracking-[1px] font-outfit">Where cinema becomes an experience.</h3>
+              <h3 className="text-white text-[clamp(1.0rem,1.6vw,1.3rem)] font-semibold mb-6 tracking-[1px] font-outfit drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Where cinema becomes an experience.</h3>
               <div className="flex gap-6 justify-center">
                 <a
                   href="https://ticketing.theconnplex.com/"
