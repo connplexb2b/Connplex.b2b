@@ -305,7 +305,7 @@ export default function Home() {
         </div>
 
         <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
-          <div className="flex gap-10 pb-4 w-max">
+          <div className="flex gap-10 pb-4 w-max min-w-full lg:justify-center px-4 lg:px-0">
             {apps.map((app) => (
               <div className="flex flex-col items-center gap-4 cursor-pointer group" key={app.name}>
                 <div className="w-[110px] h-[110px] rounded-full flex items-center justify-center border border-white/10 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
