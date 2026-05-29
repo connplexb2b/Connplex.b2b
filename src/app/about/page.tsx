@@ -231,15 +231,18 @@ export default function AboutPage() {
               <span className="font-outfit text-gold-primary text-[13px] font-semibold tracking-[0.2em] uppercase after:content-[''] after:inline-block after:w-[25px] after:h-[1px] after:bg-gold-primary after:ml-3">OUR STORY</span>
             </div>
             <h2 className="font-outfit font-light text-2xl sm:text-3xl md:text-[42px] leading-[1.25] tracking-[0.03em] text-white mb-[30px] uppercase">
-              BUILT <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">ON PASSION.</span><br />
-              DRIVEN <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">BY INNOVATION.</span>
+              BUILDING <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">THE FUTURE</span><br />
+              OF <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">CINEMA.</span>
             </h2>
 
             <div className="text-center lg:text-left">
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">We founded Connplex Cinemas with one shared vision: to democratize the luxury cinema experience and unlock untapped potential in every corner of India.</p>
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">From tier 1 cities to emerging markets, our mission is simple &mdash; bring world-class cinema to every audience, and unmatched opportunities to every partner.</p>
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With over 15 years of experience in entertainment, we&apos;ve turned Connplex into more than just a cinema brand &mdash; it&apos;s a growth engine for developers, investors, and franchise partners across the country.</p>
-              <p className="text-lg! font-normal! text-white! mt-2.5 border-l-2 border-gold-primary pl-[18px] text-left">Because great cinema isn&apos;t just watched &mdash; it&apos;s built.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">At CONNPLEX Cinemas, we believe cinema is more than entertainment&mdash;it is culture, community, and a powerful economic engine.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Founded with a vision to redefine movie-going experiences across India, CONNPLEX has evolved into one of the country&apos;s fastest-growing cinema networks, combining premium experiences, scalable infrastructure, and an asset-light franchise model designed for rapid expansion.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">From metropolitan cities to high-growth emerging markets, we are democratizing world-class cinema by making premium entertainment accessible to every audience and cinema ownership accessible to every aspiring entrepreneur and investor.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Today, CONNPLEX is building a nationwide ecosystem that connects developers, landlords, investors, franchise partners, brands, filmmakers, and audiences through a single platform dedicated to entertainment excellence.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With a strong foundation in innovation, operational excellence, and strategic partnerships, our mission extends beyond operating cinemas&mdash;we are creating the next generation of entertainment destinations.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">As India emerges as one of the world&apos;s largest consumer markets, CONNPLEX is positioned to become a leading force in the evolution of cinema, leisure, and community-driven entertainment experiences.</p>
+              <p className="text-lg! font-normal! text-white! mt-2.5 border-l-2 border-gold-primary pl-[18px] text-left">Because the future of cinema won&apos;t be inherited. It will be built.</p>
             </div>
           </div>
 
