@@ -80,7 +80,7 @@ const slides: {
     title: "Smart Cinema\nNetwork",
     tags: "Comfort · Quality · Community",
     desc: "Thoughtfully designed spaces, quality screens, and a comfortable atmosphere. Smart makes every visit feel easy, enjoyable and just right.",
-    link: "/capex-for-developers",
+    link: "/franchise",
     linkText: "Explore",
   },
 ];
