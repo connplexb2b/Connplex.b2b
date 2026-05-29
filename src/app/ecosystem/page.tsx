@@ -127,10 +127,10 @@ const cards: EcosystemCardProps[] = [
     glowColor: 'rgba(76, 175, 80, 0.35)',
   },
   {
-    id: 'purex',
-    title: 'PUREX',
+    id: 'connair',
+    title: 'CONNAIR',
     description: 'Breathe clean. Advanced medical-grade air purification designed for luxury cinema halls.',
-    link: '/pure-x',
+    link: '/connair',
     bgClass: "bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),url('/ecosystem-assets/purex-bg.png')]",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

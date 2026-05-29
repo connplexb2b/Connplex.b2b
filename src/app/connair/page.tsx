@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
 
-const PureXPage = () => {
+const ConnAirPage = () => {
   const [email, setEmail] = useState('');
   const [formStatus, setFormStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,13 +80,13 @@ const PureXPage = () => {
                 </div>
                 
                 <h1 className="font-outfit font-extralight text-5xl sm:text-6xl md:text-8xl lg:text-[96px] leading-[0.95] tracking-wide text-white mb-1.5 uppercase">
-                  PURE<span className="text-gold-primary font-normal bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent">X</span>
+                  CONN<span className="text-gold-primary font-normal bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent">AIR</span>
                 </h1>
                 <div className="font-outfit font-normal text-sm sm:text-lg text-[#e2c07d] tracking-[0.45em] uppercase mb-6">A I R &nbsp; P U R I F I E R</div>
                 <div className="font-outfit text-xl sm:text-2xl font-bold text-gold-primary tracking-[0.35em] border-y border-gold-primary/45 py-2 px-3 inline-block mb-6">COMING SOON</div>
                 
                 <p className="font-inter text-sm sm:text-base font-light leading-relaxed text-zinc-400 max-w-[500px] mb-8">
-                  Pure X is Connplex&apos;s advanced air purification system, engineered to deliver cleaner, fresher, and healthier air in every theatre.
+                  ConnAir is Connplex&apos;s advanced air purification system, engineered to deliver cleaner, fresher, and healthier air in every theatre.
                 </p>
                 
                 <div className="flex">
@@ -104,7 +104,7 @@ const PureXPage = () => {
                 <div className="relative w-full max-w-[480px] rounded-lg overflow-hidden border border-white/5 shadow-[0_25px_65px_rgba(0,0,0,0.7)]">
                   <Image 
                     src="/purex/purex_purifier.png" 
-                    alt="PureX Advanced Air Purifier System" 
+                    alt="ConnAir Advanced Air Purifier System" 
                     width={480} 
                     height={600} 
                     className="w-full h-auto block"
@@ -123,7 +123,7 @@ const PureXPage = () => {
               <span className="font-outfit text-gold-primary text-xs sm:text-sm font-semibold tracking-[0.22em] mb-4.5 display: inline-block uppercase">CLEAN AIR. ELEVATED EXPERIENCE.</span>
               <h2 className="font-outfit font-light text-3xl sm:text-4xl md:text-[42px] tracking-wide text-white uppercase mb-5">ENGINEERED FOR <span className="text-gold-primary font-normal bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent">PREMIUM SPACES</span></h2>
               <p className="text-sm sm:text-base leading-relaxed text-zinc-400 font-light max-w-[650px] mx-auto">
-                Pure X combines cutting-edge filtration technology with intelligent air quality management to create healthier environments.
+                ConnAir combines cutting-edge filtration technology with intelligent air quality management to create healthier environments.
               </p>
             </div>
 
@@ -241,5 +241,5 @@ const PureXPage = () => {
   );
 };
 
-export default PureXPage;
+export default ConnAirPage;
 

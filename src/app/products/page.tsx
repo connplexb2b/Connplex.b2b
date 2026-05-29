@@ -37,11 +37,11 @@ const ProductsPage = () => {
       alt: "DownTown District"
     },
     {
-      name: "PureX",
+      name: "ConnAir",
       tagline: "Breathe cinema-grade air.",
-      href: "/pure-x",
+      href: "/connair",
       img: "/purex_landscape_hero.png",
-      alt: "PureX Air Purifier"
+      alt: "ConnAir Air Purifier"
     }
   ];
 
@@ -79,7 +79,7 @@ const ProductsPage = () => {
                     alt={p.alt} 
                     fill 
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 20vw"
-                    style={{ objectFit: "cover", objectPosition: p.name === "PureX" ? "center" : "top" }} 
+                    style={{ objectFit: "cover", objectPosition: p.name === "ConnAir" ? "center" : "top" }} 
                     className="transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
