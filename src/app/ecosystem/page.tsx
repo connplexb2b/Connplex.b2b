@@ -52,7 +52,7 @@ const cards: EcosystemCardProps[] = [
   },
   {
     id: 'connflix',
-    title: 'CONNELIX',
+    title: 'CONNFLIX',
     description: 'Stream premium cinematic originals, indie films, and exclusive entertainment.',
     link: '/connflix',
     bgClass: "bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),url('/ecosystem-assets/connflix-bg.png')]",
