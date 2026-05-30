@@ -526,7 +526,7 @@ export default function Home() {
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(2rem,5vw,3.3rem)] font-bold text-primary-gold leading-none tracking-tight">Tier 1 &amp; 2</span>
+            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">Metro + Tier 1, 2, 3</span>
             <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
           <div className="flex flex-col gap-2.5">
