@@ -435,7 +435,7 @@ export default function AdvertisePage() {
                                 { val: "65%", lbl: "PREMIUM INCOME", icon: "M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
                                 { val: "80%", lbl: "FREQUENT MOVIE GOERS", icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
                                 { val: "4.7/5", lbl: "ENGAGEMENT RATE", icon: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" },
-                                { val: "10+", lbl: "CITIES", icon: "M3 21h18 M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16 M9 7h2 M9 11h2 M9 15h2 M13 7h2 M13 11h2 M13 15h2" },
+                                { val: "50+", lbl: "CITIES", icon: "M3 21h18 M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16 M9 7h2 M9 11h2 M9 15h2 M13 7h2 M13 11h2 M13 15h2" },
                                 { val: "125+", lbl: "SCREENS", icon: "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z M12 17v4 M8 21h8" }
                             ].map((stat, i) => (
                                 <div className="flex items-center gap-5 py-4.5 border-b border-white/5 last:border-b-0" key={i} ref={(el) => setRef(el, `aud-${i}`)}>
