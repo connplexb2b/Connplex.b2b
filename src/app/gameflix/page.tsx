@@ -50,73 +50,69 @@ export default function GameflixPage() {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', platform: 'PC' });
+    const [scrollY, setScrollY] = useState(0);
 
-    // Handle Form Submit
+    // Scroll listener for dynamic zoom and depth parallax on the hero image
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Interactive waitlist submission
     const handleNotifySubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate premium API call
         setTimeout(() => {
             setIsSubmitting(false);
             setFormSubmitted(true);
         }, 1500);
     };
 
-    // Close Modal Reset
     const closeModal = () => {
         setIsModalOpen(false);
-        // Delay reset for transition out
         setTimeout(() => {
             setFormSubmitted(false);
             setFormData({ name: '', email: '', platform: 'PC' });
         }, 300);
     };
 
+    // Calculate parallax and zoom factors
+    const heroZoom = 1 + Math.min(scrollY * 0.0003, 0.12);
+    const heroParallaxY = Math.min(scrollY * 0.08, 40);
+
     return (
         <div className="bg-[#000000] text-white font-outfit min-h-screen overflow-x-hidden relative selection:bg-[#C5A059]/30">
-            {/* Inject Custom Keyframes for floating anti-gravity effect and cinematic zoom reveal */}
+            {/* Custom Animations: Levitation and hover glow transitions */}
             <style dangerouslySetInnerHTML={{__html: `
                 @keyframes float {
                     0% { transform: translateY(0px) rotate(0deg); }
-                    50% { transform: translateY(-12px) rotate(0.5deg); }
+                    50% { transform: translateY(-10px) rotate(0.5deg); }
                     100% { transform: translateY(0px) rotate(0deg); }
                 }
                 .animate-float {
                     animation: float 6s ease-in-out infinite;
                 }
-                @keyframes cinematicReveal {
-                    0% {
-                        opacity: 0;
-                        transform: scale(0.97) translateY(20px);
-                        filter: brightness(0.7) contrast(1.1) blur(5px);
-                    }
-                    100% {
-                        opacity: 1;
-                        transform: scale(1) translateY(0);
-                        filter: brightness(1) contrast(1) blur(0);
-                    }
-                }
-                .animate-cinematic-reveal {
-                    animation: cinematicReveal 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
             `}} />
 
-            {/* Glowing Ambient Background Circles */}
-            <div className="absolute top-[20%] right-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-[#C5A059]/10 blur-[120px] sm:blur-[160px] pointer-events-none z-0"></div>
-            <div className="absolute bottom-[20%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-[#C5A059]/5 blur-[120px] sm:blur-[180px] pointer-events-none z-0"></div>
+            {/* Glowing Ambient Background Elements */}
+            <div className="absolute top-[10%] right-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/10 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
+            <div className="absolute bottom-[30%] left-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/5 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
 
-            {/* Navigation Header */}
+            {/* Glassmorphism Header */}
             <Header />
 
             <main className="relative z-10">
-                {/* HERO SECTION */}
-                <section className="pt-32 sm:pt-40 pb-20 sm:pb-32 px-4 sm:px-8 md:px-16 max-w-[1400px] mx-auto w-full">
-                    <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.3fr] gap-12 lg:gap-16 items-center">
+                {/* HERO SECTION - Split into 40% Content / 60% Gaming Setup */}
+                <section className="pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-8 md:px-16 max-w-[1400px] mx-auto w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-12 lg:gap-16 items-center">
                         
-                        {/* Left Content Side */}
-                        <div className="flex flex-col text-center lg:text-left items-center lg:items-start max-w-[600px] mx-auto lg:mx-0">
+                        {/* Left Side: Product Content */}
+                        <div className="flex flex-col text-center lg:text-left items-center lg:items-start max-w-[550px] mx-auto lg:mx-0">
                             <RevealOnScroll delay={100} className="w-full">
-                                <span className="font-inter text-xs sm:text-sm font-semibold tracking-[6px] sm:tracking-[8px] text-[#C5A059] mb-4 sm:mb-6 block uppercase">
+                                <span className="font-inter text-xs sm:text-sm font-semibold tracking-[8px] sm:tracking-[10px] text-[#C5A059] mb-4 sm:mb-6 block uppercase">
                                     GAMEFLIX
                                 </span>
                             </RevealOnScroll>
@@ -154,27 +150,86 @@ export default function GameflixPage() {
                             </RevealOnScroll>
                         </div>
 
-                        {/* Right Gaming Setup Image Side */}
-                        <div className="flex justify-center items-center relative w-full lg:w-auto mt-8 lg:mt-0">
-                            <div className="animate-cinematic-reveal animate-float relative w-full aspect-[3/2] max-w-[680px] lg:max-w-none rounded-2xl overflow-hidden border border-white/5 bg-black/40 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(197,160,89,0.05)]">
-                                <Image
-                                    src="/gameflix/hero.jpg"
-                                    alt="Gameflix Luxury Curved Monitor Setup"
-                                    fill
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                    priority
-                                    style={{ objectFit: 'cover' }}
-                                    className="brightness-[0.9] contrast-[1.05] hover:scale-103 transition-transform duration-[2s]"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none"></div>
+                        {/* Right Side: Massive Gaming Setup Image (55-60% width) */}
+                        <div className="flex justify-center items-center relative w-full lg:w-auto overflow-visible">
+                            {/* Halo Gold Glow behind the monitor */}
+                            <div className="absolute inset-[-15px] rounded-full bg-[#C5A059]/15 blur-[70px] pointer-events-none z-0"></div>
+
+                            {/* Outer Container (Scroll Zoom & Parallax) */}
+                            <div 
+                                className="relative w-full aspect-[1.1] sm:aspect-[4/3] lg:w-[115%] lg:-mr-[15%] lg:-my-4 transition-transform duration-200 ease-out z-10"
+                                style={{ transform: `scale(${heroZoom}) translateY(${heroParallaxY}px)` }}
+                            >
+                                {/* Inner Container (Floating Levitation) */}
+                                <div className="animate-float relative w-full h-full rounded-2xl overflow-hidden border border-[#C5A059]/20 bg-black/40 backdrop-blur-sm shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_40px_rgba(197,160,89,0.1)]">
+                                    <Image
+                                        src="/gameflix/hero.jpg"
+                                        alt="Gameflix Cinematic Curved Monitor Setup"
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 60vw"
+                                        priority
+                                        style={{ objectFit: 'cover' }}
+                                        className="brightness-[1.02] contrast-[1.05]"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </section>
 
-                {/* FEATURES SECTION */}
-                <section className="py-20 sm:py-32 border-t border-white/5 bg-gradient-to-b from-black to-[#050505] relative">
+                {/* HARDWARE SHOWCASE SECTION - Features the second Gameflix branded setup image */}
+                <section className="py-24 border-t border-white/5 relative bg-[#020202] overflow-hidden">
+                    <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-16 w-full">
+                        <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-16 items-center">
+                            
+                            {/* Left: Premium Branded Hardware Image */}
+                            <RevealOnScroll className="relative order-2 lg:order-1">
+                                <div className="absolute inset-[-10px] rounded-full bg-[#C5A059]/8 blur-[60px] pointer-events-none z-0"></div>
+                                <div className="relative w-full aspect-[3/2] rounded-2xl overflow-hidden border border-[#C5A059]/20 bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(197,160,89,0.08)] z-10">
+                                    <Image
+                                        src="/gameflix/other.jpg"
+                                        alt="Gameflix Hardware Console and Controller Setup"
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 45vw"
+                                        style={{ objectFit: 'cover' }}
+                                        className="brightness-95 hover:scale-102 transition-transform duration-[1.5s]"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
+                                </div>
+                            </RevealOnScroll>
+                            
+                            {/* Right: Hardware Text Details */}
+                            <div className="flex flex-col text-left items-start order-1 lg:order-2 max-w-[500px] mx-auto lg:mx-0">
+                                <RevealOnScroll delay={100}>
+                                    <span className="font-inter text-xs font-semibold tracking-[4px] text-[#C5A059] mb-3.5 block uppercase">THE CONSOLE</span>
+                                </RevealOnScroll>
+                                <RevealOnScroll delay={200}>
+                                    <h2 className="font-outfit text-3xl sm:text-4xl md:text-5xl font-bold leading-tight uppercase text-white mb-6">
+                                        ENGINEERED FOR <span className="bg-gradient-to-r from-[#fdf1d6] via-[#C5A059] to-[#906c24] bg-clip-text text-transparent inline-block">PERFECTION</span>
+                                    </h2>
+                                </RevealOnScroll>
+                                <RevealOnScroll delay={300}>
+                                    <p className="text-sm sm:text-base leading-relaxed text-[#A0A0A0] font-light mb-8">
+                                        Gameflix by Connplex represents the fusion of raw graphics power and luxury aesthetics. Featuring custom-tuned input controls, spatial audio acoustics integration, and direct low-latency streaming hubs built to deliver AAA gaming.
+                                    </p>
+                                </RevealOnScroll>
+                                <RevealOnScroll delay={400}>
+                                    <div className="flex flex-wrap gap-3 text-xs font-inter tracking-wider text-[#C5A059]">
+                                        <span className="px-3.5 py-1.5 rounded-full border border-[#C5A059]/20 bg-[#C5A059]/5 font-semibold">CUSTOM D-PAD</span>
+                                        <span className="px-3.5 py-1.5 rounded-full border border-[#C5A059]/20 bg-[#C5A059]/5 font-semibold">4K 120 FPS</span>
+                                        <span className="px-3.5 py-1.5 rounded-full border border-[#C5A059]/20 bg-[#C5A059]/5 font-semibold">SPATIAL SOUND</span>
+                                    </div>
+                                </RevealOnScroll>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </section>
+
+                {/* FEATURES SECTION - 5 Premium Feature Cards in One Row */}
+                <section className="py-24 sm:py-32 border-t border-white/5 bg-[#000000] relative">
                     <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-16 w-full">
                         
                         {/* Section Header */}
@@ -186,7 +241,7 @@ export default function GameflixPage() {
                             <div className="w-10 h-[2px] bg-[#C5A059] mx-auto mt-4 shadow-[0_0_8px_#C5A059]"></div>
                         </RevealOnScroll>
 
-                        {/* Cards Grid */}
+                        {/* 5 Cards Row */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
                             {[
                                 {
@@ -249,12 +304,12 @@ export default function GameflixPage() {
                                     )
                                 }
                             ].map((card, i) => (
-                                <RevealOnScroll key={i} delay={i * 100} className="h-full">
-                                    <div className="group/card flex flex-col items-start bg-[#0a0a0a]/60 border border-white/5 hover:border-[#C5A059]/40 rounded-xl p-8 h-full transition-all duration-500 hover:-translate-y-2.5 hover:shadow-[0_15px_40px_rgba(197,160,89,0.12)] relative overflow-hidden backdrop-blur-md">
+                                <RevealOnScroll key={i} delay={i * 80} className="h-full">
+                                    <div className="group/card flex flex-col items-start bg-[#0a0a0a]/60 border border-white/5 hover:border-[#C5A059]/40 rounded-xl p-8 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_45px_rgba(197,160,89,0.12)] relative overflow-hidden backdrop-blur-md">
                                         <div className="mb-8 p-3 rounded-lg bg-[#C5A059]/5 border border-[#C5A059]/10 group-hover/card:bg-[#C5A059]/10 group-hover/card:border-[#C5A059]/20 transition-all duration-400">
                                             {card.icon}
                                         </div>
-                                        <h3 className="font-outfit text-lg font-bold text-white mb-4 tracking-wide uppercase transition-colors duration-300 group-hover/card:text-[#C5A059]">
+                                        <h3 className="font-outfit text-base font-bold text-white mb-4 tracking-wide uppercase transition-colors duration-300 group-hover/card:text-[#C5A059]">
                                             {card.title}
                                         </h3>
                                         <p className="text-xs leading-relaxed text-[#A0A0A0] font-light">
@@ -269,7 +324,7 @@ export default function GameflixPage() {
                 </section>
             </main>
 
-            {/* Footer */}
+            {/* Footer Component */}
             <Footer />
 
             {/* NOTIFY ME GLASSMORPHISM MODAL */}
@@ -356,7 +411,7 @@ export default function GameflixPage() {
                                 <button 
                                     type="submit" 
                                     disabled={isSubmitting}
-                                    className="w-full mt-4 py-3.5 bg-[#C5A059] hover:bg-[#ebd59b] text-black font-inter text-xs font-bold tracking-wider uppercase rounded shadow-[0_5px_15px_rgba(197,160,89,0.3)] hover:-translate-y-0.5 transition-all duration-300 min-h-[48px] flex items-center justify-center cursor-pointer"
+                                    className="w-full mt-4 py-3.5 bg-[#C5A059] hover:bg-[#ebd59b] text-black font-inter text-xs font-bold tracking-wider uppercase rounded shadow-[0_5px_15px_rgba(193,155,98,0.3)] hover:-translate-y-0.5 transition-all duration-300 min-h-[48px] flex items-center justify-center cursor-pointer"
                                 >
                                     {isSubmitting ? 'ENROLLING WAITLIST...' : 'SECURE EARLY ACCESS'}
                                 </button>
