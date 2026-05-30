@@ -387,15 +387,15 @@ const CareerPage = () => {
                         <div className="openings-list-column">
                             <div className="jobs-list">
 
-                                <div className="job-card" data-job-id="theatre-ops-mgr" data-job-title="Theatre Operations Manager"
+                                <div className="job-card" data-job-id="cinema-ops-mgr" data-job-title="Cinema Operations Manager"
                                     data-job-dept="Operations" data-job-loc="Bengaluru">
                                     <div className="job-card-left">
-                                        <h3 className="job-title">Theatre Operations Manager</h3>
+                                        <h3 className="job-title">Cinema Operations Manager</h3>
                                         <span className="job-meta">Bengaluru &bull; Operations</span>
                                     </div>
                                     <div className="job-card-right">
                                         <button className="btn-view-details"
-                                            aria-label="View Details for Theatre Operations Manager">
+                                            aria-label="View Details for Cinema Operations Manager">
                                             VIEW DETAILS <span className="arrow">&rarr;</span>
                                         </button>
                                     </div>

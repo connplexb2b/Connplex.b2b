@@ -121,7 +121,7 @@ export default function BookEventPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {[
-            { title: "THE GRAND THEATRE", desc: "Our flagship auditorium with state-of-the-art projection and immersive sound.", img: "space_1.png" },
+            { title: "THE GRAND CINEMA", desc: "Our flagship auditorium with state-of-the-art projection and immersive sound.", img: "space_1.png" },
             { title: "THE PRIVATE SCREENING ROOM", desc: "Intimate, exclusive screenings for private audiences and special guests.", img: "space_2.png", popular: true },
             { title: "THE IMAX EXPERIENCE", desc: "Breathtaking scale. Unmatched immersion. Next-level storytelling.", img: "space_3.png" },
             { title: "THE OUTDOOR CINEMA", desc: "Open-air screenings under the stars. Magic, redefined.", img: "space_6.png" },

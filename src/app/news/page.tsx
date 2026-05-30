@@ -51,10 +51,10 @@ const NewsPage = () => {
                 image: "/news/news_3.jpeg",
                 body: `
                     <p><strong>Transform your next gathering into an extraordinary red-carpet event with Connplex Private Screenings.</strong></p>
-                    <p>Whether you are celebrating a milestone birthday, hosting a corporate product launch, or planning an intimate family reunion, our private theater rentals offer an unmatched level of privacy, luxury, and customization. You can choose to screen the latest theatrical releases, classic movies, or even stream personal gaming tournaments on the giant silver screen.</p>
+                    <p>Whether you are celebrating a milestone birthday, hosting a corporate product launch, or planning an intimate family reunion, our private cinema rentals offer an unmatched level of privacy, luxury, and customization. You can choose to screen the latest theatrical releases, classic movies, or even stream personal gaming tournaments on the giant silver screen.</p>
                     <p>Our dedicated events team will curate every detail of your evening, from custom red-carpet arrivals and ambient floral design to a tailored multi-course menu prepared by our executive chefs.</p>
                     <ul>
-                        <li><span><strong>Exclusive Theatre Access:</strong> Fully private auditorium hire.</span></li>
+                        <li><span><strong>Exclusive Cinema Access:</strong> Fully private auditorium hire.</span></li>
                         <li><span><strong>Custom Playlists:</strong> Latest blockbusters, timeless classics, or gaming setups.</span></li>
                         <li><span><strong>Bespoke Catering:</strong> Tailored menus, fine wines, and artisanal mocktails.</span></li>
                         <li><span><strong>Red Carpet Service:</strong> VIP entrance, photography, and dedicated event butler.</span></li>

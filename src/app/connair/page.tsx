@@ -86,7 +86,7 @@ const ConnAirPage = () => {
                 <div className="font-outfit text-xl sm:text-2xl font-bold text-gold-primary tracking-[0.35em] border-y border-gold-primary/45 py-2 px-3 inline-block mb-6">COMING SOON</div>
                 
                 <p className="font-inter text-sm sm:text-base font-light leading-relaxed text-zinc-400 max-w-[500px] mb-8">
-                  ConnAir is Connplex&apos;s advanced air purification system, engineered to deliver cleaner, fresher, and healthier air in every theatre.
+                  ConnAir is Connplex&apos;s advanced air purification system, engineered to deliver cleaner, fresher, and healthier air in every cinema.
                 </p>
                 
                 <div className="flex">

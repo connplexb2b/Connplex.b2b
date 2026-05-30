@@ -111,7 +111,7 @@ export default function CaseStudiesPage() {
     const chairImgRef = useRef<HTMLImageElement>(null);
 
     const studies = [
-        { id: 1, num: '01', tag: 'SMART THEATRE', title: 'CONNPLEX<br>EXPERIENCE CENTRE', subtitle: 'REDEFINING THE FUTURE OF CINEMA', location: 'MUMBAI, MAHARASHTRA', img: '/img/case-study/case_study_1.png', desc: 'A next-gen flagship theatre featuring 7 premium auditoriums, recliners, immersive sound and intelligent automation.', category: 'smart-theatres' },
+        { id: 1, num: '01', tag: 'SMART CINEMA', title: 'CONNPLEX<br>EXPERIENCE CENTRE', subtitle: 'REDEFINING THE FUTURE OF CINEMA', location: 'MUMBAI, MAHARASHTRA', img: '/img/case-study/case_study_1.png', desc: 'A next-gen flagship cinema featuring 7 premium auditoriums, recliners, immersive sound and intelligent automation.', category: 'smart-cinemas' },
         { id: 2, num: '02', tag: 'PREMIUM FORMAT', title: 'IMAX WITH LASER<br>AT CONNPLEX', subtitle: 'BIGGER SCREEN. BOLDER IMPACT.', location: 'PUNE, MAHARASHTRA', img: '/img/case-study/case_study_2.png', desc: "India's most advanced IMAX experience with Laser projection, precision sound and wall-to-wall visuals.", category: 'premium-formats' },
         { id: 3, num: '03', tag: 'LUXURY RECLINERS', title: 'THE RECLINER<br>EXPERIENCE', subtitle: 'COMFORT THAT ELEVATES EVERY MOMENT.', location: 'MULTIPLE LOCATIONS', img: '/img/case-study/case_study_3.png', desc: 'Crafted for those who expect more. Our recliner auditoriums blend luxury, privacy and unmatched comfort.', category: 'experience-initiatives' },
         { id: 4, num: '04', tag: 'DRIVE-IN CINEMA', title: 'CONNPLEX<br>DRIVE-IN', subtitle: 'CINEMA UNDER THE STARS.', location: 'LONAVALA, MAHARASHTRA', img: '/img/case-study/case_study_4.png', desc: 'A nostalgic experience reimagined with crystal clear visuals, powerful sound and a magical outdoor ambience.', category: 'drive-in-cinemas' },
@@ -169,7 +169,7 @@ export default function CaseStudiesPage() {
                                 <span className="bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(201,159,74,0.25)] relative inline-block">STAY.</span>
                             </h1>
                             <p className="font-inter text-base sm:text-[17px] font-light leading-[1.65] text-[#a0a0a0] max-w-[540px] mb-11">
-                                Every Connplex theatre is more than a destination—it's an experience engineered to create impact, emotion and unforgettable memories.
+                                Every Connplex cinema is more than a destination—it's an experience engineered to create impact, emotion and unforgettable memories.
                             </p>
                             <div className="flex">
                                 <a href="#" className="group inline-flex items-center gap-4 px-9 py-4 border border-[#c99f4a]/35 bg-transparent text-[#c99f4a] font-outfit text-xs font-semibold tracking-[0.12em] no-underline rounded-sm relative overflow-hidden transition-all duration-300 hover:text-white hover:border-[#c99f4a] hover:shadow-[0_0_30px_rgba(201,159,74,0.15),_inset_0_0_15px_rgba(201,159,74,0.05)] hover:-translate-y-0.5 z-10 before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[#ffd885]/10 before:to-transparent before:transition-all before:duration-500 before:z-[-1] hover:before:left-full">
@@ -204,7 +204,7 @@ export default function CaseStudiesPage() {
                         <div className="dashboard-border-glow"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-10 md:gap-0 items-center relative">
                             {[
-                                { label: 'SMART THEATRES DELIVERED', target: 85, suffix: '+' },
+                                { label: 'SMART CINEMAS DELIVERED', target: 85, suffix: '+' },
                                 { label: 'SCREENS DEPLOYED', target: 450, suffix: '+' },
                                 { label: 'GUESTS IMPRESSED', target: 25, suffix: 'M+' },
                                 { label: 'CITIES ACROSS INDIA', target: 28, suffix: '+' },
@@ -233,7 +233,7 @@ export default function CaseStudiesPage() {
                             <div className="flex flex-wrap gap-2 sm:gap-4">
                                 {[
                                     { label: 'ALL', value: 'all' },
-                                    { label: 'SMART THEATRES', value: 'smart-theatres' },
+                                    { label: 'SMART CINEMAS', value: 'smart-cinemas' },
                                     { label: 'PREMIUM FORMATS', value: 'premium-formats' },
                                     { label: 'DRIVE-IN CINEMAS', value: 'drive-in-cinemas' },
                                     { label: 'EXPERIENCE INITIATIVES', value: 'experience-initiatives' },

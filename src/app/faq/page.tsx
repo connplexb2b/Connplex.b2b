@@ -323,7 +323,7 @@ const FaqPage = () => {
                             <img
                                 src="/faq/cinema_theatre.png"
                                 className="cinema-image"
-                                alt="Luxurious Connplex theater auditorium with gold lights, stars on the ceiling, and sunset mountain peak on a huge screen."
+                                alt="Luxurious Connplex cinema auditorium with gold lights, stars on the ceiling, and sunset mountain peak on a huge screen."
                             />
                         </div>
 

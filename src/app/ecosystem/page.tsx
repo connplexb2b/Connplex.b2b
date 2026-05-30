@@ -97,7 +97,7 @@ const cards: EcosystemCardProps[] = [
   {
     id: 'downtown',
     title: 'DOWNTOWN',
-    description: 'Experience luxury movie theatres with ultra-premium reclining seats and gourmet food.',
+    description: 'Experience luxury movie cinemas with ultra-premium reclining seats and gourmet food.',
     link: '/downtown',
     bgClass: "bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),url('/ecosystem-assets/downtown-bg.png')]",
     icon: (
@@ -143,7 +143,7 @@ const cards: EcosystemCardProps[] = [
   {
     id: 'skyinn',
     title: 'SKY - INN',
-    description: 'Fabulous open-air drive-in theatre experience under the beautiful night sky.',
+    description: 'Fabulous open-air drive-in cinema experience under the beautiful night sky.',
     link: '/sky-inn',
     bgClass: "bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),url('/ecosystem-assets/skyinn-bg.png')]",
     icon: (
