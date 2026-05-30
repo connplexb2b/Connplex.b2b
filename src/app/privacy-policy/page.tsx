@@ -12,67 +12,49 @@ const policyItems = [
         num: '01.',
         icon: <User size={28} />,
         title: 'INFORMATION WE COLLECT',
-        text: 'To process bookings and transactions, we may collect information related to your movie reservations, such as selected cinemas, show timings, seat preferences, booking history, payment references, and purchase records.\n\nWe also automatically collect certain technical and usage information, including your IP address, browser type, referral sources, operating system, app version, and interactions with our website or application. This information helps us improve platform performance, security, and user experience.\n\nWe may collect your preferences regarding promotional offers, newsletters, movie alerts, and marketing communications. We may also collect information related to reward points, coupon usage, referral programs, gift cards, or promotional campaigns.\n\nAdditionally, we may collect approximate location information to display relevant cinemas, movie listings, and location-based services.',
+        text: 'We may collect personal information that you voluntarily provide to us, such as your name, email address, phone number, and any other details you submit through our contact forms or inquiries.',
     },
     {
         num: '02.',
         icon: <Settings size={28} />,
         title: 'HOW WE USE YOUR INFORMATION',
-        text: 'Please note that Connplex may sell, share, or transfer personally identifiable information about its customers to any successor in interest, such as in the event the Company is sold to a third party. Additionally, we may disclose your personally identifiable information where required by law or in response to requests from law enforcement authorities related to criminal investigations or from civil or administrative authorities in connection with pending cases or investigations. We use your information to personalize your cinema experience, recommend movies, process transactions, issue tickets, provide requested services, send important updates, promotional offers, and newsletters (with an option to opt out at any time), as well as to analyse user behaviour, improve our services, troubleshoot issues, and optimize the performance of CONNPLEX CINEMAS.',
+        text: 'The information we collect is used to respond to your inquiries, provide requested services, improve our website, and communicate with you about our services, projects, or updates.',
     },
     {
         num: '03.',
-        icon: <Cookie size={28} />,
-        title: 'COOKIES & TRACKING TECHNOLOGIES',
-        text: 'Connplex uses cookies, pixels, analytics tools, and similar technologies to enhance website functionality, analyze traffic, improve user experience, and personalize content and promotions. Users may disable cookies through their browser settings; however, certain features of the platform may not function properly as a result.',
+        icon: <Shield size={28} />,
+        title: 'INFORMATION SHARING',
+        text: 'We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as required by law or to trusted service providers who assist us in operating our website.',
     },
     {
         num: '04.',
-        icon: <Lock size={28} />,
-        title: 'PAYMENT SECURITY',
-        text: 'We implement reasonable technical and organizational security measures to help protect transaction information and ensure secure payment processing. However, all payment transactions are subject to the privacy policies and security practices of the respective payment service providers.',
+        icon: <Cookie size={28} />,
+        title: 'COOKIES & TRACKING TECHNOLOGIES',
+        text: 'Our website may use cookies and similar technologies to enhance your browsing experience, analyze site traffic, and understand user preferences. You can choose to disable cookies through your browser settings.',
     },
     {
         num: '05.',
-        icon: <Shield size={28} />,
-        title: 'SHARING OF INFORMATION',
-        text: 'Connplex may share information with trusted third-party service providers, including payment gateway partners, technology providers, hosting partners, analytics vendors, and marketing agencies, strictly for operational and service-related purposes. Information may also be disclosed when required by law, regulatory authorities, or in connection with business restructuring, mergers, or legal proceedings. Connplex does not sell personal information to third parties.',
+        icon: <Lock size={28} />,
+        title: 'DATA SECURITY',
+        text: 'We implement appropriate technical and organizational measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.',
     },
     {
         num: '06.',
-        icon: <Settings size={28} />,
-        title: 'MOBILE APPLICATION PERMISSIONS',
-        text: 'The Connplex mobile application may request access to certain device permissions such as notifications, storage, camera, or location services in order to enhance platform functionality and customer experience. Users may manage or revoke such permissions through their device settings at any time.',
+        icon: <User size={28} />,
+        title: 'YOUR RIGHTS',
+        text: 'You have the right to access, update, or delete your personal information. If you wish to exercise any of these rights, please contact us using the details provided below.',
     },
     {
         num: '07.',
-        icon: <Shield size={28} />,
-        title: 'DATA SECURITY',
-        text: 'Connplex follows reasonable technical, administrative, and security measures to protect user information against unauthorized access, misuse, alteration, disclosure, or destruction. These measures are designed to maintain the confidentiality, integrity, and security of personal information processed through our platform. While we strive to use commercially acceptable safeguards to protect user data, no method of electronic transmission, storage, or processing over the internet can be guaranteed to be completely secure. Accordingly, Connplex cannot guarantee absolute security of information shared through its platforms.',
+        icon: <LinkIcon size={28} />,
+        title: 'THIRD-PARTY LINKS',
+        text: 'Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of those websites.',
     },
     {
         num: '08.',
-        icon: <User size={28} />,
-        title: 'YOUR RIGHTS & CHOICES',
-        text: 'Users may request access to their personal information, correction of inaccurate information, deletion of data where applicable, or opt out of promotional communications and marketing messages. Such requests may be submitted using the contact details provided below.',
-    },
-    {
-        num: '09.',
-        icon: <Lock size={28} />,
-        title: 'DATA RETENTION',
-        text: 'Connplex retains personal information only for as long as necessary to fulfill operational, legal, regulatory, security, and business requirements.',
-    },
-    {
-        num: '10.',
-        icon: <User size={28} />,
-        title: 'CHILDREN’S PRIVACY',
-        text: 'Connplex services are not intended for children below the age of 13 without parental or guardian supervision. Connplex does not knowingly collect personal information from children.',
-    },
-    {
-        num: '11.',
-        icon: <LinkIcon size={28} />,
-        title: 'THIRD-PARTY LINKS',
-        text: 'The Connplex website or applications may contain links to third-party websites or services for user convenience. Connplex is not responsible for the privacy practices, policies, or content of such external platforms.',
+        icon: <PenLine size={28} />,
+        title: 'CHANGES TO THIS POLICY',
+        text: 'We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date.',
     },
 ];
 
@@ -126,32 +108,24 @@ const PrivacyPolicyPage = () => {
             </section>
 
             {/* Policy Items Grid */}
-            <section className="pt-20 pb-10 px-[5%] md:pt-[120px] md:pb-[60px] md:px-[10%] bg-black relative">
+            <section className="py-20 px-[5%] md:py-[120px] md:px-[10%] grid grid-cols-1 lg:grid-cols-2 gap-x-[120px] gap-y-[100px] gap-[60px] bg-black relative">
                 <div className="absolute top-0 left-0 w-full h-[200px] bg-gradient-to-b from-black to-transparent pointer-events-none z-0"></div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-[120px] gap-y-[100px] gap-[60px]">
-                    {policyItems.map((item) => (
-                        <div className="flex flex-col min-[481px]:flex-row gap-[15px] min-[481px]:gap-[35px] transition-transform duration-400 ease hover:-translate-y-1.25 group z-10" key={item.num}>
-                            <div 
-                                className="min-w-[60px] h-[60px] min-[481px]:min-w-[80px] min-[481px]:h-[80px] rounded-full border border-[rgba(197,160,89,0.2)] flex items-center justify-center text-[#C5A059] shadow-[inset_0_0_15px_rgba(197,160,89,0.1)] transition-all duration-300 shrink-0 group-hover:border-[#C5A059] group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] group-hover:scale-105"
-                                style={{ background: 'radial-gradient(circle, rgba(197,160,89,0.05) 0%, rgba(0,0,0,0) 100%)' }}
-                            >
-                                {item.icon}
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-[1.1rem] font-bold mb-5 text-white tracking-[1.5px] uppercase transition-colors duration-300 group-hover:text-[#C5A059]">
-                                    <span className="text-[#C5A059] mr-2.5">{item.num}</span> {item.title}
-                                </h3>
-                                <p className="text-[#A0A0A0] text-[0.9rem] leading-[1.8]" style={{ whiteSpace: 'pre-line' }}>{item.text}</p>
-                            </div>
+                {policyItems.map((item) => (
+                    <div className="flex flex-col min-[481px]:flex-row gap-[15px] min-[481px]:gap-[35px] transition-transform duration-400 ease hover:-translate-y-1.25 group z-10" key={item.num}>
+                        <div 
+                            className="min-w-[60px] h-[60px] min-[481px]:min-w-[80px] min-[481px]:h-[80px] rounded-full border border-[rgba(197,160,89,0.2)] flex items-center justify-center text-[#C5A059] shadow-[inset_0_0_15px_rgba(197,160,89,0.1)] transition-all duration-300 shrink-0 group-hover:border-[#C5A059] group-hover:shadow-[0_0_20px_rgba(197,160,89,0.4)] group-hover:scale-105"
+                            style={{ background: 'radial-gradient(circle, rgba(197,160,89,0.05) 0%, rgba(0,0,0,0) 100%)' }}
+                        >
+                            {item.icon}
                         </div>
-                    ))}
-                </div>
-
-                {/* Closing Statement */}
-                <div className="relative z-10 mt-20 max-w-[900px] border-t border-[#c5a059]/20 pt-10 text-[#A0A0A0] text-[0.95rem] leading-[1.8]">
-                    <p className="mb-6">Connplex may revise or update this Privacy Policy from time to time. Updated versions will be published on this page along with the revised effective date. Continued use of the platform after such changes constitutes acceptance of the updated policy.</p>
-                    <p className="font-bold text-[#C5A059] tracking-[1.5px] uppercase font-outfit">CONNPLEX CINEMAS LIMITED</p>
-                </div>
+                        <div className="flex-1">
+                            <h3 className="text-[1.1rem] font-bold mb-5 text-white tracking-[1.5px] uppercase transition-colors duration-300 group-hover:text-[#C5A059]">
+                                <span className="text-[#C5A059] mr-2.5">{item.num}</span> {item.title}
+                            </h3>
+                            <p className="text-[#A0A0A0] text-[0.9rem] leading-[1.8]">{item.text}</p>
+                        </div>
+                    </div>
+                ))}
             </section>
 
             {/* Contact Banner */}
