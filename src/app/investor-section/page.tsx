@@ -100,7 +100,7 @@ const InvestorRelationsPage = () => {
                                     <line x1="6" y1="10" x2="6.01" y2="10" />
                                 </svg>
                             </div>
-                            <h3>115+</h3>
+                            <h3>125+</h3>
                             <p>Screens</p>
                         </div>
                         <div className="stat-card">

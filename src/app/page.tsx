@@ -279,7 +279,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
-            <p className="text-sm text-text-secondary">115+ screens operational</p>
+            <p className="text-sm text-text-secondary">125+ screens operational</p>
           </div>
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
@@ -521,7 +521,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-2.5">
             <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
-              <Counter target={115} isVisible={isWhyVisible} suffix="+" />
+              <Counter target={125} isVisible={isWhyVisible} suffix="+" />
             </span>
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>

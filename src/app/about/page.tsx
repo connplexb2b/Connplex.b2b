@@ -146,7 +146,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={115} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={125} isVisible={isStatsVisible} suffix="+" />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-gold-primary uppercase leading-[1.3] [text-shadow:0_0_6px_rgba(201,159,74,0.2)]">SCREENS</span>
@@ -163,7 +163,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={40} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={42} isVisible={isStatsVisible} suffix="+" />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">FRANCHISE LOCATIONS</span>

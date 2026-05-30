@@ -90,7 +90,7 @@ export default function BookEventPage() {
               </div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">115+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">125+</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 PREMIUM<br />SPACES
               </div>
