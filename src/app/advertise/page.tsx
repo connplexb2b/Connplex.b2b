@@ -311,7 +311,7 @@ export default function AdvertisePage() {
                         </div>
                         <div className="flex items-end">
                             <p className="text-sm sm:text-base leading-relaxed text-white/65 font-light max-w-[520px]">
-                                Cinema is more than just a screen&mdash;it&apos;s an immersive environment where your brand connects with highly engaged audiences, creating a lasting impact.
+                                Cinema is more than just a screen, it&apos;s an immersive environment where your brand connects with highly engaged audiences, creating a lasting impact.
                             </p>
                         </div>
                     </div>
@@ -420,7 +420,7 @@ export default function AdvertisePage() {
                                 <span className="bg-gradient-to-r from-[#fdf1d6] via-gold-primary to-[#906c24] bg-clip-text text-transparent inline-block drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">OF THE RIGHT AUDIENCE.</span>
                             </h2>
                             <p className="text-[14.5px] leading-relaxed text-white/65 font-light my-5 max-w-[380px]">
-                                Our audience is diverse, upscale, and highly engaged&mdash;perfect for brands that demand quality attention.
+                                Our audience is diverse, upscale, and highly engaged, perfect for brands that demand quality attention.
                             </p>
                             <Link href="/contact" className="group inline-flex items-center gap-5 border border-white/25 bg-white/3 hover:border-gold-primary hover:text-black text-white px-7 py-3 font-inter text-xs font-semibold tracking-wider uppercase rounded-sm relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_35px_rgba(201,159,74,0.35)] cursor-pointer h-12 before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-full before:h-full before:bg-gold-primary before:transition-all before:duration-500 before:z-0 hover:before:left-0">
                                 <span className="relative z-10 transition-colors duration-500 group-hover:text-black">OUR AUDIENCE</span>

@@ -236,11 +236,11 @@ export default function AboutPage() {
             </h2>
 
             <div className="text-center lg:text-left">
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">At CONNPLEX Cinemas, we believe cinema is more than entertainment&mdash;it is culture, community, and a powerful economic engine.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">At CONNPLEX Cinemas, we believe cinema is more than entertainment, it is culture, community, and a powerful economic engine.</p>
               <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Founded with a vision to redefine movie-going experiences across India, CONNPLEX has evolved into one of the country&apos;s fastest-growing cinema networks, combining premium experiences, scalable infrastructure, and an asset-light franchise model designed for rapid expansion.</p>
               <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">From metropolitan cities to high-growth emerging markets, we are democratizing world-class cinema by making premium entertainment accessible to every audience and cinema ownership accessible to every aspiring entrepreneur and investor.</p>
               <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Today, CONNPLEX is building a nationwide ecosystem that connects developers, landlords, investors, franchise partners, brands, filmmakers, and audiences through a single platform dedicated to entertainment excellence.</p>
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With a strong foundation in innovation, operational excellence, and strategic partnerships, our mission extends beyond operating cinemas&mdash;we are creating the next generation of entertainment destinations.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With a strong foundation in innovation, operational excellence, and strategic partnerships, our mission extends beyond operating cinemas, we are creating the next generation of entertainment destinations.</p>
               <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">As India emerges as one of the world&apos;s largest consumer markets, CONNPLEX is positioned to become a leading force in the evolution of cinema, leisure, and community-driven entertainment experiences.</p>
               <p className="text-lg! font-normal! text-white! mt-2.5 border-l-2 border-gold-primary pl-[18px] text-left">Because the future of cinema won&apos;t be inherited. It will be built.</p>
             </div>
@@ -282,7 +282,7 @@ export default function AboutPage() {
               <div className="text-center lg:text-left">
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Rahul Dhyani believes great cinemas are built on emotion, connection, and unforgettable experiences. With years of expertise in entertainment and business strategy, his vision for Connplex has been centered around creating destinations that combine storytelling, hospitality, and community engagement.</p>
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His approach focuses on understanding local markets while delivering global-standard cinema experiences through thoughtfully designed formats like Luxuriance, Signature, and Express. From concept to execution, he has played a key role in shaping Connplex into a modern entertainment brand built for India&apos;s evolving audiences.</p>
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For him, Connplex is not just about screens &mdash; it&apos;s about creating spaces where memories are made, businesses grow, and communities come alive through cinema.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For him, Connplex is not just about screens, it&apos;s about creating spaces where memories are made, businesses grow, and communities come alive through cinema.</p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-[30px] mt-8 sm:mt-10">
@@ -314,8 +314,8 @@ export default function AboutPage() {
               </h3>
 
               <div className="text-center lg:text-left">
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For Anish Patel, cinema has always been more than entertainment &mdash; it&apos;s an experience that brings people, culture, and communities together. With a strong entrepreneurial mindset and a passion for innovation, he envisioned a cinema brand that could redefine how India experiences movies across both metro cities and emerging markets.</p>
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His focus has always been on creating scalable cinema ecosystems that combine luxury, technology, operational excellence, and long-term business value. Under his leadership, Connplex continues to expand with a clear mission &mdash; delivering premium entertainment experiences while creating profitable opportunities for developers, investors, and franchise partners.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For Anish Patel, cinema has always been more than entertainment, it&apos;s an experience that brings people, culture, and communities together. With a strong entrepreneurial mindset and a passion for innovation, he envisioned a cinema brand that could redefine how India experiences movies across both metro cities and emerging markets.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His focus has always been on creating scalable cinema ecosystems that combine luxury, technology, operational excellence, and long-term business value. Under his leadership, Connplex continues to expand with a clear mission, delivering premium entertainment experiences while creating profitable opportunities for developers, investors, and franchise partners.</p>
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Driven by innovation and growth, he believes the future of cinema lies in accessibility, smart infrastructure, and experiences that audiences truly remember.</p>
               </div>
 
@@ -444,7 +444,7 @@ export default function AboutPage() {
                 OF CINEMA <span className="text-gold-primary font-normal">TOGETHER.</span>
               </h2>
               <p className="font-inter text-[15px] font-light leading-[1.7] text-text-secondary max-w-[550px] mb-10">
-                Whether you are a passionate moviegoer or an investor exploring new opportunities, Connplex is shaping the future of cinema &mdash; through smarter spaces, stronger returns, and unforgettable storytelling moments.
+                Whether you are a passionate moviegoer or an investor exploring new opportunities, Connplex is shaping the future of cinema, through smarter spaces, stronger returns, and unforgettable storytelling moments.
               </p>
               <Link href="/contact" className="inline-flex items-center gap-[15px] px-9 py-4 bg-[linear-gradient(135deg,#c99f4a_0%,#ffd885_50%,#b3852d_100%)] text-black font-outfit text-xs font-semibold tracking-[0.12em] no-underline rounded transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_10px_30px_rgba(201,159,74,0.25)] hover:scale-[1.02] hover:shadow-[0_15px_35px_rgba(201,159,74,0.35)] min-h-[44px] min-w-[44px]">
                 LET&apos;S CONNECT
