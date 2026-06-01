@@ -169,7 +169,7 @@ export default function CaseStudiesPage() {
                                 <span className="bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(201,159,74,0.25)] relative inline-block">STAY.</span>
                             </h1>
                             <p className="font-inter text-base sm:text-[17px] font-light leading-[1.65] text-[#a0a0a0] max-w-[540px] mb-11">
-                                Every Connplex cinema is more than a destination—it's an experience engineered to create impact, emotion and unforgettable memories.
+                                Every Connplex cinema is more than a destination it's an experience engineered to create impact, emotion and unforgettable memories.
                             </p>
                             <div className="flex">
                                 <a href="#" className="group inline-flex items-center gap-4 px-9 py-4 border border-[#c99f4a]/35 bg-transparent text-[#c99f4a] font-outfit text-xs font-semibold tracking-[0.12em] no-underline rounded-sm relative overflow-hidden transition-all duration-300 hover:text-white hover:border-[#c99f4a] hover:shadow-[0_0_30px_rgba(201,159,74,0.15),_inset_0_0_15px_rgba(201,159,74,0.05)] hover:-translate-y-0.5 z-10 before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[#ffd885]/10 before:to-transparent before:transition-all before:duration-500 before:z-[-1] hover:before:left-full">
