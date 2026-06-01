@@ -264,7 +264,9 @@ export default function CaseStudiesPage() {
                         </div>
                     </section>
 
-                    <section className="relative mt-[60px] md:mt-[100px] mb-[60px] py-[60px] px-6 sm:py-[120px] sm:px-[40px] rounded-2xl overflow-hidden bg-[url('/img/case-study/cta_theater_bg.png')] bg-cover bg-center border border-[#c99f4a]/15 flex justify-center items-center text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-b before:from-black/85 before:via-black/50 before:to-black/90 before:z-10">
+                    <section className="relative mt-[60px] md:mt-[100px] mb-[60px] py-[60px] px-6 sm:py-[120px] sm:px-[40px] rounded-2xl overflow-hidden border border-[#c99f4a]/15 flex justify-center items-center text-center">
+                        <div className="absolute inset-0 bg-[url('/img/case-study/cta_theater_bg.png')] bg-cover bg-center filter blur-[2px] scale-103 z-0 pointer-events-none"></div>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black/85 z-10 pointer-events-none"></div>
                         <div className="relative z-20 max-w-[750px] flex flex-col items-center gap-4">
                             <span className="font-outfit text-xs font-semibold tracking-wider text-[#c99f4a] uppercase">LET'S CREATE IMPACT TOGETHER</span>
                             <h2 className="font-oswald text-[32px] sm:text-[48px] font-bold text-white uppercase">HAVE A STORY IN MIND?</h2>
