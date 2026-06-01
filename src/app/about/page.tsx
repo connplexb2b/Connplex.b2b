@@ -5,6 +5,18 @@ import Link from "next/link";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useEffect, useState, useRef } from "react";
+import { useStats } from "@/hooks/useStats";
+
+const getNumeric = (val: string): number => {
+  const match = val.match(/[\d\.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+const getSuffix = (val: string): string => {
+  const match = val.match(/[\d\.]+(.*)/);
+  return match ? match[1] : "";
+};
+
 
 // --- Components ---
 
@@ -48,6 +60,7 @@ const Counter = ({ target, isVisible, suffix = "", decimals = 0 }: { target: num
 // --- Main Page ---
 
 export default function AboutPage() {
+  const { stats } = useStats();
   const [isStatsVisible, setIsStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -146,7 +159,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={125} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.screens)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.screens)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-gold-primary uppercase leading-[1.3] [text-shadow:0_0_6px_rgba(201,159,74,0.2)]">SCREENS</span>
@@ -163,7 +176,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={42} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.franchiseLocations)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.franchiseLocations)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">FRANCHISE LOCATIONS</span>
@@ -179,7 +192,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={8} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.yearsOfExcellence)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.yearsOfExcellence)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">YEARS OF EXCELLENCE</span>
@@ -194,7 +207,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={1} isVisible={isStatsVisible} />
+                  <Counter target={getNumeric(stats.aboutPage.vision)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.vision)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-gold-primary uppercase leading-[1.3] [text-shadow:0_0_6px_rgba(201,159,74,0.2)]">VISION</span>
@@ -210,7 +223,10 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <span className="font-outfit">10M</span><span className="text-gold-primary text-[28px] ml-0.5 font-semibold group-hover:text-gold-bright transition-colors">+</span>
+                  <span className="font-outfit">{stats.aboutPage.happyMoviegoers.replace(/[+]/g, '')}</span>
+                  {stats.aboutPage.happyMoviegoers.includes('+') && (
+                    <span className="text-gold-primary text-[28px] ml-0.5 font-semibold group-hover:text-gold-bright transition-colors">+</span>
+                  )}
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">HAPPY MOVIEGOERS</span>

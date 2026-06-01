@@ -5,6 +5,18 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useStats } from "@/hooks/useStats";
+
+const getNumeric = (val: string): number => {
+  const match = val.match(/[\d\.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+const getSuffix = (val: string): string => {
+  const match = val.match(/[\d\.]+(.*)/);
+  return match ? match[1] : "";
+};
+
 
 const apps = [
   { name: "Conn events", link: "/connevents", glow: "rgba(156, 39, 176, 0.35)", color: "#e040fb", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg> },
@@ -141,6 +153,7 @@ const Counter = ({ target, isVisible, suffix = "", decimals = 0 }: { target: num
 };
 
 export default function Home() {
+  const { stats } = useStats();
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [currentCase, setCurrentCase] = useState(0);
@@ -279,7 +292,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
-            <p className="text-sm text-text-secondary">125+ screens operational</p>
+            <p className="text-sm text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
           </div>
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
@@ -515,22 +528,22 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-t border-white/10 pt-14 text-left">
           <div className="flex flex-col gap-2.5">
             <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
-              <Counter target={10} isVisible={isWhyVisible} suffix="M+" />
+              <Counter target={getNumeric(stats.homepage.annualFootfall)} isVisible={isWhyVisible} suffix={getSuffix(stats.homepage.annualFootfall)} />
             </span>
             <span className="text-sm text-text-secondary font-normal">Annual Footfall</span>
           </div>
           <div className="flex flex-col gap-2.5">
             <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
-              <Counter target={125} isVisible={isWhyVisible} suffix="+" />
+              <Counter target={getNumeric(stats.homepage.premiumScreens)} isVisible={isWhyVisible} suffix={getSuffix(stats.homepage.premiumScreens)} />
             </span>
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">Metro + Tier 1, 2, 3</span>
+            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">{stats.homepage.citiesCovered}</span>
             <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">Immersive</span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">{stats.homepage.experiencesDelivered}</span>
             <span className="text-sm text-text-secondary font-normal">Cinema Experiences Delivered</span>
           </div>
         </div>

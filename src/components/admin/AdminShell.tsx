@@ -34,6 +34,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         <nav className="admin-nav">
           {navLink('/admin', 'Media Library', 'fa-folder-open')}
           {navLink('/admin/investors', 'Investors', 'fa-building')}
+          {navLink('/admin/stats', 'Website Stats', 'fa-chart-bar')}
           <span className="disabled">
             <i className="fa-solid fa-chart-line" aria-hidden="true" />
             Dashboard
