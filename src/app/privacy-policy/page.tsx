@@ -115,16 +115,15 @@ const PrivacyPolicyPage = () => {
                             PRIVACY
                         </span>
                         POLICY
-                    </h1>
-                    <div 
+                    </h1>                    <div 
                         className="max-w-[550px] text-[#A0A0A0] text-[0.95rem] min-[481px]:text-[1.05rem] leading-[1.8] border-l-2 border-[#C5A059] pl-[15px] min-[481px]:pl-[30px]"
                         style={{ animation: 'ppFadeIn 1s ease-out 0.5s both' }}
                     >
-                        <p>At Connplex Private Limited, we value your trust and are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.</p>
+                        <p>At Connplex Cinemas Limited, we value your trust and are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.</p>
                     </div>
                 </div>
             </section>
-
+ 
             {/* Policy Items Grid */}
             <section className="pt-20 pb-10 px-[5%] md:pt-[120px] md:pb-[60px] md:px-[10%] bg-black relative">
                 <div className="absolute top-0 left-0 w-full h-[200px] bg-gradient-to-b from-black to-transparent pointer-events-none z-0"></div>
@@ -146,14 +145,14 @@ const PrivacyPolicyPage = () => {
                         </div>
                     ))}
                 </div>
-
+ 
                 {/* Closing Statement */}
                 <div className="relative z-10 mt-20 max-w-[900px] border-t border-[#c5a059]/20 pt-10 text-[#A0A0A0] text-[0.95rem] leading-[1.8]">
                     <p className="mb-6">Connplex may revise or update this Privacy Policy from time to time. Updated versions will be published on this page along with the revised effective date. Continued use of the platform after such changes constitutes acceptance of the updated policy.</p>
                     <p className="font-bold text-[#C5A059] tracking-[1.5px] uppercase font-outfit">CONNPLEX CINEMAS LIMITED</p>
                 </div>
             </section>
-
+ 
             {/* Contact Banner */}
             <section className="mx-[5%] my-10 md:mx-[10%] md:my-[80px] mb-[80px] md:mb-[120px] p-5 min-[481px]:p-[30px] md:p-20 border border-[rgba(197,160,89,0.2)] rounded bg-[#0A0A0A] flex flex-col md:flex-row items-start md:items-center relative overflow-hidden shadow-[0_0_50px_rgba(197,160,89,0.05)]">
                 <div className="absolute inset-0 z-0">
@@ -177,19 +176,19 @@ const PrivacyPolicyPage = () => {
                     <div className="flex flex-col gap-[25px]">
                         <div className="flex items-center gap-[20px] text-white text-base">
                             <Building2 size={20} className="text-[#C5A059] shrink-0" />
-                            <span className="font-medium">Connplex Private Limited</span>
+                            <span className="font-medium">Connplex Cinemas Limited</span>
                         </div>
                         <div className="flex items-center gap-[20px] text-white text-base">
                             <Mail size={20} className="text-[#C5A059] shrink-0" />
-                            <a href="mailto:info@connplex.com" className="text-white no-underline transition-colors duration-300 hover:text-[#C5A059]">info@connplex.com</a>
+                            <a href="mailto:feedback@connplex.com" className="text-white no-underline transition-colors duration-300 hover:text-[#C5A059]">feedback@connplex.com</a>
                         </div>
                         <div className="flex items-center gap-[20px] text-white text-base">
                             <Phone size={20} className="text-[#C5A059] shrink-0" />
-                            <a href="tel:+912249704158" className="text-white no-underline transition-colors duration-300 hover:text-[#C5A059]">+91 22 4970 4158</a>
+                            <a href="tel:+919924577556" className="text-white no-underline transition-colors duration-300 hover:text-[#C5A059]">+91 99245 77556</a>
                         </div>
                         <div className="flex items-center gap-[20px] text-white text-base">
                             <MapPin size={20} className="text-[#C5A059] shrink-0" />
-                            <span className="font-medium">Connplex House, Andheri (W), Mumbai — 400053, India</span>
+                            <span className="font-medium">Krish Cubical, Block C: (1001 to 1008), 10th Floor, Opp. Avalon Hotel Road, SBR - Sindhu Bhavan Marg, Thaltej, Ahmedabad, Gujarat - 380059</span>
                         </div>
                     </div>
                 </div>
