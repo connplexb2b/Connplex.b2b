@@ -204,11 +204,11 @@ export default function CaseStudiesPage() {
                         <div className="dashboard-border-glow"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-10 md:gap-0 items-center relative">
                             {[
-                                { label: 'SMART CINEMAS DELIVERED', target: 85, suffix: '+' },
-                                { label: 'SCREENS DEPLOYED', target: 450, suffix: '+' },
-                                { label: 'GUESTS IMPRESSED', target: 25, suffix: 'M+' },
-                                { label: 'CITIES ACROSS INDIA', target: 28, suffix: '+' },
-                                { label: 'YEARS OF CINEMATIC EXCELLENCE', target: 10, suffix: '+' }
+                                { label: 'SMART CINEMAS DELIVERED', target: 42, suffix: '+' },
+                                { label: 'SCREENS DEPLOYED', target: 125, suffix: '+' },
+                                { label: 'GUESTS IMPRESSED', target: 10, suffix: 'M+' },
+                                { label: 'CITIES ACROSS INDIA', target: 50, suffix: '+' },
+                                { label: 'YEARS OF CINEMATIC EXCELLENCE', target: 8, suffix: '+' }
                             ].map((stat, i) => (
                                 <div className="flex flex-col items-center text-center px-[15px] py-2.5 relative cursor-pointer transition-all duration-500 cubic-bezier-[0.16,1,0.3,1] hover:-translate-y-2 hover:scale-[1.03] group" key={i}>
                                     <div className="flex items-center justify-center w-12 h-12 mb-5.5 text-[#c99f4a] bg-[#c99f4a]/3 border border-[#c99f4a]/8 rounded-full transition-all duration-400 group-hover:text-black group-hover:bg-gradient-to-br group-hover:from-[#c99f4a] group-hover:via-[#ffd885] group-hover:to-[#b3852d] group-hover:border-[#c99f4a] group-hover:shadow-[0_0_20px_rgba(201,159,74,0.4)]">
@@ -219,7 +219,14 @@ export default function CaseStudiesPage() {
                                     </div>
                                     <div className="font-oswald text-[48px] font-semibold leading-tight text-white mb-3.5 flex items-baseline justify-center">
                                         <AnimatedNumber target={stat.target} />
-                                        <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">{stat.suffix}</span>
+                                        {stat.suffix === 'M+' ? (
+                                            <>
+                                                <span>M</span>
+                                                <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">+</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">{stat.suffix}</span>
+                                        )}
                                     </div>
                                     <p className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-[#a0a0a0] leading-normal max-w-[160px] uppercase">{stat.label}</p>
                                     {i < 4 && <div className="absolute right-0 top-[15%] h-[70%] w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent hidden lg:block"></div>}
