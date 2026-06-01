@@ -79,12 +79,12 @@ export default function BookEventPage() {
             BOOK<br />AN<br /><span className="text-gold-primary font-normal">EVENT</span>
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-text-secondary font-light max-w-[600px] mb-10 leading-relaxed">
-            The Connplex is more than a venue – it&apos;s a canvas for unforgettable cinematic experiences. From premieres to private screenings, bring your vision to life.
+            The Connplex is more than a venue it&apos;s a canvas for unforgettable cinematic experiences. From premieres to private screenings, bring your vision to life.
           </p>
           
           <div className="flex flex-wrap sm:flex-nowrap gap-8 sm:gap-12 md:gap-16 pt-4">
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">41</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">42</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 ICONIC<br />VENUES
               </div>
