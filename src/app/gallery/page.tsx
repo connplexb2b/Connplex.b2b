@@ -6,8 +6,10 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Tv, MapPin, Award, Users, ArrowUpRight } from 'lucide-react';
+import { useStats } from '@/hooks/useStats';
 
 const GalleryPage = () => {
+    const { stats } = useStats();
     return (
         <div className="bg-black text-white font-outfit overflow-x-hidden selection:bg-[#c5a059]/30">
             <Header />
@@ -108,26 +110,25 @@ const GalleryPage = () => {
 
             </section>
 
-            {/* Stats Section */}
             <section className="px-[5%] py-[60px] sm:py-[80px] flex flex-col sm:flex-row flex-wrap lg:flex-nowrap justify-around items-center gap-8 sm:gap-y-12 lg:gap-0 border-y border-[#c5a059]/20">
                 <div className="text-center px-10 relative w-full sm:w-1/2 lg:w-1/4 border-b sm:border-b-0 sm:border-r border-[#c5a059]/20 last:border-0 py-4 sm:py-0">
                     <Tv size={28} className="text-[#c5a059] mx-auto mb-2.5" />
-                    <span className="text-4xl font-bold text-white block">125+</span>
+                    <span className="text-4xl font-bold text-white block">{stats.galleryPage.screens}</span>
                     <span className="text-xs uppercase tracking-widest text-[#c5a059]">Screens</span>
                 </div>
                 <div className="text-center px-10 relative w-full sm:w-1/2 lg:w-1/4 border-b sm:border-b-0 lg:border-r border-[#c5a059]/20 last:border-0 py-4 sm:py-0">
                     <MapPin size={28} className="text-[#c5a059] mx-auto mb-2.5" />
-                    <span className="text-4xl font-bold text-white block">42+</span>
+                    <span className="text-4xl font-bold text-white block">{stats.galleryPage.locations}</span>
                     <span className="text-xs uppercase tracking-widest text-[#c5a059]">Locations</span>
                 </div>
                 <div className="text-center px-10 relative w-full sm:w-1/2 lg:w-1/4 border-b sm:border-b-0 sm:border-r border-[#c5a059]/20 last:border-0 py-4 sm:py-0">
                     <Award size={28} className="text-[#c5a059] mx-auto mb-2.5" />
-                    <span className="text-4xl font-bold text-white block">8+</span>
+                    <span className="text-4xl font-bold text-white block">{stats.galleryPage.years}</span>
                     <span className="text-xs uppercase tracking-widest text-[#c5a059]">Years</span>
                 </div>
                 <div className="text-center px-10 relative w-full sm:w-1/2 lg:w-1/4 py-4 sm:py-0">
                     <Users size={28} className="text-[#c5a059] mx-auto mb-2.5" />
-                    <span className="text-4xl font-bold text-white block">10M</span>
+                    <span className="text-4xl font-bold text-white block">{stats.galleryPage.experiences}</span>
                     <span className="text-xs uppercase tracking-widest text-[#c5a059]">of Experiences</span>
                 </div>
             </section>

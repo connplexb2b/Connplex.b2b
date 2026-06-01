@@ -6,8 +6,10 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
+import { useStats } from '@/hooks/useStats';
 
 export default function BookEventPage() {
+  const { stats } = useStats();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
@@ -84,19 +86,19 @@ export default function BookEventPage() {
           
           <div className="flex flex-wrap sm:flex-nowrap gap-8 sm:gap-12 md:gap-16 pt-4">
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">42+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.iconicVenues}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 ICONIC<br />VENUES
               </div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">125+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.premiumSpaces}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 PREMIUM<br />SPACES
               </div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">∞</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.possibilities}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 UNLIMITED<br />POSSIBILITIES
               </div>

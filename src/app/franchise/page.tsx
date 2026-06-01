@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
+import { useStats } from '@/hooks/useStats';
 
 const AnimatedNumber = ({ value, duration = 2000 }: { value: string; duration?: number }) => {
     const [count, setCount] = useState(0);
@@ -237,6 +238,7 @@ const FAQSection = () => {
 };
 
 export default function FranchisePage() {
+    const { stats } = useStats();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
@@ -470,10 +472,10 @@ export default function FranchisePage() {
 
                     <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
                         {[
-                            { val: "42+", lbl: "Cinemas Nationwide" },
-                            { val: "10M+", lbl: "Happy Moviegoers" },
-                            { val: "50+", lbl: "Cities Covered" },
-                            { val: "98%", lbl: "Partner Satisfaction" }
+                            { val: stats.franchisePage.cinemasNationwide, lbl: "Cinemas Nationwide" },
+                            { val: stats.franchisePage.happyMoviegoers, lbl: "Happy Moviegoers" },
+                            { val: stats.franchisePage.citiesCovered, lbl: "Cities Covered" },
+                            { val: stats.franchisePage.partnerSatisfaction, lbl: "Partner Satisfaction" }
                         ].map((s, i) => (
                             <div className="bg-[#191919]/60 border border-[#c19b62]/20 hover:border-[#c19b62] p-6 sm:p-8 rounded-2xl text-center hover:bg-[#c19b62]/5 transition-all duration-300 flex flex-col justify-center items-center" key={i}>
                                 <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#c19b62] font-outfit mb-2">
