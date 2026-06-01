@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Scroll Reveal Component using IntersectionObserver
+// Scroll Reveal Component using IntersectionObserver for smooth fade-up reveals
 const RevealOnScroll = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => {
     const [isVisible, setIsVisible] = useState(false);
     const domRef = useRef<HTMLDivElement>(null);
@@ -52,6 +52,11 @@ export default function GameflixPage() {
     const [formData, setFormData] = useState({ name: '', email: '', platform: 'PC' });
     const [scrollY, setScrollY] = useState(0);
 
+    // Mouse tilt tracking state
+    const heroCardRef = useRef<HTMLDivElement>(null);
+    const [tilt, setTilt] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+
     // Scroll listener for dynamic zoom and depth parallax on the hero image
     useEffect(() => {
         const handleScroll = () => {
@@ -61,7 +66,34 @@ export default function GameflixPage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Interactive waitlist submission
+    // Mouse tilt handler for a 3D hover interaction
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const card = heroCardRef.current;
+        if (!card) return;
+        
+        const rect = card.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        
+        const mouseX = e.clientX - rect.left - width / 2;
+        const mouseY = e.clientY - rect.top - height / 2;
+        
+        const x = mouseX / (width / 2);
+        const y = mouseY / (height / 2);
+        
+        // Dynamic rotation limit of 6 degrees
+        setTilt({
+            x: x * 6,
+            y: -y * 6
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        setTilt({ x: 0, y: 0 });
+    };
+
+    // Interactive waitlist submission handler
     const handleNotifySubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -79,38 +111,53 @@ export default function GameflixPage() {
         }, 300);
     };
 
-    // Calculate parallax and zoom factors
+    // Calculate scroll zoom and parallax translation factors
     const heroZoom = 1 + Math.min(scrollY * 0.0003, 0.12);
-    const heroParallaxY = Math.min(scrollY * 0.08, 40);
+    const heroParallaxY = Math.min(scrollY * 0.05, 35);
+
+    // Unified transform style for mouse tilt + scroll zoom + scroll parallax
+    const transformStyle = {
+        transform: `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg) scale(${heroZoom}) translateY(${heroParallaxY}px)`,
+        transition: isHovered ? 'transform 0.05s ease-out' : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+    };
 
     return (
         <div className="bg-[#000000] text-white font-outfit min-h-screen overflow-x-hidden relative selection:bg-[#C5A059]/30">
-            {/* Custom Animations: Levitation and hover glow transitions */}
+            {/* Custom Animations: Levitation loop and animated gradient borders */}
             <style dangerouslySetInnerHTML={{__html: `
                 @keyframes float {
                     0% { transform: translateY(0px) rotate(0deg); }
-                    50% { transform: translateY(-10px) rotate(0.5deg); }
+                    50% { transform: translateY(-10px) rotate(0.3deg); }
                     100% { transform: translateY(0px) rotate(0deg); }
                 }
                 .animate-float {
                     animation: float 6s ease-in-out infinite;
                 }
+                @keyframes gradientBorder {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                .animate-gradient-border:hover {
+                    background-size: 200% 200%;
+                    animation: gradientBorder 3s linear infinite;
+                }
             `}} />
 
-            {/* Glowing Ambient Background Elements */}
-            <div className="absolute top-[10%] right-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/10 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
-            <div className="absolute bottom-[30%] left-[-10%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/5 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
+            {/* Glowing Ambient Background Orbs */}
+            <div className="absolute top-[12%] right-[-12%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/8 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
+            <div className="absolute bottom-[25%] left-[-12%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-[#C5A059]/5 blur-[130px] sm:blur-[180px] pointer-events-none z-0"></div>
 
-            {/* Glassmorphism Header */}
+            {/* Navbar Component */}
             <Header />
 
             <main className="relative z-10">
-                {/* HERO SECTION - Split into 40% Content / 60% Gaming Setup */}
-                <section className="pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-8 md:px-16 max-w-[1400px] mx-auto w-full">
-                    <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-12 lg:gap-16 items-center">
+                {/* HERO SECTION - Responsive flex: vertical stacking on mobile, side-by-side on desktop */}
+                <section className="pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-8 md:px-16 max-w-[1400px] mx-auto w-full relative">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-8 lg:gap-16 w-full">
                         
-                        {/* Left Side: Product Content */}
-                        <div className="flex flex-col text-center lg:text-left items-center lg:items-start max-w-[550px] mx-auto lg:mx-0">
+                        {/* Left Side: Product Details (40% width on desktop) */}
+                        <div className="w-full md:w-[calc(40%-1rem)] lg:w-[calc(40%-2rem)] flex flex-col text-center md:text-left items-center md:items-start max-w-[550px] mx-auto md:mx-0 shrink-0">
                             <RevealOnScroll delay={100} className="w-full">
                                 <span className="font-inter text-xs sm:text-sm font-semibold tracking-[8px] sm:tracking-[10px] text-[#C5A059] mb-4 sm:mb-6 block uppercase">
                                     GAMEFLIX
@@ -136,7 +183,7 @@ export default function GameflixPage() {
                                 </p>
                             </RevealOnScroll>
 
-                            <RevealOnScroll delay={500} className="w-full flex justify-center lg:justify-start">
+                            <RevealOnScroll delay={500} className="w-full flex justify-center md:justify-start">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
                                     className="group inline-flex items-center gap-4 px-8 py-3.5 border border-[#C5A059] hover:bg-[#C5A059] hover:text-black text-[#C5A059] hover:shadow-[0_0_30px_rgba(197,160,89,0.35)] font-inter text-xs font-semibold tracking-wider uppercase rounded-sm transition-all duration-500 cursor-pointer min-h-[48px]"
@@ -150,47 +197,51 @@ export default function GameflixPage() {
                             </RevealOnScroll>
                         </div>
 
-                        {/* Right Side: Massive Gaming Setup Image (55-60% width) */}
-                        <div className="flex justify-center items-center relative w-full lg:w-auto overflow-visible">
-                            {/* Halo Gold Glow behind the monitor */}
-                            <div className="absolute inset-[-15px] rounded-full bg-[#C5A059]/15 blur-[70px] pointer-events-none z-0"></div>
+                        {/* Right Side: Setup Image Column (60% width on desktop) */}
+                        <div className="w-full md:w-[calc(60%-1rem)] lg:w-[calc(60%-2rem)] relative h-[320px] sm:h-[450px] md:h-[500px] lg:h-[650px] flex items-center justify-center overflow-visible z-20">
+                            
+                            {/* Ambient Gold Glow behind the setup container */}
+                            <div className="absolute inset-[-30px] rounded-full bg-[#C5A059]/12 blur-[80px] pointer-events-none z-0"></div>
 
-                            {/* Outer Container (Scroll Zoom & Parallax) */}
+                            {/* Outer Transform Wrapper (Scroll Zoom + Parallax + 3D Mouse Tilt) */}
                             <div 
-                                className="relative w-full aspect-[1.1] sm:aspect-[4/3] lg:w-[115%] lg:-mr-[15%] lg:-my-4 transition-transform duration-200 ease-out z-10"
-                                style={{ transform: `scale(${heroZoom}) translateY(${heroParallaxY}px)` }}
+                                ref={heroCardRef}
+                                onMouseMove={handleMouseMove}
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={handleMouseLeave}
+                                style={transformStyle}
+                                className="relative w-full h-full z-10 cursor-pointer"
                             >
-                                {/* Inner Container (Floating Levitation) */}
-                                <div className="animate-float relative w-full h-full rounded-2xl overflow-hidden border border-[#C5A059]/20 bg-black/40 backdrop-blur-sm shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_40px_rgba(197,160,89,0.1)]">
-                                    <Image
-                                        src="/gameflix/hero.jpg"
-                                        alt="Gameflix Cinematic Curved Monitor Setup"
-                                        fill
-                                        sizes="(max-width: 1024px) 100vw, 60vw"
-                                        priority
-                                        style={{ objectFit: 'cover' }}
-                                        className="brightness-[1.02] contrast-[1.05]"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none"></div>
-                                </div>
-                            </div>
+                                {/* Inner Levitation Wrapper (Constant Floating Loop) */}
+                                <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#C5A059]/20 bg-[#0a0a0a] shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_40px_rgba(197,160,89,0.1)]">
+
+    <img
+        src="/gameflix/hero.jpg"
+        alt="Gameflix Gaming Setup"
+        className="w-full h-full object-cover"
+    />
+
+    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none"></div>
+
+</div>
+</div>
                         </div>
 
                     </div>
                 </section>
 
-                {/* HARDWARE SHOWCASE SECTION - Features the second Gameflix branded setup image */}
-                <section className="py-24 border-t border-white/5 relative bg-[#020202] overflow-hidden">
+                {/* SHOWCASE SECTION - Responsive flex: vertical stacking on mobile, showcase image on left, content on right on desktop */}
+                <section className="py-24 border-t border-white/5 relative bg-[#020202] overflow-visible">
                     <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-16 w-full">
-                        <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-16 items-center">
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-16 w-full">
                             
-                            {/* Left: Premium Branded Hardware Image */}
-                            <RevealOnScroll className="relative order-2 lg:order-1">
-                                <div className="absolute inset-[-10px] rounded-full bg-[#C5A059]/8 blur-[60px] pointer-events-none z-0"></div>
-                                <div className="relative w-full aspect-[3/2] rounded-2xl overflow-hidden border border-[#C5A059]/20 bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(197,160,89,0.08)] z-10">
+                            {/* Left: Showcase Console Image (explicit height) */}
+                            <RevealOnScroll className="relative w-full lg:w-[55%] h-[320px] sm:h-[420px] lg:h-[500px] overflow-visible order-2 lg:order-1 shrink-0">
+                                <div className="absolute inset-[-15px] rounded-full bg-[#C5A059]/6 blur-[60px] pointer-events-none z-0"></div>
+                                <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#C5A059]/25 bg-[#0a0a0a] shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_35px_rgba(197,160,89,0.08)] z-10">
                                     <Image
                                         src="/gameflix/other.jpg"
-                                        alt="Gameflix Hardware Console and Controller Setup"
+                                        alt="Gameflix Console and Controller Setup"
                                         fill
                                         sizes="(max-width: 1024px) 100vw, 45vw"
                                         style={{ objectFit: 'cover' }}
@@ -200,8 +251,8 @@ export default function GameflixPage() {
                                 </div>
                             </RevealOnScroll>
                             
-                            {/* Right: Hardware Text Details */}
-                            <div className="flex flex-col text-left items-start order-1 lg:order-2 max-w-[500px] mx-auto lg:mx-0">
+                            {/* Right: Technical Details & Info (order-1 on mobile, order-2 on desktop) */}
+                            <div className="w-full lg:w-[40%] flex flex-col text-left items-start max-w-[500px] mx-auto lg:mx-0 order-1 lg:order-2">
                                 <RevealOnScroll delay={100}>
                                     <span className="font-inter text-xs font-semibold tracking-[4px] text-[#C5A059] mb-3.5 block uppercase">THE CONSOLE</span>
                                 </RevealOnScroll>
@@ -241,7 +292,7 @@ export default function GameflixPage() {
                             <div className="w-10 h-[2px] bg-[#C5A059] mx-auto mt-4 shadow-[0_0_8px_#C5A059]"></div>
                         </RevealOnScroll>
 
-                        {/* 5 Cards Row */}
+                        {/* Cards Grid */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
                             {[
                                 {
@@ -305,17 +356,21 @@ export default function GameflixPage() {
                                 }
                             ].map((card, i) => (
                                 <RevealOnScroll key={i} delay={i * 80} className="h-full">
-                                    <div className="group/card flex flex-col items-start bg-[#0a0a0a]/60 border border-white/5 hover:border-[#C5A059]/40 rounded-xl p-8 h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_45px_rgba(197,160,89,0.12)] relative overflow-hidden backdrop-blur-md">
-                                        <div className="mb-8 p-3 rounded-lg bg-[#C5A059]/5 border border-[#C5A059]/10 group-hover/card:bg-[#C5A059]/10 group-hover/card:border-[#C5A059]/20 transition-all duration-400">
-                                            {card.icon}
+                                    {/* Gold Gradient Animated Border Box with Hover Lift */}
+                                    <div className="animate-gradient-border p-[1px] rounded-xl bg-white/5 transition-all duration-500 hover:bg-gradient-to-r hover:from-[#C5A059]/20 hover:via-[#fdf1d6] hover:to-[#906c24]/20 hover:shadow-[0_0_30px_rgba(197,160,89,0.15)] h-full">
+                                        {/* Card inner body */}
+                                        <div className="group/card flex flex-col items-start bg-[#0a0a0a] rounded-[11px] p-8 h-full transition-transform duration-500 hover:-translate-y-2 relative overflow-hidden">
+                                            <div className="mb-8 p-3 rounded-lg bg-[#C5A059]/5 border border-[#C5A059]/10 group-hover/card:bg-[#C5A059]/10 group-hover/card:border-[#C5A059]/20 transition-all duration-400">
+                                                {card.icon}
+                                            </div>
+                                            <h3 className="font-outfit text-base font-bold text-white mb-4 tracking-wide uppercase transition-colors duration-300 group-hover/card:text-[#C5A059]">
+                                                {card.title}
+                                            </h3>
+                                            <p className="text-xs leading-relaxed text-[#A0A0A0] font-light">
+                                                {card.desc}
+                                            </p>
+                                            <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-[#C5A059] to-[#906c24] transition-all duration-500 group-hover/card:w-full"></div>
                                         </div>
-                                        <h3 className="font-outfit text-base font-bold text-white mb-4 tracking-wide uppercase transition-colors duration-300 group-hover/card:text-[#C5A059]">
-                                            {card.title}
-                                        </h3>
-                                        <p className="text-xs leading-relaxed text-[#A0A0A0] font-light">
-                                            {card.desc}
-                                        </p>
-                                        <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-[#C5A059] to-[#906c24] transition-all duration-500 group-hover/card:w-full"></div>
                                     </div>
                                 </RevealOnScroll>
                             ))}
@@ -337,7 +392,7 @@ export default function GameflixPage() {
                     ></div>
                     
                     {/* Modal Window Container */}
-                    <div className="bg-[#050505] border border-[#C5A059]/20 shadow-[0_0_60px_rgba(197,160,89,0.2)] rounded-xl w-full max-w-[480px] p-8 sm:p-10 relative z-10 transition-transform duration-300 transform scale-100 max-h-[90vh] overflow-y-auto">
+                    <div className="bg-[#050505] border border-[#C5A059]/25 shadow-[0_0_60px_rgba(197,160,89,0.2)] rounded-xl w-full max-w-[480px] p-8 sm:p-10 relative z-10 transition-transform duration-300 transform scale-100 max-h-[90vh] overflow-y-auto">
                         
                         {/* Close Button */}
                         <button 
@@ -428,12 +483,14 @@ export default function GameflixPage() {
                                 <p className="text-xs text-[#A0A0A0] leading-relaxed max-w-[320px] mx-auto mb-8 font-light">
                                     Thank you for your interest, <strong className="text-white font-medium">{formData.name}</strong>. We will notify you at <strong className="text-white font-medium">{formData.email}</strong> as soon as the Gameflix alpha trials open in your region.
                                 </p>
-                                <button
-                                    onClick={closeModal}
-                                    className="px-8 py-3 bg-transparent border border-[#C5A059] text-[#C5A059] rounded font-inter text-xs font-semibold tracking-wider hover:bg-[#C5A059]/10 transition-all duration-300 min-h-[44px] cursor-pointer"
-                                >
-                                    Return to Page
-                                </button>
+                                <div className="flex justify-center">
+                                    <button
+                                        onClick={closeModal}
+                                        className="px-8 py-3 bg-transparent border border-[#C5A059] text-[#C5A059] rounded font-inter text-xs font-semibold tracking-wider hover:bg-[#C5A059]/10 transition-all duration-300 min-h-[44px] cursor-pointer"
+                                    >
+                                        Return to Page
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>
