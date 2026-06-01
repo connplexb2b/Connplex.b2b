@@ -471,7 +471,7 @@ export default function FranchisePage() {
                         {[
                             { val: "42+", lbl: "Cinemas Nationwide" },
                             { val: "10M+", lbl: "Happy Moviegoers" },
-                            { val: "42+", lbl: "Cities Covered" },
+                            { val: "50+", lbl: "Cities Covered" },
                             { val: "98%", lbl: "Partner Satisfaction" }
                         ].map((s, i) => (
                             <div className="bg-[#191919]/60 border border-[#c19b62]/20 hover:border-[#c19b62] p-6 sm:p-8 rounded-2xl text-center hover:bg-[#c19b62]/5 transition-all duration-300 flex flex-col justify-center items-center" key={i}>
