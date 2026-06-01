@@ -379,10 +379,10 @@ export default function BookEventPage() {
                 events@theconnplex.com
               </a>
               <a 
-                href="tel:+971501234567" 
+                href="tel:+919924577556" 
                 className="text-white hover:text-gold-primary text-xs transition-colors py-1.5 px-3 min-h-[44px] flex items-center justify-center"
               >
-                +971 50 123 4567 🎧
+                +91 9924577556 🎧
               </a>
             </div>
           </div>
