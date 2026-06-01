@@ -2,6 +2,7 @@ import BookEvent from '../models/BookEvent.js';
 import ConnEventsWaitlist from '../models/ConnEventsWaitlist.js';
 import ConnflixSubscriber from '../models/ConnflixSubscriber.js';
 import ConnmusicWaitlist from '../models/ConnmusicWaitlist.js';
+import GameflixWaitlist from '../models/GameflixWaitlist.js';
 import StudioInvitation from '../models/StudioInvitation.js';
 import ContactMessage from '../models/ContactMessage.js';
 import DowntownInvitation from '../models/DowntownInvitation.js';
@@ -85,6 +86,11 @@ export const joinConnflixWaitlist = (req, res, next) => {
 // 4. Connmusic Waitlist Form Controller
 export const joinConnmusicWaitlist = (req, res, next) => {
   return handleSubmission(ConnmusicWaitlist, req, res, next);
+};
+
+// 4b. Gameflix Waitlist Form Controller
+export const joinGameflixWaitlist = (req, res, next) => {
+  return handleSubmission(GameflixWaitlist, req, res, next);
 };
 
 // 5. Connplex Studio Invitation Form Controller

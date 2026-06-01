@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import './news.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const NewsPage = () => {
     useEffect(() => {
@@ -182,7 +183,7 @@ const NewsPage = () => {
         });
 
         if (connectForm) {
-            connectForm.addEventListener('submit', (e) => {
+            connectForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const submitBtn = connectForm.querySelector('.btn-submit-connect') as HTMLButtonElement;
@@ -193,10 +194,26 @@ const NewsPage = () => {
                 submitBtn.style.opacity = '0.75';
                 submitBtn.innerHTML = 'TRANSMITTING ENQUIRY...';
 
-                setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.innerHTML = originalText;
+                const fullName = (document.getElementById('connect-name') as HTMLInputElement)?.value;
+                const email = (document.getElementById('connect-email') as HTMLInputElement)?.value;
+                const phone = (document.getElementById('connect-phone') as HTMLInputElement)?.value;
+                const subject = (document.getElementById('connect-interest') as HTMLSelectElement)?.value;
+                const message = (document.getElementById('connect-message') as HTMLTextAreaElement)?.value;
+
+                try {
+                    const apiUrl = getApiUrl();
+                    const response = await fetch(`${apiUrl}/api/forms/general-inquiry`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ fullName, email, phone, subject, message }),
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Submission failed. Please try again.');
+                    }
 
                     connectForm.style.display = 'none';
                     if (connectSuccess) connectSuccess.style.display = 'flex';
@@ -205,7 +222,14 @@ const NewsPage = () => {
                     if (modalContainer) {
                         modalContainer.scrollTo({ top: 0, behavior: 'smooth' });
                     }
-                }, 1000);
+                } catch (err: any) {
+                    console.error('Enquiry submission error:', err);
+                    alert(err.message || 'Unable to process your enquiry at this time. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerHTML = originalText;
+                }
             });
         }
 
@@ -214,7 +238,7 @@ const NewsPage = () => {
         const subscribeSuccess = document.getElementById('subscription-success');
 
         if (subscribeForm) {
-            subscribeForm.addEventListener('submit', (e) => {
+            subscribeForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const subscribeBtn = subscribeForm.querySelector('.btn-subscribe') as HTMLButtonElement;
@@ -225,14 +249,34 @@ const NewsPage = () => {
                 subscribeBtn.style.opacity = '0.75';
                 subscribeBtn.innerHTML = 'JOINING...';
 
-                setTimeout(() => {
-                    subscribeBtn.disabled = false;
-                    subscribeBtn.style.opacity = '1';
-                    subscribeBtn.innerHTML = originalText;
+                const emailInput = subscribeForm.querySelector('.newsletter-input') as HTMLInputElement;
+                const email = emailInput?.value;
+
+                try {
+                    const apiUrl = getApiUrl();
+                    const response = await fetch(`${apiUrl}/api/forms/newsletter`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email }),
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Subscription failed. Please try again.');
+                    }
 
                     subscribeForm.style.display = 'none';
                     if (subscribeSuccess) subscribeSuccess.style.display = 'flex';
-                }, 1000);
+                } catch (err: any) {
+                    console.error('Newsletter subscription error:', err);
+                    alert(err.message || 'Unable to join newsletter at this time. Please try again.');
+                } finally {
+                    subscribeBtn.disabled = false;
+                    subscribeBtn.style.opacity = '1';
+                    subscribeBtn.innerHTML = originalText;
+                }
             });
         }
     }, []);

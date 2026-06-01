@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 // Scroll Reveal Component using IntersectionObserver for smooth fade-up reveals
 const RevealOnScroll = ({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) => {
@@ -50,6 +51,7 @@ export default function GameflixPage() {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', platform: 'PC' });
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [scrollY, setScrollY] = useState(0);
 
     // Mouse tilt tracking state
@@ -94,13 +96,32 @@ export default function GameflixPage() {
     };
 
     // Interactive waitlist submission handler
-    const handleNotifySubmit = (e: React.FormEvent) => {
+    const handleNotifySubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setTimeout(() => {
-            setIsSubmitting(false);
+        setSubmitError(null);
+        try {
+            const apiUrl = getApiUrl();
+            const requestUrl = `${apiUrl}/api/forms/gameflix-waitlist`;
+            console.log('Submitting Gameflix Waitlist:', requestUrl, formData);
+            const response = await fetch(requestUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || 'Something went wrong. Please try again.');
+            }
             setFormSubmitted(true);
-        }, 1500);
+        } catch (err: any) {
+            console.error('Gameflix waitlist error:', err);
+            setSubmitError(err.message || 'Unable to join waitlist. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const closeModal = () => {
@@ -108,6 +129,7 @@ export default function GameflixPage() {
         setTimeout(() => {
             setFormSubmitted(false);
             setFormData({ name: '', email: '', platform: 'PC' });
+            setSubmitError(null);
         }, 300);
     };
 
@@ -462,6 +484,12 @@ export default function GameflixPage() {
                                         </select>
                                     </div>
                                 </div>
+
+                                {submitError && (
+                                    <div className="text-red-500 text-xs font-semibold text-center mt-2">
+                                        ⚠️ {submitError}
+                                    </div>
+                                )}
 
                                 <button 
                                     type="submit" 
