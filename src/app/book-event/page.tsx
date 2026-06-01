@@ -84,7 +84,7 @@ export default function BookEventPage() {
           
           <div className="flex flex-wrap sm:flex-nowrap gap-8 sm:gap-12 md:gap-16 pt-4">
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">42</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">42+</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 ICONIC<br />VENUES
               </div>
