@@ -299,7 +299,7 @@ const FeedbackPage = () => {
                                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                             </svg>
                                         </div>
-                                        <a href="tel:+60312345678" className="channel-text">+60 3 1234 5678</a>
+                                        <a href="tel:+919924577556" className="channel-text">+91 9924577556</a>
                                     </div>
                                     
                                     <div className="channel-row">
@@ -309,7 +309,7 @@ const FeedbackPage = () => {
                                                 <polyline points="22,6 12,13 2,6"></polyline>
                                             </svg>
                                         </div>
-                                        <a href="mailto:hello@connplex.com" className="channel-text">hello@connplex.com</a>
+                                        <a href="mailto:feedback@connplex.com" className="channel-text">feedback@connplex.com</a>
                                     </div>
 
                                     <div className="channel-row">
