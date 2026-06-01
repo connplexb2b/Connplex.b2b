@@ -236,7 +236,7 @@ export default function AdvertisePage() {
                 <ProjectorMotes />
 
                 {/* Main Hero Content */}
-                <main className="flex-1 flex items-center px-4 md:px-20 z-10 relative mt-16 md:-mt-8 py-20 md:py-0">
+                <main className="flex-1 flex items-center px-4 md:px-20 z-10 relative pt-[110px] pb-12 md:pt-[140px] md:pb-20">
                     <div className="flex flex-col max-w-[650px] w-full text-center md:text-left items-center md:items-start">
                         <div className="flex items-center mb-5">
                             <span className="font-inter text-[11px] font-semibold tracking-[3px] text-zinc-500 uppercase">BIGGER SCREEN. BIGGER IMPACT.</span>
