@@ -7,6 +7,7 @@ import StudioInvitation from '../models/StudioInvitation.js';
 import ContactMessage from '../models/ContactMessage.js';
 import DowntownInvitation from '../models/DowntownInvitation.js';
 import FranchiseInquiry from '../models/FranchiseInquiry.js';
+import PreApprovedFranchise from '../models/PreApprovedFranchise.js';
 import PurexSubscriber from '../models/PurexSubscriber.js';
 import SkyinnReservation from '../models/SkyinnReservation.js';
 import Newsletter from '../models/Newsletter.js';
@@ -110,6 +111,9 @@ export const requestDowntownInvitation = (req, res, next) => {
 
 // 8. Franchise Form Controller
 export const submitFranchiseApplication = (req, res, next) => {
+  if (req.body.hasProperty === 'no') {
+    return handleSubmission(PreApprovedFranchise, req, res, next);
+  }
   return handleSubmission(FranchiseInquiry, req, res, next);
 };
 

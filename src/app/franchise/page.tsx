@@ -240,6 +240,7 @@ export default function FranchisePage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [hasProperty, setHasProperty] = useState<string>('');
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -561,8 +562,48 @@ export default function FranchisePage() {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <input name="preferredCity" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                                <input name="hasProperty" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Do you have a property or location for cinema?" required />
+                                <div className="relative">
+                                    <select
+                                        name="hasProperty"
+                                        className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer"
+                                        required
+                                        value={hasProperty}
+                                        onChange={(e) => setHasProperty(e.target.value)}
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: 'right 18px center',
+                                            backgroundSize: '14px',
+                                        }}
+                                    >
+                                        <option value="" disabled className="bg-[#111] text-white">Do you have a property or location?</option>
+                                        <option value="yes" className="bg-[#111] text-white">Yes</option>
+                                        <option value="no" className="bg-[#111] text-white">No</option>
+                                    </select>
+                                </div>
                             </div>
+
+                            {hasProperty === 'no' && (
+                                <div className="relative">
+                                    <select
+                                        name="preApprovedCity"
+                                        className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer"
+                                        required
+                                        defaultValue=""
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: 'right 18px center',
+                                            backgroundSize: '14px',
+                                        }}
+                                    >
+                                        <option value="" disabled className="bg-[#111] text-white">Select Pre-approved Franchise City</option>
+                                        <option value="Ahmedabad" className="bg-[#111] text-white">Ahmedabad</option>
+                                        <option value="Navsari" className="bg-[#111] text-white">Navsari</option>
+                                        <option value="Rajasthan" className="bg-[#111] text-white">Rajasthan</option>
+                                    </select>
+                                </div>
+                            )}
 
                             <div className="relative">
                                 <select
