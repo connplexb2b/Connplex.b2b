@@ -106,20 +106,6 @@ const GalleryPage = () => {
                     </div>
                 </div>
 
-                {/* Small Thumbnails */}
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3.5 mt-5">
-                    {[
-                        { src: '/gallery/luxuriance.png', alt: 'Luxuriance' },
-                        { src: '/gallery/downtown.png', alt: 'Downtown' },
-                        { src: '/gallery/sky_inn.png', alt: 'Sky Inn' },
-                        { src: '/gallery/signature.png', alt: 'Signature' },
-                        { src: '/gallery/spectra_x.png', alt: 'Spectra X' },
-                    ].map((item) => (
-                        <div key={item.alt} className="h-[150px] overflow-hidden">
-                            <Image src={item.src} alt={item.alt} width={300} height={150} style={{ objectFit: 'cover', width: '100%', height: 'auto' }} />
-                        </div>
-                    ))}
-                </div>
             </section>
 
             {/* Stats Section */}
