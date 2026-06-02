@@ -601,7 +601,23 @@ export default function FranchisePage() {
                                     >
                                         <option value="" disabled className="bg-[#111] text-white">Select Pre-approved Franchise City</option>
                                         <option value="Ahmedabad" className="bg-[#111] text-white">Ahmedabad</option>
+                                        <option value="Assam" className="bg-[#111] text-white">Assam</option>
+                                        <option value="Jammu" className="bg-[#111] text-white">Jammu</option>
+                                        <option value="Mandvi" className="bg-[#111] text-white">Mandvi</option>
+                                        <option value="Sanand" className="bg-[#111] text-white">Sanand</option>
+                                        <option value="Badoli" className="bg-[#111] text-white">Badoli</option>
+                                        <option value="Chhattisgarh" className="bg-[#111] text-white">Chhattisgarh</option>
+                                        <option value="Himmatnagar" className="bg-[#111] text-white">Himmatnagar</option>
+                                        <option value="Dhamtari" className="bg-[#111] text-white">Dhamtari</option>
                                         <option value="Navsari" className="bg-[#111] text-white">Navsari</option>
+                                        <option value="Rajnandgaon" className="bg-[#111] text-white">Rajnandgaon</option>
+                                        <option value="Uttar Pradesh" className="bg-[#111] text-white">Uttar Pradesh</option>
+                                        <option value="Haryana" className="bg-[#111] text-white">Haryana</option>
+                                        <option value="Telangana" className="bg-[#111] text-white">Telangana</option>
+                                        <option value="Pune" className="bg-[#111] text-white">Pune</option>
+                                        <option value="Nashik" className="bg-[#111] text-white">Nashik</option>
+                                        <option value="Jharkhand" className="bg-[#111] text-white">Jharkhand</option>
+                                        <option value="Maharashtra" className="bg-[#111] text-white">Maharashtra</option>
                                         <option value="Rajasthan" className="bg-[#111] text-white">Rajasthan</option>
                                     </select>
                                 </div>
