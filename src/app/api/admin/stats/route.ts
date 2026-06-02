@@ -1,21 +1,58 @@
 import { NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/db';
+import { Stats } from '@/models/Stats';
+import { isAdminAuthenticated, unauthorizedResponse } from '@/lib/admin-auth';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { isAdminAuthenticated, unauthorizedResponse } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 const STATS_PATH = path.join(process.cwd(), 'data', 'stats.json');
 
+async function getFallbackStats() {
+  try {
+    const raw = await fs.readFile(STATS_PATH, 'utf-8');
+    return JSON.parse(raw);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Public route to get current website stats
 export async function GET() {
   try {
-    const raw = await fs.readFile(STATS_PATH, 'utf-8');
-    const stats = JSON.parse(raw);
+    await connectToDatabase();
+    let stats = await Stats.findOne().lean();
+    
+    if (!stats) {
+      // Fallback/Seed from local data/stats.json
+      const fallback = await getFallbackStats();
+      if (fallback) {
+        const doc = await Stats.create(fallback);
+        stats = doc.toObject();
+      } else {
+        // Fallback to absolute defaults if stats.json doesn't exist
+        const doc = await Stats.create({});
+        stats = doc.toObject();
+      }
+    }
+    
+    if (stats) {
+      delete (stats as any)._id;
+      delete (stats as any).__v;
+      delete (stats as any).createdAt;
+      delete (stats as any).updatedAt;
+    }
+    
     return NextResponse.json(stats);
-  } catch (error) {
-    // If stats.json doesn't exist yet, return a 404 or empty object
-    return NextResponse.json({ error: 'Stats not found' }, { status: 404 });
+  } catch (error: any) {
+    console.error('Error fetching stats from MongoDB:', error);
+    // If DB is down, try to read local file as a graceful fallback
+    const fallback = await getFallbackStats();
+    if (fallback) {
+      return NextResponse.json(fallback);
+    }
+    return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }
 }
 
@@ -33,14 +70,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });
     }
 
-    // Ensure the data directory exists
-    await fs.mkdir(path.dirname(STATS_PATH), { recursive: true });
+    await connectToDatabase();
     
-    // Save stats to json file
-    await fs.writeFile(STATS_PATH, JSON.stringify(body, null, 2), 'utf-8');
+    // Update or create stats document
+    const updatedStats = await Stats.findOneAndUpdate(
+      {},
+      { $set: body },
+      { new: true, upsert: true }
+    ).lean();
     
-    return NextResponse.json({ success: true, stats: body });
+    if (updatedStats) {
+      delete (updatedStats as any)._id;
+      delete (updatedStats as any).__v;
+      delete (updatedStats as any).createdAt;
+      delete (updatedStats as any).updatedAt;
+    }
+    
+    return NextResponse.json({ success: true, stats: updatedStats });
   } catch (err: any) {
+    console.error('Error updating stats in MongoDB:', err);
     return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
   }
 }
