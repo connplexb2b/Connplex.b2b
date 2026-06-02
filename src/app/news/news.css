@@ -1406,6 +1406,10 @@
         padding-top: 0;
     }
     
+    .news-modal {
+        padding: 1rem;
+    }
+    
     .modal-container {
         max-height: 90vh;
     }
@@ -1434,6 +1438,12 @@
     
     .form-group {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-details-content {
+        padding: 1.5rem 1rem 2rem;
     }
 }
 }

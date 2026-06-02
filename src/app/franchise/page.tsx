@@ -428,7 +428,7 @@ export default function FranchisePage() {
 
                                 <div className="bg-black/35 border border-[#c19b62]/10 p-6 sm:p-8 rounded-xl h-fit w-full flex flex-col">
                                     <h4 className="text-white font-outfit text-base font-semibold mb-6 border-b border-white/10 pb-3 uppercase tracking-wider">Technical Specifications</h4>
-                                    <div className="grid grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                         {m.specs.map((s, j) => (
                                             <div key={j} className="flex flex-col gap-1">
                                                 <span className="text-[9px] sm:text-[10px] tracking-wider text-text-secondary uppercase">{s.label}</span>
@@ -470,7 +470,7 @@ export default function FranchisePage() {
                         </ul>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full">
                         {[
                             { val: stats.franchisePage.cinemasNationwide, lbl: "Cinemas Nationwide" },
                             { val: stats.franchisePage.happyMoviegoers, lbl: "Happy Moviegoers" },
