@@ -60,7 +60,8 @@ export default function AdminStatsPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Failed to save stats. Invalid session or connection issue.');
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to save stats. Invalid session or connection issue.');
       }
 
       setSuccess(true);
