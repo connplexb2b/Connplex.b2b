@@ -3,6 +3,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { isAdminAuthenticated, unauthorizedResponse } from '@/lib/admin-auth';
 
+export const dynamic = 'force-dynamic';
+
 const STATS_PATH = path.join(process.cwd(), 'data', 'stats.json');
 
 // Public route to get current website stats
