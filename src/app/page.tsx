@@ -245,8 +245,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      {/* ── HERO ── */}
-      <main className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 py-32 overflow-hidden bg-bg-dark">
+      <main className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 md:py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
@@ -254,11 +253,12 @@ export default function Home() {
             muted
             loop
             playsInline
-            className="w-full h-full object-cover opacity-80 blur-[3px] scale-105"
+            className="w-full h-[70%] md:h-full object-cover opacity-80 blur-[3px] scale-100 md:scale-105 absolute top-0 left-0"
           >
             <source src="/video/hero-bg.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-black/30 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-dark md:hidden"></div>
         </div>
 
         <h1 className="text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[1.1] mb-6 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
