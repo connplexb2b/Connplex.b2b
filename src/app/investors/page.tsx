@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import './investor.css';
+import '../investor-section/investor.css';
 
 interface InvestorPDF {
   originalname: string;
@@ -42,7 +42,7 @@ interface InvestorPageData {
 const BASE_API_URL = 'https://webadmin.theconnplex.com/api';
 const FILE_URL = 'https://webadmin.theconnplex.com/api/file';
 
-export default function InvestorRelationsPage() {
+export default function InvestorsPage() {
   const [categories, setCategories] = useState<InvestorCategory[]>([]);
   const [pageData, setPageData] = useState<InvestorPageData | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('');
@@ -346,7 +346,7 @@ export default function InvestorRelationsPage() {
         </div>
       </section>
 
-      {/* Investor Grievances/Emails Strip at the bottom */}
+      {/* Grievances Email Cards Strip */}
       <section className="investors-section py-20 bg-[#161619] border-t border-white/5">
         <div className="container mx-auto px-6 max-w-7xl text-center">
           <h2 className="investors-title text-2xl font-bold text-[#fac400] mb-3 uppercase tracking-wider">
