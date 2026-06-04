@@ -73,7 +73,7 @@ const TestimonialSlider = () => {
         {
             name: "Chintan Shah",
             location: "Anand, Gujarat",
-            text: "Connplex is not just a cinema franchise brand — it’s a complete entertainment ecosystem. Their marketing campaigns, launch support, and operational guidance made the process seamless. We recovered our investment faster than expected, and the business continues to grow steadily.",
+            text: "Connplex is not just a cinema franchise brand, it’s a complete entertainment ecosystem. Their marketing campaigns, launch support, and operational guidance made the process seamless. We recovered our investment faster than expected, and the business continues to grow steadily.",
             img: "https://randomuser.me/api/portraits/men/81.jpg"
         },
         {
@@ -142,7 +142,7 @@ const FAQSection = () => {
     const faqs = [
         {
             q: "What are the location requirements for starting a Connplex Cinemas franchise?",
-            a: "At Connplex Cinemas, we typically look for spaces ranging from 7,000 to 15,000 sq. ft., depending on the number of screens, seating capacity, and cinema format selected.\n\nThe ideal property should also offer:\n• Clear height ranging from 11 ft. to 24 ft. & more\n• Strong visibility and accessibility\n• High-footfall surroundings\n• Strong catchment potential\n• Entertainment and retail compatibility\n\nWe believe the right location becomes the heart of the city’s entertainment ecosystem. Whether it’s a mall, high street, mixed-use development, or standalone property — if your location has the potential to become a leisure destination, it could be the perfect fit for Connplex."
+            a: "At Connplex Cinemas, we typically look for spaces ranging from 7,000 to 15,000 sq. ft., depending on the number of screens, seating capacity, and cinema format selected.\n\nThe ideal property should also offer:\n• Clear height ranging from 11 ft. to 24 ft. & more\n• Strong visibility and accessibility\n• High-footfall surroundings\n• Strong catchment potential\n• Entertainment and retail compatibility\n\nWe believe the right location becomes the heart of the city’s entertainment ecosystem. Whether it’s a mall, high street, mixed-use development, or standalone property, if your location has the potential to become a leisure destination, it could be the perfect fit for Connplex."
         },
         {
             q: "Do I need to own a property to start a Connplex franchise?",
@@ -154,11 +154,11 @@ const FAQSection = () => {
         },
         {
             q: "What kind of returns and payback period can I expect?",
-            a: "Cinema is one of the few entertainment businesses with strong cash-flow potential. With Connplex’s proven business model and operational support, franchise partners can typically expect:\n• Attractive ROI opportunities\n• Estimated payback within 18–24 months\n• Long-term recurring revenue potential\n• Multiple revenue streams through ticketing, F&B, advertising, and events"
+            a: "Cinema is one of the few entertainment businesses with strong cash-flow potential. With Connplex’s proven business model and operational support, franchise partners can typically expect:\n• Attractive ROI opportunities\n• Estimated payback within 18-24 months\n• Long-term recurring revenue potential\n• Multiple revenue streams through ticketing, F&B, advertising, and events"
         },
         {
             q: "How soon can I launch my Connplex Cinemas after approval?",
-            a: "On average, a Connplex Cinemas franchise can become operational within 3–6 months, depending on site readiness, construction requirements, number of screens, and technology installation timelines."
+            a: "On average, a Connplex Cinemas franchise can become operational within 3-6 months, depending on site readiness, construction requirements, number of screens, and technology installation timelines."
         },
         {
             q: "Do I need prior cinema or business experience to start?",
@@ -307,8 +307,8 @@ export default function FranchisePage() {
                         OWN YOUR<br /><span className="text-[#c19b62]">OWN CINEMA</span>
                     </h1>
                     <p className="text-base sm:text-lg md:text-xl font-light mb-10 leading-relaxed text-white/90">
-                        Partner with Connplex — India&apos;s fastest-growing<br className="hidden sm:inline" />
-                        Cinema chain — and bring a <br className="hidden sm:inline" />
+                        Partner with Connplex, India&apos;s fastest-growing<br className="hidden sm:inline" />
+                        Cinema chain, and bring a <br className="hidden sm:inline" />
                         world-class cinema experience to your city.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center sm:justify-start items-center mt-2.5">
@@ -346,19 +346,19 @@ export default function FranchisePage() {
                             idealFor: "Metro & Tier 1 markets",
                             description: [
                                 "The Connplex Luxuriance is our flagship luxury cinema franchise format, a full-scale multiplex experience designed for high-footfall urban markets where audiences expect nothing less than world-class. With 4 to 6 premium auditoriums, recliner seating, Dolby Atmos sound, Spectrax, premium lounge/cafe, and a Premium lobby experience, Luxuriance sets the benchmark for premium cinema in India.",
-                                "Built across 10,000–14,000 sq ft and more, this format is engineered for developers and investors seeking a high-revenue cinema franchise anchor in malls, mixed-use developments, and large commercial properties in metro and Tier 1 markets."
+                                "Built across 10,000-14,000 sq ft and more, this format is engineered for developers and investors seeking a high-revenue cinema franchise anchor in malls, mixed-use developments, and large commercial properties in metro and Tier 1 markets."
                             ],
                             features: [
                                 "Maximum screen count for higher content variety",
-                                "Largest audience capacity — up to 300 seats",
+                                "Largest audience capacity, up to 300 seats",
                                 "Premium lobby design with premium F&B & Lounges & cafe",
                                 "Strongest ROI potential in high-density markets"
                             ],
                             specs: [
-                                { label: "Required Area", value: "10,000 – 14,000 sq ft", desc: "Built-up area" },
-                                { label: "Screens", value: "4 – 6 Screens", desc: "Auditorium count" },
+                                { label: "Required Area", value: "10,000 - 14,000 sq ft", desc: "Built-up area" },
+                                { label: "Screens", value: "4 - 6 Screens", desc: "Auditorium count" },
                                 { label: "Seat Capacity", value: "Up to 300 Seats", desc: "Across all screens" },
-                                { label: "Clear Height", value: "11 ft – 24 ft and more", desc: "Minimum ceiling height" }
+                                { label: "Clear Height", value: "11 ft - 24 ft and more", desc: "Minimum ceiling height" }
                             ]
                         },
                         {
@@ -367,17 +367,17 @@ export default function FranchisePage() {
                             idealFor: "Tier 1 & strong Tier 2 cities",
                             description: [
                                 "The Connplex Signature is the most versatile format in our cinema franchise portfolio, delivering the full Connplex luxury experience at a more accessible footprint and investment threshold. With 3 to 4 screens and seating for up to 250 guests, Signature is purpose-built for markets that demand quality without requiring the scale of a flagship multiplex.",
-                                "Across 8,000–10,000 sq ft, this mid-scale multiplex franchise model suits established Tier 2 cities, premium high streets, and developers looking for a cinema franchise with a faster break-even and strong neighbourhood loyalty."
+                                "Across 8,000-10,000 sq ft, this mid-scale multiplex franchise model suits established Tier 2 cities, premium high streets, and developers looking for a cinema franchise with a faster break-even and strong neighbourhood loyalty."
                             ],
                             features: [
                                 "Optimal screen-to-footprint ratio",
                                 "Full Connplex brand and technology standards",
-                                "Up to 250 seats — right-sized for growing urban audiences",
+                                "Up to 250 seats, right-sized for growing urban audiences",
                                 "Faster break-even timeline compared to flagship format"
                             ],
                             specs: [
-                                { label: "Required Area", value: "8,000 – 10,000 sq ft", desc: "Built-up area" },
-                                { label: "Screens", value: "3 – 4 Screens", desc: "Auditorium count" },
+                                { label: "Required Area", value: "8,000 - 10,000 sq ft", desc: "Built-up area" },
+                                { label: "Screens", value: "3 - 4 Screens", desc: "Auditorium count" },
                                 { label: "Seat Capacity", value: "Up to 250 Seats", desc: "Across all screens" },
                                 { label: "Clear Height", value: "11 ft and more", desc: "Minimum ceiling height" }
                             ]
@@ -397,10 +397,10 @@ export default function FranchisePage() {
                                 "Same Connplex brand, technology, and content access as flagship"
                             ],
                             specs: [
-                                { label: "Required Area", value: "7,000 – 10,000 sq ft", desc: "Built-up area" },
-                                { label: "Screens", value: "2 – 4 Screens", desc: "Auditorium count" },
+                                { label: "Required Area", value: "7,000 - 10,000 sq ft", desc: "Built-up area" },
+                                { label: "Screens", value: "2 - 4 Screens", desc: "Auditorium count" },
                                 { label: "Seat Capacity", value: "Up to 200 Seats", desc: "Across all screens" },
-                                { label: "Clear Height", value: "10 ft – 12 ft", desc: "Minimum ceiling height" }
+                                { label: "Clear Height", value: "10 ft - 12 ft", desc: "Minimum ceiling height" }
                             ]
                         }
                     ].map((m, i) => (
