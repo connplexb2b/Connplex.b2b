@@ -253,11 +253,11 @@ export default function Home() {
             muted
             loop
             playsInline
-            className="w-full h-[70%] md:h-full object-cover opacity-80 blur-[3px] scale-100 md:scale-105 absolute top-0 left-0"
+            className="w-full h-[70%] md:h-full object-cover opacity-75 blur-[6px] scale-105 md:scale-110 absolute top-0 left-0"
           >
             <source src="/video/hero-bg.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/30 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
+          <div className="absolute inset-0 bg-black/45 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-dark md:hidden"></div>
         </div>
 
