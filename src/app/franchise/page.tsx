@@ -342,10 +342,10 @@ export default function FranchisePage() {
                     {[
                         {
                             title: "LUXURIANCE",
-                            subtitle: "The full-scale luxury cinema franchise — built for maximum impact.",
+                            subtitle: "The full-scale luxury cinema franchise built for maximum impact.",
                             idealFor: "Metro & Tier 1 markets",
                             description: [
-                                "The Connplex Luxuriance is our flagship luxury cinema franchise format — a full-scale multiplex experience designed for high-footfall urban markets where audiences expect nothing less than world-class. With 4 to 6 premium auditoriums, recliner seating, Dolby Atmos sound, Spectrax, premium lounge/cafe, and a Premium lobby experience, Luxuriance sets the benchmark for premium cinema in India.",
+                                "The Connplex Luxuriance is our flagship luxury cinema franchise format, a full-scale multiplex experience designed for high-footfall urban markets where audiences expect nothing less than world-class. With 4 to 6 premium auditoriums, recliner seating, Dolby Atmos sound, Spectrax, premium lounge/cafe, and a Premium lobby experience, Luxuriance sets the benchmark for premium cinema in India.",
                                 "Built across 10,000–14,000 sq ft and more, this format is engineered for developers and investors seeking a high-revenue cinema franchise anchor in malls, mixed-use developments, and large commercial properties in metro and Tier 1 markets."
                             ],
                             features: [
@@ -366,7 +366,7 @@ export default function FranchisePage() {
                             subtitle: "The perfect balance of luxury, scale, and investment efficiency.",
                             idealFor: "Tier 1 & strong Tier 2 cities",
                             description: [
-                                "The Connplex Signature is the most versatile format in our cinema franchise portfolio — delivering the full Connplex luxury experience at a more accessible footprint and investment threshold. With 3 to 4 screens and seating for up to 250 guests, Signature is purpose-built for markets that demand quality without requiring the scale of a flagship multiplex.",
+                                "The Connplex Signature is the most versatile format in our cinema franchise portfolio, delivering the full Connplex luxury experience at a more accessible footprint and investment threshold. With 3 to 4 screens and seating for up to 250 guests, Signature is purpose-built for markets that demand quality without requiring the scale of a flagship multiplex.",
                                 "Across 8,000–10,000 sq ft, this mid-scale multiplex franchise model suits established Tier 2 cities, premium high streets, and developers looking for a cinema franchise with a faster break-even and strong neighbourhood loyalty."
                             ],
                             features: [
@@ -387,11 +387,11 @@ export default function FranchisePage() {
                             subtitle: "The entry-level cinema franchise that opens every market.",
                             idealFor: "Tier 2, Tier 3 & emerging cities",
                             description: [
-                                "The Connplex Smart is the most accessible format in our cinema franchise range — and the one changing the face of entertainment in India's underserved markets. With 2 to 4 screens, seating up to 200 guests, and a footprint starting at just 7,000 sq ft, the Smart model is the ideal mini multiplex franchise for Tier 2, Tier 3, and emerging cities where organised cinema has never existed.",
+                                "The Connplex Smart is the most accessible format in our cinema franchise range and the one changing the face of entertainment in India's underserved markets. With 2 to 4 screens, seating up to 200 guests, and a footprint starting at just 7,000 sq ft, the Smart model is the ideal mini multiplex franchise for Tier 2, Tier 3, and emerging cities where organised cinema has never existed.",
                                 "This is where the biggest opportunities are. Low competition. High demand. A first-mover advantage that no other cinema franchise model in India currently addresses with this level of brand quality and technology at this scale."
                             ],
                             features: [
-                                "Smallest footprint — ideal for compact commercial spaces",
+                                "Smallest footprint, ideal for compact commercial spaces",
                                 "Lowest cinema franchise investment entry point",
                                 "First-mover advantage in high-growth, low-competition markets",
                                 "Same Connplex brand, technology, and content access as flagship"
@@ -457,7 +457,7 @@ export default function FranchisePage() {
                         <h2 className="font-outfit text-3xl sm:text-4xl md:text-5xl font-light leading-[1.1] mb-6 uppercase text-white">
                             WHY PARTNER WITH<br /><span className="text-[#c19b62] font-normal">CONNPLEX?</span>
                         </h2>
-                        <p className="text-sm sm:text-base text-white/70 font-light mb-8 max-w-[500px]">Joining Connplex means more than just business – it&apos;s becoming a part of a legacy.</p>
+                        <p className="text-sm sm:text-base text-white/70 font-light mb-8 max-w-[500px]">Joining Connplex means more than just business, it&apos;s becoming a part of a legacy.</p>
                         <ul className="flex flex-col gap-4 text-left">
                             {["India's Most Premium Cinema Brand", "Cutting-edge Technology & Immersive Experience", "End-to-End Support & Training", "Proven Business Model with Strong ROI", "Marketing Power of a Trusted Brand"].map((item, i) => (
                                 <li key={i} className="flex gap-4 items-center text-sm sm:text-base text-white/90">
