@@ -148,64 +148,75 @@ export default function InvestorRelationsPage() {
     <div className="investor-page bg-black min-h-screen text-white font-sans">
       <Header />
 
-      {/* Hero Video Banner */}
-      <section className="hero-section relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-black/60">
-          <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-40">
-            <source src="/video/hero-bg.mp4" type="video/mp4" />
-          </video>
-        </div>
-        <div className="hero-overlay absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-1"></div>
-        <div className="container mx-auto px-6 relative z-10 text-center max-w-4xl pt-[80px]">
-          <span className="hero-label text-[#d4af37] text-xs font-bold tracking-[3px] uppercase block mb-3">
-            INVESTOR RELATIONS
-          </span>
-          <h1 className="hero-title text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
-            {pageData?.title || 'Investors Section'}
+      {/* Hero Image Banner (aligned to the left matching the live site) */}
+      <section className="relative min-h-[85vh] flex items-center justify-start overflow-hidden bg-black pt-[80px]" style={{
+        backgroundImage: "url('/img/contact/hero_bg.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center right',
+        backgroundRepeat: 'no-repeat'
+      }}>
+        {/* Deep linear gradient overlay from the left to make text readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent z-1"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-1"></div>
+        
+        <div className="container mx-auto px-6 sm:px-[5%] relative z-10 text-left max-w-6xl w-full flex flex-col items-start">
+          <h1 className="text-[clamp(2.2rem,5vw,4.5rem)] font-bold leading-[1.15] mb-6 tracking-tight font-sans text-white max-w-3xl uppercase">
+            Building India's<br />
+            Most <span className="text-[#fac400] italic font-serif lowercase">Premium</span><br />
+            Cinema Network.
           </h1>
-          <p className="hero-description text-sm sm:text-base text-gray-300 max-w-2xl mx-auto mb-8">
-            {pageData?.subTitle || 'Fueling Entertainment Growth: Your Opportunity to Be Part of the Story'}
+          
+          <p className="text-sm sm:text-base text-gray-300 max-w-2xl mb-10 leading-relaxed font-sans font-light">
+            Connplex Cinemas Limited is committed to delivering world-class cinematic experiences through innovation, operational excellence and a scalable franchise model.
           </p>
           
           {/* Functional Banner CTA Buttons */}
-          <div className="hero-buttons flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap gap-4 items-center w-full">
             <a 
               href="https://webadmin.theconnplex.com/api/file/1778582332703-877641406.pdf" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="btn-gold inline-flex items-center gap-2"
+              className="bg-[#fac400] hover:bg-[#e0b400] text-black font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 transition-all duration-300 hover:shadow-[0_5px_15px_rgba(250,196,0,0.3)] hover:-translate-y-0.5"
               title="Download Investor Presentation PDF"
             >
               Investor Presentation
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
             </a>
+            
             <button 
               onClick={() => handleScrollToCategory('Annual Report')}
-              className="btn-outline inline-flex items-center gap-2 cursor-pointer bg-transparent border border-white/20 text-white rounded-full hover:bg-white hover:text-black transition-all"
+              className="bg-transparent border border-white/20 hover:border-white text-white hover:bg-white/10 font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 cursor-pointer transition-all duration-300 hover:-translate-y-0.5"
             >
               Annual Reports
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="6 9 12 15 18 9" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
               </svg>
             </button>
+            
             <button 
               onClick={() => handleScrollToCategory('Financial Results')}
-              className="btn-outline inline-flex items-center gap-2 cursor-pointer bg-transparent border border-white/20 text-white rounded-full hover:bg-white hover:text-black transition-all"
+              className="bg-transparent border border-white/20 hover:border-white text-white hover:bg-white/10 font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 cursor-pointer transition-all duration-300 hover:-translate-y-0.5"
             >
               Financial Filings
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="6 9 12 15 18 9" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
               </svg>
             </button>
-            <Link href="/contact" className="btn-outline inline-flex items-center gap-2 bg-transparent border border-white/20 text-white rounded-full hover:bg-white hover:text-black transition-all">
+            
+            <Link 
+              href="/contact" 
+              className="bg-transparent border border-white/20 hover:border-white text-white hover:bg-white/10 font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5"
+            >
               Contact Us
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
               </svg>
             </Link>
           </div>
