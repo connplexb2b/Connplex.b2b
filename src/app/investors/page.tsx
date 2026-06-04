@@ -283,12 +283,16 @@ export default function InvestorsPage() {
                       {activeDetails.title}
                     </h3>
                     
-                    {activeDetails.type === 'Content' ? (
+                    {/* Render HTML content if it exists */}
+                    {activeDetails.content && (
                       <div
-                        className="investor-html-content text-gray-200"
-                        dangerouslySetInnerHTML={{ __html: activeDetails.content || '' }}
+                        className="investor-html-content text-gray-200 mb-6"
+                        dangerouslySetInnerHTML={{ __html: activeDetails.content }}
                       />
-                    ) : activeDetails.type === 'Files' && activeDetails.investorsPdfs ? (
+                    )}
+                    
+                    {/* Render PDF/Audio files if they exist */}
+                    {activeDetails.investorsPdfs && activeDetails.investorsPdfs.length > 0 && (
                       <div className="investor-pdf-list">
                         <div className="investor-card-main-flex flex flex-col gap-4">
                           {activeDetails.investorsPdfs.map((file, idx) => {
@@ -332,7 +336,10 @@ export default function InvestorsPage() {
                           })}
                         </div>
                       </div>
-                    ) : (
+                    )}
+
+                    {/* Fallback if neither content nor PDFs exist */}
+                    {!activeDetails.content && (!activeDetails.investorsPdfs || activeDetails.investorsPdfs.length === 0) && (
                       <p className="text-gray-400">No content available.</p>
                     )}
                   </div>
