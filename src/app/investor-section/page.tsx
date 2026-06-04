@@ -401,8 +401,8 @@ export default function InvestorRelationsPage() {
               </div>
               <div className="text-left">
                 <span className="block text-xs text-[#fac400] font-bold uppercase tracking-wider">Investor Support</span>
-                <a href={`mailto:${pageData?.email_two || 'cs@theconnplex.com'}`} className="investors-email hover:text-[#fac400] transition-colors text-sm font-semibold break-all text-white">
-                  {pageData?.email_two || 'cs@theconnplex.com'}
+                <a href={`mailto:${pageData?.email_two || 'investor@connplex.com'}`} className="investors-email hover:text-[#fac400] transition-colors text-sm font-semibold break-all text-white">
+                  {pageData?.email_two || 'investor@connplex.com'}
                 </a>
               </div>
             </div>
