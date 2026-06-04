@@ -86,7 +86,7 @@ export default function Connflix() {
     }, []);
 
     const posters = [
-        { src: '/beyond_the_echo.png', title: 'BEYOND', subtitle: 'THE SIGNAL', red: true, col: 1 },
+        { src: '/beyond_the_signal.jpg', title: 'BEYOND', subtitle: 'THE SIGNAL', red: true, col: 1 },
         { src: '/the_silent_orbit.png', title: 'ASHES OF', subtitle: 'TOMORROW', red: false, col: 1 },
         { src: '/the_silent_orbit.png', title: 'THE', subtitle: 'SILENT ORBIT', red: false, col: 2 },
         { src: '/echoes_of_the_abyss.png', title: 'ECHOES OF', subtitle: 'THE ABYSS', red: true, active: true, col: 2 },

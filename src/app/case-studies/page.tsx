@@ -3,6 +3,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useStats } from '@/hooks/useStats';
+
+const getNumeric = (val: string): number => {
+  const match = val.match(/[\d\.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+const getSuffix = (val: string): string => {
+  const match = val.match(/[\d\.]+(.*)/);
+  return match ? match[1] : "";
+};
 
 const AnimatedNumber = ({ target }: { target: number }) => {
     const [count, setCount] = useState(0);
@@ -106,12 +117,13 @@ const CaseStudyCard = ({ study }: { study: any }) => {
 };
 
 export default function CaseStudiesPage() {
+    const { stats } = useStats();
     const [filter, setFilter] = useState('all');
     const chairRef = useRef<HTMLDivElement>(null);
     const chairImgRef = useRef<HTMLImageElement>(null);
 
     const studies = [
-        { id: 1, num: '01', tag: 'SMART THEATRE', title: 'CONNPLEX<br>EXPERIENCE CENTRE', subtitle: 'REDEFINING THE FUTURE OF CINEMA', location: 'MUMBAI, MAHARASHTRA', img: '/img/case-study/case_study_1.png', desc: 'A next-gen flagship theatre featuring 7 premium auditoriums, recliners, immersive sound and intelligent automation.', category: 'smart-theatres' },
+        { id: 1, num: '01', tag: 'SMART CINEMA', title: 'CONNPLEX<br>EXPERIENCE CENTRE', subtitle: 'REDEFINING THE FUTURE OF CINEMA', location: 'MUMBAI, MAHARASHTRA', img: '/img/case-study/case_study_1.png', desc: 'A next-gen flagship cinema featuring 7 premium auditoriums, recliners, immersive sound and intelligent automation.', category: 'smart-cinemas' },
         { id: 2, num: '02', tag: 'PREMIUM FORMAT', title: 'IMAX WITH LASER<br>AT CONNPLEX', subtitle: 'BIGGER SCREEN. BOLDER IMPACT.', location: 'PUNE, MAHARASHTRA', img: '/img/case-study/case_study_2.png', desc: "India's most advanced IMAX experience with Laser projection, precision sound and wall-to-wall visuals.", category: 'premium-formats' },
         { id: 3, num: '03', tag: 'LUXURY RECLINERS', title: 'THE RECLINER<br>EXPERIENCE', subtitle: 'COMFORT THAT ELEVATES EVERY MOMENT.', location: 'MULTIPLE LOCATIONS', img: '/img/case-study/case_study_3.png', desc: 'Crafted for those who expect more. Our recliner auditoriums blend luxury, privacy and unmatched comfort.', category: 'experience-initiatives' },
         { id: 4, num: '04', tag: 'DRIVE-IN CINEMA', title: 'CONNPLEX<br>DRIVE-IN', subtitle: 'CINEMA UNDER THE STARS.', location: 'LONAVALA, MAHARASHTRA', img: '/img/case-study/case_study_4.png', desc: 'A nostalgic experience reimagined with crystal clear visuals, powerful sound and a magical outdoor ambience.', category: 'drive-in-cinemas' },
@@ -169,7 +181,7 @@ export default function CaseStudiesPage() {
                                 <span className="bg-gradient-to-br from-[#c99f4a] via-[#ffd885] to-[#b3852d] bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(201,159,74,0.25)] relative inline-block">STAY.</span>
                             </h1>
                             <p className="font-inter text-base sm:text-[17px] font-light leading-[1.65] text-[#a0a0a0] max-w-[540px] mb-11">
-                                Every Connplex theatre is more than a destination—it's an experience engineered to create impact, emotion and unforgettable memories.
+                                Every Connplex cinema is more than a destination it's an experience engineered to create impact, emotion and unforgettable memories.
                             </p>
                             <div className="flex">
                                 <a href="#" className="group inline-flex items-center gap-4 px-9 py-4 border border-[#c99f4a]/35 bg-transparent text-[#c99f4a] font-outfit text-xs font-semibold tracking-[0.12em] no-underline rounded-sm relative overflow-hidden transition-all duration-300 hover:text-white hover:border-[#c99f4a] hover:shadow-[0_0_30px_rgba(201,159,74,0.15),_inset_0_0_15px_rgba(201,159,74,0.05)] hover:-translate-y-0.5 z-10 before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[#ffd885]/10 before:to-transparent before:transition-all before:duration-500 before:z-[-1] hover:before:left-full">
@@ -204,11 +216,11 @@ export default function CaseStudiesPage() {
                         <div className="dashboard-border-glow"></div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-10 md:gap-0 items-center relative">
                             {[
-                                { label: 'SMART THEATRES DELIVERED', target: 85, suffix: '+' },
-                                { label: 'SCREENS DEPLOYED', target: 450, suffix: '+' },
-                                { label: 'GUESTS IMPRESSED', target: 25, suffix: 'M+' },
-                                { label: 'CITIES ACROSS INDIA', target: 28, suffix: '+' },
-                                { label: 'YEARS OF CINEMATIC EXCELLENCE', target: 10, suffix: '+' }
+                                { label: 'SMART CINEMAS DELIVERED', target: getNumeric(stats.caseStudiesPage.smartCinemas), suffix: getSuffix(stats.caseStudiesPage.smartCinemas) },
+                                { label: 'SCREENS DEPLOYED', target: getNumeric(stats.caseStudiesPage.screensDeployed), suffix: getSuffix(stats.caseStudiesPage.screensDeployed) },
+                                { label: 'GUESTS IMPRESSED', target: getNumeric(stats.caseStudiesPage.guestsImpressed), suffix: getSuffix(stats.caseStudiesPage.guestsImpressed) },
+                                { label: 'CITIES ACROSS INDIA', target: getNumeric(stats.caseStudiesPage.citiesAcrossIndia), suffix: getSuffix(stats.caseStudiesPage.citiesAcrossIndia) },
+                                { label: 'YEARS OF CINEMATIC EXCELLENCE', target: getNumeric(stats.caseStudiesPage.yearsOfExcellence), suffix: getSuffix(stats.caseStudiesPage.yearsOfExcellence) }
                             ].map((stat, i) => (
                                 <div className="flex flex-col items-center text-center px-[15px] py-2.5 relative cursor-pointer transition-all duration-500 cubic-bezier-[0.16,1,0.3,1] hover:-translate-y-2 hover:scale-[1.03] group" key={i}>
                                     <div className="flex items-center justify-center w-12 h-12 mb-5.5 text-[#c99f4a] bg-[#c99f4a]/3 border border-[#c99f4a]/8 rounded-full transition-all duration-400 group-hover:text-black group-hover:bg-gradient-to-br group-hover:from-[#c99f4a] group-hover:via-[#ffd885] group-hover:to-[#b3852d] group-hover:border-[#c99f4a] group-hover:shadow-[0_0_20px_rgba(201,159,74,0.4)]">
@@ -219,7 +231,14 @@ export default function CaseStudiesPage() {
                                     </div>
                                     <div className="font-oswald text-[48px] font-semibold leading-tight text-white mb-3.5 flex items-baseline justify-center">
                                         <AnimatedNumber target={stat.target} />
-                                        <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">{stat.suffix}</span>
+                                        {stat.suffix === 'M+' ? (
+                                            <>
+                                                <span>M</span>
+                                                <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">+</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-[#c99f4a] text-3xl ml-0.25 font-medium">{stat.suffix}</span>
+                                        )}
                                     </div>
                                     <p className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-[#a0a0a0] leading-normal max-w-[160px] uppercase">{stat.label}</p>
                                     {i < 4 && <div className="absolute right-0 top-[15%] h-[70%] w-[1px] bg-gradient-to-b from-transparent via-white/5 to-transparent hidden lg:block"></div>}
@@ -233,7 +252,7 @@ export default function CaseStudiesPage() {
                             <div className="flex flex-wrap gap-2 sm:gap-4">
                                 {[
                                     { label: 'ALL', value: 'all' },
-                                    { label: 'SMART THEATRES', value: 'smart-theatres' },
+                                    { label: 'SMART CINEMAS', value: 'smart-cinemas' },
                                     { label: 'PREMIUM FORMATS', value: 'premium-formats' },
                                     { label: 'DRIVE-IN CINEMAS', value: 'drive-in-cinemas' },
                                     { label: 'EXPERIENCE INITIATIVES', value: 'experience-initiatives' },
@@ -257,7 +276,9 @@ export default function CaseStudiesPage() {
                         </div>
                     </section>
 
-                    <section className="relative mt-[60px] md:mt-[100px] mb-[60px] py-[60px] px-6 sm:py-[120px] sm:px-[40px] rounded-2xl overflow-hidden bg-[url('/img/case-study/cta_theater_bg.png')] bg-cover bg-center border border-[#c99f4a]/15 flex justify-center items-center text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-b before:from-black/85 before:via-black/50 before:to-black/90 before:z-10">
+                    <section className="relative mt-[60px] md:mt-[100px] mb-[60px] py-[60px] px-6 sm:py-[120px] sm:px-[40px] rounded-2xl overflow-hidden border border-[#c99f4a]/15 flex justify-center items-center text-center">
+                        <div className="absolute inset-0 bg-[url('/img/case-study/cta_theater_bg.png')] bg-cover bg-center filter blur-[2px] scale-103 z-0 pointer-events-none"></div>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black/85 z-10 pointer-events-none"></div>
                         <div className="relative z-20 max-w-[750px] flex flex-col items-center gap-4">
                             <span className="font-outfit text-xs font-semibold tracking-wider text-[#c99f4a] uppercase">LET'S CREATE IMPACT TOGETHER</span>
                             <h2 className="font-oswald text-[32px] sm:text-[48px] font-bold text-white uppercase">HAVE A STORY IN MIND?</h2>

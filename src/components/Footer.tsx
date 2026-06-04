@@ -10,7 +10,7 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
                 <div className="col-span-1 sm:col-span-2 lg:col-span-1 max-w-full lg:max-w-[280px]">
                     <div className="mb-6">
-                        <Image src="/logo.png" alt="Connplex Cinemas" width={150} height={50} style={{ objectFit: "contain" }} />
+                        <Image src="/logo.png" alt="Connplex Cinemas" width={150} height={50} style={{ objectFit: "contain", height: "auto" }} />
                     </div>
                     <p className="text-sm text-text-secondary leading-relaxed">
                         A premium cinema network for advertising, experiential marketing, and brand events.
@@ -37,7 +37,7 @@ const Footer = () => {
 
                 <div className="flex flex-col">
                     <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                        <li><Link href="/investor-section" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Inverstors Section</Link></li>
+                        <li><Link href="/investors" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Investors Section</Link></li>
                         <li><Link href="/privacy-policy" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Privacy Policy</Link></li>
                         <li><Link href="/terms-and-conditions" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Terms & Conditions</Link></li>
                         <li><Link href="/legal-notice" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Legal Notice</Link></li>

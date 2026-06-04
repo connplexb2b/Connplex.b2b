@@ -4,6 +4,7 @@ import {
   joinConnEventsWaitlist,
   joinConnflixWaitlist,
   joinConnmusicWaitlist,
+  joinGameflixWaitlist,
   requestStudioInvitation,
   submitContactInquiry,
   requestDowntownInvitation,
@@ -14,7 +15,9 @@ import {
   registerVendor,
   bookConsultant,
   applyCareer,
-  submitGeneralInquiry
+  submitGeneralInquiry,
+  submitFeedback,
+  getFAQs
 } from '../controllers/formController.js';
 
 const router = express.Router();
@@ -32,6 +35,7 @@ router.post('/book-event', bookEvent);
 router.post('/connevents-waitlist', joinConnEventsWaitlist);
 router.post('/connflix-subscribers', joinConnflixWaitlist);
 router.post('/connmusic-waitlist', joinConnmusicWaitlist);
+router.post('/gameflix-waitlist', joinGameflixWaitlist);
 router.post('/studio-invitations', requestStudioInvitation);
 router.post('/contact-messages', submitContactInquiry);
 router.post('/downtown-invitations', requestDowntownInvitation);
@@ -46,5 +50,7 @@ router.post('/franchise-inquiry', submitFranchiseApplication);
 router.post('/consultant-booking', bookConsultant);
 router.post('/career-application', applyCareer);
 router.post('/general-inquiry', submitGeneralInquiry);
+router.post('/feedback', submitFeedback);
+router.get('/faqs', getFAQs);
 
 export default router;

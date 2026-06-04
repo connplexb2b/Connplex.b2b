@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
+import { useStats } from '@/hooks/useStats';
 
 const AnimatedNumber = ({ value, duration = 2000 }: { value: string; duration?: number }) => {
     const [count, setCount] = useState(0);
@@ -237,9 +238,11 @@ const FAQSection = () => {
 };
 
 export default function FranchisePage() {
+    const { stats } = useStats();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [hasProperty, setHasProperty] = useState<string>('');
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -425,7 +428,7 @@ export default function FranchisePage() {
 
                                 <div className="bg-black/35 border border-[#c19b62]/10 p-6 sm:p-8 rounded-xl h-fit w-full flex flex-col">
                                     <h4 className="text-white font-outfit text-base font-semibold mb-6 border-b border-white/10 pb-3 uppercase tracking-wider">Technical Specifications</h4>
-                                    <div className="grid grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                         {m.specs.map((s, j) => (
                                             <div key={j} className="flex flex-col gap-1">
                                                 <span className="text-[9px] sm:text-[10px] tracking-wider text-text-secondary uppercase">{s.label}</span>
@@ -467,12 +470,12 @@ export default function FranchisePage() {
                         </ul>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full">
                         {[
-                            { val: "42+", lbl: "Cinemas Nationwide" },
-                            { val: "10M+", lbl: "Happy Moviegoers" },
-                            { val: "40+", lbl: "Cities Covered" },
-                            { val: "98%", lbl: "Partner Satisfaction" }
+                            { val: stats.franchisePage.cinemasNationwide, lbl: "Cinemas Nationwide" },
+                            { val: stats.franchisePage.happyMoviegoers, lbl: "Happy Moviegoers" },
+                            { val: stats.franchisePage.citiesCovered, lbl: "Cities Covered" },
+                            { val: stats.franchisePage.partnerSatisfaction, lbl: "Partner Satisfaction" }
                         ].map((s, i) => (
                             <div className="bg-[#191919]/60 border border-[#c19b62]/20 hover:border-[#c19b62] p-6 sm:p-8 rounded-2xl text-center hover:bg-[#c19b62]/5 transition-all duration-300 flex flex-col justify-center items-center" key={i}>
                                 <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#c19b62] font-outfit mb-2">
@@ -502,7 +505,7 @@ export default function FranchisePage() {
             {/* Contact */}
             <section className="grid grid-cols-1 lg:grid-cols-2 bg-[#040404] min-h-[600px] w-full max-w-[1400px] mx-auto border-t border-white/5" id="contact">
                 <div className="relative w-full min-h-[300px] sm:min-h-[400px] lg:min-h-full">
-                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill className="object-cover" />
+                    <Image src="/img/franchise/last_cta_image.png" alt="Interior" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
                 </div>
                 <div className="p-6 sm:p-10 md:p-16 lg:p-20 xl:p-24 flex flex-col justify-center">
                     <span className="block font-outfit text-[11px] md:text-xs font-semibold tracking-[0.2em] text-text-secondary mb-3.5 uppercase">TAKE THE FIRST STEP</span>
@@ -561,8 +564,64 @@ export default function FranchisePage() {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <input name="preferredCity" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                                <input name="hasProperty" type="text" className="bg-transparent border border-white/20 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px]" placeholder="Do you have a property or location for cinema?" required />
+                                <div className="relative">
+                                    <select
+                                        name="hasProperty"
+                                        className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer"
+                                        required
+                                        value={hasProperty}
+                                        onChange={(e) => setHasProperty(e.target.value)}
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: 'right 18px center',
+                                            backgroundSize: '14px',
+                                        }}
+                                    >
+                                        <option value="" disabled className="bg-[#111] text-white">Do you have a property or location?</option>
+                                        <option value="yes" className="bg-[#111] text-white">Yes</option>
+                                        <option value="no" className="bg-[#111] text-white">No</option>
+                                    </select>
+                                </div>
                             </div>
+
+                            {hasProperty === 'no' && (
+                                <div className="relative">
+                                    <select
+                                        name="preApprovedCity"
+                                        className="w-full bg-black/90 border border-white/20 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-[#c19b62] min-h-[48px] appearance-none cursor-pointer"
+                                        required
+                                        defaultValue=""
+                                        style={{
+                                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c19b62' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundPosition: 'right 18px center',
+                                            backgroundSize: '14px',
+                                        }}
+                                    >
+                                        <option value="" disabled className="bg-[#111] text-white">Select Pre-approved Franchise City</option>
+                                        <option value="Ahmedabad" className="bg-[#111] text-white">Ahmedabad</option>
+                                        <option value="Assam" className="bg-[#111] text-white">Assam</option>
+                                        <option value="Jammu" className="bg-[#111] text-white">Jammu</option>
+                                        <option value="Mandvi" className="bg-[#111] text-white">Mandvi</option>
+                                        <option value="Sanand" className="bg-[#111] text-white">Sanand</option>
+                                        <option value="Badoli" className="bg-[#111] text-white">Badoli</option>
+                                        <option value="Chhattisgarh" className="bg-[#111] text-white">Chhattisgarh</option>
+                                        <option value="Himmatnagar" className="bg-[#111] text-white">Himmatnagar</option>
+                                        <option value="Dhamtari" className="bg-[#111] text-white">Dhamtari</option>
+                                        <option value="Navsari" className="bg-[#111] text-white">Navsari</option>
+                                        <option value="Rajnandgaon" className="bg-[#111] text-white">Rajnandgaon</option>
+                                        <option value="Uttar Pradesh" className="bg-[#111] text-white">Uttar Pradesh</option>
+                                        <option value="Haryana" className="bg-[#111] text-white">Haryana</option>
+                                        <option value="Telangana" className="bg-[#111] text-white">Telangana</option>
+                                        <option value="Pune" className="bg-[#111] text-white">Pune</option>
+                                        <option value="Nashik" className="bg-[#111] text-white">Nashik</option>
+                                        <option value="Jharkhand" className="bg-[#111] text-white">Jharkhand</option>
+                                        <option value="Maharashtra" className="bg-[#111] text-white">Maharashtra</option>
+                                        <option value="Rajasthan" className="bg-[#111] text-white">Rajasthan</option>
+                                    </select>
+                                </div>
+                            )}
 
                             <div className="relative">
                                 <select

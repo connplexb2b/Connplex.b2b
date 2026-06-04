@@ -5,6 +5,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useStats } from "@/hooks/useStats";
+
 
 // --- Components ---
 
@@ -184,6 +186,7 @@ const ProjectorMotes = () => {
 // --- Main Page ---
 
 export default function AdvertisePage() {
+    const { stats } = useStats();
     const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
     const heroRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -236,7 +239,7 @@ export default function AdvertisePage() {
                 <ProjectorMotes />
 
                 {/* Main Hero Content */}
-                <main className="flex-1 flex items-center px-4 md:px-20 z-10 relative mt-16 md:-mt-8 py-20 md:py-0">
+                <main className="flex-1 flex items-center px-4 md:px-20 z-10 relative pt-[110px] pb-12 md:pt-[140px] md:pb-20">
                     <div className="flex flex-col max-w-[650px] w-full text-center md:text-left items-center md:items-start">
                         <div className="flex items-center mb-5">
                             <span className="font-inter text-[11px] font-semibold tracking-[3px] text-zinc-500 uppercase">BIGGER SCREEN. BIGGER IMPACT.</span>
@@ -311,7 +314,7 @@ export default function AdvertisePage() {
                         </div>
                         <div className="flex items-end">
                             <p className="text-sm sm:text-base leading-relaxed text-white/65 font-light max-w-[520px]">
-                                Cinema is more than just a screen&mdash;it&apos;s an immersive environment where your brand connects with highly engaged audiences, creating a lasting impact.
+                                Cinema is more than just a screen, it&apos;s an immersive environment where your brand connects with highly engaged audiences, creating a lasting impact.
                             </p>
                         </div>
                     </div>
@@ -360,7 +363,7 @@ export default function AdvertisePage() {
                             ].map((format, i) => (
                                 <div className="group/format bg-[#0f0f0f]/40 border border-white/5 p-3.5 rounded-lg transition-all duration-500 flex flex-col hover:border-[#c99f4a]/30 hover:bg-[#c99f4a]/[0.02] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(0,0,0,0.5)]" key={i}>
                                     <div className="w-full aspect-[4/3] rounded-md overflow-hidden relative mb-4 bg-black">
-                                        <Image src={format.img} alt={format.title} fill style={{ objectFit: 'cover' }} className="w-full h-full object-cover block transition-transform duration-700 group-hover/format:scale-108" />
+                                        <Image src={format.img} alt={format.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw" style={{ objectFit: 'cover' }} className="w-full h-full object-cover block transition-transform duration-700 group-hover/format:scale-108" />
                                         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-black/60 pointer-events-none"></div>
                                     </div>
                                     <h3 className="font-inter text-[11px] font-bold tracking-[1.5px] text-[#ebd59b] mb-2 uppercase">{format.title}</h3>
@@ -382,7 +385,7 @@ export default function AdvertisePage() {
                                 <span className="font-inter text-[11px] font-semibold tracking-[3px] text-gold-primary uppercase">THE POWER OF THE BIG SCREEN</span>
                             </div>
                             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden relative border border-white/8 shadow-[0_25px_60px_rgba(0,0,0,0.75),0_0_40px_rgba(201,159,74,0.05)]">
-                                <Image src="/img/advertise/theater_bg.png" alt="Big Screen Power" fill style={{ objectFit: 'cover' }} className="w-full h-full object-cover block brightness-[0.65] contrast-[1.05]" />
+                                <Image src="/img/advertise/theater_bg.png" alt="Big Screen Power" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} className="w-full h-full object-cover block brightness-[0.65] contrast-[1.05]" />
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c99f4a]/6 via-transparent to-[#030303]/75 pointer-events-none z-10"></div>
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-outfit text-base sm:text-xl font-semibold tracking-[3px] text-white/75 uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] z-20 text-center w-[90%]">YOUR BRAND ON THE BIG SCREEN</div>
                             </div>
@@ -420,7 +423,7 @@ export default function AdvertisePage() {
                                 <span className="bg-gradient-to-r from-[#fdf1d6] via-gold-primary to-[#906c24] bg-clip-text text-transparent inline-block drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]">OF THE RIGHT AUDIENCE.</span>
                             </h2>
                             <p className="text-[14.5px] leading-relaxed text-white/65 font-light my-5 max-w-[380px]">
-                                Our audience is diverse, upscale, and highly engaged&mdash;perfect for brands that demand quality attention.
+                                Our audience is diverse, upscale, and highly engaged, perfect for brands that demand quality attention.
                             </p>
                             <Link href="/contact" className="group inline-flex items-center gap-5 border border-white/25 bg-white/3 hover:border-gold-primary hover:text-black text-white px-7 py-3 font-inter text-xs font-semibold tracking-wider uppercase rounded-sm relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_35px_rgba(201,159,74,0.35)] cursor-pointer h-12 before:content-[''] before:absolute before:top-0 before:left-[-100%] before:w-full before:h-full before:bg-gold-primary before:transition-all before:duration-500 before:z-0 hover:before:left-0">
                                 <span className="relative z-10 transition-colors duration-500 group-hover:text-black">OUR AUDIENCE</span>
@@ -431,12 +434,12 @@ export default function AdvertisePage() {
                         </div>
                         <div className="flex flex-col border-y md:border-y-0 md:border-x border-white/5 divide-y divide-white/5 py-4 md:py-0 md:px-8">
                             {[
-                                { val: "70%", lbl: "AGE 18-45", icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" },
-                                { val: "65%", lbl: "PREMIUM INCOME", icon: "M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
-                                { val: "80%", lbl: "FREQUENT MOVIE GOERS", icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
-                                { val: "4.7/5", lbl: "ENGAGEMENT RATE", icon: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" },
-                                { val: "10+", lbl: "CITIES", icon: "M3 21h18 M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16 M9 7h2 M9 11h2 M9 15h2 M13 7h2 M13 11h2 M13 15h2" },
-                                { val: "115+", lbl: "SCREENS", icon: "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z M12 17v4 M8 21h8" }
+                                { val: stats.advertisePage.ageRange, lbl: "AGE 18-45", icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" },
+                                { val: stats.advertisePage.premiumIncome, lbl: "PREMIUM INCOME", icon: "M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" },
+                                { val: stats.advertisePage.frequentMoviegoers, lbl: "FREQUENT MOVIE GOERS", icon: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" },
+                                { val: stats.advertisePage.engagementRate, lbl: "ENGAGEMENT RATE", icon: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" },
+                                { val: stats.advertisePage.cities, lbl: "CITIES", icon: "M3 21h18 M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16 M9 7h2 M9 11h2 M9 15h2 M13 7h2 M13 11h2 M13 15h2" },
+                                { val: stats.advertisePage.screens, lbl: "SCREENS", icon: "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5z M12 17v4 M8 21h8" }
                             ].map((stat, i) => (
                                 <div className="flex items-center gap-5 py-4.5 border-b border-white/5 last:border-b-0" key={i} ref={(el) => setRef(el, `aud-${i}`)}>
                                     <div className="text-gold-primary flex items-center justify-center">
@@ -485,7 +488,7 @@ export default function AdvertisePage() {
                         </div>
                         <div className="w-full">
                             <div className="w-full aspect-[16/9] rounded-xl overflow-hidden relative border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.8),inset_0_0_30px_rgba(201,159,74,0.05)]">
-                                <Image src="/img/advertise/cta_theater_bg.png" alt="Theater Screen" fill style={{ objectFit: 'cover' }} />
+                                <Image src="/img/advertise/cta_theater_bg.png" alt="Theater Screen" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[#c99f4a]/2 via-transparent to-[#030303]/85 pointer-events-none"></div>
                             </div>
                         </div>

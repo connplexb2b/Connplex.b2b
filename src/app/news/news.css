@@ -5,7 +5,7 @@
 /* --------------------------------------------------------------------------
    0. DESIGN SYSTEM & CUSTOM VARIABLE TOKENS
    -------------------------------------------------------------------------- */
-:root {
+.news-page-wrapper {
     /* Color Palette */
     --bg-deep: #030303;
     --bg-card: #080808;
@@ -31,53 +31,40 @@
     /* Animation System */
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     --transition-fast: all 0.2s ease;
-}
 
-/* --------------------------------------------------------------------------
-   1. GLOBAL RESET & BASE STYLES
-   -------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-    background-color: var(--bg-deep);
-}
-
-body {
-    font-family: var(--font-body);
     background-color: var(--bg-deep);
     color: var(--text-silver);
+    font-family: var(--font-body);
     line-height: 1.6;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-}
+    position: relative;
+    min-height: 100vh;
 
-a {
-    color: inherit;
-    text-decoration: none;
-    transition: var(--transition-fast);
-}
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-button {
-    font-family: inherit;
-    background: none;
-    border: none;
-    cursor: pointer;
-    outline: none;
-}
+    a {
+        color: inherit;
+        text-decoration: none;
+        transition: var(--transition-fast);
+    }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
+    button {
+        font-family: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
 
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
@@ -1419,6 +1406,10 @@ img {
         padding-top: 0;
     }
     
+    .news-modal {
+        padding: 1rem;
+    }
+    
     .modal-container {
         max-height: 90vh;
     }
@@ -1448,4 +1439,11 @@ img {
     .form-group {
         width: 100%;
     }
+}
+
+@media (max-width: 480px) {
+    .modal-details-content {
+        padding: 1.5rem 1rem 2rem;
+    }
+}
 }

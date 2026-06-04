@@ -64,7 +64,7 @@ function AdminLoginForm() {
           alt="Connplex"
           width={160}
           height={48}
-          style={{ objectFit: 'contain', margin: '0 auto 1.5rem', display: 'block' }}
+          style={{ objectFit: 'contain', margin: '0 auto 1.5rem', display: 'block', height: 'auto' }}
         />
         <h1>Admin Login</h1>
         <p>Upload and manage PDF &amp; audio files</p>

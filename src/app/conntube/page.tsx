@@ -59,6 +59,7 @@ const Tube3DGallery = () => {
                                 src={card.src}
                                 alt={card.alt}
                                 fill
+                                sizes="(max-width: 640px) 100px, (max-width: 768px) 140px, 240px"
                                 style={{ objectFit: 'cover', opacity: 0.6 }}
                                 className="transition-opacity duration-400 group-hover:opacity-90"
                             />

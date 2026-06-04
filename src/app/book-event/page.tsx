@@ -6,8 +6,10 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getApiUrl } from '@/utils/api';
+import { useStats } from '@/hooks/useStats';
 
 export default function BookEventPage() {
+  const { stats } = useStats();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
@@ -64,6 +66,7 @@ export default function BookEventPage() {
             src="/img/book-event/top_image.png" 
             alt="Hero" 
             fill 
+            sizes="100vw"
             className="object-cover opacity-60"
             priority 
           />
@@ -78,24 +81,24 @@ export default function BookEventPage() {
             BOOK<br />AN<br /><span className="text-gold-primary font-normal">EVENT</span>
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-text-secondary font-light max-w-[600px] mb-10 leading-relaxed">
-            The Connplex is more than a venue – it&apos;s a canvas for unforgettable cinematic experiences. From premieres to private screenings, bring your vision to life.
+            The Connplex is more than a venue it&apos;s a canvas for unforgettable cinematic experiences. From premieres to private screenings, bring your vision to life.
           </p>
           
           <div className="flex flex-wrap sm:flex-nowrap gap-8 sm:gap-12 md:gap-16 pt-4">
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">41</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.iconicVenues}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 ICONIC<br />VENUES
               </div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">115+</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.premiumSpaces}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 PREMIUM<br />SPACES
               </div>
             </div>
             <div>
-              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">∞</div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-light text-gold-primary leading-none mb-2">{stats.bookEventPage.possibilities}</div>
               <div className="text-[10px] tracking-wider leading-normal text-text-secondary uppercase">
                 UNLIMITED<br />POSSIBILITIES
               </div>
@@ -120,7 +123,7 @@ export default function BookEventPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {[
-            { title: "THE GRAND THEATRE", desc: "Our flagship auditorium with state-of-the-art projection and immersive sound.", img: "space_1.png" },
+            { title: "THE GRAND CINEMA", desc: "Our flagship auditorium with state-of-the-art projection and immersive sound.", img: "space_1.png" },
             { title: "THE PRIVATE SCREENING ROOM", desc: "Intimate, exclusive screenings for private audiences and special guests.", img: "space_2.png", popular: true },
             { title: "THE IMAX EXPERIENCE", desc: "Breathtaking scale. Unmatched immersion. Next-level storytelling.", img: "space_3.png" },
             { title: "THE OUTDOOR CINEMA", desc: "Open-air screenings under the stars. Magic, redefined.", img: "space_6.png" },
@@ -141,6 +144,7 @@ export default function BookEventPage() {
                   src={`/img/book-event/${s.img}`} 
                   alt={s.title} 
                   fill 
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover" 
                 />
               </div>
@@ -377,10 +381,10 @@ export default function BookEventPage() {
                 events@theconnplex.com
               </a>
               <a 
-                href="tel:+971501234567" 
+                href="tel:+919924577556" 
                 className="text-white hover:text-gold-primary text-xs transition-colors py-1.5 px-3 min-h-[44px] flex items-center justify-center"
               >
-                +971 50 123 4567 🎧
+                +91 9924577556 🎧
               </a>
             </div>
           </div>

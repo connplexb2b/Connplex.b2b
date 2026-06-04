@@ -5,16 +5,30 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { useStats } from "@/hooks/useStats";
+
+const getNumeric = (val: string): number => {
+  const match = val.match(/[\d\.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+const getSuffix = (val: string): string => {
+  const match = val.match(/[\d\.]+(.*)/);
+  return match ? match[1] : "";
+};
+
 
 const apps = [
-  { name: "Connflix", glow: "rgba(229, 57, 53, 0.35)", color: "#ff5252", icon: <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z" /></svg> },
-  { name: "Conntube", glow: "rgba(255, 255, 255, 0.25)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="3" /><path d="M10 9l5 3-5 3V9z" fill="#111" /></svg> },
-
-  { name: "Connplay", glow: "rgba(79, 195, 247, 0.35)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z" /></svg> },
-  { name: "Connkids", glow: "rgba(129, 212, 250, 0.35)", color: "#81d4fa", icon: <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01" /></svg> },
-  { name: "Connsports", glow: "rgba(105, 240, 174, 0.35)", color: "#69f0ae", icon: <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" /></svg> },
-  { name: "Connlive", glow: "rgba(255, 82, 82, 0.35)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="2" /><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48 0a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" /></svg> },
-  { name: "Connnews", glow: "rgba(187, 222, 251, 0.35)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M4 6h16v12H4z" /><path d="M6 8h12v2H6zm0 4h8v2H6zm0 4h12v2H6z" /></svg> },
+  { name: "Conn events", link: "/connevents", glow: "rgba(156, 39, 176, 0.35)", color: "#e040fb", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg> },
+  { name: "Conn Music", link: "/connmusic", glow: "rgba(0, 229, 255, 0.35)", color: "#00e5ff", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg> },
+  { name: "Connflix", link: "/connflix", glow: "rgba(229, 57, 53, 0.35)", color: "#ff5252", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="currentColor"><path d="M8 5v14l11-7z" /></svg> },
+  { name: "Connplex studio", link: "/connplex-studio", glow: "rgba(255, 235, 59, 0.35)", color: "#ffeb3b", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 7l-7 5 7 5V7z" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg> },
+  { name: "ConnTube", link: "/conntube", glow: "rgba(255, 255, 255, 0.25)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" className="w-7 h-7 md:w-8 md:h-8 xl:w-9 xl:h-9" fill="currentColor"><rect x="2" y="6" width="20" height="12" rx="3" /><path d="M10 9l5 3-5 3V9z" fill="#111" /></svg> },
+  { name: "Downtown", link: "/downtown", glow: "rgba(233, 30, 99, 0.35)", color: "#ff4081", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2" /><line x1="9" y1="22" x2="9" y2="16" /><line x1="15" y1="22" x2="15" y2="16" /><path d="M9 16h6M8 6h2M14 6h2M8 10h2M14 10h2" /></svg> },
+  { name: "Gameflix", link: "/gameflix", glow: "rgba(76, 175, 80, 0.35)", color: "#69f0ae", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="3" /><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01" /></svg> },
+  { name: "ConnAir", link: "/connair", glow: "rgba(224, 224, 224, 0.35)", color: "#ffffff", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12l4 6-10 12L2 9z" /></svg> },
+  { name: "Sky - inn", link: "/sky-inn", glow: "rgba(33, 150, 243, 0.35)", color: "#2196f3", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg> },
+  { name: "Spectra X", link: "/spectra-x", glow: "rgba(255, 110, 64, 0.35)", color: "#ff6e40", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg> },
 ];
 
 const movies = [
@@ -57,7 +71,7 @@ const slides: {
     eyebrow: "Luxury Cinema Experience.",
     title: "Luxury Cinema\nExperience",
     tags: "Recliners · Gourmet F&B · VIP Service",
-    desc: "Plush recliners, curated menus, and white-glove service. Every detail crafted for indulgence. Host premieres, VIP screenings, and private events in true luxury. This is cinema as an event - intimate, indulgent, unforgettable.",
+    desc: "Plush recliners, curated menus, and white glove service. Every detail crafted for indulgence. Host premieres, VIP screenings, and private events in true luxury. This is cinema as an event intimate, indulgent, unforgettable.",
     link: "/franchise",
     linkText: "Know More",
   },
@@ -67,7 +81,7 @@ const slides: {
     eyebrow: "Where Style Meets the Screen.",
     title: "Signature\nExperience",
     tags: "Technology · Design · Immersion",
-    desc: "Sleek interiors, cutting-edge technology, and an atmosphere that pulls you in from the moment you walk through the door. Cinema elevated for the modern audience.",
+    desc: "Sleek interiors, cutting edge technology, and an atmosphere that pulls you in from the moment you walk through the door. Cinema elevated for the modern audience.",
     link: "/franchise",
     linkText: "Know More",
   },
@@ -78,7 +92,7 @@ const slides: {
     title: "Smart Cinema\nNetwork",
     tags: "Comfort · Quality · Community",
     desc: "Thoughtfully designed spaces, quality screens, and a comfortable atmosphere. Smart makes every visit feel easy, enjoyable and just right.",
-    link: "/capex-for-developers",
+    link: "/franchise",
     linkText: "Explore",
   },
 ];
@@ -139,6 +153,7 @@ const Counter = ({ target, isVisible, suffix = "", decimals = 0 }: { target: num
 };
 
 export default function Home() {
+  const { stats } = useStats();
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [currentCase, setCurrentCase] = useState(0);
@@ -230,8 +245,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      {/* ── HERO ── */}
-      <main className="relative min-h-screen flex flex-col justify-center items-center text-center px-4 py-32 overflow-hidden bg-bg-dark">
+      <main className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 md:py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
@@ -239,11 +253,12 @@ export default function Home() {
             muted
             loop
             playsInline
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-[70%] md:h-full object-cover opacity-80 blur-[3px] scale-100 md:scale-105 absolute top-0 left-0"
           >
             <source src="/video/hero-bg.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-black/30 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-dark md:hidden"></div>
         </div>
 
         <h1 className="text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[1.1] mb-6 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
@@ -277,7 +292,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
-            <p className="text-sm text-text-secondary">115+ screens operational</p>
+            <p className="text-sm text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
           </div>
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
@@ -304,13 +319,13 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth">
-          <div className="flex gap-10 pb-4 w-max">
+        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth w-full">
+          <div className="flex gap-4 md:gap-6 xl:gap-8 2xl:gap-10 pb-4 w-max min-w-full lg:justify-center px-4 lg:px-0">
             {apps.map((app) => (
-              <div className="flex flex-col items-center gap-4 cursor-pointer group" key={app.name}>
-                <div className="w-[110px] h-[110px] rounded-full flex items-center justify-center border border-white/10 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+              <Link href={app.link || "#"} className="flex flex-col items-center gap-4 cursor-pointer group" key={app.name}>
+                <div className="w-[75px] h-[75px] md:w-[90px] md:h-[90px] xl:w-[100px] xl:h-[100px] 2xl:w-[110px] 2xl:h-[110px] rounded-full flex items-center justify-center border border-white/10 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                   <div
-                    className="w-[65px] h-[65px] rounded-[22px] flex items-center justify-center border transition-all duration-300"
+                    className="w-[45px] h-[45px] md:w-[52px] md:h-[52px] xl:w-[58px] xl:h-[58px] 2xl:w-[65px] 2xl:h-[65px] rounded-[14px] md:rounded-[18px] xl:rounded-[20px] 2xl:rounded-[22px] flex items-center justify-center border transition-all duration-300"
                     style={{
                       background: 'linear-gradient(145deg, #1a1a1a, #0a0a0a)',
                       boxShadow: `0 0 25px ${app.glow}, inset 0 0 15px ${app.glow}`,
@@ -321,8 +336,8 @@ export default function Home() {
                     {app.icon}
                   </div>
                 </div>
-                <p className="text-xs text-text-secondary text-center transition-colors duration-200 group-hover:text-white">{app.name}</p>
-              </div>
+                <p className="text-[10px] md:text-xs text-text-secondary text-center transition-colors duration-200 group-hover:text-white">{app.name}</p>
+              </Link>
             ))}
           </div>
         </div>
@@ -341,6 +356,7 @@ export default function Home() {
               src={s.src}
               alt={s.alt}
               fill
+              sizes="100vw"
               style={{ objectFit: "cover" }}
               priority={i === 0}
             />
@@ -418,7 +434,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/connflix_hero_mockup.png" alt="Connflix" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/connflix_hero_mockup.png" alt="Connflix" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -431,7 +447,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/conntube_hero_mockup.png" alt="Conntube" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/conntube_hero_mockup.png" alt="Conntube" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -444,7 +460,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/spectra-x-hero.png" alt="SpectraX" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/spectra-x-hero.png" alt="SpectraX" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
 
@@ -457,7 +473,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
-              <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill style={{ objectFit: "cover", objectPosition: "top" }} />
+              <Image src="/img/363ae3a1-9296-45b4-8a62-e84d026b07f6.png" alt="DownTown" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
         </div>
@@ -472,28 +488,29 @@ export default function Home() {
               src="/assets/cinema_bg.png"
               alt="Luxury Cinema Background"
               fill
+              sizes="100vw"
               style={{ objectFit: "cover" }}
               priority
             />
           </div>
 
-          <div className={`absolute left-3/5 -translate-x-1/2 z-20 w-[80%] md:w-[55%] max-w-[650px] pointer-events-none mix-blend-screen transition-all duration-1000 ease-out [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)] ${isWhyVisible ? 'bottom-0 md:bottom-[-10%] translate-y-0 opacity-100' : 'bottom-[-20%] translate-y-[100px] opacity-0'}`}>
+          <div className={`absolute left-1/2 -translate-x-1/2 z-20 w-[60%] md:w-[45%] max-w-[500px] pointer-events-none mix-blend-screen transition-all duration-1000 ease-out [mask-image:linear-gradient(to_bottom,black_80%,transparent_100%)] ${isWhyVisible ? 'bottom-[-15%] md:bottom-[-20%] translate-y-0 opacity-100' : 'bottom-[-25%] md:bottom-[-30%] translate-y-[100px] opacity-0'}`}>
             <Image
               src="/assets/popcorn.png"
               alt="Popcorn Bucket"
               width={500}
               height={500}
               className="transition-transform duration-100 ease-linear"
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", width: "100%", height: "auto" }}
             />
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 px-6 pt-12 pb-24 md:pb-[15rem] bg-gradient-to-b from-black/50 via-transparent to-black/75">
-            <div className="max-w-[800px] w-full -translate-y-5">
+          <div className="absolute inset-0 flex flex-col items-center justify-start text-center z-30 px-6 pt-4 md:pt-8 pb-0 bg-gradient-to-b from-black/50 via-transparent to-black/75">
+            <div className="max-w-[800px] w-full">
               <div className="mb-6 flex justify-center drop-shadow-[0_4px_15px_rgba(0,0,0,0.5)]">
-                <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain" }} />
+                <Image src="/logo.png" alt="Connplex Cinemas" width={300} height={100} style={{ objectFit: "contain", height: "auto" }} />
               </div>
-              <h3 className="text-white/85 text-[clamp(0.9rem,1.35vw,1.2rem)] font-normal mb-6 tracking-[1px] font-outfit">Where cinema becomes an experience.</h3>
+              <h3 className="text-white text-[clamp(1.0rem,1.6vw,1.3rem)] font-semibold mb-6 tracking-[1px] font-outfit drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">Where cinema becomes an experience.</h3>
               <div className="flex gap-6 justify-center">
                 <a
                   href="https://ticketing.theconnplex.com/"
@@ -511,22 +528,22 @@ export default function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 border-t border-white/10 pt-14 text-left">
           <div className="flex flex-col gap-2.5">
             <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
-              <Counter target={10} isVisible={isWhyVisible} suffix="M+" />
+              <Counter target={getNumeric(stats.homepage.annualFootfall)} isVisible={isWhyVisible} suffix={getSuffix(stats.homepage.annualFootfall)} />
             </span>
             <span className="text-sm text-text-secondary font-normal">Annual Footfall</span>
           </div>
           <div className="flex flex-col gap-2.5">
             <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">
-              <Counter target={115} isVisible={isWhyVisible} suffix="+" />
+              <Counter target={getNumeric(stats.homepage.premiumScreens)} isVisible={isWhyVisible} suffix={getSuffix(stats.homepage.premiumScreens)} />
             </span>
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(2rem,5vw,3.3rem)] font-bold text-primary-gold leading-none tracking-tight">Tier 1 &amp; 2</span>
+            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">{stats.homepage.citiesCovered}</span>
             <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">Immersive</span>
+            <span className="text-[clamp(2rem,5vw,3.5rem)] font-bold text-primary-gold leading-none tracking-tight">{stats.homepage.experiencesDelivered}</span>
             <span className="text-sm text-text-secondary font-normal">Cinema Experiences Delivered</span>
           </div>
         </div>
@@ -568,6 +585,7 @@ export default function Home() {
                   src={cases[currentCase].src}
                   alt={cases[currentCase].title}
                   fill
+                  sizes="100vw"
                   style={{ objectFit: "cover" }}
                 />
               </div>
@@ -614,6 +632,7 @@ export default function Home() {
                 src={m.src}
                 alt={m.alt}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 style={{ objectFit: "cover" }}
                 className="transition-transform duration-700 ease-out group-hover:scale-105"
               />

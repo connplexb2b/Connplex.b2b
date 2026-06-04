@@ -63,12 +63,11 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
           </button>
 
           <a 
-            href="https://theconnplex.com/" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className={`bg-white !text-black font-bold rounded-full transition-all duration-300 hover:bg-[#c99f4a] hover:!text-black hover:-translate-y-0.5 text-center whitespace-nowrap text-[0.9rem] px-6 py-[0.8rem] ${isOpen ? 'hidden' : 'block'}`}
+            href="https://connplexcinemas.zohobookings.in/#/ConnplexCinemasLimited" 
+            className={`bg-white !text-black font-bold rounded-full transition-all duration-300 hover:bg-[#c99f4a] hover:!text-black hover:-translate-y-0.5 text-center whitespace-nowrap text-[0.9rem] px-4 sm:px-6 py-[0.8rem] ${isOpen ? 'hidden' : 'block'}`}
           >
-            Book a Call With Consultant
+            <span className="hidden sm:inline">Book a Call With Consultant</span>
+            <span className="inline sm:hidden">Book</span>
           </a>
         </div>
       </header>

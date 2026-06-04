@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import './career.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const CareerPage = () => {
     useEffect(() => {
@@ -202,7 +203,7 @@ const CareerPage = () => {
 
         // 5. INTERACTIVE FORM SUBMISSION HANDLER
         if (careerForm) {
-            careerForm.addEventListener('submit', (e) => {
+            careerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const submitBtn = careerForm.querySelector('.btn-submit-app') as HTMLButtonElement;
@@ -213,10 +214,34 @@ const CareerPage = () => {
                     submitBtn.style.opacity = '0.75';
                     submitBtn.innerHTML = 'PROCESSING APPLICATION <span class="loader-dots">...</span>';
 
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.style.opacity = '1';
-                        submitBtn.innerHTML = originalBtnContent;
+                    const formData = new FormData(careerForm);
+                    const fileInput = document.getElementById('applicant-resume') as HTMLInputElement;
+                    const fileName = fileInput?.files && fileInput.files.length > 0 ? fileInput.files[0].name : '';
+
+                    const payload = {
+                        fullName: formData.get('fullname'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        position: formData.get('job_title') || formData.get('department') || 'General Application',
+                        experience: formData.get('department') || '',
+                        coverLetter: formData.get('message') || '',
+                        cvUrl: fileName
+                    };
+
+                    try {
+                        const apiUrl = getApiUrl();
+                        const response = await fetch(`${apiUrl}/api/forms/career-application`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        const result = await response.json();
+                        if (!response.ok) {
+                            throw new Error(result.message || 'Submission failed. Please try again.');
+                        }
                         
                         careerForm.style.display = 'none';
                         if (successScreen) successScreen.style.display = 'flex';
@@ -225,7 +250,14 @@ const CareerPage = () => {
                         if (modalContainer) {
                             modalContainer.scrollTo({ top: 0, behavior: 'smooth' });
                         }
-                    }, 1200);
+                    } catch (err: any) {
+                        console.error('Career application submission error:', err);
+                        alert(err.message || 'Unable to process your application at this time. Please try again.');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
+                        submitBtn.innerHTML = originalBtnContent;
+                    }
                 }
             });
         }
@@ -240,9 +272,10 @@ const CareerPage = () => {
     }, []);
 
     return (
-        <div className="career-page">
+        <>
             <Header />
-            {/* Hero Section */}
+            <div className="career-page">
+                {/* Hero Section */}
             <section className="hero-section" aria-label="Careers Hero">
                 <div className="hero-bg-wrapper">
                     <img src="/career/Top page image.jpeg" alt="Cinema film projector background" className="hero-bg-img" />
@@ -354,15 +387,15 @@ const CareerPage = () => {
                         <div className="openings-list-column">
                             <div className="jobs-list">
 
-                                <div className="job-card" data-job-id="theatre-ops-mgr" data-job-title="Theatre Operations Manager"
+                                <div className="job-card" data-job-id="cinema-ops-mgr" data-job-title="Cinema Operations Manager"
                                     data-job-dept="Operations" data-job-loc="Bengaluru">
                                     <div className="job-card-left">
-                                        <h3 className="job-title">Theatre Operations Manager</h3>
+                                        <h3 className="job-title">Cinema Operations Manager</h3>
                                         <span className="job-meta">Bengaluru &bull; Operations</span>
                                     </div>
                                     <div className="job-card-right">
                                         <button className="btn-view-details"
-                                            aria-label="View Details for Theatre Operations Manager">
+                                            aria-label="View Details for Cinema Operations Manager">
                                             VIEW DETAILS <span className="arrow">&rarr;</span>
                                         </button>
                                     </div>
@@ -537,8 +570,9 @@ const CareerPage = () => {
                     </div>
                 </div>
             </div>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 

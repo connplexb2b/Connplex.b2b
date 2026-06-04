@@ -408,6 +408,7 @@ const SpectraXPage = () => {
                             src="/spectrax/bottom image.png"
                             alt="Spectra X Cinema"
                             fill
+                            sizes="100vw"
                             style={{ objectFit: 'cover', filter: 'brightness(0.32) saturate(1.2)' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/60"></div>

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import './feedback.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { getApiUrl } from '@/utils/api';
 
 const FeedbackPage = () => {
     useEffect(() => {
@@ -37,7 +38,7 @@ const FeedbackPage = () => {
         const formHeaderBlock = document.querySelector('.form-header-block') as HTMLElement;
 
         if (mainForm && successBox) {
-            mainForm.addEventListener('submit', (e) => {
+            mainForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 const submitBtn = mainForm.querySelector('.btn-submit-feedback') as HTMLButtonElement;
@@ -47,10 +48,30 @@ const FeedbackPage = () => {
                 submitBtn.style.opacity = '0.75';
                 submitBtn.innerHTML = 'TRANSMITTING FEEDBACK...';
 
-                setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.style.opacity = '1';
-                    submitBtn.innerHTML = originalText;
+                const formData = new FormData(mainForm);
+                const payload = {
+                    fullName: formData.get('fullname'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone') || '',
+                    location: formData.get('location') || '',
+                    feedbackType: formData.get('feedback_type'),
+                    message: formData.get('message')
+                };
+
+                try {
+                    const apiUrl = getApiUrl();
+                    const response = await fetch(`${apiUrl}/api/forms/feedback`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Submission failed. Please try again.');
+                    }
 
                     mainForm.style.display = 'none';
                     if (formHeaderBlock) formHeaderBlock.style.display = 'none';
@@ -61,7 +82,14 @@ const FeedbackPage = () => {
                         const offsetTop = feedbackSection.getBoundingClientRect().top + window.scrollY - 120;
                         window.scrollTo({ top: offsetTop, behavior: 'smooth' });
                     }
-                }, 1200);
+                } catch (err: any) {
+                    console.error('Feedback submission error:', err);
+                    alert(err.message || 'Unable to transmit feedback at this time. Please try again.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.innerHTML = originalText;
+                }
             });
         }
 
@@ -89,9 +117,10 @@ const FeedbackPage = () => {
     }, []);
 
     return (
-        <div className="feedback-page-wrapper">
+        <>
             <Header />
-            <section className="hero-section" aria-label="Feedback Hero">
+            <div className="feedback-page-wrapper">
+                <section className="hero-section" aria-label="Feedback Hero">
                 <div className="hero-bg-wrapper">
                     <img src="/feedback/top_image_feedback.jpeg" alt="Connplex Premium Cinema Lounge Bar" className="hero-bg-img" />
                     <div className="hero-overlay"></div>
@@ -270,7 +299,7 @@ const FeedbackPage = () => {
                                                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                                             </svg>
                                         </div>
-                                        <a href="tel:+60312345678" className="channel-text">+60 3 1234 5678</a>
+                                        <a href="tel:+919924577556" className="channel-text">+91 9924577556</a>
                                     </div>
                                     
                                     <div className="channel-row">
@@ -280,7 +309,7 @@ const FeedbackPage = () => {
                                                 <polyline points="22,6 12,13 2,6"></polyline>
                                             </svg>
                                         </div>
-                                        <a href="mailto:hello@connplex.com" className="channel-text">hello@connplex.com</a>
+                                        <a href="mailto:feedback@connplex.com" className="channel-text">feedback@connplex.com</a>
                                     </div>
 
                                     <div className="channel-row">
@@ -308,8 +337,9 @@ const FeedbackPage = () => {
 
                 </div>
             </main>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 

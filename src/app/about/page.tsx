@@ -5,6 +5,18 @@ import Link from "next/link";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useEffect, useState, useRef } from "react";
+import { useStats } from "@/hooks/useStats";
+
+const getNumeric = (val: string): number => {
+  const match = val.match(/[\d\.]+/);
+  return match ? parseFloat(match[0]) : 0;
+};
+
+const getSuffix = (val: string): string => {
+  const match = val.match(/[\d\.]+(.*)/);
+  return match ? match[1] : "";
+};
+
 
 // --- Components ---
 
@@ -48,6 +60,7 @@ const Counter = ({ target, isVisible, suffix = "", decimals = 0 }: { target: num
 // --- Main Page ---
 
 export default function AboutPage() {
+  const { stats } = useStats();
   const [isStatsVisible, setIsStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -102,6 +115,7 @@ export default function AboutPage() {
             src="/img/about/About us top image.png"
             alt="Theater Background"
             fill
+            sizes="100vw"
             className="w-full h-full object-cover"
             priority
           />
@@ -145,7 +159,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={115} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.screens)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.screens)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-gold-primary uppercase leading-[1.3] [text-shadow:0_0_6px_rgba(201,159,74,0.2)]">SCREENS</span>
@@ -162,7 +176,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={40} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.franchiseLocations)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.franchiseLocations)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">FRANCHISE LOCATIONS</span>
@@ -178,7 +192,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={8} isVisible={isStatsVisible} suffix="+" />
+                  <Counter target={getNumeric(stats.aboutPage.yearsOfExcellence)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.yearsOfExcellence)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">YEARS OF EXCELLENCE</span>
@@ -193,7 +207,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <Counter target={1} isVisible={isStatsVisible} />
+                  <Counter target={getNumeric(stats.aboutPage.vision)} isVisible={isStatsVisible} suffix={getSuffix(stats.aboutPage.vision)} />
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[11px] font-semibold tracking-[0.1em] text-gold-primary uppercase leading-[1.3] [text-shadow:0_0_6px_rgba(201,159,74,0.2)]">VISION</span>
@@ -209,7 +223,10 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <div className="font-outfit text-[42px] font-semibold leading-none text-white mb-3 flex items-baseline justify-center [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:text-gold-bright group-hover:[transform:translateZ(25px)]">
-                  <span className="font-outfit">10M</span><span className="text-gold-primary text-[28px] ml-0.5 font-semibold group-hover:text-gold-bright transition-colors">+</span>
+                  <span className="font-outfit">{stats.aboutPage.happyMoviegoers.replace(/[+]/g, '')}</span>
+                  {stats.aboutPage.happyMoviegoers.includes('+') && (
+                    <span className="text-gold-primary text-[28px] ml-0.5 font-semibold group-hover:text-gold-bright transition-colors">+</span>
+                  )}
                 </div>
                 <div className="flex flex-col items-center gap-[3px] [transform-style:preserve-3d] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:[transform:translateZ(15px)]">
                   <span className="font-outfit text-[10px] font-medium tracking-[0.08em] text-text-secondary uppercase leading-[1.4] max-w-[160px] transition-colors duration-200 group-hover:text-white">HAPPY MOVIEGOERS</span>
@@ -230,15 +247,18 @@ export default function AboutPage() {
               <span className="font-outfit text-gold-primary text-[13px] font-semibold tracking-[0.2em] uppercase after:content-[''] after:inline-block after:w-[25px] after:h-[1px] after:bg-gold-primary after:ml-3">OUR STORY</span>
             </div>
             <h2 className="font-outfit font-light text-2xl sm:text-3xl md:text-[42px] leading-[1.25] tracking-[0.03em] text-white mb-[30px] uppercase">
-              BUILT <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">ON PASSION.</span><br />
-              DRIVEN <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">BY INNOVATION.</span>
+              BUILDING <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">THE FUTURE</span><br />
+              OF <span className="text-gold-primary font-normal drop-shadow-[0_0_10px_rgba(201,159,74,0.2)]">CINEMA.</span>
             </h2>
 
             <div className="text-center lg:text-left">
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">We founded Connplex Cinemas with one shared vision: to democratize the luxury cinema experience and unlock untapped potential in every corner of India.</p>
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">From tier 1 cities to emerging markets, our mission is simple &mdash; bring world-class cinema to every audience, and unmatched opportunities to every partner.</p>
-              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With over 15 years of experience in entertainment, we&apos;ve turned Connplex into more than just a cinema brand &mdash; it&apos;s a growth engine for developers, investors, and franchise partners across the country.</p>
-              <p className="text-lg! font-normal! text-white! mt-2.5 border-l-2 border-gold-primary pl-[18px] text-left">Because great cinema isn&apos;t just watched &mdash; it&apos;s built.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">At CONNPLEX Cinemas, we believe cinema is more than entertainment, it is culture, community, and a powerful economic engine.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Founded with a vision to redefine movie-going experiences across India, CONNPLEX has evolved into one of the country&apos;s fastest-growing cinema networks, combining premium experiences, scalable infrastructure, and an asset-light franchise model designed for rapid expansion.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">From metropolitan cities to high-growth emerging markets, we are democratizing world-class cinema by making premium entertainment accessible to every audience and cinema ownership accessible to every aspiring entrepreneur and investor.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Today, CONNPLEX is building a nationwide ecosystem that connects developers, landlords, investors, franchise partners, brands, filmmakers, and audiences through a single platform dedicated to entertainment excellence.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">With a strong foundation in innovation, operational excellence, and strategic partnerships, our mission extends beyond operating cinemas, we are creating the next generation of entertainment destinations.</p>
+              <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">As India emerges as one of the world&apos;s largest consumer markets, CONNPLEX is positioned to become a leading force in the evolution of cinema, leisure, and community-driven entertainment experiences.</p>
+              <p className="text-lg! font-normal! text-white! mt-2.5 border-l-2 border-gold-primary pl-[18px] text-left">Because the future of cinema won&apos;t be inherited. It will be built.</p>
             </div>
           </div>
 
@@ -278,7 +298,7 @@ export default function AboutPage() {
               <div className="text-center lg:text-left">
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Rahul Dhyani believes great cinemas are built on emotion, connection, and unforgettable experiences. With years of expertise in entertainment and business strategy, his vision for Connplex has been centered around creating destinations that combine storytelling, hospitality, and community engagement.</p>
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His approach focuses on understanding local markets while delivering global-standard cinema experiences through thoughtfully designed formats like Luxuriance, Signature, and Express. From concept to execution, he has played a key role in shaping Connplex into a modern entertainment brand built for India&apos;s evolving audiences.</p>
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For him, Connplex is not just about screens &mdash; it&apos;s about creating spaces where memories are made, businesses grow, and communities come alive through cinema.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For him, Connplex is not just about screens, it&apos;s about creating spaces where memories are made, businesses grow, and communities come alive through cinema.</p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-[30px] mt-8 sm:mt-10">
@@ -290,7 +310,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]" style={{ direction: 'ltr' }}>
-              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
+              <Image src="/img/rahul dhyani.jpeg" alt="Rahul Dhyani" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
@@ -310,8 +330,8 @@ export default function AboutPage() {
               </h3>
 
               <div className="text-center lg:text-left">
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For Anish Patel, cinema has always been more than entertainment &mdash; it&apos;s an experience that brings people, culture, and communities together. With a strong entrepreneurial mindset and a passion for innovation, he envisioned a cinema brand that could redefine how India experiences movies across both metro cities and emerging markets.</p>
-                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His focus has always been on creating scalable cinema ecosystems that combine luxury, technology, operational excellence, and long-term business value. Under his leadership, Connplex continues to expand with a clear mission &mdash; delivering premium entertainment experiences while creating profitable opportunities for developers, investors, and franchise partners.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">For Anish Patel, cinema has always been more than entertainment, it&apos;s an experience that brings people, culture, and communities together. With a strong entrepreneurial mindset and a passion for innovation, he envisioned a cinema brand that could redefine how India experiences movies across both metro cities and emerging markets.</p>
+                <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">His focus has always been on creating scalable cinema ecosystems that combine luxury, technology, operational excellence, and long-term business value. Under his leadership, Connplex continues to expand with a clear mission, delivering premium entertainment experiences while creating profitable opportunities for developers, investors, and franchise partners.</p>
                 <p className="font-inter text-[15px] font-light leading-[1.8] text-text-secondary mb-5">Driven by innovation and growth, he believes the future of cinema lies in accessibility, smart infrastructure, and experiences that audiences truly remember.</p>
               </div>
 
@@ -324,7 +344,7 @@ export default function AboutPage() {
             </div>
 
             <div className="relative bg-white/2 w-full aspect-[4/5] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_20%)] lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%)]">
-              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill style={{ objectFit: 'cover', objectPosition: 'center center' }} />
+              <Image src="/img/anish patel.jpeg" alt="Anish Patel" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover', objectPosition: 'center center' }} />
             </div>
           </div>
         </div>
@@ -426,6 +446,7 @@ export default function AboutPage() {
             src="/img/about/let's connect last cta image.png"
             alt="Lobby Background"
             fill
+            sizes="100vw"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(5,5,5,0.96)_0%,rgba(5,5,5,0.82)_40%,rgba(5,5,5,0.15)_70%,rgba(5,5,5,0.8)_100%)] z-2"></div>
@@ -439,7 +460,7 @@ export default function AboutPage() {
                 OF CINEMA <span className="text-gold-primary font-normal">TOGETHER.</span>
               </h2>
               <p className="font-inter text-[15px] font-light leading-[1.7] text-text-secondary max-w-[550px] mb-10">
-                Whether you are a passionate moviegoer or an investor exploring new opportunities, Connplex is shaping the future of cinema &mdash; through smarter spaces, stronger returns, and unforgettable storytelling moments.
+                Whether you are a passionate moviegoer or an investor exploring new opportunities, Connplex is shaping the future of cinema, through smarter spaces, stronger returns, and unforgettable storytelling moments.
               </p>
               <Link href="/contact" className="inline-flex items-center gap-[15px] px-9 py-4 bg-[linear-gradient(135deg,#c99f4a_0%,#ffd885_50%,#b3852d_100%)] text-black font-outfit text-xs font-semibold tracking-[0.12em] no-underline rounded transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_10px_30px_rgba(201,159,74,0.25)] hover:scale-[1.02] hover:shadow-[0_15px_35px_rgba(201,159,74,0.35)] min-h-[44px] min-w-[44px]">
                 LET&apos;S CONNECT
