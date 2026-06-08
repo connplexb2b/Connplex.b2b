@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
@@ -8,8 +8,88 @@ import Footer from '@/components/Footer';
 import { Tv, MapPin, Award, Users, ArrowUpRight } from 'lucide-react';
 import { useStats } from '@/hooks/useStats';
 
+const DEFAULT_GALLERY_ITEMS = [
+    {
+        id: "gallery-default-1",
+        title: "Luxuriance",
+        imagePath: "/gallery/luxuriance.png",
+    },
+    {
+        id: "gallery-default-2",
+        title: "Downtown",
+        imagePath: "/gallery/downtown.png",
+    },
+    {
+        id: "gallery-default-3",
+        title: "Sky Inn",
+        imagePath: "/gallery/sky_inn.png",
+    },
+    {
+        id: "gallery-default-4",
+        title: "Signature",
+        imagePath: "/gallery/signature.png",
+    },
+    {
+        id: "gallery-default-5",
+        title: "Spectra X",
+        imagePath: "/gallery/spectra_x.png",
+    },
+    {
+        id: "gallery-default-6",
+        title: "Behind the Magic",
+        imagePath: "/gallery/behind_magic.png",
+    },
+    {
+        id: "gallery-default-7",
+        title: "Grand Openings",
+        imagePath: "/gallery/grand_opening.png",
+    }
+];
+
+const getGridClass = (idx: number) => {
+    switch (idx) {
+        case 0: return 'col-span-1 md:col-span-1 lg:col-span-8 lg:row-span-2';
+        case 1: return 'col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-2';
+        case 2: return 'col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1';
+        case 3: return 'col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1';
+        case 4: return 'col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1';
+        case 5: return 'col-span-1 md:col-span-1 lg:col-span-6 lg:row-span-1';
+        case 6: return 'col-span-1 md:col-span-1 lg:col-span-6 lg:row-span-1';
+        default: return 'col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1';
+    }
+};
+
+const getSizes = (idx: number) => {
+    switch (idx) {
+        case 0: return '(max-width: 1024px) 100vw, 66vw';
+        case 1: return '(max-width: 1024px) 100vw, 33vw';
+        case 5:
+        case 6: return '(max-width: 1024px) 100vw, 50vw';
+        default: return '(max-width: 1024px) 100vw, 33vw';
+    }
+};
+
 const GalleryPage = () => {
     const { stats } = useStats();
+    const [galleryItems, setGalleryItems] = useState<any[]>(DEFAULT_GALLERY_ITEMS);
+
+    useEffect(() => {
+        const fetchGallery = async () => {
+            try {
+                const res = await fetch('/api/admin/gallery');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        setGalleryItems(data.filter((item: any) => item.isActive));
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching gallery:", err);
+            }
+        };
+        fetchGallery();
+    }, []);
+
     return (
         <div className="bg-black text-white font-outfit overflow-x-hidden selection:bg-[#c5a059]/30">
             <Header />
@@ -43,71 +123,23 @@ const GalleryPage = () => {
             {/* Gallery Section */}
             <section className="px-[5%] py-[60px] sm:py-[100px] bg-black" id="gallery">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 auto-rows-[300px]">
-
-                    {/* Luxuriance — spans 8 cols, 2 rows */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-8 lg:row-span-2">
-                        <Image src="/gallery/luxuriance.png" alt="Luxuriance" fill sizes="(max-width: 1024px) 100vw, 66vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Luxuriance</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
+                    {galleryItems.map((item, idx) => (
+                        <div key={item.id || idx} className={`group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto ${getGridClass(idx)}`}>
+                            <Image 
+                                src={item.imagePath} 
+                                alt={item.title || 'Gallery Image'} 
+                                fill 
+                                sizes={getSizes(idx)} 
+                                style={{ objectFit: 'cover' }} 
+                                className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" 
+                            />
+                            <div className="absolute bottom-5 left-5 z-10">
+                                <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">{item.title}</h3>
+                                <div className="w-10 h-0.5 bg-[#c5a059]"></div>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Downtown — spans 4 cols, 2 rows */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-2">
-                        <Image src="/gallery/downtown.png" alt="Downtown" fill sizes="(max-width: 1024px) 100vw, 33vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Downtown</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
-
-                    {/* Sky Inn — spans 4 cols, 1 row */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1">
-                        <Image src="/gallery/sky_inn.png" alt="Sky Inn" fill sizes="(max-width: 1024px) 100vw, 33vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Sky Inn</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
-
-                    {/* Signature — spans 4 cols, 1 row */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1">
-                        <Image src="/gallery/signature.png" alt="Signature" fill sizes="(max-width: 1024px) 100vw, 33vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Signature</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
-
-                    {/* Spectra X — spans 4 cols, 1 row */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-4 lg:row-span-1">
-                        <Image src="/gallery/spectra_x.png" alt="Spectra X" fill sizes="(max-width: 1024px) 100vw, 33vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Spectra X</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
-
-                    {/* Behind the Magic — spans 6 cols */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-6 lg:row-span-1">
-                        <Image src="/gallery/behind_magic.png" alt="Behind the Magic" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Behind the Magic</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
-
-                    {/* Grand Openings — spans 6 cols */}
-                    <div className="group relative overflow-hidden cursor-pointer h-[300px] lg:h-auto col-span-1 md:col-span-1 lg:col-span-6 lg:row-span-1">
-                        <Image src="/gallery/grand_opening.png" alt="Grand Openings" fill sizes="(max-width: 1024px) 100vw, 50vw" style={{ objectFit: 'cover' }} className="transition-transform duration-500 ease-[cubic-bezier(0.165,0.84,0.44,1)] group-hover:scale-105 group-hover:brightness-[0.6]" />
-                        <div className="absolute bottom-5 left-5 z-10">
-                            <h3 className="text-lg text-white tracking-widest uppercase mb-1.5">Grand Openings</h3>
-                            <div className="w-10 h-0.5 bg-[#c5a059]"></div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
-
             </section>
 
             <section className="px-[5%] py-[60px] sm:py-[80px] flex flex-col sm:flex-row flex-wrap lg:flex-nowrap justify-around items-center gap-8 sm:gap-y-12 lg:gap-0 border-y border-[#c5a059]/20">

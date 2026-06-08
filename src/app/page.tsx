@@ -55,7 +55,7 @@ const movies = [
   },
 ];
 
-const slides: {
+const HARDCODED_SLIDES: {
   src: string;
   alt: string;
   eyebrow: string;
@@ -161,12 +161,35 @@ export default function Home() {
   const [isWhyVisible, setIsWhyVisible] = useState(false);
   const whyRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [slides, setSlides] = useState(HARDCODED_SLIDES);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 1.5;
     }
   }, []);
+
+  // Fetch hero slides from admin panel (falls back to hardcoded if DB is empty)
+  useEffect(() => {
+    fetch('/api/admin/hero-slides')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: any[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data.map(s => ({
+            src: s.imagePath,
+            alt: s.eyebrow,
+            eyebrow: s.eyebrow,
+            title: s.title,
+            tags: s.tags || '',
+            desc: s.description || '',
+            link: s.link || '/franchise',
+            linkText: s.linkText || 'Know More',
+          })));
+        }
+      })
+      .catch(() => { /* keep hardcoded fallback */ });
+  }, []);
+
 
   const [activeProductIdx, setActiveProductIdx] = useState(0);
   const productsGridRef = useRef<HTMLDivElement>(null);

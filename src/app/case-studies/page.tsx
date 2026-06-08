@@ -122,7 +122,7 @@ export default function CaseStudiesPage() {
     const chairRef = useRef<HTMLDivElement>(null);
     const chairImgRef = useRef<HTMLImageElement>(null);
 
-    const studies = [
+    const defaultStudies = [
         { id: 1, num: '01', tag: 'SMART CINEMA', title: 'CONNPLEX<br>EXPERIENCE CENTRE', subtitle: 'REDEFINING THE FUTURE OF CINEMA', location: 'MUMBAI, MAHARASHTRA', img: '/img/case-study/case_study_1.png', desc: 'A next-gen flagship cinema featuring 7 premium auditoriums, recliners, immersive sound and intelligent automation.', category: 'smart-cinemas' },
         { id: 2, num: '02', tag: 'PREMIUM FORMAT', title: 'IMAX WITH LASER<br>AT CONNPLEX', subtitle: 'BIGGER SCREEN. BOLDER IMPACT.', location: 'PUNE, MAHARASHTRA', img: '/img/case-study/case_study_2.png', desc: "India's most advanced IMAX experience with Laser projection, precision sound and wall-to-wall visuals.", category: 'premium-formats' },
         { id: 3, num: '03', tag: 'LUXURY RECLINERS', title: 'THE RECLINER<br>EXPERIENCE', subtitle: 'COMFORT THAT ELEVATES EVERY MOMENT.', location: 'MULTIPLE LOCATIONS', img: '/img/case-study/case_study_3.png', desc: 'Crafted for those who expect more. Our recliner auditoriums blend luxury, privacy and unmatched comfort.', category: 'experience-initiatives' },
@@ -130,6 +130,35 @@ export default function CaseStudiesPage() {
         { id: 5, num: '05', tag: 'TECHNOLOGY', title: 'DOLBY ATMOS<br>IMMERSIVE SOUND', subtitle: 'SOUND THAT MOVES YOU.', location: 'ACROSS INDIA', img: '/img/case-study/case_study_5.png', desc: 'Immersive audio that places you at the centre of every scene with breathtaking clarity and depth.', category: 'premium-formats' },
         { id: 6, num: '06', tag: 'EXPERIENCE INITIATIVE', title: 'PRIVATE SCREENING<br>EXPERIENCES', subtitle: 'MADE FOR MOMENTS THAT MATTER.', location: 'MUMBAI, DELHI, BENGALURU', img: '/img/case-study/case_study_6.png', desc: 'Curated private screenings for corporate events, premieres and celebrations with bespoke service and exclusivity.', category: 'experience-initiatives' }
     ];
+
+    const [studies, setStudies] = useState<any[]>(defaultStudies);
+
+    useEffect(() => {
+        const fetchStudies = async () => {
+            try {
+                const res = await fetch('/api/admin/case-studies');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        setStudies(data.map(s => ({
+                            id: s._id || s.id,
+                            num: s.num,
+                            tag: s.tag,
+                            title: s.title,
+                            subtitle: s.subtitle,
+                            location: s.location,
+                            img: s.img,
+                            desc: s.desc,
+                            category: s.category
+                        })));
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching B2B case studies:", err);
+            }
+        };
+        fetchStudies();
+    }, []);
 
     const filteredStudies = filter === 'all' ? studies : studies.filter(s => s.category === filter);
 

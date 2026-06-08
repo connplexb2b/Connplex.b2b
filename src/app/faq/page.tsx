@@ -283,6 +283,16 @@ const FaqPage = () => {
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
+                // 1. Try Next.js admin FAQs first
+                const adminRes = await fetch('/api/admin/faqs');
+                if (adminRes.ok) {
+                    const adminData = await adminRes.json();
+                    if (Array.isArray(adminData) && adminData.length > 0) {
+                        setFaqs(adminData.map((item: any) => ({ q: item.question, a: item.answer })));
+                        return;
+                    }
+                }
+                // 2. Fallback to backend Express FAQs
                 const apiUrl = getApiUrl();
                 const response = await fetch(`${apiUrl}/api/forms/faqs`);
                 const result = await response.json();
@@ -293,6 +303,7 @@ const FaqPage = () => {
                     }));
                     setFaqs(mapped);
                 }
+                // 3. If both fail/empty, FRANCHISE_FAQS hardcoded fallback is already in state
             } catch (err) {
                 console.error('Error fetching FAQs:', err);
             }
