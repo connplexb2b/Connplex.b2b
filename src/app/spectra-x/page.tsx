@@ -30,7 +30,7 @@ const SpectraXPage = () => {
                         </h1>
                         <p className="text-base sm:text-lg lg:text-[1.15rem] font-extrabold leading-normal tracking-[0.06em] mb-3 text-white uppercase">
                             INDIA'S FIRST PATENTED<br />
-                            <span className="text-[#C9A84C]">ACTIVE LED</span> <span className="text-white">CINEMA TECHNOLOGY</span>
+                            <span className="text-[#C9A84C]">ACTIVE NON DCI</span> <span className="text-white">CINEMA SCREEN</span>
                         </p>
                         <p className="text-[0.68rem] tracking-[0.22em] text-[#444] font-normal mb-9 uppercase">PATENTED. POWERFUL. PROVEN.</p>
                         <div className="flex gap-3.5 flex-wrap">
@@ -77,7 +77,7 @@ const SpectraXPage = () => {
                                 </svg>
                             </div>
                             <div className="flex-1">
-                                <p className="text-[0.72rem] font-bold tracking-[0.08em] color-white leading-1.5 uppercase">GOVERNMENT<br />OF INDIA</p>
+                                <p className="text-[0.72rem] font-bold tracking-[0.08em] text-white leading-relaxed uppercase">GOVERNMENT<br />OF INDIA</p>
                                 <p className="text-[0.62rem] font-bold tracking-[0.12em] mt-1.5 text-[#C9A84C] uppercase">GRANTED PATENT</p>
                             </div>
                         </div>
@@ -86,7 +86,7 @@ const SpectraXPage = () => {
                         <div className="flex items-center gap-4 px-[30px] py-[28px] border-b border-[#C9A84C]/10 md:border-b-0 md:border-r-0 lg:border-r border-[#C9A84C]/12" id="stat20">
                             <div className="text-[2.8rem] font-black text-[#C9A84C] leading-none w-12 h-12 flex items-center justify-center">20</div>
                             <div className="flex-1">
-                                <p className="text-[0.72rem] font-bold tracking-[0.08em] color-white leading-1.5 uppercase">20 YEARS<br />PATENT PROTECTION</p>
+                                <p className="text-[0.72rem] font-bold tracking-[0.08em] text-white leading-relaxed uppercase">20 YEARS<br />PATENT PROTECTION</p>
                                 <p className="text-[0.62rem] font-bold tracking-[0.12em] mt-1.5 text-[#C9A84C] uppercase">STARTING MAY 2025</p>
                             </div>
                         </div>
@@ -105,7 +105,7 @@ const SpectraXPage = () => {
                                 <span className="w-2 h-2 rounded-full bg-[#C9A84C] opacity-80"></span>
                             </div>
                             <div className="flex-1">
-                                <p className="text-[0.72rem] font-bold tracking-[0.08em] color-white leading-1.5 uppercase">ACTIVE LED +<br />NON-DCI INTEGRATION</p>
+                                <p className="text-[0.72rem] font-bold tracking-[0.08em] text-white leading-relaxed uppercase">ACTIVE LED +<br />NON-DCI INTEGRATION</p>
                                 <p className="text-[0.62rem] font-bold tracking-[0.12em] mt-1.5 text-[#C9A84C] uppercase">INDIA'S FIRST</p>
                             </div>
                         </div>
