@@ -68,7 +68,8 @@ export async function GET() {
           alt: displayName,
           title: displayName,
           genre: category || 'Drama',
-          rating: m.rating ? String(m.rating) : '4.8'
+          rating: m.rating ? String(m.rating) : '4.8',
+          link: m._id ? `https://ticketing.theconnplex.com/movie-details?mId=${m._id}&rId=${ahmedabadId}` : 'https://ticketing.theconnplex.com/'
         };
       });
 
