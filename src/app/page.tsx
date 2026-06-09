@@ -31,7 +31,7 @@ const apps = [
   { name: "Spectra X", link: "/spectra-x", glow: "rgba(255, 110, 64, 0.35)", color: "#ff6e40", icon: <svg viewBox="0 0 24 24" className="w-6 h-6 md:w-7 md:h-7 xl:w-8 xl:h-8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg> },
 ];
 
-const movies = [
+const HARDCODED_MOVIES = [
   {
     src: "/movies/hai_jawani.png",
     alt: "Hai Jawani Toh Ishq Hona Hai",
@@ -162,6 +162,7 @@ export default function Home() {
   const whyRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [slides, setSlides] = useState(HARDCODED_SLIDES);
+  const [liveMovies, setLiveMovies] = useState(HARDCODED_MOVIES);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -185,6 +186,18 @@ export default function Home() {
             link: s.link || '/franchise',
             linkText: s.linkText || 'Know More',
           })));
+        }
+      })
+      .catch(() => { /* keep hardcoded fallback */ });
+  }, []);
+  
+  // Fetch live recent release movies from ticketing database
+  useEffect(() => {
+    fetch('/api/recent-releases')
+      .then(r => r.ok ? r.json() : null)
+      .then(res => {
+        if (res && res.success && Array.isArray(res.movies) && res.movies.length > 0) {
+          setLiveMovies(res.movies);
         }
       })
       .catch(() => { /* keep hardcoded fallback */ });
@@ -649,8 +662,8 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" role="list">
-          {movies.map((m) => (
-            <div className="relative w-full aspect-[16/9] sm:aspect-[2/3] rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={m.title} role="listitem">
+          {liveMovies.slice(0, 3).map((m, idx) => (
+            <div className="relative w-full aspect-[16/9] sm:aspect-[2/3] rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={`${m.title}-${idx}`} role="listitem">
               <Image
                 src={m.src}
                 alt={m.alt}
