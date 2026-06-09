@@ -694,7 +694,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" role="list">
           {liveMovies.slice(0, 3).map((m, idx) => (
-            <div className="relative w-full aspect-[16/9] sm:aspect-[2/3] rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={`${m.title}-${idx}`} role="listitem">
+            <div className="relative w-full max-w-[300px] mx-auto aspect-[2/3] sm:max-w-none rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={`${m.title}-${idx}`} role="listitem">
               <Image
                 src={m.src}
                 alt={m.alt}
