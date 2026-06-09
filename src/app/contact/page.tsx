@@ -43,6 +43,68 @@ export default function ContactPage() {
         throw new Error(result.message || 'Something went wrong. Please try again.');
       }
 
+      // Submit to Zoho CRM in the background (Web-to-Lead)
+      try {
+        const nameParts = (data.fullName as string || '').trim().split(/\s+/);
+        let firstName = '';
+        let lastName = '';
+        if (nameParts.length > 1) {
+          firstName = nameParts[0];
+          lastName = nameParts.slice(1).join(' ');
+        } else {
+          lastName = nameParts[0] || 'Unknown';
+        }
+
+        const companyName = (data.company as string || '').trim() || 'Individual';
+        const businessType = (data.businessType as string || '').trim() || 'B2B Franchise';
+
+        // Map preferred investment range to Zoho's options
+        let zohoInvestment = 'Less than 1 Crore';
+        const prefInv = data.preferredInvestment as string;
+        if (prefInv === '1.5-2cr' || prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
+          zohoInvestment = '1 Crore to 3 Crore';
+        } else if (prefInv === '3cr+') {
+          zohoInvestment = '3 Crore to 5 Crore';
+        }
+
+        const description = `Contact Message Form Submission:\n` +
+          `- Preferred City: ${data.preferredCity || 'N/A'}\n` +
+          `- Property Available: ${data.hasProperty || 'N/A'}\n` +
+          `- Timeframe: ${data.timeframe || 'N/A'}\n` +
+          `- Message: ${data.message || 'N/A'}`;
+
+        const zohoParams = new URLSearchParams();
+        zohoParams.append('xnQsjsdp', '9d75c1ec9a9ce89c1cfde5512ee7be07aeb6ae92d5477978cc7f09d73e0cebca');
+        zohoParams.append('xmIwtLD', '47701f059aba5ae3d9a8d34438d171279271c6d7dd42b4f15387889d32a2e308d0dc40500d53bfff4f42dd4952cbc0a9');
+        zohoParams.append('actionType', 'TGVhZHM=');
+        zohoParams.append('returnURL', 'null');
+        zohoParams.append('First Name', firstName);
+        zohoParams.append('Last Name', lastName);
+        zohoParams.append('Email', data.email as string || '');
+        zohoParams.append('Phone', data.phone as string || '');
+        zohoParams.append('City', data.city as string || '');
+        zohoParams.append('State', data.state as string || '');
+        zohoParams.append('Company', companyName);
+        zohoParams.append('LEADCF126', businessType);
+        zohoParams.append('LEADCF10', zohoInvestment);
+        zohoParams.append('Description', description);
+        zohoParams.append('aG9uZXlwb3Q', '');
+
+        console.log('Submitting to Zoho CRM...');
+        fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: zohoParams.toString(),
+        })
+          .then(() => console.log('Zoho CRM submission request dispatched successfully'))
+          .catch(err => console.error('Zoho CRM dispatch failed:', err));
+      } catch (zohoErr) {
+        console.error('Failed to prepare Zoho CRM payload:', zohoErr);
+      }
+
       setIsSubmitted(true);
     } catch (error: any) {
       console.error('Submission Error:', error);
@@ -191,15 +253,17 @@ export default function ContactPage() {
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <input name="fullName" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Full Name" required />
-                    <input name="email" type="email" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Email Address" required />
+                    <input name="company" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Company Name" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <input name="email" type="email" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Email Address" required />
                     <input name="phone" type="tel" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Phone Number" required />
-                    <input name="state" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="State" required />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <input name="city" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="City" required />
-                    
+                    <input name="state" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="State" required />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="relative">
                       <select 
                         name="preferredInvestment" 
@@ -218,6 +282,25 @@ export default function ContactPage() {
                         <option value="2-2.5cr" className="bg-[#0a0a0a] text-white">2cr to 2.5 cr</option>
                         <option value="2.5-3cr" className="bg-[#0a0a0a] text-white">2.5 to 3cr</option>
                         <option value="3cr+" className="bg-[#0a0a0a] text-white">3cr and above</option>
+                      </select>
+                    </div>
+                    
+                    <div className="relative">
+                      <select 
+                        name="businessType" 
+                        className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
+                        required 
+                        defaultValue=""
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 16px center',
+                          backgroundSize: '14px',
+                        }}
+                      >
+                        <option value="" disabled className="bg-[#0a0a0a] text-white">Preferred business type?</option>
+                        <option value="B2B Franchise" className="bg-[#0a0a0a] text-white">B2B Franchise</option>
+                        <option value="B2B Capex" className="bg-[#0a0a0a] text-white">B2B Capex</option>
                       </select>
                     </div>
                   </div>
