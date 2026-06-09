@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SpectraXForm from '@/components/SpectraXForm';
 
 export const metadata = {
     title: "Connplex | Spectra X – India's First Active LED Cinema Technology",
@@ -33,8 +34,7 @@ const SpectraXPage = () => {
                         </p>
                         <p className="text-[0.68rem] tracking-[0.22em] text-[#444] font-normal mb-9 uppercase">PATENTED. POWERFUL. PROVEN.</p>
                         <div className="flex gap-3.5 flex-wrap">
-                            <a href="#technology" className="inline-block px-6 py-3 border border-[#C9A84C] text-[#C9A84C] text-[0.72rem] font-bold tracking-[0.1em] rounded-[3px] hover:bg-[#C9A84C] hover:text-black transition-colors duration-200 uppercase" id="exploreTech">EXPLORE TECHNOLOGY →</a>
-                            <a href="#patent" className="inline-block px-6 py-3 border border-white/20 text-[#bbb] text-[0.72rem] font-bold tracking-[0.1em] rounded-[3px] hover:border-[#C9A84C] hover:text-[#C9A84C] transition-colors duration-200 uppercase" id="viewPatent">VIEW PATENT &nbsp;⧉</a>
+                            <a href="#technology-form" className="inline-block px-6 py-3 border border-[#C9A84C] text-[#C9A84C] text-[0.72rem] font-bold tracking-[0.1em] rounded-[3px] hover:bg-[#C9A84C] hover:text-black transition-colors duration-200 uppercase" id="exploreTech">EXPLORE TECHNOLOGY →</a>
                         </div>
                     </div>
                     
@@ -447,6 +447,10 @@ const SpectraXPage = () => {
                         </div>
                     </div>
                 </section>
+
+                <div id="technology-form">
+                    <SpectraXForm />
+                </div>
             </main>
 
             {/* Global Footer */}
