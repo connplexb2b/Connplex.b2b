@@ -1,0 +1,72 @@
+[
+  {
+    "id": "gallery-default-1",
+    "title": "Luxuriance",
+    "caption": "",
+    "category": "Cinemas",
+    "imagePath": "/gallery/luxuriance.png",
+    "order": 0,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-2",
+    "title": "Downtown",
+    "caption": "",
+    "category": "Cinemas",
+    "imagePath": "/gallery/downtown.png",
+    "order": 1,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-3",
+    "title": "Sky Inn",
+    "caption": "",
+    "category": "Experience",
+    "imagePath": "/gallery/sky_inn.png",
+    "order": 2,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-4",
+    "title": "Signature",
+    "caption": "",
+    "category": "Cinemas",
+    "imagePath": "/gallery/signature.png",
+    "order": 3,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-5",
+    "title": "Spectra X",
+    "caption": "",
+    "category": "Experience",
+    "imagePath": "/gallery/spectra_x.png",
+    "order": 4,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-6",
+    "title": "Behind the Magic",
+    "caption": "",
+    "category": "Behind the Scenes",
+    "imagePath": "/gallery/behind_magic.png",
+    "order": 5,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  },
+  {
+    "id": "gallery-default-7",
+    "title": "Grand Openings",
+    "caption": "",
+    "category": "Events",
+    "imagePath": "/gallery/grand_opening.png",
+    "order": 6,
+    "isActive": true,
+    "createdAt": "2026-06-08T00:00:00.000Z"
+  }
+]

@@ -33,29 +33,29 @@ const apps = [
 
 const movies = [
   {
-    src: "/movie_poster_action_1778065539049.png",
-    alt: "The Last Horizon",
-    title: "THE LAST HORIZON",
-    genre: "Action • Sci-Fi",
-    rating: "8.9"
+    src: "/movies/hai_jawani.png",
+    alt: "Hai Jawani Toh Ishq Hona Hai",
+    title: "HAI JAWANI TOH ISHQ HONA HAI",
+    genre: "Comedy • Romance",
+    rating: "4.8"
   },
   {
-    src: "/movie_poster_scifi_1778065566530.png",
-    alt: "Nebula Echoes",
-    title: "NEBULA ECHOES",
-    genre: "Sci-Fi • Adventure",
-    rating: "9.2"
+    src: "/movies/he_man.png",
+    alt: "He-Man and the Masters of the Universe",
+    title: "HE-MAN AND THE MASTERS OF THE UNIVERSE",
+    genre: "Action • Adventure",
+    rating: "4.9"
   },
   {
-    src: "/movie_poster_fantasy_1778065585485.png",
-    alt: "The Golden Kingdom",
-    title: "THE GOLDEN KINGDOM",
-    genre: "Fantasy • Epic",
-    rating: "8.7"
+    src: "/movies/peddi.png",
+    alt: "Peddi",
+    title: "PEDDI (TELUGU)",
+    genre: "Action • Drama",
+    rating: "4.8"
   },
 ];
 
-const slides: {
+const HARDCODED_SLIDES: {
   src: string;
   alt: string;
   eyebrow: string;
@@ -161,12 +161,35 @@ export default function Home() {
   const [isWhyVisible, setIsWhyVisible] = useState(false);
   const whyRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [slides, setSlides] = useState(HARDCODED_SLIDES);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 1.5;
     }
   }, []);
+
+  // Fetch hero slides from admin panel (falls back to hardcoded if DB is empty)
+  useEffect(() => {
+    fetch('/api/admin/hero-slides')
+      .then(r => r.ok ? r.json() : [])
+      .then((data: any[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(data.map(s => ({
+            src: s.imagePath,
+            alt: s.eyebrow,
+            eyebrow: s.eyebrow,
+            title: s.title,
+            tags: s.tags || '',
+            desc: s.description || '',
+            link: s.link || '/franchise',
+            linkText: s.linkText || 'Know More',
+          })));
+        }
+      })
+      .catch(() => { /* keep hardcoded fallback */ });
+  }, []);
+
 
   const [activeProductIdx, setActiveProductIdx] = useState(0);
   const productsGridRef = useRef<HTMLDivElement>(null);
