@@ -34,12 +34,10 @@ const contactMessageSchema = new mongoose.Schema({
   },
   preferredInvestment: {
     type: String,
-    required: [true, 'Preferred investment range is required'],
     trim: true,
   },
   preferredCity: {
     type: String,
-    required: [true, 'Preferred city for cinema is required'],
     trim: true,
   },
   company: {
@@ -52,12 +50,10 @@ const contactMessageSchema = new mongoose.Schema({
   },
   hasProperty: {
     type: String,
-    required: [true, 'Property availability details are required'],
     trim: true,
   },
   timeframe: {
     type: String,
-    required: [true, 'Investment timeframe is required'],
     trim: true,
   },
   message: {

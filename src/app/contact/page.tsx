@@ -18,20 +18,38 @@ export default function ContactPage() {
     setSubmitError(null);
 
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const rawData = Object.fromEntries(formData.entries());
+
+    const firstName = (rawData.firstName as string || '').trim();
+    const lastName = (rawData.lastName as string || '').trim() || 'Unknown';
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    // Map fields for local database (sending N/A for removed fields to bypass mongoose validations)
+    const localPayload = {
+      fullName,
+      email: rawData.email,
+      phone: rawData.phone,
+      city: rawData.city,
+      state: rawData.state,
+      message: rawData.message,
+      preferredInvestment: 'N/A',
+      preferredCity: 'N/A',
+      hasProperty: 'N/A',
+      timeframe: 'N/A',
+    };
 
     try {
       const apiUrl = getApiUrl();
       const requestUrl = `${apiUrl}/api/forms/contact-messages`;
       console.log('API URL:', requestUrl);
-      console.log('Request Payload:', data);
+      console.log('Request Payload:', localPayload);
 
       const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(localPayload),
       });
 
       console.log('Response Status:', response.status);
@@ -45,34 +63,6 @@ export default function ContactPage() {
 
       // Submit to Zoho CRM in the background (Web-to-Lead)
       try {
-        const nameParts = (data.fullName as string || '').trim().split(/\s+/);
-        let firstName = '';
-        let lastName = '';
-        if (nameParts.length > 1) {
-          firstName = nameParts[0];
-          lastName = nameParts.slice(1).join(' ');
-        } else {
-          lastName = nameParts[0] || 'Unknown';
-        }
-
-        const companyName = (data.company as string || '').trim() || 'Individual';
-        const businessType = (data.businessType as string || '').trim() || 'B2B Franchise';
-
-        // Map preferred investment range to Zoho's options
-        let zohoInvestment = 'Less than 1 Crore';
-        const prefInv = data.preferredInvestment as string;
-        if (prefInv === '1.5-2cr' || prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
-          zohoInvestment = '1 Crore to 3 Crore';
-        } else if (prefInv === '3cr+') {
-          zohoInvestment = '3 Crore to 5 Crore';
-        }
-
-        const description = `Contact Message Form Submission:\n` +
-          `- Preferred City: ${data.preferredCity || 'N/A'}\n` +
-          `- Property Available: ${data.hasProperty || 'N/A'}\n` +
-          `- Timeframe: ${data.timeframe || 'N/A'}\n` +
-          `- Message: ${data.message || 'N/A'}`;
-
         const zohoParams = new URLSearchParams();
         zohoParams.append('xnQsjsdp', '9d75c1ec9a9ce89c1cfde5512ee7be07aeb6ae92d5477978cc7f09d73e0cebca');
         zohoParams.append('xmIwtLD', '47701f059aba5ae3d9a8d34438d171279271c6d7dd42b4f15387889d32a2e308d0dc40500d53bfff4f42dd4952cbc0a9');
@@ -80,14 +70,14 @@ export default function ContactPage() {
         zohoParams.append('returnURL', 'null');
         zohoParams.append('First Name', firstName);
         zohoParams.append('Last Name', lastName);
-        zohoParams.append('Email', data.email as string || '');
-        zohoParams.append('Phone', data.phone as string || '');
-        zohoParams.append('City', data.city as string || '');
-        zohoParams.append('State', data.state as string || '');
-        zohoParams.append('Company', companyName);
-        zohoParams.append('LEADCF126', businessType);
-        zohoParams.append('LEADCF10', zohoInvestment);
-        zohoParams.append('Description', description);
+        zohoParams.append('Email', rawData.email as string || '');
+        zohoParams.append('Phone', rawData.phone as string || '');
+        zohoParams.append('City', rawData.city as string || '');
+        zohoParams.append('State', rawData.state as string || '');
+        zohoParams.append('Company', fullName || 'Individual');
+        zohoParams.append('LEADCF126', 'B2B Franchise'); // Business Type (Mandatory in Zoho)
+        zohoParams.append('LEADCF10', 'Less than 1 Crore'); // Investment Range (Mandatory in Zoho)
+        zohoParams.append('Description', rawData.message as string || '');
         zohoParams.append('aG9uZXlwb3Q', '');
 
         console.log('Submitting to Zoho CRM...');
@@ -252,8 +242,8 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <input name="fullName" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Full Name" required />
-                    <input name="company" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Company Name" />
+                    <input name="firstName" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="First Name" required />
+                    <input name="lastName" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Last Name" required />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <input name="email" type="email" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Email Address" required />
@@ -263,73 +253,6 @@ export default function ContactPage() {
                     <input name="city" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="City" required />
                     <input name="state" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="State" required />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div className="relative">
-                      <select 
-                        name="preferredInvestment" 
-                        className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
-                        required 
-                        defaultValue=""
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'right 16px center',
-                          backgroundSize: '14px',
-                        }}
-                      >
-                        <option value="" disabled className="bg-[#0a0a0a] text-white">Preferred investment range?</option>
-                        <option value="1.5-2cr" className="bg-[#0a0a0a] text-white">1.5 to 2 cr</option>
-                        <option value="2-2.5cr" className="bg-[#0a0a0a] text-white">2cr to 2.5 cr</option>
-                        <option value="2.5-3cr" className="bg-[#0a0a0a] text-white">2.5 to 3cr</option>
-                        <option value="3cr+" className="bg-[#0a0a0a] text-white">3cr and above</option>
-                      </select>
-                    </div>
-                    
-                    <div className="relative">
-                      <select 
-                        name="businessType" 
-                        className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
-                        required 
-                        defaultValue=""
-                        style={{
-                          backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'right 16px center',
-                          backgroundSize: '14px',
-                        }}
-                      >
-                        <option value="" disabled className="bg-[#0a0a0a] text-white">Preferred business type?</option>
-                        <option value="B2B Franchise" className="bg-[#0a0a0a] text-white">B2B Franchise</option>
-                        <option value="B2B Capex" className="bg-[#0a0a0a] text-white">B2B Capex</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <input name="preferredCity" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Which city do you prefer for Connplex Cinema?" required />
-                    <input name="hasProperty" type="text" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px]" placeholder="Do you have a property or location for cinema?" required />
-                  </div>
-                  
-                  <div className="relative">
-                    <select 
-                      name="timeframe" 
-                      className="w-full bg-black/50 border border-white/10 px-4 py-3.5 pr-10 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[48px] appearance-none cursor-pointer" 
-                      required 
-                      defaultValue=""
-                      style={{
-                        backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99f4a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'right 16px center',
-                        backgroundSize: '14px',
-                      }}
-                    >
-                      <option value="" disabled className="bg-[#0a0a0a] text-white">How soon do you plan to start this investment?</option>
-                      <option value="immediately" className="bg-[#0a0a0a] text-white">Immediately</option>
-                      <option value="1-month" className="bg-[#0a0a0a] text-white">1 month</option>
-                      <option value="1-3-months" className="bg-[#0a0a0a] text-white">1-3 months</option>
-                      <option value="3plus-months" className="bg-[#0a0a0a] text-white">3+ months</option>
-                    </select>
-                  </div>
-                  
                   <div>
                     <textarea name="message" className="bg-black/50 border border-white/10 px-4 py-3.5 text-white rounded text-sm transition-all focus:outline-none focus:border-gold-primary focus:bg-black/70 focus:shadow-[0_0_15px_rgba(201,159,74,0.12)] min-h-[120px] resize-none" placeholder="Message" rows={4} required></textarea>
                   </div>
