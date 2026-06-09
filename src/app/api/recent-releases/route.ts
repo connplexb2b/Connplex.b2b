@@ -72,7 +72,22 @@ export async function GET() {
         };
       });
 
-      return NextResponse.json({ success: true, movies: formatted });
+      // Sort by priority to match the exact visual display order on the ticketing page
+      const orderPriority = ['jawani', 'bandar', 'he-man', 'peddi'];
+      const sorted = formatted.sort((a: any, b: any) => {
+        const aTitle = a.title.toLowerCase();
+        const bTitle = b.title.toLowerCase();
+        
+        let aIndex = orderPriority.findIndex(p => aTitle.includes(p));
+        let bIndex = orderPriority.findIndex(p => bTitle.includes(p));
+        
+        if (aIndex === -1) aIndex = 999;
+        if (bIndex === -1) bIndex = 999;
+        
+        return aIndex - bIndex;
+      });
+
+      return NextResponse.json({ success: true, movies: sorted });
     }
 
     throw new Error('Invalid API response format');
