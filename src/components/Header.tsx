@@ -49,6 +49,14 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
         </div>
 
         <div className="flex items-center gap-3 sm:gap-5">
+          <a 
+            href="https://connplexcinemas.zohobookings.in/#/ConnplexCinemasLimited" 
+            className={`bg-white !text-black font-bold rounded-full transition-all duration-300 hover:bg-[#c99f4a] hover:!text-black hover:-translate-y-0.5 text-center whitespace-nowrap text-[0.9rem] px-4 sm:px-6 py-[0.8rem] ${isOpen ? 'hidden' : 'block'}`}
+          >
+            <span className="hidden sm:inline">Book a Call With Consultant</span>
+            <span className="inline sm:hidden">Book</span>
+          </a>
+
           {/* Hamburger Menu Toggle with 44px minimum tap target */}
           <button
             className="w-11 h-11 flex items-center justify-center relative z-[1001] bg-transparent text-white focus:outline-none cursor-pointer"
@@ -61,14 +69,6 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
               <span className={`w-full h-[2px] bg-white transition-all duration-300 origin-center ${isOpen ? 'transform -translate-y-[9px] -rotate-45' : ''}`}></span>
             </div>
           </button>
-
-          <a 
-            href="https://connplexcinemas.zohobookings.in/#/ConnplexCinemasLimited" 
-            className={`bg-white !text-black font-bold rounded-full transition-all duration-300 hover:bg-[#c99f4a] hover:!text-black hover:-translate-y-0.5 text-center whitespace-nowrap text-[0.9rem] px-4 sm:px-6 py-[0.8rem] ${isOpen ? 'hidden' : 'block'}`}
-          >
-            <span className="hidden sm:inline">Book a Call With Consultant</span>
-            <span className="inline sm:hidden">Book</span>
-          </a>
         </div>
       </header>
 
