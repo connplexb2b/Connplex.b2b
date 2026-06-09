@@ -67,7 +67,7 @@ export const DEFAULT_STATS: WebsiteStats = {
   homepage: {
     annualFootfall: "10M+",
     premiumScreens: "125+",
-    citiesCovered: "Metro + Tier 1, 2, 3",
+    citiesCovered: "Metros &\nTier 1, 2, 3",
     experiencesDelivered: "Immersive"
   },
   aboutPage: {

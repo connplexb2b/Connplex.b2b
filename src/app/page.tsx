@@ -609,7 +609,7 @@ export default function Home() {
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">{stats.homepage.citiesCovered}</span>
+            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight whitespace-pre-line">{stats.homepage.citiesCovered}</span>
             <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
           <div className="flex flex-col gap-2.5">

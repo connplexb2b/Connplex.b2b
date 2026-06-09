@@ -4,7 +4,7 @@ const StatsSchema = new Schema({
   homepage: {
     annualFootfall: { type: String, default: "10M+" },
     premiumScreens: { type: String, default: "125+" },
-    citiesCovered: { type: String, default: "Metro + Tier 1, 2, 3" },
+    citiesCovered: { type: String, default: "Metros &\nTier 1, 2, 3" },
     experiencesDelivered: { type: String, default: "Immersive" }
   },
   aboutPage: {

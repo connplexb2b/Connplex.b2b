@@ -372,7 +372,7 @@ export default function AboutPage() {
               </div>
               <h4 className="font-outfit text-[13px] font-medium text-white mb-[15px] tracking-[0.05em]">Seamless Booking. Modern Convenience.</h4>
               <p className="font-inter text-sm font-light leading-[1.6] text-text-secondary mb-[25px] grow">Experience hassle-free ticket booking through our state-of-the-art platform.</p>
-              <Link href="#" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
+              <a href="https://ticketing.theconnplex.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</a>
             </div>
           </div>
 
@@ -388,7 +388,7 @@ export default function AboutPage() {
               </div>
               <h4 className="font-outfit text-[13px] font-medium text-white mb-[15px] tracking-[0.05em]">Partner with India&apos;s Fastest Growing Chain.</h4>
               <p className="font-inter text-sm font-light leading-[1.6] text-text-secondary mb-[25px] grow">Unlock massive growth opportunities and robust business models with our scalable solutions.</p>
-              <Link href="#" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
+              <Link href="/franchise" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
             </div>
           </div>
 
@@ -404,7 +404,7 @@ export default function AboutPage() {
               </div>
               <h4 className="font-outfit text-[13px] font-medium text-white mb-[15px] tracking-[0.05em]">Your Brand. The Big Screen.</h4>
               <p className="font-inter text-sm font-light leading-[1.6] text-text-secondary mb-[25px] grow">Maximize brand impact and reach high-intent premium audiences.</p>
-              <Link href="#" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
+              <Link href="/advertise" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
             </div>
           </div>
         </div>
@@ -423,7 +423,7 @@ export default function AboutPage() {
             { label: "NEXT-GEN TECHNOLOGY", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg> },
             { label: "LUXURY REDEFINED", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 12l5.25 5 2.625-5L12 17l2.125-5L16.75 17 22 12" /></svg> },
             { label: "UNMATCHED EXPERIENCES", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg> },
-            { label: "PEOPLE FIRST", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg> },
+            { label: "CUSTOMER FIRST", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg> },
             { label: "STRONG FRANCHISE ECOSYSTEM", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg> },
             { label: "SCALABLE MODEL", icon: <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg> }
           ].map((item, idx) => (

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { X, CheckCircle } from 'lucide-react';
 import { getApiUrl } from '@/utils/api';
+import Header from '@/components/Header';
 
 const STARS = [
     { top: '8%', left: '12%', size: 3, dur: '3.2s', delay: '0s' },
@@ -20,8 +21,7 @@ const SkyInnPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [email, setEmail] = useState('');
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement>(null);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -67,18 +67,7 @@ const SkyInnPage = () => {
         }
     };
 
-    const toggleSound = () => {
-        const audio = audioRef.current;
-        if (!audio) return;
-        if (isPlaying) {
-            audio.pause();
-            setIsPlaying(false);
-        } else {
-            audio.volume = 0.15;
-            audio.play().catch(() => { });
-            setIsPlaying(true);
-        }
-    };
+
 
     return (
         <div className="min-h-screen bg-[#020202] text-white font-outfit relative overflow-x-hidden h-screen lg:h-screen lg:overflow-hidden overflow-y-auto lg:overflow-y-hidden">
@@ -141,58 +130,7 @@ const SkyInnPage = () => {
             />
 
             {/* Header */}
-            <header 
-                className="fixed top-0 left-0 w-full px-[6%] py-[30px] flex justify-between items-center z-[100]"
-                style={{ 
-                    background: 'linear-gradient(to bottom, rgba(2,2,2,0.9) 0%, transparent 100%)' 
-                }}
-            >
-                <div className="flex flex-col">
-                    <span className="text-xl font-bold tracking-[0.35em] text-[#d5b263] uppercase">CONNPLEX</span>
-                    <span className="text-[8px] font-light tracking-[0.4em] text-white/30 uppercase mt-0.5">EXPERIENCE MORE</span>
-                </div>
-                <button
-                    className={`inline-flex items-center gap-2.5 px-4.5 py-2 border border-[#d5b263]/20 bg-transparent text-white/65 text-[9px] font-medium tracking-[0.25em] uppercase cursor-pointer transition-all duration-600 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-sm hover:border-[#d5b263] hover:text-[#d5b263] ${isPlaying ? 'border-[#d5b263] text-[#d5b263]' : ''}`}
-                    onClick={toggleSound}
-                    aria-label="Toggle ambient sound"
-                >
-                    <span>{isPlaying ? 'SOUND ON' : 'SOUND OFF'}</span>
-                    <span className="flex items-end gap-[3px] h-3.5">
-                        <span 
-                            className="w-0.5 bg-current rounded-sm transition-all duration-300" 
-                            style={{ 
-                                animation: isPlaying ? 'soundBar 0.8s ease-in-out 0s infinite alternate' : 'none', 
-                                height: isPlaying ? '6px' : '4px',
-                                transformOrigin: 'bottom'
-                            }} 
-                        />
-                        <span 
-                            className="w-0.5 bg-current rounded-sm transition-all duration-300" 
-                            style={{ 
-                                animation: isPlaying ? 'soundBar 0.8s ease-in-out 0.15s infinite alternate' : 'none', 
-                                height: isPlaying ? '10px' : '8px',
-                                transformOrigin: 'bottom'
-                            }} 
-                        />
-                        <span 
-                            className="w-0.5 bg-current rounded-sm transition-all duration-300" 
-                            style={{ 
-                                animation: isPlaying ? 'soundBar 0.8s ease-in-out 0.3s infinite alternate' : 'none', 
-                                height: isPlaying ? '14px' : '12px',
-                                transformOrigin: 'bottom'
-                            }} 
-                        />
-                        <span 
-                            className="w-0.5 bg-current rounded-sm transition-all duration-300" 
-                            style={{ 
-                                animation: isPlaying ? 'soundBar 0.8s ease-in-out 0.45s infinite alternate' : 'none', 
-                                height: isPlaying ? '8px' : '6px',
-                                transformOrigin: 'bottom'
-                            }} 
-                        />
-                    </span>
-                </button>
-            </header>
+            <Header />
 
             {/* Hero Section */}
             <main className="relative z-10 min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center px-[6%] pt-[130px] lg:pt-[140px] pb-[60px] gap-[60px]">
@@ -329,13 +267,7 @@ const SkyInnPage = () => {
                 </div>
             </div>
 
-            {/* Hidden ambient audio */}
-            <audio
-                ref={audioRef}
-                loop
-                src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"
-                preload="none"
-            />
+
         </div>
     );
 };
