@@ -282,8 +282,9 @@ const NewsPage = () => {
     }, []);
 
     return (
-        <div className="news-page-wrapper">
+        <>
             <Header />
+            <div className="news-page-wrapper">
             <section className="hero-section" aria-label="News & Promotions Hero">
                 <div className="hero-bg-wrapper">
                     <img src="/news/top_image.jpeg" alt="Connplex Premium Cinema Lobby Lounge" className="hero-bg-img" />
@@ -500,8 +501,9 @@ const NewsPage = () => {
                     </div>
                 </div>
             </div>
+            </div>
             <Footer />
-        </div>
+        </>
     );
 };
 
