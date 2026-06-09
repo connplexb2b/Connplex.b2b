@@ -37,21 +37,24 @@ const HARDCODED_MOVIES = [
     alt: "Hai Jawani Toh Ishq Hona Hai",
     title: "HAI JAWANI TOH ISHQ HONA HAI",
     genre: "Comedy • Romance",
-    rating: "4.8"
+    rating: "4.8",
+    link: "https://ticketing.theconnplex.com/movie-details?mId=6a1d4fdeaec95804649703e6&rId=64da17939cdcb529a693aac2"
   },
   {
     src: "/movies/he_man.png",
     alt: "He-Man and the Masters of the Universe",
     title: "HE-MAN AND THE MASTERS OF THE UNIVERSE",
     genre: "Action • Adventure",
-    rating: "4.9"
+    rating: "4.9",
+    link: "https://ticketing.theconnplex.com/movie-details?mId=6a1d4fdeaec95804649703e8&rId=64da17939cdcb529a693aac2"
   },
   {
     src: "/movies/peddi.png",
     alt: "Peddi",
     title: "PEDDI (TELUGU)",
     genre: "Action • Drama",
-    rating: "4.8"
+    rating: "4.8",
+    link: "https://ticketing.theconnplex.com/movie-details?mId=6a1d4fdeaec95804649703eb&rId=64da17939cdcb529a693aac2"
   },
 ];
 
@@ -694,7 +697,14 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10" role="list">
           {liveMovies.slice(0, 3).map((m, idx) => (
-            <div className="relative w-full max-w-[300px] mx-auto aspect-[2/3] sm:max-w-none rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group" key={`${m.title}-${idx}`} role="listitem">
+            <a
+              href={m.link || "https://ticketing.theconnplex.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative w-full max-w-[300px] mx-auto aspect-[2/3] sm:max-w-none rounded-2xl overflow-hidden bg-[#111] border border-white/5 cursor-pointer group block"
+              key={`${m.title}-${idx}`}
+              role="listitem"
+            >
               <Image
                 src={m.src}
                 alt={m.alt}
@@ -710,17 +720,14 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl md:text-2xl font-bold text-white mb-1.5 tracking-wide font-outfit uppercase">{m.title}</h3>
                   <p className="text-xs md:text-sm text-white/60 mb-5">{m.genre}</p>
-                  <a
-                    href="https://ticketing.theconnplex.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <span
                     className="w-full bg-white text-black py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:bg-primary-gold hover:text-black block text-center opacity-100 sm:opacity-0 sm:scale-95 sm:group-hover:opacity-100 sm:group-hover:scale-100"
                   >
                     Book Tickets
-                  </a>
+                  </span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
