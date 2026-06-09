@@ -42,6 +42,10 @@ const franchiseInquirySchema = new mongoose.Schema({
     required: [true, 'Preferred city for cinema is required'],
     trim: true,
   },
+  company: {
+    type: String,
+    trim: true,
+  },
   hasProperty: {
     type: String,
     required: [true, 'Property availability details are required'],

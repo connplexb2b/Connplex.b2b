@@ -42,6 +42,14 @@ const contactMessageSchema = new mongoose.Schema({
     required: [true, 'Preferred city for cinema is required'],
     trim: true,
   },
+  company: {
+    type: String,
+    trim: true,
+  },
+  businessType: {
+    type: String,
+    trim: true,
+  },
   hasProperty: {
     type: String,
     required: [true, 'Property availability details are required'],
