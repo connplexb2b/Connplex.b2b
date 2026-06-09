@@ -9,7 +9,7 @@ const StatsSchema = new Schema({
   },
   aboutPage: {
     screens: { type: String, default: "125+" },
-    franchiseLocations: { type: String, default: "42+" },
+    franchiseLocations: { type: String, default: "43+" },
     yearsOfExcellence: { type: String, default: "8+" },
     vision: { type: String, default: "1" },
     happyMoviegoers: { type: String, default: "10M+" }
@@ -23,18 +23,18 @@ const StatsSchema = new Schema({
     screens: { type: String, default: "125+" }
   },
   franchisePage: {
-    cinemasNationwide: { type: String, default: "42+" },
+    cinemasNationwide: { type: String, default: "43+" },
     happyMoviegoers: { type: String, default: "10M+" },
     citiesCovered: { type: String, default: "50+" },
-    partnerSatisfaction: { type: String, default: "98%" }
+    partnerSatisfaction: { type: String, default: "100%" }
   },
   bookEventPage: {
-    iconicVenues: { type: String, default: "42+" },
+    iconicVenues: { type: String, default: "43+" },
     premiumSpaces: { type: String, default: "125+" },
     possibilities: { type: String, default: "∞" }
   },
   caseStudiesPage: {
-    smartCinemas: { type: String, default: "42+" },
+    smartCinemas: { type: String, default: "43+" },
     screensDeployed: { type: String, default: "125+" },
     guestsImpressed: { type: String, default: "10M+" },
     citiesAcrossIndia: { type: String, default: "50+" },
@@ -42,7 +42,7 @@ const StatsSchema = new Schema({
   },
   galleryPage: {
     screens: { type: String, default: "125+" },
-    locations: { type: String, default: "42+" },
+    locations: { type: String, default: "43+" },
     years: { type: String, default: "8+" },
     experiences: { type: String, default: "10M" }
   }
