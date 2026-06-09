@@ -290,7 +290,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-20 md:py-32 overflow-hidden bg-bg-dark">
+      <main className="relative min-h-[75vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-10 md:py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
@@ -315,7 +315,7 @@ export default function Home() {
           Luxury. Technology. Cinema.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-24 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 md:mb-24 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
           <a
             href="https://theconnplex.com/"
             target="_blank"
@@ -373,7 +373,7 @@ export default function Home() {
       </main>
 
       {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
-      <section className="bg-bg-dark py-20 px-[4%] sm:px-[6%] border-t border-white/5">
+      <section className="bg-bg-dark py-12 md:py-20 px-[4%] sm:px-[6%] border-t border-white/5">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="flex flex-col text-left">
             <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">THE CONNPLEX SUITE</p>
@@ -411,7 +411,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 2: PREMIUM LOUNGERS SLIDESHOW ── */}
-      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end px-[4%] sm:px-[6%] py-20 overflow-hidden bg-bg-dark">
+      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end px-[4%] sm:px-[6%] py-12 md:py-20 overflow-hidden bg-bg-dark">
         {/* Slide images stacked, crossfade */}
         {slides.map((s, i) => (
           <div
@@ -472,7 +472,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 3: PRODUCTS ── */}
-      <section className="bg-bg-dark px-[4%] sm:px-[6%] pt-20 pb-0 overflow-x-hidden border-t border-white/5">
+      <section className="bg-bg-dark px-[4%] sm:px-[6%] pt-12 md:pt-20 pb-0 overflow-x-hidden border-t border-white/5">
         <div className="flex flex-row justify-between items-end gap-6 mb-12 text-left">
           <div>
             <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">OUR PRODUCTS</p>
@@ -548,7 +548,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 4: WHY CONNPLEX ── */}
-      <section className="bg-black px-[4%] sm:px-[6%] py-20 border-t border-white/5" ref={whyRef}>
+      <section className="bg-black px-[4%] sm:px-[6%] py-12 md:py-20 border-t border-white/5" ref={whyRef}>
         <div className="relative w-full md:w-[calc(100%+8%)] md:-ml-[4%] aspect-square md:aspect-[16/8] overflow-hidden mb-20 bg-black flex items-center justify-center rounded-2xl md:rounded-none">
           <div className="absolute inset-0 opacity-60 z-10">
             <Image
@@ -617,7 +617,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 5: CASE STUDIES ── */}
-      <section className="bg-black px-[4%] sm:px-[6%] py-20 md:py-32 border-t border-white/5">
+      <section className="bg-black px-[4%] sm:px-[6%] py-12 md:py-32 border-t border-white/5">
         <div className="flex flex-row justify-between items-end gap-6 mb-12 text-left">
           <div>
             <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">CASE STUDIES</p>
@@ -676,7 +676,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 6: LATEST RELEASES ── */}
-      <section className="bg-black px-[4%] sm:px-[6%] py-20 border-t border-white/5">
+      <section className="bg-black px-[4%] sm:px-[6%] py-12 md:py-20 border-t border-white/5">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-12 text-left">
           <h2 className="text-[clamp(1.8rem,5vw,3rem)] font-bold leading-tight tracking-tight uppercase font-outfit">
             <span className="text-white">Latest Releases</span>{" "}
@@ -726,7 +726,7 @@ export default function Home() {
       </section>
 
       {/* ── SECTION 7: CREATE TOGETHER ── */}
-      <section className="bg-black px-[4%] sm:px-[6%] py-24 md:py-32 text-center relative border-t border-white/5 before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-[200px] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-primary-gold before:to-transparent">
+      <section className="bg-black px-[4%] sm:px-[6%] py-16 md:py-32 text-center relative border-t border-white/5 before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-[200px] before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-primary-gold before:to-transparent">
         <div className="max-w-[900px] mx-auto">
           <p className="text-[0.8rem] font-bold tracking-[4px] text-primary-gold mb-8 uppercase">LET&apos;S CREATE TOGETHER</p>
           <h2 className="text-[clamp(2.2rem,6vw,4rem)] font-bold text-white leading-tight mb-8 tracking-tighter uppercase font-outfit">
