@@ -163,11 +163,20 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [slides, setSlides] = useState(HARDCODED_SLIDES);
   const [liveMovies, setLiveMovies] = useState(HARDCODED_MOVIES);
+  const [activeStatIdx, setActiveStatIdx] = useState(0);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 1.5;
     }
+  }, []);
+
+  // Auto-advance homepage hero stats on mobile
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveStatIdx((prev) => (prev + 1) % 3);
+    }, 1500);
+    return () => clearInterval(timer);
   }, []);
 
   // Fetch hero slides from admin panel (falls back to hardcoded if DB is empty)
@@ -325,7 +334,8 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+        {/* Desktop View (Visible on md and up) */}
+        <div className="hidden md:grid grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
             <p className="text-sm text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
@@ -337,6 +347,33 @@ export default function Home() {
           <div className="text-center flex flex-col gap-2">
             <h3 className="text-[1.1rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
             <p className="text-sm text-text-secondary">Luxury movie experiences across India</p>
+          </div>
+        </div>
+
+        {/* Mobile View (Visible on mobile, rotating every 1.5 seconds) */}
+        <div className="block md:hidden w-full max-w-[400px] mx-auto border-t border-white/10 pt-6 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+          <div className="relative overflow-hidden h-[75px] flex items-center justify-center">
+            {/* Stat 1 */}
+            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+              <h3 className="text-[1.05rem] font-semibold text-white">Pan-India Reach</h3>
+              <p className="text-xs text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
+            </div>
+            {/* Stat 2 */}
+            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+              <h3 className="text-[1.05rem] font-semibold text-white">High Cinema Footfall</h3>
+              <p className="text-xs text-text-secondary">Connect with thousands of daily viewers</p>
+            </div>
+            {/* Stat 3 */}
+            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+              <h3 className="text-[1.05rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
+              <p className="text-xs text-text-secondary">Luxury movie experiences across India</p>
+            </div>
+          </div>
+          {/* Subtle Indicator Dots */}
+          <div className="flex justify-center gap-1.5 mt-2">
+            {[0, 1, 2].map((i) => (
+              <span key={i} className={`block w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeStatIdx ? 'bg-primary-gold w-3.5' : 'bg-white/20'}`}></span>
+            ))}
           </div>
         </div>
       </main>
