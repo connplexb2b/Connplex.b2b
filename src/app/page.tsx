@@ -290,7 +290,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="relative min-h-[75vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-10 md:py-32 overflow-hidden bg-bg-dark">
+      <main className="relative min-h-[65vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-6 md:py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
@@ -351,8 +351,8 @@ export default function Home() {
         </div>
 
         {/* Mobile View (Visible on mobile, rotating every 1.5 seconds) */}
-        <div className="block md:hidden w-full max-w-[400px] mx-auto border-t border-white/10 pt-6 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
-          <div className="relative overflow-hidden h-[75px] flex items-center justify-center">
+        <div className="block md:hidden w-full max-w-[400px] mx-auto border-y border-white/10 py-4 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+          <div className="relative overflow-hidden h-[55px] flex items-center justify-center">
             {/* Stat 1 */}
             <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
               <h3 className="text-[1.05rem] font-semibold text-white">Pan-India Reach</h3>
@@ -373,7 +373,7 @@ export default function Home() {
       </main>
 
       {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
-      <section className="bg-bg-dark py-12 md:py-20 px-[4%] sm:px-[6%] border-t border-white/5">
+      <section className="bg-bg-dark pt-8 pb-12 md:py-20 px-[4%] sm:px-[6%] border-t-0 md:border-t border-white/5">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="flex flex-col text-left">
             <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">THE CONNPLEX SUITE</p>
