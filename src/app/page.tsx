@@ -290,7 +290,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 py-20 md:py-32 overflow-hidden bg-bg-dark">
+      <main className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-20 md:py-32 overflow-hidden bg-bg-dark">
         <div className="absolute inset-0 z-0">
           <video
             ref={videoRef}
@@ -368,12 +368,6 @@ export default function Home() {
               <h3 className="text-[1.05rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
               <p className="text-xs text-text-secondary">Luxury movie experiences across India</p>
             </div>
-          </div>
-          {/* Subtle Indicator Dots */}
-          <div className="flex justify-center gap-1.5 mt-2">
-            {[0, 1, 2].map((i) => (
-              <span key={i} className={`block w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeStatIdx ? 'bg-primary-gold w-3.5' : 'bg-white/20'}`}></span>
-            ))}
           </div>
         </div>
       </main>
