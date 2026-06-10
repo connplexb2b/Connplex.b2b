@@ -669,7 +669,7 @@ export default function FranchisePage() {
                                         <option value="Jammu" className="bg-[#111] text-white">Jammu</option>
                                         <option value="Mandvi" className="bg-[#111] text-white">Mandvi</option>
                                         <option value="Sanand" className="bg-[#111] text-white">Sanand</option>
-                                        <option value="Badoli" className="bg-[#111] text-white">Badoli</option>
+                                        <option value="Bardoli" className="bg-[#111] text-white">Bardoli</option>
                                         <option value="Chhattisgarh" className="bg-[#111] text-white">Chhattisgarh</option>
                                         <option value="Himmatnagar" className="bg-[#111] text-white">Himmatnagar</option>
                                         <option value="Dhamtari" className="bg-[#111] text-white">Dhamtari</option>
