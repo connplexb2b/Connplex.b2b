@@ -248,4 +248,9 @@ body {
   overflow-x: hidden;
 }
 
+.cinematic-hero-section {
+  height: 100vh;
+  height: 100dvh;
+}
+
 
