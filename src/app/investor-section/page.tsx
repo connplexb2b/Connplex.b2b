@@ -162,7 +162,7 @@ export default function InvestorRelationsPage() {
         <div className="container mx-auto px-6 sm:px-[5%] relative z-10 text-left max-w-6xl w-full flex flex-col items-start">
           <h1 className="text-[clamp(2.2rem,5vw,4.5rem)] font-bold leading-[1.15] mb-6 tracking-tight font-sans text-white max-w-3xl uppercase">
             Building India's<br />
-            Most <span className="text-[#fac400] italic font-serif lowercase">Premium</span><br />
+            Most <span className="text-[#fac400]">Premium</span><br />
             Cinema Network.
           </h1>
           

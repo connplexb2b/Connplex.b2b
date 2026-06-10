@@ -402,7 +402,7 @@ const SpectraXPage = () => {
                 </section>
 
                 {/* FUTURE OF CINEMA CTA */}
-                <section className="relative min-h-[480px] flex items-center justify-center text-center overflow-hidden" id="futureCta">
+                <section className="relative min-h-[320px] flex items-center justify-center text-center overflow-hidden" id="futureCta">
                     <div className="absolute inset-0">
                         <Image
                             src="/spectrax/bottom image.png"
@@ -413,38 +413,13 @@ const SpectraXPage = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/60"></div>
                     </div>
-                    <div className="relative z-10 py-20 px-[15px] sm:px-[32px] md:px-0 max-w-[1320px] mx-auto w-full">
+                    <div className="relative z-10 pt-20 pb-4 px-[15px] sm:px-[32px] md:px-0 max-w-[1320px] mx-auto w-full">
                         <h2 className="text-[2.6rem] sm:text-[3.8rem] lg:text-[4.8rem] font-black leading-[1.05] text-[#C9A84C] tracking-[-0.01em] mb-4 uppercase">
                             THE FUTURE OF CINEMA<br />STARTS HERE.
                         </h2>
-                        <p className="text-[0.85rem] text-white/55 leading-[1.75] max-w-[440px] mx-auto mb-11">
+                        <p className="text-[0.85rem] text-white/55 leading-[1.75] max-w-[440px] mx-auto mb-0">
                             Connplex Cinemas Limited is leading India into a brighter, bigger, and more immersive future.
                         </p>
-                        <div className="flex gap-3 justify-center flex-col sm:flex-row sm:flex-wrap items-center">
-                            <a href="#" className="inline-flex items-center gap-2 px-5.5 py-[13px] border border-white/18 bg-black/55 text-[#ddd] text-[0.7rem] font-bold tracking-[0.1em] rounded-[3px] hover:border-[#C9A84C] hover:bg-[#C9A84C]/10 hover:text-[#C9A84C] transition-all duration-200 backdrop-blur-md uppercase w-full sm:w-auto justify-center" id="ctaBook">
-                                <svg className="w-3.75 h-3.75" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                                    <rect x={3} y={4} width={18} height={18} rx={2} />
-                                    <path d="M16 2v4M8 2v4M3 10h18" />
-                                </svg>
-                                BOOK PRESENTATION
-                            </a>
-                            <a href="#" className="inline-flex items-center gap-2 px-5.5 py-[13px] border border-white/18 bg-black/55 text-[#ddd] text-[0.7rem] font-bold tracking-[0.1em] rounded-[3px] hover:border-[#C9A84C] hover:bg-[#C9A84C]/10 hover:text-[#C9A84C] transition-all duration-200 backdrop-blur-md uppercase w-full sm:w-auto justify-center" id="ctaInvestor">
-                                <svg className="w-3.75 h-3.75" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
-                                    <polyline points="16 7 22 7 22 13" />
-                                </svg>
-                                INVESTOR ENQUIRY
-                            </a>
-                            <a href="#" className="inline-flex items-center gap-2 px-5.5 py-[13px] border border-white/18 bg-black/55 text-[#ddd] text-[0.7rem] font-bold tracking-[0.1em] rounded-[3px] hover:border-[#C9A84C] hover:bg-[#C9A84C]/10 hover:text-[#C9A84C] transition-all duration-200 backdrop-blur-md uppercase w-full sm:w-auto justify-center" id="ctaPartner">
-                                <svg className="w-3.75 h-3.75" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx={9} cy={7} r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                                PARTNER WITH CONNPLEX
-                            </a>
-                        </div>
                     </div>
                 </section>
 
