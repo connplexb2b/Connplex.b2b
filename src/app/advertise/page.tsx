@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AdvertiseForm from "@/components/AdvertiseForm";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useStats } from "@/hooks/useStats";
 
@@ -495,6 +496,8 @@ export default function AdvertisePage() {
                     </div>
                 </div>
             </section>
+
+            <AdvertiseForm />
 
             <Footer />
         </div>
