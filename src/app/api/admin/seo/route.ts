@@ -23,7 +23,7 @@ const DEFAULT_PAGES = [
     ogImage: ""
   },
   {
-    pageSlug: '/franchise',
+    pageSlug: '/franchise-with-us',
     pageLabel: 'Franchise',
     metaTitle: "smart cinema & Cinema Franchise Cost in India | Connplex",
     metaDescription: "Own a high-profit smart cinema franchise in India. Explore Connplex FOCO/FOFO franchise cost, premium cinema setup investment, and profit models.",

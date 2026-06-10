@@ -388,7 +388,7 @@ export default function AboutPage() {
               </div>
               <h4 className="font-outfit text-[13px] font-medium text-white mb-[15px] tracking-[0.05em]">Partner with India&apos;s Fastest Growing Chain.</h4>
               <p className="font-inter text-sm font-light leading-[1.6] text-text-secondary mb-[25px] grow">Unlock massive growth opportunities and robust business models with our scalable solutions.</p>
-              <Link href="/franchise" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
+              <Link href="/franchise-with-us" className="inline-flex items-center gap-2 font-outfit text-[11px] font-semibold tracking-[0.08em] text-white no-underline transition-all duration-200 opacity-75 hover:text-gold-primary hover:opacity-100 min-h-[44px]">KNOW MORE</Link>
             </div>
           </div>
 

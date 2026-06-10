@@ -76,7 +76,7 @@ const HARDCODED_SLIDES: {
     title: "Luxury Cinema\nExperience",
     tags: "Recliners · Gourmet F&B · VIP Service",
     desc: "Plush recliners, curated menus, and white glove service. Every detail crafted for indulgence. Host premieres, VIP screenings, and private events in true luxury. This is cinema as an event intimate, indulgent, unforgettable.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Know More",
   },
   {
@@ -86,7 +86,7 @@ const HARDCODED_SLIDES: {
     title: "Signature\nExperience",
     tags: "Technology · Design · Immersion",
     desc: "Sleek interiors, cutting edge technology, and an atmosphere that pulls you in from the moment you walk through the door. Cinema elevated for the modern audience.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Know More",
   },
   {
@@ -96,7 +96,7 @@ const HARDCODED_SLIDES: {
     title: "Smart Cinema\nNetwork",
     tags: "Comfort · Quality · Community",
     desc: "Thoughtfully designed spaces, quality screens, and a comfortable atmosphere. Smart makes every visit feel easy, enjoyable and just right.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Explore",
   },
 ];
@@ -189,7 +189,7 @@ export default function Home() {
             title: s.title,
             tags: s.tags || '',
             desc: s.description || '',
-            link: s.link || '/franchise',
+            link: s.link || '/franchise-with-us',
             linkText: s.linkText || 'Know More',
           })));
         }

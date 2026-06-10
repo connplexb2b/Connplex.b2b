@@ -300,7 +300,7 @@ export default function FranchisePage() {
                 // Map preferred investment range to Zoho's options
                 let zohoInvestment = 'Less than 1 Crore';
                 const prefInv = data.preferredInvestment as string;
-                if (prefInv === '1.5-2cr' || prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
+                if (prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
                     zohoInvestment = '1 Crore to 3 Crore';
                 } else if (prefInv === '3cr+') {
                     zohoInvestment = '3 Crore to 5 Crore';
@@ -620,7 +620,6 @@ export default function FranchisePage() {
                                         }}
                                     >
                                         <option value="" disabled className="bg-[#111] text-white">Preferred investment range?</option>
-                                        <option value="1.5-2cr" className="bg-[#111] text-white">1.5 to 2 cr</option>
                                         <option value="2-2.5cr" className="bg-[#111] text-white">2cr to 2.5 cr</option>
                                         <option value="2.5-3cr" className="bg-[#111] text-white">2.5 to 3cr</option>
                                         <option value="3cr+" className="bg-[#111] text-white">3cr and above</option>
