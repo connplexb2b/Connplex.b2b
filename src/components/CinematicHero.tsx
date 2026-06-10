@@ -1,175 +1,160 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CinematicHero() {
+const TOTAL_FRAMES = 240;
+const FRAME_PATH = (n: number) =>
+  `/frames/frame_${String(n).padStart(4, "0")}.jpg`;
+
+type CinematicHeroProps = {
+  children?: ReactNode;
+};
+
+export default function CinematicHero({ children }: CinematicHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
+    let isMounted = true;
+
     const hero = heroRef.current;
-    const video = videoRef.current;
-    const text = textRef.current;
+    const canvas = canvasRef.current;
+    if (!hero || !canvas) return;
 
-    if (!hero || !video || !text) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    let tl: gsap.core.Timeline | null = null;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    const initScrollTrigger = () => {
-      const duration = video.duration;
-      if (!duration || isNaN(duration)) return;
+    const resize = () => {
+      if (!isMounted) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const img = images[currentFrame];
+      if (img?.complete) draw(img);
+    };
+    window.addEventListener("resize", resize);
 
-      // Force pause video initially
-      video.pause();
-      video.currentTime = 0;
-
-      // Object to animate virtually
-      const scrollObj = { time: 0 };
-
-      // Create a unified timeline for scroll animations
-      tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          end: "+=3500",
-          pin: true,
-          scrub: 0.5, // Smooth lag to ease seeking and playback transitions
-          anticipatePin: 1,
-        },
-      });
-
-      // Scrub the video playhead using virtual time object and force pause
-      tl.to(
-        scrollObj,
-        {
-          time: duration - 0.05, // Avoid absolute end frame to prevent black screen or looping glitch
-          ease: "none",
-          duration: 1,
-          onUpdate: () => {
-            video.currentTime = scrollObj.time;
-            // Prevent browser from automatically playing video during seek
-            if (!video.paused) {
-              video.pause();
-            }
-          },
-        },
-        0
-      );
-
-      // Smooth zoom-in and slight rotation effect for 3D/parallax feel
-      tl.to(
-        video,
-        {
-          scale: 1.15,
-          rotationZ: 2, // Rotate slightly as user scrolls
-          ease: "none",
-          duration: 1,
-        },
-        0
-      );
-
-      // Elegant text fade out, fading completely within the first 25% of scroll
-      tl.to(
-        text,
-        {
-          opacity: 0,
-          y: -60,
-          ease: "power1.out",
-          duration: 0.25,
-        },
-        0
-      );
+    const draw = (img: HTMLImageElement) => {
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const w = img.naturalWidth * scale;
+      const h = img.naturalHeight * scale;
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
     };
 
-    // Prevent default autoplay and loop behaviors
-    video.autoplay = false;
-    video.loop = false;
-    video.pause();
+    const images: HTMLImageElement[] = [];
+    let loaded = 0;
+    let currentFrame = 0;
+    let targetFrame = 0;
 
-    // If metadata is already loaded, initialize immediately
-    if (video.readyState >= 1) {
-      initScrollTrigger();
-    } else {
-      video.addEventListener("loadedmetadata", initScrollTrigger);
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = FRAME_PATH(i + 1);
+      img.onload = () => {
+        if (!isMounted) return;
+        loaded++;
+        if (i === 0) draw(images[0]);
+        if (loaded === TOTAL_FRAMES) setupST();
+      };
+      images.push(img);
     }
 
-    // Additional event listener to prevent any automatic playback
-    const handlePlay = (e: Event) => {
-      e.preventDefault();
-      video.pause();
+    const tick = () => {
+      if (!isMounted) return;
+      if (targetFrame !== currentFrame) {
+        currentFrame = targetFrame;
+        const img = images[currentFrame];
+        if (img?.complete) draw(img);
+      }
+      rafRef.current = requestAnimationFrame(tick);
     };
-    video.addEventListener("play", handlePlay);
+    rafRef.current = requestAnimationFrame(tick);
+
+    const setupST = () => {
+      if (!isMounted) return;
+
+      ScrollTrigger.create({
+        trigger: hero,
+        start: "top top",
+        end: "+=3000",
+        pin: true,
+        anticipatePin: 1,
+        scrub: true,
+        onUpdate: (self) => {
+          targetFrame = Math.min(
+            TOTAL_FRAMES - 1,
+            Math.floor(self.progress * TOTAL_FRAMES)
+          );
+        },
+      });
+    };
 
     return () => {
-      video.removeEventListener("loadedmetadata", initScrollTrigger);
-      video.removeEventListener("play", handlePlay);
-      if (tl) {
-        tl.kill();
-        if (tl.scrollTrigger) {
-          tl.scrollTrigger.kill();
-        }
-      }
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      isMounted = false;
+      cancelAnimationFrame(rafRef.current);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
     <section
       ref={heroRef}
-      className="relative h-screen overflow-hidden bg-black"
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden",
+        background: "#000",
+      }}
     >
-      <video
-        ref={videoRef}
-        src="/video/hero-bg.mp4"
-        preload="auto"
-        muted
-        playsInline
-        autoPlay={false}
-        controls={false}
-        className="absolute inset-0 w-full h-full object-cover will-change-transform"
+      {/* Scroll background layer */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          display: "block",
+          zIndex: 0,
+        }}
       />
 
-      {/* Luxury cinematic overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/15 to-black/80 pointer-events-none" />
-
-      {/* Typography and CTA Buttons */}
+      {/* Optional dark overlay so text stays readable */}
       <div
-        ref={textRef}
-        className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4 select-none pointer-events-none"
-      >
-        <h1 className="text-7xl md:text-9xl font-bold tracking-[6px] md:tracking-[12px] text-[#C9A84C] font-outfit uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
-          CONNPLEX
-        </h1>
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%)",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
 
-        <p className="mt-6 text-lg md:text-2xl text-white/90 max-w-[600px] font-medium tracking-wide drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]">
-          The Ultimate Cinematic Experience
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mt-12 w-full max-w-[320px] sm:max-w-none px-4 pointer-events-auto">
-          <a
-            href="https://theconnplex.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-          >
-            Franchise With Us <span className="transition-transform duration-300">&rarr;</span>
-          </a>
-          <a
-            href="https://ticketing.theconnplex.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-          >
-            Book tickets <span className="transition-transform duration-300">&rarr;</span>
-          </a>
+      {/* Existing hero content on top */}
+      {children && (
+        <div
+          ref={contentRef}
+          style={{
+            position: "relative",
+            zIndex: 2,
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          {children}
         </div>
-      </div>
+      )}
     </section>
   );
 }
