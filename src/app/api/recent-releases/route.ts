@@ -69,26 +69,50 @@ export async function GET() {
           title: displayName,
           genre: category || 'Drama',
           rating: m.rating ? String(m.rating) : '4.8',
-          link: m._id ? `https://ticketing.theconnplex.com/movie-details?mId=${m._id}&rId=${ahmedabadId}` : 'https://ticketing.theconnplex.com/'
+          link: m._id ? `https://ticketing.theconnplex.com/movie-details?mId=${m._id}&rId=${ahmedabadId}` : 'https://ticketing.theconnplex.com/',
+          // Internal fields used for sorting and de-duplication
+          _isShowAvailable: !!m.isShowAvailable,
+          _openingDate: m.filmOpeningDate ? new Date(m.filmOpeningDate).getTime() : 0,
+          _originalName: m.name || ''
         };
       });
 
-      // Sort by priority to match the exact visual display order on the ticketing page
-      const orderPriority = ['jawani', 'bandar', 'he-man', 'peddi'];
+      // Sort by:
+      // 1. isShowAvailable (true first)
+      // 2. filmOpeningDate (descending / latest first)
       const sorted = formatted.sort((a: any, b: any) => {
-        const aTitle = a.title.toLowerCase();
-        const bTitle = b.title.toLowerCase();
-        
-        let aIndex = orderPriority.findIndex(p => aTitle.includes(p));
-        let bIndex = orderPriority.findIndex(p => bTitle.includes(p));
-        
-        if (aIndex === -1) aIndex = 999;
-        if (bIndex === -1) bIndex = 999;
-        
-        return aIndex - bIndex;
+        if (a._isShowAvailable !== b._isShowAvailable) {
+          return a._isShowAvailable ? -1 : 1;
+        }
+        return b._openingDate - a._openingDate;
       });
 
-      return NextResponse.json({ success: true, movies: sorted });
+      // Helper function to get clean base title for de-duplication
+      const getCleanBaseTitle = (name: string): string => {
+        let cleaned = name.toLowerCase();
+        // Remove language suffixes like (hindi), (english), etc.
+        cleaned = cleaned.replace(/\s*\((hindi|english|telugu|tamil|kannada|malayalam|gujarati|bengali|marathi)\)\s*$/g, '');
+        // Remove "3d" prefix or suffix
+        cleaned = cleaned.replace(/^\s*3d\s+/g, '');
+        cleaned = cleaned.replace(/\s+3d\s*$/g, '');
+        return cleaned.trim();
+      };
+
+      // De-duplicate movies keeping the first occurrence of each unique base title
+      const uniqueMovies: any[] = [];
+      const seenTitles = new Set<string>();
+
+      for (const movie of sorted) {
+        const baseTitle = getCleanBaseTitle(movie._originalName);
+        if (!seenTitles.has(baseTitle)) {
+          seenTitles.add(baseTitle);
+          // Clean up the internal properties before returning to client
+          const { _isShowAvailable, _openingDate, _originalName, ...clientMovie } = movie;
+          uniqueMovies.push(clientMovie);
+        }
+      }
+
+      return NextResponse.json({ success: true, movies: uniqueMovies });
     }
 
     throw new Error('Invalid API response format');

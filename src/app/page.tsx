@@ -7,7 +7,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useStats } from "@/hooks/useStats";
 import CinematicHero from "@/components/CinematicHero";
-import LaunchOverlay from "@/components/LaunchOverlay";
 
 const getNumeric = (val: string): number => {
   const match = val.match(/[\d\.]+/);
@@ -287,7 +286,6 @@ export default function Home() {
 
   return (
     <>
-      <LaunchOverlay />
       <Header />
       <CinematicHero>
         <div className="flex flex-col justify-center items-center text-center w-full h-full px-4 pt-28 pb-6 md:pt-24 md:pb-12">
