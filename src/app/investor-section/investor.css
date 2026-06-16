@@ -810,7 +810,7 @@
     transition: max-height 0.3s ease-out;
 }
 .investor-accordion-body.show {
-    max-height: 500px;
+    max-height: 2000px;
 }
 .investor-accordion-body ul {
     list-style: none;
