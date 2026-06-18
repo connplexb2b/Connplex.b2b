@@ -27,6 +27,7 @@ export default function CinematicHero({ children }: CinematicHeroProps) {
 
   useEffect(() => {
     let isMounted = true;
+    const gsapCtx = gsap.context(() => {}, heroRef);
 
     // Enable scroll normalization to synchronize touch events with scrub timeline on mobile
     let normalizedScroll: any = null;
@@ -149,19 +150,21 @@ export default function CinematicHero({ children }: CinematicHeroProps) {
     const setupST = () => {
       if (!isMounted) return;
 
-      ScrollTrigger.create({
-        trigger: hero,
-        start: "top top",
-        end: "+=3000",
-        pin: true,
-        anticipatePin: 1,
-        scrub: true,
-        onUpdate: (self) => {
-          targetFrame = Math.min(
-            TOTAL_FRAMES - 1,
-            Math.floor(self.progress * TOTAL_FRAMES)
-          );
-        },
+      gsapCtx.add(() => {
+        ScrollTrigger.create({
+          trigger: hero,
+          start: "top top",
+          end: "+=3000",
+          pin: true,
+          anticipatePin: 1,
+          scrub: true,
+          onUpdate: (self) => {
+            targetFrame = Math.min(
+              TOTAL_FRAMES - 1,
+              Math.floor(self.progress * TOTAL_FRAMES)
+            );
+          },
+        });
       });
     };
 
@@ -171,60 +174,62 @@ export default function CinematicHero({ children }: CinematicHeroProps) {
       if (normalizedScroll) {
         normalizedScroll.kill();
       }
-      ScrollTrigger.getAll().forEach((t) => t.kill());
       window.removeEventListener("resize", resize);
+      gsapCtx.revert();
     };
   }, []);
 
   return (
-    <section
-      ref={heroRef}
-      className="cinematic-hero-section"
-      style={{
-        position: "relative",
-        width: "100%",
-        overflow: "hidden",
-        background: "#000",
-      }}
-    >
-      {/* Scroll background layer */}
-      <canvas
-        ref={canvasRef}
+    <div style={{ width: "100%", overflow: "visible" }}>
+      <section
+        ref={heroRef}
+        className="cinematic-hero-section"
         style={{
-          position: "absolute",
-          inset: 0,
+          position: "relative",
           width: "100%",
-          height: "100%",
-          display: "block",
-          zIndex: 0,
+          overflow: "hidden",
+          background: "#000",
         }}
-      />
-
-      {/* Optional dark overlay so text stays readable */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%)",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Existing hero content on top */}
-      {children && (
-        <div
-          ref={contentRef}
+      >
+        {/* Scroll background layer */}
+        <canvas
+          ref={canvasRef}
           style={{
-            position: "relative",
-            zIndex: 2,
+            position: "absolute",
+            inset: 0,
             width: "100%",
             height: "100%",
+            display: "block",
+            zIndex: 0,
           }}
-        >
-          {children}
-        </div>
-      )}
-    </section>
+        />
+
+        {/* Optional dark overlay so text stays readable */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.55) 100%)",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Existing hero content on top */}
+        {children && (
+          <div
+            ref={contentRef}
+            style={{
+              position: "relative",
+              zIndex: 2,
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {children}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
