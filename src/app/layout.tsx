@@ -26,6 +26,17 @@ export default function RootLayout({
     <html lang="en" className={`${outfit.variable} ${montserrat.variable}`}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (var registration of registrations) {
+                  registration.unregister();
+                }
+              });
+            }
+          `
+        }} />
       </head>
       <body>{children}</body>
     </html>
