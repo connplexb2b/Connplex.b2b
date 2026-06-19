@@ -45,6 +45,90 @@ export default function BookEventPage() {
         throw new Error(result.message || 'Something went wrong. Please try again.');
       }
 
+      // Submit to Zoho CRM in the background (Web-to-Lead)
+      try {
+        const fullName = (data.fullName as string || '').trim();
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || 'Unknown';
+
+        const parseTimeToZoho = (timeStr: string) => {
+          if (!timeStr) return { hour: '12', minute: '00', ampm: 'AM' };
+          const [hourStr, minuteStr] = timeStr.split(':');
+          let hour = parseInt(hourStr, 10);
+          const minute = minuteStr || '00';
+          let ampm = 'AM';
+          if (hour >= 12) {
+            ampm = 'PM';
+            if (hour > 12) hour -= 12;
+          }
+          if (hour === 0) hour = 12;
+          const hourFormatted = hour.toString().padStart(2, '0');
+          return { hour: hourFormatted, minute, ampm };
+        };
+
+        const formatDateToZoho = (dateStr: string) => {
+          if (!dateStr) return '';
+          const parts = dateStr.split('-');
+          if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+          }
+          return dateStr;
+        };
+
+        const startTimeObj = parseTimeToZoho(data.startTime as string);
+        const endTimeObj = parseTimeToZoho(data.endTime as string);
+        const formattedDate = formatDateToZoho(data.eventDate as string);
+
+        const zohoParams = new URLSearchParams();
+        zohoParams.append('xnQsjsdp', 'fdfc24bbeb5d7c5293f5f9ef59d7b4e8c81020fa16fb6aafc941cf932f3f8788');
+        zohoParams.append('xmIwtLD', 'd9c92d8a2d66e194ca533aeef9bf356f85ce0ff9a23b190c21a685f1b9f3c3b75c85c8d05d5d1e0a4aa37a3bbf244b2a');
+        zohoParams.append('actionType', 'TGVhZHM=');
+        zohoParams.append('returnURL', 'null');
+
+        zohoParams.append('First Name', firstName);
+        zohoParams.append('Last Name', lastName);
+        zohoParams.append('Email', data.email as string || '');
+        zohoParams.append('Phone', data.phone as string || '');
+        zohoParams.append('Company', data.company as string || fullName || 'Individual');
+        zohoParams.append('Lead Source', 'Book Event Website');
+        zohoParams.append('Description', data.message as string || '');
+
+        // Custom fields for Book Event
+        zohoParams.append('LEADCF156', data.eventType as string || '');
+        zohoParams.append('LEADCF157', data.eventName as string || '');
+        zohoParams.append('LEADCF58', formattedDate);
+
+        // Start Time
+        zohoParams.append('LEADCF55', formattedDate);
+        zohoParams.append('LEADCF55hour', startTimeObj.hour);
+        zohoParams.append('LEADCF55minute', startTimeObj.minute);
+        zohoParams.append('LEADCF55ampm', startTimeObj.ampm);
+
+        // End Time
+        zohoParams.append('LEADCF56', formattedDate);
+        zohoParams.append('LEADCF56hour', endTimeObj.hour);
+        zohoParams.append('LEADCF56minute', endTimeObj.minute);
+        zohoParams.append('LEADCF56ampm', endTimeObj.ampm);
+
+        zohoParams.append('LEADCF155', data.expectedGuests as string || '');
+        zohoParams.append('aG9uZXlwb3Q', '');
+
+        console.log('Submitting Book Event to Zoho CRM...');
+        fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: zohoParams.toString(),
+        })
+          .then(() => console.log('Zoho CRM Book Event submission request dispatched successfully'))
+          .catch(err => console.error('Zoho CRM Book Event dispatch failed:', err));
+      } catch (zohoErr) {
+        console.error('Failed to prepare Zoho CRM Book Event payload:', zohoErr);
+      }
+
       setIsSubmitted(true);
     } catch (error: any) {
       console.error('Submission Error:', error);

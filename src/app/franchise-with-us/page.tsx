@@ -314,19 +314,23 @@ export default function FranchisePage() {
                     `- Message: ${data.message || 'N/A'}`;
 
                 const zohoParams = new URLSearchParams();
-                zohoParams.append('xnQsjsdp', '9d75c1ec9a9ce89c1cfde5512ee7be07aeb6ae92d5477978cc7f09d73e0cebca');
-                zohoParams.append('xmIwtLD', '47701f059aba5ae3d9a8d34438d171279271c6d7dd42b4f15387889d32a2e308d0dc40500d53bfff4f42dd4952cbc0a9');
+                zohoParams.append('xnQsjsdp', 'f876dc47cb07c8cfc0bc85f90d224947e2bdd2fbb67b947e59ab7a1d9d854694');
+                zohoParams.append('xmIwtLD', 'd9306febd7f1357422f127ad47fbf676b448a86bd87a17e0e4ee20783b1eac2ae6e7e8490689e6b16156b968d8934cf2');
                 zohoParams.append('actionType', 'TGVhZHM=');
                 zohoParams.append('returnURL', 'null');
                 zohoParams.append('First Name', firstName);
                 zohoParams.append('Last Name', lastName);
                 zohoParams.append('Email', data.email as string || '');
                 zohoParams.append('Phone', data.phone as string || '');
-                zohoParams.append('City', data.city as string || '');
-                zohoParams.append('State', data.state as string || '');
                 zohoParams.append('Company', companyName);
-                zohoParams.append('LEADCF126', businessType);
-                zohoParams.append('LEADCF10', zohoInvestment);
+                zohoParams.append('LEADCF1', companyName);
+                zohoParams.append('LEADCF130', data.city as string || '');
+                zohoParams.append('LEADCF151', data.state as string || '');
+                zohoParams.append('LEADCF48', zohoInvestment);
+                zohoParams.append('LEADCF49', data.preferredCity as string || '');
+                zohoParams.append('LEADCF121', data.hasProperty as string || '');
+                zohoParams.append('LEADCF50', data.timeframe as string || '');
+                zohoParams.append('Lead Source', 'Franchise Website Leads');
                 zohoParams.append('Description', description);
                 zohoParams.append('aG9uZXlwb3Q', '');
 

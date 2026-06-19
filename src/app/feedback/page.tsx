@@ -73,6 +73,47 @@ const FeedbackPage = () => {
                         throw new Error(result.message || 'Submission failed. Please try again.');
                     }
 
+                    // Submit to Zoho CRM in the background (Web-to-Lead)
+                    try {
+                        const fullNameVal = (payload.fullName as string || '').trim();
+                        const nameParts = fullNameVal.split(' ');
+                        const firstName = nameParts[0] || '';
+                        const lastName = nameParts.slice(1).join(' ') || 'Unknown';
+
+                        const zohoParams = new URLSearchParams();
+                        zohoParams.append('xnQsjsdp', '373ea6cb21a136eb888d485bcdfd95c79e0554155268c9bd4c8e21d0830919bf');
+                        zohoParams.append('xmIwtLD', '75b4402a483830be0619a44a8ec6e6d3b4f27a8f20958e76426d6f7ccfd02c4ab2976885c782b6cefe723be666af60e8');
+                        zohoParams.append('actionType', 'TGVhZHM=');
+                        zohoParams.append('returnURL', 'null');
+
+                        zohoParams.append('First Name', firstName);
+                        zohoParams.append('Last Name', lastName);
+                        zohoParams.append('Email', payload.email as string || '');
+                        zohoParams.append('Phone', payload.phone as string || '');
+                        zohoParams.append('Company', fullNameVal || 'Individual'); // Mandatory in Zoho Lead
+                        zohoParams.append('Lead Source', 'Feedback Website Form');
+                        zohoParams.append('Description', payload.message as string || '');
+
+                        // Custom fields for Feedback
+                        zohoParams.append('LEADCF153', payload.location as string || '');
+                        zohoParams.append('LEADCF154', payload.feedbackType as string || '');
+                        zohoParams.append('aG9uZXlwb3Q', '');
+
+                        console.log('Submitting Feedback to Zoho CRM...');
+                        fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: zohoParams.toString(),
+                        })
+                            .then(() => console.log('Zoho CRM Feedback submission request dispatched successfully'))
+                            .catch(err => console.error('Zoho CRM Feedback dispatch failed:', err));
+                    } catch (zohoErr) {
+                        console.error('Failed to prepare Zoho CRM Feedback payload:', zohoErr);
+                    }
+
                     mainForm.style.display = 'none';
                     if (formHeaderBlock) formHeaderBlock.style.display = 'none';
                     successBox.style.display = 'flex';

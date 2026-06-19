@@ -64,19 +64,17 @@ export default function ContactPage() {
       // Submit to Zoho CRM in the background (Web-to-Lead)
       try {
         const zohoParams = new URLSearchParams();
-        zohoParams.append('xnQsjsdp', '9d75c1ec9a9ce89c1cfde5512ee7be07aeb6ae92d5477978cc7f09d73e0cebca');
-        zohoParams.append('xmIwtLD', '47701f059aba5ae3d9a8d34438d171279271c6d7dd42b4f15387889d32a2e308d0dc40500d53bfff4f42dd4952cbc0a9');
+        zohoParams.append('xnQsjsdp', '3d8388912022a70a4029253d07486d1ffcfe4ac161a0313f4f2263853f1f61e4');
+        zohoParams.append('xmIwtLD', 'fa0831cb6229dfc2fe636c6098821758d7233025034a14aacedaa09587a1c5e596dd8d7ef23e7813d687918333b84921');
         zohoParams.append('actionType', 'TGVhZHM=');
         zohoParams.append('returnURL', 'null');
         zohoParams.append('First Name', firstName);
         zohoParams.append('Last Name', lastName);
         zohoParams.append('Email', rawData.email as string || '');
         zohoParams.append('Phone', rawData.phone as string || '');
-        zohoParams.append('City', rawData.city as string || '');
-        zohoParams.append('State', rawData.state as string || '');
-        zohoParams.append('Company', fullName || 'Individual');
-        zohoParams.append('LEADCF126', 'B2B Franchise'); // Business Type (Mandatory in Zoho)
-        zohoParams.append('LEADCF10', 'Less than 1 Crore'); // Investment Range (Mandatory in Zoho)
+        zohoParams.append('LEADCF130', rawData.city as string || '');
+        zohoParams.append('LEADCF151', rawData.state as string || '');
+        zohoParams.append('Lead Source', 'Contact us Webite');
         zohoParams.append('Description', rawData.message as string || '');
         zohoParams.append('aG9uZXlwb3Q', '');
 
