@@ -38,12 +38,42 @@ export default function ContactPage() {
       timeframe: 'N/A',
     };
 
+    // 1. Submit to Zoho CRM in the background (Web-to-Lead)
+    try {
+      const zohoParams = new URLSearchParams();
+      zohoParams.append('xnQsjsdp', '3d8388912022a70a4029253d07486d1ffcfe4ac161a0313f4f2263853f1f61e4');
+      zohoParams.append('xmIwtLD', 'fa0831cb6229dfc2fe636c6098821758d7233025034a14aacedaa09587a1c5e596dd8d7ef23e7813d687918333b84921');
+      zohoParams.append('actionType', 'TGVhZHM=');
+      zohoParams.append('returnURL', 'null');
+      zohoParams.append('First Name', firstName);
+      zohoParams.append('Last Name', lastName);
+      zohoParams.append('Email', rawData.email as string || '');
+      zohoParams.append('Phone', rawData.phone as string || '');
+      zohoParams.append('LEADCF130', rawData.city as string || '');
+      zohoParams.append('LEADCF151', rawData.state as string || '');
+      zohoParams.append('Lead Source', 'Contact us Webite');
+      zohoParams.append('Description', rawData.message as string || '');
+      zohoParams.append('aG9uZXlwb3Q', '');
+
+      console.log('Submitting to Zoho CRM...');
+      fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: zohoParams.toString(),
+      })
+        .then(() => console.log('Zoho CRM submission request dispatched successfully'))
+        .catch(err => console.error('Zoho CRM dispatch failed:', err));
+    } catch (zohoErr) {
+      console.error('Failed to prepare Zoho CRM payload:', zohoErr);
+    }
+
+    // 2. Submit to internal database
     try {
       const apiUrl = getApiUrl();
       const requestUrl = `${apiUrl}/api/forms/contact-messages`;
-      console.log('API URL:', requestUrl);
-      console.log('Request Payload:', localPayload);
-
       const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
@@ -52,54 +82,15 @@ export default function ContactPage() {
         body: JSON.stringify(localPayload),
       });
 
-      console.log('Response Status:', response.status);
-
-      const result = await response.json();
-      console.log('Response Payload:', result);
-
       if (!response.ok) {
-        throw new Error(result.message || 'Something went wrong. Please try again.');
+        console.warn('Internal DB log returned non-ok status');
       }
-
-      // Submit to Zoho CRM in the background (Web-to-Lead)
-      try {
-        const zohoParams = new URLSearchParams();
-        zohoParams.append('xnQsjsdp', '3d8388912022a70a4029253d07486d1ffcfe4ac161a0313f4f2263853f1f61e4');
-        zohoParams.append('xmIwtLD', 'fa0831cb6229dfc2fe636c6098821758d7233025034a14aacedaa09587a1c5e596dd8d7ef23e7813d687918333b84921');
-        zohoParams.append('actionType', 'TGVhZHM=');
-        zohoParams.append('returnURL', 'null');
-        zohoParams.append('First Name', firstName);
-        zohoParams.append('Last Name', lastName);
-        zohoParams.append('Email', rawData.email as string || '');
-        zohoParams.append('Phone', rawData.phone as string || '');
-        zohoParams.append('LEADCF130', rawData.city as string || '');
-        zohoParams.append('LEADCF151', rawData.state as string || '');
-        zohoParams.append('Lead Source', 'Contact us Webite');
-        zohoParams.append('Description', rawData.message as string || '');
-        zohoParams.append('aG9uZXlwb3Q', '');
-
-        console.log('Submitting to Zoho CRM...');
-        fetch('https://crm.zoho.in/crm/WebToLeadForm', {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: zohoParams.toString(),
-        })
-          .then(() => console.log('Zoho CRM submission request dispatched successfully'))
-          .catch(err => console.error('Zoho CRM dispatch failed:', err));
-      } catch (zohoErr) {
-        console.error('Failed to prepare Zoho CRM payload:', zohoErr);
-      }
-
-      setIsSubmitted(true);
-    } catch (error: any) {
-      console.error('Submission Error:', error);
-      setSubmitError(error.message || 'Unable to submit enquiry. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
+    } catch (dbError) {
+      console.error('Internal DB log request failed:', dbError);
     }
+
+    setIsSubmitted(true);
+    setIsSubmitting(false);
   };
 
   return (

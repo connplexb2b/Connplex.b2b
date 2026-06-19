@@ -259,12 +259,76 @@ export default function FranchisePage() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
+        // 1. Submit to Zoho CRM in the background (Web-to-Lead)
+        try {
+            const nameParts = (data.fullName as string || '').trim().split(/\s+/);
+            let firstName = '';
+            let lastName = '';
+            if (nameParts.length > 1) {
+                firstName = nameParts[0];
+                lastName = nameParts.slice(1).join(' ');
+            } else {
+                lastName = nameParts[0] || 'Unknown';
+            }
+
+            const companyName = (data.company as string || '').trim() || 'Individual';
+            
+            // Map preferred investment range to Zoho's options
+            let zohoInvestment = 'Less than 1 Crore';
+            const prefInv = data.preferredInvestment as string;
+            if (prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
+                zohoInvestment = '1 Crore to 3 Crore';
+            } else if (prefInv === '3cr+') {
+                zohoInvestment = '3 Crore to 5 Crore';
+            }
+
+            const description = `Franchise Application Form Submission:\n` +
+                `- Preferred City: ${data.preferredCity || 'N/A'}\n` +
+                `- Property Available: ${data.hasProperty || 'N/A'}\n` +
+                `- Pre-Approved City: ${data.preApprovedCity || 'N/A'}\n` +
+                `- Timeframe: ${data.timeframe || 'N/A'}\n` +
+                `- Message: ${data.message || 'N/A'}`;
+
+            const zohoParams = new URLSearchParams();
+            zohoParams.append('xnQsjsdp', 'f876dc47cb07c8cfc0bc85f90d224947e2bdd2fbb67b947e59ab7a1d9d854694');
+            zohoParams.append('xmIwtLD', 'd9306febd7f1357422f127ad47fbf676b448a86bd87a17e0e4ee20783b1eac2ae6e7e8490689e6b16156b968d8934cf2');
+            zohoParams.append('actionType', 'TGVhZHM=');
+            zohoParams.append('returnURL', 'null');
+            zohoParams.append('First Name', firstName);
+            zohoParams.append('Last Name', lastName);
+            zohoParams.append('Email', data.email as string || '');
+            zohoParams.append('Phone', data.phone as string || '');
+            zohoParams.append('Company', companyName);
+            zohoParams.append('LEADCF1', companyName);
+            zohoParams.append('LEADCF130', data.city as string || '');
+            zohoParams.append('LEADCF151', data.state as string || '');
+            zohoParams.append('LEADCF48', zohoInvestment);
+            zohoParams.append('LEADCF49', data.preferredCity as string || '');
+            zohoParams.append('LEADCF121', data.hasProperty as string || '');
+            zohoParams.append('LEADCF50', data.timeframe as string || '');
+            zohoParams.append('Lead Source', 'Franchise Website Leads');
+            zohoParams.append('Description', description);
+            zohoParams.append('aG9uZXlwb3Q', '');
+
+            console.log('Submitting to Zoho CRM...');
+            fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: zohoParams.toString(),
+            })
+                .then(() => console.log('Zoho CRM submission request dispatched successfully'))
+                .catch(err => console.error('Zoho CRM dispatch failed:', err));
+        } catch (zohoErr) {
+            console.error('Failed to prepare Zoho CRM payload:', zohoErr);
+        }
+
+        // 2. Submit to internal database
         try {
             const apiUrl = getApiUrl();
             const requestUrl = `${apiUrl}/api/forms/franchise-applications`;
-            console.log('API URL:', requestUrl);
-            console.log('Request Payload:', data);
-
             const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
@@ -273,89 +337,15 @@ export default function FranchisePage() {
                 body: JSON.stringify(data),
             });
 
-            console.log('Response Status:', response.status);
-
-            const result = await response.json();
-            console.log('Response Payload:', result);
-
             if (!response.ok) {
-                throw new Error(result.message || 'Something went wrong. Please try again.');
+                console.warn('Internal DB log returned non-ok status');
             }
-
-            // Submit to Zoho CRM in the background (Web-to-Lead)
-            try {
-                const nameParts = (data.fullName as string || '').trim().split(/\s+/);
-                let firstName = '';
-                let lastName = '';
-                if (nameParts.length > 1) {
-                    firstName = nameParts[0];
-                    lastName = nameParts.slice(1).join(' ');
-                } else {
-                    lastName = nameParts[0] || 'Unknown';
-                }
-
-                const companyName = (data.company as string || '').trim() || 'Individual';
-                const businessType = 'B2B Franchise'; // Franchise application is always Franchise type
-
-                // Map preferred investment range to Zoho's options
-                let zohoInvestment = 'Less than 1 Crore';
-                const prefInv = data.preferredInvestment as string;
-                if (prefInv === '2-2.5cr' || prefInv === '2.5-3cr') {
-                    zohoInvestment = '1 Crore to 3 Crore';
-                } else if (prefInv === '3cr+') {
-                    zohoInvestment = '3 Crore to 5 Crore';
-                }
-
-                const description = `Franchise Application Form Submission:\n` +
-                    `- Preferred City: ${data.preferredCity || 'N/A'}\n` +
-                    `- Property Available: ${data.hasProperty || 'N/A'}\n` +
-                    `- Pre-Approved City: ${data.preApprovedCity || 'N/A'}\n` +
-                    `- Timeframe: ${data.timeframe || 'N/A'}\n` +
-                    `- Message: ${data.message || 'N/A'}`;
-
-                const zohoParams = new URLSearchParams();
-                zohoParams.append('xnQsjsdp', 'f876dc47cb07c8cfc0bc85f90d224947e2bdd2fbb67b947e59ab7a1d9d854694');
-                zohoParams.append('xmIwtLD', 'd9306febd7f1357422f127ad47fbf676b448a86bd87a17e0e4ee20783b1eac2ae6e7e8490689e6b16156b968d8934cf2');
-                zohoParams.append('actionType', 'TGVhZHM=');
-                zohoParams.append('returnURL', 'null');
-                zohoParams.append('First Name', firstName);
-                zohoParams.append('Last Name', lastName);
-                zohoParams.append('Email', data.email as string || '');
-                zohoParams.append('Phone', data.phone as string || '');
-                zohoParams.append('Company', companyName);
-                zohoParams.append('LEADCF1', companyName);
-                zohoParams.append('LEADCF130', data.city as string || '');
-                zohoParams.append('LEADCF151', data.state as string || '');
-                zohoParams.append('LEADCF48', zohoInvestment);
-                zohoParams.append('LEADCF49', data.preferredCity as string || '');
-                zohoParams.append('LEADCF121', data.hasProperty as string || '');
-                zohoParams.append('LEADCF50', data.timeframe as string || '');
-                zohoParams.append('Lead Source', 'Franchise Website Leads');
-                zohoParams.append('Description', description);
-                zohoParams.append('aG9uZXlwb3Q', '');
-
-                console.log('Submitting to Zoho CRM...');
-                fetch('https://crm.zoho.in/crm/WebToLeadForm', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: zohoParams.toString(),
-                })
-                    .then(() => console.log('Zoho CRM submission request dispatched successfully'))
-                    .catch(err => console.error('Zoho CRM dispatch failed:', err));
-            } catch (zohoErr) {
-                console.error('Failed to prepare Zoho CRM payload:', zohoErr);
-            }
-
-            setIsSubmitted(true);
-        } catch (error: any) {
-            console.error('Submission Error:', error);
-            setSubmitError(error.message || 'Unable to submit enquiry. Please try again later.');
-        } finally {
-            setIsSubmitting(false);
+        } catch (dbError) {
+            console.error('Internal DB log request failed:', dbError);
         }
+
+        setIsSubmitted(true);
+        setIsSubmitting(false);
     };
 
     return (

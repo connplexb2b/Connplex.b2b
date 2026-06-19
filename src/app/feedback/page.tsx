@@ -59,21 +59,7 @@ const FeedbackPage = () => {
                 };
 
                 try {
-                    const apiUrl = getApiUrl();
-                    const response = await fetch(`${apiUrl}/api/forms/feedback`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
-
-                    const result = await response.json();
-                    if (!response.ok) {
-                        throw new Error(result.message || 'Submission failed. Please try again.');
-                    }
-
-                    // Submit to Zoho CRM in the background (Web-to-Lead)
+                    // 1. Submit to Zoho CRM in the background (Web-to-Lead)
                     try {
                         const fullNameVal = (payload.fullName as string || '').trim();
                         const nameParts = fullNameVal.split(' ');
@@ -114,6 +100,24 @@ const FeedbackPage = () => {
                         console.error('Failed to prepare Zoho CRM Feedback payload:', zohoErr);
                     }
 
+                    // 2. Submit to internal database
+                    try {
+                        const apiUrl = getApiUrl();
+                        const response = await fetch(`${apiUrl}/api/forms/feedback`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        if (!response.ok) {
+                            console.warn('Internal DB log returned non-ok status');
+                        }
+                    } catch (dbError) {
+                        console.error('Internal DB log request failed:', dbError);
+                    }
+
                     mainForm.style.display = 'none';
                     if (formHeaderBlock) formHeaderBlock.style.display = 'none';
                     successBox.style.display = 'flex';
@@ -125,7 +129,6 @@ const FeedbackPage = () => {
                     }
                 } catch (err: any) {
                     console.error('Feedback submission error:', err);
-                    alert(err.message || 'Unable to transmit feedback at this time. Please try again.');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.style.opacity = '1';
