@@ -59,18 +59,63 @@ const FeedbackPage = () => {
                 };
 
                 try {
-                    const apiUrl = getApiUrl();
-                    const response = await fetch(`${apiUrl}/api/forms/feedback`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload),
-                    });
+                    // 1. Submit to Zoho CRM in the background (Web-to-Lead)
+                    try {
+                        const fullNameVal = (payload.fullName as string || '').trim();
+                        const nameParts = fullNameVal.split(' ');
+                        const firstName = nameParts[0] || '';
+                        const lastName = nameParts.slice(1).join(' ') || 'Unknown';
 
-                    const result = await response.json();
-                    if (!response.ok) {
-                        throw new Error(result.message || 'Submission failed. Please try again.');
+                        const zohoParams = new URLSearchParams();
+                        zohoParams.append('xnQsjsdp', '373ea6cb21a136eb888d485bcdfd95c79e0554155268c9bd4c8e21d0830919bf');
+                        zohoParams.append('xmIwtLD', '75b4402a483830be0619a44a8ec6e6d3b4f27a8f20958e76426d6f7ccfd02c4ab2976885c782b6cefe723be666af60e8');
+                        zohoParams.append('actionType', 'TGVhZHM=');
+                        zohoParams.append('returnURL', 'null');
+
+                        zohoParams.append('First Name', firstName);
+                        zohoParams.append('Last Name', lastName);
+                        zohoParams.append('Email', payload.email as string || '');
+                        zohoParams.append('Phone', payload.phone as string || '');
+                        zohoParams.append('Company', fullNameVal || 'Individual'); // Mandatory in Zoho Lead
+                        zohoParams.append('Lead Source', 'Feedback Website Form');
+                        zohoParams.append('Description', payload.message as string || '');
+
+                        // Custom fields for Feedback
+                        zohoParams.append('LEADCF153', payload.location as string || '');
+                        zohoParams.append('LEADCF154', payload.feedbackType as string || '');
+                        zohoParams.append('aG9uZXlwb3Q', '');
+
+                        console.log('Submitting Feedback to Zoho CRM...');
+                        fetch('https://crm.zoho.in/crm/WebToLeadForm', {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: zohoParams.toString(),
+                        })
+                            .then(() => console.log('Zoho CRM Feedback submission request dispatched successfully'))
+                            .catch(err => console.error('Zoho CRM Feedback dispatch failed:', err));
+                    } catch (zohoErr) {
+                        console.error('Failed to prepare Zoho CRM Feedback payload:', zohoErr);
+                    }
+
+                    // 2. Submit to internal database
+                    try {
+                        const apiUrl = getApiUrl();
+                        const response = await fetch(`${apiUrl}/api/forms/feedback`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(payload),
+                        });
+
+                        if (!response.ok) {
+                            console.warn('Internal DB log returned non-ok status');
+                        }
+                    } catch (dbError) {
+                        console.error('Internal DB log request failed:', dbError);
                     }
 
                     mainForm.style.display = 'none';
@@ -84,7 +129,6 @@ const FeedbackPage = () => {
                     }
                 } catch (err: any) {
                     console.error('Feedback submission error:', err);
-                    alert(err.message || 'Unable to transmit feedback at this time. Please try again.');
                 } finally {
                     submitBtn.disabled = false;
                     submitBtn.style.opacity = '1';

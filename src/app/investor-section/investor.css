@@ -810,7 +810,7 @@
     transition: max-height 0.3s ease-out;
 }
 .investor-accordion-body.show {
-    max-height: 500px;
+    max-height: 2000px;
 }
 .investor-accordion-body ul {
     list-style: none;
@@ -822,4 +822,58 @@
     font-size: 15px;
     padding: 10px 15px;
 }
+
+/* =============================================
+   MOBILE RESPONSIVENESS AND TWEAKS
+   ============================================= */
+
+@media (max-width: 992px) {
+    .investors-email-list-flex {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .inevestor-flex {
+        flex-direction: column;
+        margin-bottom: 30px;
+    }
+    .inevestor-left-main {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .inevestor-right-main {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .investor-card {
+        padding: 12px 10px;
+    }
+    .investor-card-title {
+        font-size: 12px;
+        line-height: 18px;
+    }
+    .inevestor-right-main {
+        padding: 15px 10px;
+    }
+}
+
+/* Ensure tables inside CMS content wrap/scroll properly on mobile */
+.investor-html-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.investor-html-content table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
 

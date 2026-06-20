@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useStats } from "@/hooks/useStats";
+import CinematicHero from "@/components/CinematicHero";
 
 const getNumeric = (val: string): number => {
   const match = val.match(/[\d\.]+/);
@@ -75,7 +76,7 @@ const HARDCODED_SLIDES: {
     title: "Luxury Cinema\nExperience",
     tags: "Recliners · Gourmet F&B · VIP Service",
     desc: "Plush recliners, curated menus, and white glove service. Every detail crafted for indulgence. Host premieres, VIP screenings, and private events in true luxury. This is cinema as an event intimate, indulgent, unforgettable.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Know More",
   },
   {
@@ -85,7 +86,7 @@ const HARDCODED_SLIDES: {
     title: "Signature\nExperience",
     tags: "Technology · Design · Immersion",
     desc: "Sleek interiors, cutting edge technology, and an atmosphere that pulls you in from the moment you walk through the door. Cinema elevated for the modern audience.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Know More",
   },
   {
@@ -95,7 +96,7 @@ const HARDCODED_SLIDES: {
     title: "Smart Cinema\nNetwork",
     tags: "Comfort · Quality · Community",
     desc: "Thoughtfully designed spaces, quality screens, and a comfortable atmosphere. Smart makes every visit feel easy, enjoyable and just right.",
-    link: "/franchise",
+    link: "/franchise-with-us",
     linkText: "Explore",
   },
 ];
@@ -163,16 +164,9 @@ export default function Home() {
   const [caseAnimating, setCaseAnimating] = useState(false);
   const [isWhyVisible, setIsWhyVisible] = useState(false);
   const whyRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [slides, setSlides] = useState(HARDCODED_SLIDES);
   const [liveMovies, setLiveMovies] = useState(HARDCODED_MOVIES);
   const [activeStatIdx, setActiveStatIdx] = useState(0);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 1.5;
-    }
-  }, []);
 
   // Auto-advance homepage hero stats on mobile
   useEffect(() => {
@@ -195,7 +189,7 @@ export default function Home() {
             title: s.title,
             tags: s.tags || '',
             desc: s.description || '',
-            link: s.link || '/franchise',
+            link: s.link || '/franchise-with-us',
             linkText: s.linkText || 'Know More',
           })));
         }
@@ -293,87 +287,74 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="relative min-h-[65vh] md:min-h-screen flex flex-col justify-center items-center text-center px-4 pt-40 pb-6 md:py-32 overflow-hidden bg-bg-dark">
-        <div className="absolute inset-0 z-0">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-[70%] md:h-full object-cover opacity-75 blur-[4px] scale-105 md:scale-110 absolute top-0 left-0"
-          >
-            <source src="/video/hero-bg.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-black/45 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.7)_100%)]"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bg-dark md:hidden"></div>
-        </div>
+      <CinematicHero>
+        <div className="flex flex-col justify-center items-center text-center w-full h-full px-4 pt-28 pb-6 md:pt-24 md:pb-12">
+          <h1 className="text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.15] mb-4 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
+            Unbox your Own<br />
+            <span className="text-primary-gold">Cinema.</span>
+          </h1>
 
-        <h1 className="text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[1.1] mb-6 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
-          Unbox your Own<br />
-          <span className="text-primary-gold">Cinema.</span>
-        </h1>
+          <p className="text-[clamp(0.95rem,1.8vw,1.3rem)] text-text-secondary mb-6 font-normal tracking-wide relative z-10 animate-fade-in-up [animation-delay:0.4s]">
+            Luxury. Technology. Cinema.
+          </p>
 
-        <p className="text-[clamp(1rem,2vw,1.4rem)] text-text-secondary mb-12 font-normal tracking-wide relative z-10 animate-fade-in-up [animation-delay:0.4s]">
-          Luxury. Technology. Cinema.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 md:mb-24 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
-          <a
-            href="https://theconnplex.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
-          >
-            Franchise With Us <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-          </a>
-          <a
-            href="https://ticketing.theconnplex.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
-          >
-            Book tickets <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-          </a>
-        </div>
-
-        {/* Desktop View (Visible on md and up) */}
-        <div className="hidden md:grid grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
-          <div className="text-center flex flex-col gap-2">
-            <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
-            <p className="text-sm text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
+            <a
+              href="https://theconnplex.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+            >
+              Franchise With Us <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+            </a>
+            <a
+              href="https://ticketing.theconnplex.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+            >
+              Book tickets <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+            </a>
           </div>
-          <div className="text-center flex flex-col gap-2">
-            <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
-            <p className="text-sm text-text-secondary">Connect with thousands of daily viewers</p>
-          </div>
-          <div className="text-center flex flex-col gap-2">
-            <h3 className="text-[1.1rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
-            <p className="text-sm text-text-secondary">Luxury movie experiences across India</p>
-          </div>
-        </div>
 
-        {/* Mobile View (Visible on mobile, rotating every 1.5 seconds) */}
-        <div className="block md:hidden w-full max-w-[400px] mx-auto border-y border-white/10 py-4 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
-          <div className="relative overflow-hidden h-[55px] flex items-center justify-center">
-            {/* Stat 1 */}
-            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-              <h3 className="text-[1.05rem] font-semibold text-white">Pan-India Reach</h3>
-              <p className="text-xs text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
+          {/* Desktop View (Visible on md and up) */}
+          <div className="hidden md:grid grid-cols-3 gap-8 md:gap-12 w-full max-w-[1000px] mx-auto border-t border-white/10 pt-8 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+            <div className="text-center flex flex-col gap-2">
+              <h3 className="text-[1.1rem] font-semibold text-white">Pan-India Reach</h3>
+              <p className="text-sm text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
             </div>
-            {/* Stat 2 */}
-            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-              <h3 className="text-[1.05rem] font-semibold text-white">High Cinema Footfall</h3>
-              <p className="text-xs text-text-secondary">Connect with thousands of daily viewers</p>
+            <div className="text-center flex flex-col gap-2">
+              <h3 className="text-[1.1rem] font-semibold text-white">High Cinema Footfall</h3>
+              <p className="text-sm text-text-secondary">Connect with thousands of daily viewers</p>
             </div>
-            {/* Stat 3 */}
-            <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-              <h3 className="text-[1.05rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
-              <p className="text-xs text-text-secondary">Luxury movie experiences across India</p>
+            <div className="text-center flex flex-col gap-2">
+              <h3 className="text-[1.1rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
+              <p className="text-sm text-text-secondary">Luxury movie experiences across India</p>
+            </div>
+          </div>
+
+          {/* Mobile View (Visible on mobile, rotating every 1.5 seconds) */}
+          <div className="block md:hidden w-full max-w-[400px] mx-auto border-y border-white/10 py-4 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+            <div className="relative overflow-hidden h-[55px] flex items-center justify-center">
+              {/* Stat 1 */}
+              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[1.05rem] font-semibold text-white">Pan-India Reach</h3>
+                <p className="text-xs text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
+              </div>
+              {/* Stat 2 */}
+              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[1.05rem] font-semibold text-white">High Cinema Footfall</h3>
+                <p className="text-xs text-text-secondary">Connect with thousands of daily viewers</p>
+              </div>
+              {/* Stat 3 */}
+              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[1.05rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
+                <p className="text-xs text-text-secondary">Luxury movie experiences across India</p>
+              </div>
             </div>
           </div>
         </div>
-      </main>
+      </CinematicHero>
 
       {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
       <section className="bg-bg-dark pt-8 pb-12 md:py-20 px-[4%] sm:px-[6%] border-t-0 md:border-t border-white/5">
@@ -609,7 +590,7 @@ export default function Home() {
             <span className="text-sm text-text-secondary font-normal">Premium Screens</span>
           </div>
           <div className="flex flex-col gap-2.5">
-            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight">{stats.homepage.citiesCovered}</span>
+            <span className="text-[clamp(1.5rem,4.2vw,2.8rem)] font-bold text-primary-gold leading-tight tracking-tight whitespace-pre-line">{stats.homepage.citiesCovered}</span>
             <span className="text-sm text-text-secondary font-normal">Cities Covered</span>
           </div>
           <div className="flex flex-col gap-2.5">

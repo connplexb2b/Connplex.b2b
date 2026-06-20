@@ -162,7 +162,7 @@ export default function InvestorsPage() {
         <div className="container mx-auto px-6 sm:px-[5%] relative z-10 text-left max-w-6xl w-full flex flex-col items-start">
           <h1 className="text-[clamp(2.2rem,5vw,4.5rem)] font-bold leading-[1.15] mb-6 tracking-tight font-sans text-white max-w-3xl uppercase">
             Building India's<br />
-            Most <span className="text-[#fac400] italic font-serif lowercase">Premium</span><br />
+            Most <span className="text-[#fac400]">Premium</span><br />
             Cinema Network.
           </h1>
           
@@ -173,7 +173,7 @@ export default function InvestorsPage() {
           {/* Functional Banner CTA Buttons */}
           <div className="flex flex-wrap gap-4 items-center w-full">
             <a 
-              href="https://webadmin.theconnplex.com/api/file/1778582332703-877641406.pdf" 
+              href="https://webadmin.theconnplex.com/api/file//1778582332703-877641406.pdf?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE." 
               target="_blank" 
               rel="noopener noreferrer" 
               className="bg-[#fac400] hover:bg-[#e0b400] text-black font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 transition-all duration-300 hover:shadow-[0_5px_15px_rgba(250,196,0,0.3)] hover:-translate-y-0.5"
@@ -314,7 +314,7 @@ export default function InvestorsPage() {
                                 key={idx}
                                 className="investor-card flex justify-between items-center p-5 bg-[#1a1816] hover:bg-[#131110] border border-white/5 rounded-lg transition-all duration-300"
                                 target="_blank"
-                                href={`${FILE_URL}/${file.fileName}`}
+                                href={`${FILE_URL}//${file.fileName}?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE.`}
                                 rel="noopener noreferrer"
                                 title={`Download ${displayName} ${isAudio ? 'Audio' : 'PDF'}`}
                               >

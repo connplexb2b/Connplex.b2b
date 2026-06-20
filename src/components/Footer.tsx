@@ -21,7 +21,7 @@ const Footer = () => {
                     <ul className="list-none p-0 m-0 flex flex-col gap-3">
                         <li><Link href="/contact" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Contact Us</Link></li>
                         <li><Link href="/advertise" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Advertise With Us</Link></li>
-                        <li><Link href="/franchise" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Franchise in 20 Minutes</Link></li>
+                        <li><Link href="/franchise-with-us" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Franchise in 20 Minutes</Link></li>
                         <li><Link href="/ecosystem" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Connplex Ecosystem</Link></li>
                     </ul>
                 </div>
@@ -37,10 +37,9 @@ const Footer = () => {
 
                 <div className="flex flex-col">
                     <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                        <li><Link href="/investors" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Investors Section</Link></li>
+                        <li><Link href="/investors" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white" title="Investors">Investor Section</Link></li>
                         <li><Link href="/privacy-policy" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Privacy Policy</Link></li>
                         <li><Link href="/terms-and-conditions" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Terms & Conditions</Link></li>
-                        <li><Link href="/refund-policy" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Refund Policy</Link></li>
                         <li><Link href="/legal-notice" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Legal Notice</Link></li>
                     </ul>
                 </div>
@@ -50,7 +49,7 @@ const Footer = () => {
                         <li><Link href="/faq" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">FAQ</Link></li>
                         <li><Link href="/career" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Career</Link></li>
                         <li><Link href="/gallery" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Gallery</Link></li>
-                        <li><Link href="/franchise" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Franchisee Section</Link></li>
+                        <li><Link href="/franchise-with-us" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Franchise Section</Link></li>
                     </ul>
                 </div>
             </div>

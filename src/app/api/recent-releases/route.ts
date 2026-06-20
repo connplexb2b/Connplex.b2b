@@ -37,6 +37,67 @@ function fetchGet(url: string) {
   });
 }
 
+function processMovies(list: any[], ahmedabadId: string) {
+  const formatted = list.map((m: any) => {
+    // format category to look like "Action • Adventure" instead of "Action ,Adventure"
+    const category = m.category ? m.category.split(',').map((s: string) => s.trim()).filter(Boolean).join(' • ') : '';
+    
+    let displayName = m.name || '';
+    // Clean up text like (HINDI), (ENG) from the end of the name
+    displayName = displayName.replace(/\s*\((HINDI|ENGLISH|TELUGU|TAMIL|KANNADA|MALAYALAM|GUJARATI|BENGALI|MARATHI)\)\s*$/i, '');
+
+    return {
+      src: `https://d1b2pdd8bvo7rr.cloudfront.net/uploads/${m.poster}`,
+      alt: displayName,
+      title: displayName,
+      genre: category || 'Drama',
+      rating: m.rating ? String(m.rating) : '4.8',
+      link: m._id ? `https://ticketing.theconnplex.com/movie-details?mId=${m._id}&rId=${ahmedabadId}` : 'https://ticketing.theconnplex.com/',
+      // Internal fields used for sorting and de-duplication
+      _isShowAvailable: !!m.isShowAvailable,
+      _openingDate: m.filmOpeningDate ? new Date(m.filmOpeningDate).getTime() : 0,
+      _originalName: m.name || ''
+    };
+  });
+
+  // Sort by:
+  // 1. isShowAvailable (true first)
+  // 2. filmOpeningDate (descending / latest first)
+  const sorted = formatted.sort((a: any, b: any) => {
+    if (a._isShowAvailable !== b._isShowAvailable) {
+      return a._isShowAvailable ? -1 : 1;
+    }
+    return b._openingDate - a._openingDate;
+  });
+
+  // Helper function to get clean base title for de-duplication
+  const getCleanBaseTitle = (name: string): string => {
+    let cleaned = name.toLowerCase();
+    // Remove language suffixes like (hindi), (english), etc.
+    cleaned = cleaned.replace(/\s*\((hindi|english|telugu|tamil|kannada|malayalam|gujarati|bengali|marathi)\)\s*$/g, '');
+    // Remove "3d" prefix or suffix
+    cleaned = cleaned.replace(/^\s*3d\s+/g, '');
+    cleaned = cleaned.replace(/\s+3d\s*$/g, '');
+    return cleaned.trim();
+  };
+
+  // De-duplicate movies keeping the first occurrence of each unique base title
+  const uniqueMovies: any[] = [];
+  const seenTitles = new Set<string>();
+
+  for (const movie of sorted) {
+    const baseTitle = getCleanBaseTitle(movie._originalName);
+    if (!seenTitles.has(baseTitle)) {
+      seenTitles.add(baseTitle);
+      // Clean up the internal properties before returning to client
+      const { _isShowAvailable, _openingDate, _originalName, ...clientMovie } = movie;
+      uniqueMovies.push(clientMovie);
+    }
+  }
+
+  return NextResponse.json({ success: true, movies: uniqueMovies });
+}
+
 export async function GET() {
   try {
     // 1. Fetch cinemas to get regions and resolve Ahmedabad ID
@@ -55,45 +116,27 @@ export async function GET() {
 
     if (moviesRes && moviesRes.status === 200 && moviesRes.data && Array.isArray(moviesRes.data.recentReleasesMovies)) {
       const list = moviesRes.data.recentReleasesMovies;
-      const formatted = list.map((m: any) => {
-        // format category to look like "Action • Adventure" instead of "Action ,Adventure"
-        const category = m.category ? m.category.split(',').map((s: string) => s.trim()).filter(Boolean).join(' • ') : '';
-        
-        let displayName = m.name || '';
-        // Clean up text like (HINDI), (ENG) from the end of the name
-        displayName = displayName.replace(/\s*\((HINDI|ENGLISH|TELUGU|TAMIL|KANNADA|MALAYALAM|GUJARATI|BENGALI|MARATHI)\)\s*$/i, '');
-
-        return {
-          src: `https://d1b2pdd8bvo7rr.cloudfront.net/uploads/${m.poster}`,
-          alt: displayName,
-          title: displayName,
-          genre: category || 'Drama',
-          rating: m.rating ? String(m.rating) : '4.8',
-          link: m._id ? `https://ticketing.theconnplex.com/movie-details?mId=${m._id}&rId=${ahmedabadId}` : 'https://ticketing.theconnplex.com/'
-        };
-      });
-
-      // Sort by priority to match the exact visual display order on the ticketing page
-      const orderPriority = ['jawani', 'bandar', 'he-man', 'peddi'];
-      const sorted = formatted.sort((a: any, b: any) => {
-        const aTitle = a.title.toLowerCase();
-        const bTitle = b.title.toLowerCase();
-        
-        let aIndex = orderPriority.findIndex(p => aTitle.includes(p));
-        let bIndex = orderPriority.findIndex(p => bTitle.includes(p));
-        
-        if (aIndex === -1) aIndex = 999;
-        if (bIndex === -1) bIndex = 999;
-        
-        return aIndex - bIndex;
-      });
-
-      return NextResponse.json({ success: true, movies: sorted });
+      return processMovies(list, ahmedabadId);
     }
 
     throw new Error('Invalid API response format');
   } catch (err: any) {
-    console.error('Failed to fetch dynamic recent releases:', err);
+    console.error('Failed to fetch dynamic recent releases, trying fallback cached file:', err);
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const cachedPath = path.join(process.cwd(), 'scratch', 'all-movies.json');
+      if (fs.existsSync(cachedPath)) {
+        const cachedData = JSON.parse(fs.readFileSync(cachedPath, 'utf8'));
+        if (cachedData && Array.isArray(cachedData.recentReleasesMovies)) {
+          const ahmedabadId = '64da17939cdcb529a693aac2';
+          return processMovies(cachedData.recentReleasesMovies, ahmedabadId);
+        }
+      }
+    } catch (fallbackErr) {
+      console.error('Failed to load cached fallback:', fallbackErr);
+    }
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
+

@@ -31,7 +31,7 @@ export default function HeroSlidesPage() {
 
   useEffect(() => { load(); }, []);
 
-  const openAdd = () => setModal({ eyebrow: '', title: '', tags: '', description: '', imagePath: '/img/LUX.jpeg', link: '/franchise', linkText: 'Know More', order: slides.length, isActive: true });
+  const openAdd = () => setModal({ eyebrow: '', title: '', tags: '', description: '', imagePath: '/img/LUX.jpeg', link: '/franchise-with-us', linkText: 'Know More', order: slides.length, isActive: true });
   const openEdit = (s: Slide) => setModal({ ...s });
   const closeModal = () => { setModal(null); setError(''); };
 
@@ -118,7 +118,7 @@ export default function HeroSlidesPage() {
               {modal.imagePath && <img src={modal.imagePath} alt="preview" style={{ marginTop: '0.5rem', height: '80px', borderRadius: '4px', objectFit: 'cover', border: '1px solid var(--admin-border)' }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-              <div className="admin-form-group"><label>Button Link</label><input className="admin-input" value={modal.link || ''} onChange={e => setModal({ ...modal, link: e.target.value })} placeholder="/franchise" /></div>
+              <div className="admin-form-group"><label>Button Link</label><input className="admin-input" value={modal.link || ''} onChange={e => setModal({ ...modal, link: e.target.value })} placeholder="/franchise-with-us" /></div>
               <div className="admin-form-group"><label>Button Text</label><input className="admin-input" value={modal.linkText || ''} onChange={e => setModal({ ...modal, linkText: e.target.value })} placeholder="Know More" /></div>
               <div className="admin-form-group"><label>Order</label><input className="admin-input" type="number" value={modal.order ?? 0} onChange={e => setModal({ ...modal, order: parseInt(e.target.value) })} /></div>
             </div>

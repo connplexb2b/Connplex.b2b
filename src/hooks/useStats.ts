@@ -67,12 +67,12 @@ export const DEFAULT_STATS: WebsiteStats = {
   homepage: {
     annualFootfall: "10M+",
     premiumScreens: "125+",
-    citiesCovered: "Metro + Tier 1, 2, 3",
+    citiesCovered: "Metros &\nTier 1, 2, 3",
     experiencesDelivered: "Immersive"
   },
   aboutPage: {
     screens: "125+",
-    franchiseLocations: "42+",
+    franchiseLocations: "43+",
     yearsOfExcellence: "8+",
     vision: "1",
     happyMoviegoers: "10M+"
@@ -86,18 +86,18 @@ export const DEFAULT_STATS: WebsiteStats = {
     screens: "125+"
   },
   franchisePage: {
-    cinemasNationwide: "42+",
+    cinemasNationwide: "43+",
     happyMoviegoers: "10M+",
     citiesCovered: "50+",
-    partnerSatisfaction: "98%"
+    partnerSatisfaction: "100%"
   },
   bookEventPage: {
-    iconicVenues: "42+",
+    iconicVenues: "43+",
     premiumSpaces: "125+",
     possibilities: "∞"
   },
   caseStudiesPage: {
-    smartCinemas: "42+",
+    smartCinemas: "43+",
     screensDeployed: "125+",
     guestsImpressed: "10M+",
     citiesAcrossIndia: "50+",
@@ -105,7 +105,7 @@ export const DEFAULT_STATS: WebsiteStats = {
   },
   galleryPage: {
     screens: "125+",
-    locations: "42+",
+    locations: "43+",
     years: "8+",
     experiences: "10M"
   }

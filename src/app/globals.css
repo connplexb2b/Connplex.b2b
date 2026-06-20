@@ -240,4 +240,24 @@ body {
   will-change: opacity;
 }
 
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.cinematic-hero-section {
+  height: 100vh;
+  height: 100dvh;
+}
+
+@media (max-width: 768px) {
+  .cinematic-hero-section {
+    height: 75vh;
+    height: 75dvh;
+  }
+}
+
 

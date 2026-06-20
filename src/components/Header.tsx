@@ -23,8 +23,8 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
   const links = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Advertise', path: '/advertise' },
-    { name: 'Apply For Franchise', path: '/franchise' },
+    { name: 'Advertise With Us', path: '/advertise' },
+    { name: 'Apply For Franchise', path: '/franchise-with-us' },
     { name: 'Book an Event', path: '/book-event' },
     { name: 'Case Studies', path: '/case-studies' },
     { name: 'Gallery', path: '/gallery' },
@@ -73,7 +73,7 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
       </header>
 
       {/* Navigation Overlay Menu */}
-      <div className={`fixed inset-0 w-full h-screen bg-black/95 flex items-center justify-center transition-transform duration-500 cubic-bezier(0.77, 0, 0.175, 1) z-[999] overflow-y-auto py-24 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed inset-0 w-full h-screen bg-black/95 flex items-start justify-center transition-transform duration-500 cubic-bezier(0.77, 0, 0.175, 1) z-[999] overflow-y-auto pt-32 pb-12 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <nav className="flex flex-col items-center justify-center gap-6 sm:gap-[30px] w-full max-w-[90%] mx-auto text-center">
           {links.map((link) => (
             <Link
