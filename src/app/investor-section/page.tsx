@@ -173,7 +173,7 @@ export default function InvestorRelationsPage() {
           {/* Functional Banner CTA Buttons */}
           <div className="flex flex-wrap gap-4 items-center w-full">
             <a 
-              href="https://webadmin.theconnplex.com/api/file/1778582332703-877641406.pdf" 
+              href="https://webadmin.theconnplex.com/api/file//1778582332703-877641406.pdf?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE." 
               target="_blank" 
               rel="noopener noreferrer" 
               className="bg-[#fac400] hover:bg-[#e0b400] text-black font-semibold text-xs sm:text-sm px-6 py-3.5 rounded-full inline-flex items-center gap-2 transition-all duration-300 hover:shadow-[0_5px_15px_rgba(250,196,0,0.3)] hover:-translate-y-0.5"
@@ -314,7 +314,7 @@ export default function InvestorRelationsPage() {
                                 key={idx}
                                 className="investor-card flex justify-between items-center p-5 bg-[#1a1816] hover:bg-[#131110] border border-white/5 rounded-lg transition-all duration-300"
                                 target="_blank"
-                                href={`${FILE_URL}/${file.fileName}`}
+                                href={`${FILE_URL}//${file.fileName}?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE.`}
                                 rel="noopener noreferrer"
                                 title={`Download ${displayName} ${isAudio ? 'Audio' : 'PDF'}`}
                               >
