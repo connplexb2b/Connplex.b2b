@@ -151,19 +151,40 @@ export default function CinematicHero({ children }: CinematicHeroProps) {
       if (!isMounted) return;
 
       gsapCtx.add(() => {
-        ScrollTrigger.create({
-          trigger: hero,
-          start: "top top",
-          end: "+=3000",
-          pin: true,
-          anticipatePin: 1,
-          scrub: true,
-          onUpdate: (self) => {
-            targetFrame = Math.min(
-              TOTAL_FRAMES - 1,
-              Math.floor(self.progress * TOTAL_FRAMES)
-            );
-          },
+        const mm = gsap.matchMedia();
+
+        // Desktop: Pin and scrub
+        mm.add("(min-width: 769px)", () => {
+          ScrollTrigger.create({
+            trigger: hero,
+            start: "top top",
+            end: "+=3000",
+            pin: true,
+            anticipatePin: 1,
+            scrub: true,
+            onUpdate: (self) => {
+              targetFrame = Math.min(
+                TOTAL_FRAMES - 1,
+                Math.floor(self.progress * TOTAL_FRAMES)
+              );
+            },
+          });
+        });
+
+        // Mobile: No pinning, just scrub as you scroll past the hero
+        mm.add("(max-width: 768px)", () => {
+          ScrollTrigger.create({
+            trigger: hero,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            onUpdate: (self) => {
+              targetFrame = Math.min(
+                TOTAL_FRAMES - 1,
+                Math.floor(self.progress * TOTAL_FRAMES)
+              );
+            },
+          });
         });
       });
     };
