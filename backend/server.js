@@ -21,7 +21,9 @@ app.use((req, res, next) => {
 // Dynamic production CORS setup
 const allowedOrigins = [
   "https://connplex-b2b-89ab.vercel.app",
-  "https://connplex-b2b.vercel.app"
+  "https://connplex-b2b.vercel.app",
+  "https://theconnplex.com",
+  "https://www.theconnplex.com"
 ];
 
 app.use(cors({
