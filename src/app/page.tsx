@@ -288,22 +288,22 @@ export default function Home() {
     <>
       <Header />
       <CinematicHero>
-        <div className="flex flex-col justify-center items-center text-center w-full h-full px-4 pt-28 pb-6 md:pt-24 md:pb-12">
-          <h1 className="text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.15] mb-4 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
+        <div className="flex flex-col justify-center items-center text-center w-full h-[75dvh] md:h-full px-4 pt-24 pb-4 md:pt-24 md:pb-12">
+          <h1 className="text-[clamp(2.0rem,6vw,4.5rem)] md:text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.15] mb-3 md:mb-4 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
             Unbox your Own<br />
             <span className="text-primary-gold">Cinema.</span>
           </h1>
 
-          <p className="text-[clamp(0.95rem,1.8vw,1.3rem)] text-text-secondary mb-6 font-normal tracking-wide relative z-10 animate-fade-in-up [animation-delay:0.4s]">
+          <p className="text-[clamp(0.85rem,1.8vw,1.3rem)] md:text-[clamp(0.95rem,1.8vw,1.3rem)] text-text-secondary mb-4 md:mb-6 font-normal tracking-wide relative z-10 animate-fade-in-up [animation-delay:0.4s]">
             Luxury. Technology. Cinema.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-8 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[320px] sm:max-w-none px-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-6 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[300px] sm:max-w-none px-4">
             <a
               href="https://theconnplex.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
             >
               Franchise With Us <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
             </a>
@@ -311,7 +311,7 @@ export default function Home() {
               href="https://ticketing.theconnplex.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
             >
               Book tickets <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
             </a>
@@ -334,24 +334,42 @@ export default function Home() {
           </div>
 
           {/* Mobile View (Visible on mobile, rotating every 1.5 seconds) */}
-          <div className="block md:hidden w-full max-w-[400px] mx-auto border-y border-white/10 py-4 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
-            <div className="relative overflow-hidden h-[55px] flex items-center justify-center">
+          <div className="block md:hidden w-full max-w-[400px] mx-auto border-y border-white/10 py-3 relative z-10 animate-fade-in-up [animation-delay:0.8s] px-4">
+            <div className="relative overflow-hidden h-[45px] flex items-center justify-center">
               {/* Stat 1 */}
-              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                <h3 className="text-[1.05rem] font-semibold text-white">Pan-India Reach</h3>
-                <p className="text-xs text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
+              <div className={`absolute w-full text-center flex flex-col gap-1 transition-all duration-500 transform ${activeStatIdx === 0 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[0.95rem] font-semibold text-white">Pan-India Reach</h3>
+                <p className="text-[10px] text-text-secondary">{stats.homepage.premiumScreens} screens operational</p>
               </div>
               {/* Stat 2 */}
-              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                <h3 className="text-[1.05rem] font-semibold text-white">High Cinema Footfall</h3>
-                <p className="text-xs text-text-secondary">Connect with thousands of daily viewers</p>
+              <div className={`absolute w-full text-center flex flex-col gap-1 transition-all duration-500 transform ${activeStatIdx === 1 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[0.95rem] font-semibold text-white">High Cinema Footfall</h3>
+                <p className="text-[10px] text-text-secondary">Connect with thousands of daily viewers</p>
               </div>
               {/* Stat 3 */}
-              <div className={`absolute w-full text-center flex flex-col gap-1.5 transition-all duration-500 transform ${activeStatIdx === 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
-                <h3 className="text-[1.05rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
-                <p className="text-xs text-text-secondary">Luxury movie experiences across India</p>
+              <div className={`absolute w-full text-center flex flex-col gap-1 transition-all duration-500 transform ${activeStatIdx === 2 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}`}>
+                <h3 className="text-[0.95rem] font-semibold text-white">Next-Generation Cinema Screens</h3>
+                <p className="text-[10px] text-text-secondary">Luxury movie experiences across India</p>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile View Suite Peeking Footer (Visible only on mobile, stays fixed during scroll) */}
+        <div className="block md:hidden w-full h-[25dvh] bg-black/45 backdrop-blur-md border-t border-white/5 px-[6%] py-6 flex flex-col justify-between relative z-10 select-none">
+          <div className="flex flex-col text-left">
+            <p className="text-[0.65rem] font-semibold tracking-[3px] text-primary-gold mb-2 uppercase">THE CONNPLEX SUITE</p>
+            <h2 className="text-xl font-bold text-white leading-tight">
+              One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
+            </h2>
+          </div>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-[10px] text-text-secondary font-medium tracking-wider uppercase flex items-center gap-1.5 animate-pulse">
+              Scroll <span className="text-xs">&darr;</span>
+            </span>
+            <Link href="/ecosystem" className="text-xs text-primary-gold font-medium tracking-wider hover:text-white transition-colors duration-300">
+              Explore &rarr;
+            </Link>
           </div>
         </div>
       </CinematicHero>

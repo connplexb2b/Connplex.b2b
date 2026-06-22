@@ -253,11 +253,4 @@ body {
   height: 100dvh;
 }
 
-@media (max-width: 768px) {
-  .cinematic-hero-section {
-    height: 75vh;
-    height: 75dvh;
-  }
-}
-
 
