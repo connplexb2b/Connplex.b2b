@@ -300,7 +300,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-6 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[300px] sm:max-w-none px-4">
             <a
-              href="https://theconnplex.com/"
+              href="https://www.theconnplex.com/franchise-with-us"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
