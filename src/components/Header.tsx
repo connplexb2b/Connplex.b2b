@@ -24,7 +24,7 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Advertise With Us', path: '/advertise' },
-    { name: 'Apply For Franchise', path: '/franchise-with-us' },
+    { name: 'Franchise With Us', path: '/franchise-with-us' },
     { name: 'Book an Event', path: '/book-event' },
     { name: 'Case Studies', path: '/case-studies' },
     { name: 'Gallery', path: '/gallery' },
