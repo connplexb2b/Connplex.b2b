@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  outputFileTracingExcludes: {
+    '*': [
+      './backend/**/*',
+      './scratch/**/*',
+      './public/uploads/**/*',
+      './data/**/*',
+    ],
+  },
   async redirects() {
     return [
       {
