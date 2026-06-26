@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import formRoutes from "./routes/formRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -59,6 +60,7 @@ app.get("/", (req, res) => {
 
 // Forms API routes
 app.use("/api/forms", formRoutes);
+app.use("/api", userRoutes);
 
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
