@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Montserrat } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -15,6 +16,11 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Connplex Cinemas | Premium Cinema Chain in India",
   description: "Welcome to Connplex Cinemas, India's fastest-growing premium next-gen cinema chain. Explore premium smart cinema screens and B2B cinema screen partnerships, redefining entertainment.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -38,7 +44,22 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-GRV1S9CVTT"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-GRV1S9CVTT');
+          `}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
