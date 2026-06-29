@@ -4,6 +4,24 @@ import Footer from '@/components/Footer';
 import { readInvestors } from '@/lib/admin-investors';
 import { formatDate, formatFileSize } from '@/lib/media-utils';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const readableTitle = slug
+        .split('-')
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
+
+    return {
+        title: `${readableTitle} | Connplex Cinemas Investor Documents`,
+        description: `Official downloads, filings, and disclosures related to ${readableTitle} for Connplex Cinemas Limited.`,
+    };
+}
 
 export default async function InvestorDocumentsPage({
     params,
