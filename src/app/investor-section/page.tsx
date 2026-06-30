@@ -103,7 +103,31 @@ export default function InvestorRelationsPage() {
         const res = await fetch(`${BASE_API_URL}/user/get-single-investor-by-user?title=${encodeURIComponent(activeCategory)}`);
         const json = await res.json();
         if (json && json.status === 200) {
-          setActiveDetails(json.data);
+          let data = json.data;
+          const isOtherAnnouncement = 
+            activeCategory.toLowerCase() === 'other announcements' || 
+            activeCategory.toLowerCase() === 'other announcement' ||
+            activeCategory.toLowerCase() === 'other annoucment';
+          
+          if (isOtherAnnouncement && data) {
+            if (!data.investorsPdfs) {
+              data.investorsPdfs = [];
+            }
+            // Check if it already exists to prevent duplicate insertion
+            const exists = data.investorsPdfs.some(
+              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf'
+            );
+            if (!exists) {
+              data.investorsPdfs.unshift({
+                _id: 'da37e2c9-95e2-411a-8fcd-a9b0e12d45c6',
+                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf',
+                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c0326e08-9df2-421e-a4b5-12cfcf5b2c9a.pdf',
+                mimeType: 'application/pdf',
+                size: 555811
+              });
+            }
+          }
+          setActiveDetails(data);
         }
       } catch (err) {
         console.error('Error loading category details:', err);
@@ -314,7 +338,7 @@ export default function InvestorRelationsPage() {
                                 key={idx}
                                 className="investor-card flex justify-between items-center p-5 bg-[#1a1816] hover:bg-[#131110] border border-white/5 rounded-lg transition-all duration-300"
                                 target="_blank"
-                                href={`${FILE_URL}//${file.fileName}?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE.`}
+                                href={file.fileName.startsWith('/') || file.fileName.startsWith('http') ? file.fileName : `${FILE_URL}//${file.fileName}?_gl=1*mcahn2*_ga*MTgwOTQ1NjYwMi4xNzgxNzg0Mzg2*_ga_GH3360Q98K*czE3ODE3ODQzODUkbzEkZzEkdDE3ODE3ODQ0MjQkajIxJGwwJGg1MDE5MTQwMjE.`}
                                 rel="noopener noreferrer"
                                 title={`Download ${displayName} ${isAudio ? 'Audio' : 'PDF'}`}
                               >
