@@ -1,5 +1,4 @@
 'use client';
-
 import { useCallback, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Investor, InvestorFileType, InvestorFile } from '@/lib/media-utils';
