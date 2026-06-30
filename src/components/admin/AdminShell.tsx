@@ -33,17 +33,10 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
         <nav className="admin-nav">
           <div style={{ padding: '0.4rem 1.5rem 0.2rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)' }}>Content</div>
-          {navLink('/admin', 'Media Library', 'fa-folder-open')}
-          {navLink('/admin/investors', 'Investors', 'fa-building')}
           {navLink('/admin/stats', 'Website Stats', 'fa-chart-bar')}
-          {navLink('/admin/hero-slides', 'Hero Slides', 'fa-film')}
           {navLink('/admin/news', 'News & Promotions', 'fa-newspaper')}
-          {navLink('/admin/case-studies', 'Case Studies', 'fa-briefcase')}
-          {navLink('/admin/faqs', "FAQ's", 'fa-circle-question')}
-          {navLink('/admin/gallery', 'Gallery', 'fa-images')}
           <div style={{ padding: '0.6rem 1.5rem 0.2rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', marginTop: '0.25rem' }}>Data & SEO</div>
           {navLink('/admin/analytics', 'Analytics', 'fa-chart-line')}
-          {navLink('/admin/submissions', 'Form Submissions', 'fa-inbox')}
           {navLink('/admin/seo', 'SEO Manager', 'fa-magnifying-glass')}
         </nav>
       </aside>

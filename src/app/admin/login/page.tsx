@@ -32,7 +32,7 @@ function AdminLoginForm() {
       }
 
       // Successfully authenticated, navigate to dashboard
-      const from = searchParams.get('from') || '/admin';
+      const from = searchParams.get('from') || '/admin/news';
       
       // Refresh session first, then navigate
       router.refresh();
