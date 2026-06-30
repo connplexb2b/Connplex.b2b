@@ -39,8 +39,8 @@ interface InvestorPageData {
   email_three: string;
 }
 
-const BASE_API_URL = 'https://webadmin.theconnplex.com/api';
-const FILE_URL = 'https://webadmin.theconnplex.com/api/file';
+const BASE_API_URL = '/api';
+const FILE_URL = '/api/file';
 
 export default function InvestorRelationsPage() {
   const [categories, setCategories] = useState<InvestorCategory[]>([]);
