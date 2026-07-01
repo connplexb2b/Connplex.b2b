@@ -82,22 +82,24 @@ export default function NewsAdminPage() {
     const file = e.target.files?.[0];
     if (!file || !modal) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
+    // Limit file size to 2MB to keep MongoDB BSON size small
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image must be less than 2MB');
+      return;
+    }
 
     try {
       setError('');
-      const res = await fetch('/api/admin/upload-image', {
-        method: 'POST',
-        body: formData,
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setModal({ ...modal, imagePath: data.fileUrl });
-      } else {
-        const errData = await res.json();
-        setError(errData.error || 'Failed to upload image');
-      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setModal({ ...modal, imagePath: reader.result });
+        }
+      };
+      reader.onerror = () => {
+        setError('Failed to read image file');
+      };
+      reader.readAsDataURL(file);
     } catch (err: any) {
       setError(err.message || 'Upload error');
     }
