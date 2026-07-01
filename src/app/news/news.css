@@ -1472,8 +1472,9 @@
 }
 
 #news-modal .modal-image-wrapper {
-    height: 60vh;
-    min-height: 400px;
+    height: auto;
+    max-height: 70vh;
+    background: #000;
 }
 
 #news-modal .modal-details-content {
@@ -1492,6 +1493,13 @@
 #news-modal .modal-body-text {
     font-size: 1.1rem;
     line-height: 1.8;
+}
+
+#news-modal #modal-image {
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    object-fit: contain;
 }
 
 #news-modal .news-modal-close-btn {
@@ -1525,8 +1533,8 @@
 
 @media (max-width: 768px) {
     #news-modal .modal-image-wrapper {
-        height: 40vh;
-        min-height: 280px;
+        height: auto;
+        max-height: 50vh;
     }
     
     #news-modal .modal-details-content {
