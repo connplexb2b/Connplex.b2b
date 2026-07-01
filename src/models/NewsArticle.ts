@@ -9,6 +9,7 @@ const NewsArticleSchema = new Schema({
   body: { type: String, default: '', trim: true },
   isActive: { type: Boolean, default: true },
   order: { type: Number, default: 0 },
+  buttonText: { type: String, default: "LET'S CONNECT", trim: true },
 }, { timestamps: true });
 
 export const NewsArticle = mongoose.models.NewsArticle || mongoose.model('NewsArticle', NewsArticleSchema);

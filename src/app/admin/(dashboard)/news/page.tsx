@@ -12,6 +12,7 @@ interface Article {
   body: string;
   isActive: boolean;
   order: number;
+  buttonText?: string;
 }
 
 export default function NewsAdminPage() {
@@ -23,14 +24,14 @@ export default function NewsAdminPage() {
 
   const load = async () => {
     setLoading(true);
-    const res = await fetch('/api/admin/news');
+    const res = await fetch('/api/admin/news?all=true');
     if (res.ok) setArticles(await res.json());
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
 
-  const openAdd = () => setModal({ slug: '', title: '', date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(), shortDesc: '', imagePath: '', body: '', isActive: true, order: 0 });
+  const openAdd = () => setModal({ slug: '', title: '', date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(), shortDesc: '', imagePath: '', body: '', isActive: true, order: 0, buttonText: "LET'S CONNECT" });
   const openEdit = (a: Article) => setModal({ ...a });
   const closeModal = () => { setModal(null); setError(''); };
 
@@ -112,6 +113,9 @@ export default function NewsAdminPage() {
             <div className="admin-form-group"><label>Image Path</label>
               <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.imagePath || ''} onChange={e => setModal({ ...modal, imagePath: e.target.value })} placeholder="/news/news_1.jpeg" />
               {modal.imagePath && <img src={modal.imagePath} alt="" style={{ marginTop: '0.5rem', height: '70px', borderRadius: '4px', objectFit: 'cover', border: '1px solid var(--admin-border)' }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
+            </div>
+            <div className="admin-form-group"><label>Button Text (for Action Button in Modal)</label>
+              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.buttonText || ''} onChange={e => setModal({ ...modal, buttonText: e.target.value })} placeholder="LET'S CONNECT" />
             </div>
             <div className="admin-form-group"><label>Body HTML</label>
               <textarea className="admin-input" style={{ maxWidth: '100%', height: '150px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.82rem' }} value={modal.body || ''} onChange={e => setModal({ ...modal, body: e.target.value })} placeholder="<p>Article content in HTML...</p>" /></div>

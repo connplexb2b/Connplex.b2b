@@ -16,7 +16,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   };
 
   const navLink = (href: string, label: string, icon: string) => {
-    const active = pathname === href || (href !== '/admin' && pathname.startsWith(href));
+    const active = pathname === href || (href !== '/admin' && pathname?.startsWith(href));
     return (
       <Link href={href} className={active ? 'active' : ''}>
         <i className={`fa-solid ${icon}`} aria-hidden="true" />
