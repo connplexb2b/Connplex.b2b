@@ -50,9 +50,18 @@ export async function GET(
   }
 
   const headers = new Headers();
-  if (filename.toLowerCase().endsWith('.pdf')) {
+  const lowerName = filename.toLowerCase();
+  if (lowerName.endsWith('.pdf')) {
     headers.set('Content-Type', 'application/pdf');
     headers.set('Content-Disposition', 'inline');
+  } else if (lowerName.endsWith('.png')) {
+    headers.set('Content-Type', 'image/png');
+  } else if (lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg')) {
+    headers.set('Content-Type', 'image/jpeg');
+  } else if (lowerName.endsWith('.webp')) {
+    headers.set('Content-Type', 'image/webp');
+  } else if (lowerName.endsWith('.gif')) {
+    headers.set('Content-Type', 'image/gif');
   } else {
     headers.set('Content-Type', 'application/octet-stream');
   }

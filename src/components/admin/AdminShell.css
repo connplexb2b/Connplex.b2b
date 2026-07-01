@@ -11,3 +11,36 @@
   width: 1rem;
   text-align: center;
 }
+
+.upload-preview-container {
+  position: relative;
+  width: 150px;
+  height: 100px;
+  border: 1px solid #b3b3b3;
+  border-radius: 8px;
+  background: #dcdcdc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.upload-preview-container:hover .upload-overlay {
+  opacity: 1 !important;
+}
+
+.upload-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}

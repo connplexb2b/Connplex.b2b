@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface Article {
   _id: string;
@@ -21,6 +22,8 @@ export default function NewsAdminPage() {
   const [modal, setModal] = useState<Partial<Article> | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const load = async () => {
     setLoading(true);
@@ -31,7 +34,18 @@ export default function NewsAdminPage() {
 
   useEffect(() => { load(); }, []);
 
-  const openAdd = () => setModal({ slug: '', title: '', date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(), shortDesc: '', imagePath: '', body: '', isActive: true, order: 0, buttonText: "LET'S CONNECT" });
+  const openAdd = () => setModal({ 
+    slug: '', 
+    title: '', 
+    date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(), 
+    shortDesc: '', 
+    imagePath: '', 
+    body: '', 
+    isActive: true, 
+    order: articles.length, 
+    buttonText: "LET'S CONNECT" 
+  });
+  
   const openEdit = (a: Article) => setModal({ ...a });
   const closeModal = () => { setModal(null); setError(''); };
 
@@ -56,6 +70,37 @@ export default function NewsAdminPage() {
   const handleToggle = async (a: Article) => {
     await fetch(`/api/admin/news/${a._id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isActive: !a.isActive }) });
     load();
+  };
+
+  const handleTitleChange = (val: string) => {
+    if (!modal) return;
+    const slug = modal._id ? (modal.slug || '') : val.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    setModal({ ...modal, title: val, slug });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !modal) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setError('');
+      const res = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setModal({ ...modal, imagePath: data.fileUrl });
+      } else {
+        const errData = await res.json();
+        setError(errData.error || 'Failed to upload image');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Upload error');
+    }
   };
 
   return (
@@ -97,37 +142,118 @@ export default function NewsAdminPage() {
 
       {modal !== null && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '700px', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h2 style={{ marginTop: 0 }}>{modal._id ? 'Edit Article' : 'Add Article'}</h2>
-            {error && <p style={{ color: '#dc2626', fontSize: '0.88rem' }}>{error}</p>}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="admin-form-group"><label>Slug <span style={{ color: '#dc2626' }}>*</span></label>
-                <input className="admin-input" value={modal.slug || ''} onChange={e => setModal({ ...modal, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} placeholder="next-gen-auditorium" /></div>
-              <div className="admin-form-group"><label>Date</label>
-                <input className="admin-input" value={modal.date || ''} onChange={e => setModal({ ...modal, date: e.target.value })} placeholder="20 MAY 2024" /></div>
+          <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '850px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h2 style={{ marginTop: 0, fontSize: '1.4rem', fontWeight: 600, color: '#18181b', marginBottom: '1.5rem' }}>
+              {modal._id ? 'Edit Blog' : 'Add Blog'}
+            </h2>
+            
+            {error && <p style={{ color: '#dc2626', fontSize: '0.88rem', marginBottom: '1rem' }}>{error}</p>}
+            
+            {/* Image Upload Zone */}
+            <div className="admin-form-group">
+              <label style={{ fontSize: '0.88rem', fontWeight: 600, color: '#18181b', marginBottom: '0.5rem', display: 'block' }}>
+                Image (size 1100x540 px)
+              </label>
+              <div 
+                className="upload-preview-container"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {modal.imagePath ? (
+                  <>
+                    <img src={modal.imagePath} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div className="upload-overlay" onClick={(e) => { e.stopPropagation(); setModal({ ...modal, imagePath: '' }); }}>
+                      Remove
+                    </div>
+                  </>
+                ) : (
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    background: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#a1a1aa',
+                    fontSize: '1.25rem',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  }}>
+                    +
+                  </div>
+                )}
+              </div>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleImageUpload} 
+                accept="image/*" 
+                style={{ display: 'none' }} 
+              />
             </div>
-            <div className="admin-form-group"><label>Title <span style={{ color: '#dc2626' }}>*</span></label>
-              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.title || ''} onChange={e => setModal({ ...modal, title: e.target.value })} placeholder="Article headline" /></div>
-            <div className="admin-form-group"><label>Short Description</label>
-              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.shortDesc || ''} onChange={e => setModal({ ...modal, shortDesc: e.target.value })} placeholder="Brief summary shown on news card" /></div>
-            <div className="admin-form-group"><label>Image Path</label>
-              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.imagePath || ''} onChange={e => setModal({ ...modal, imagePath: e.target.value })} placeholder="/news/news_1.jpeg" />
-              {modal.imagePath && <img src={modal.imagePath} alt="" style={{ marginTop: '0.5rem', height: '70px', borderRadius: '4px', objectFit: 'cover', border: '1px solid var(--admin-border)' }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />}
-            </div>
-            <div className="admin-form-group"><label>Button Text (for Action Button in Modal)</label>
-              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.buttonText || ''} onChange={e => setModal({ ...modal, buttonText: e.target.value })} placeholder="LET'S CONNECT" />
-            </div>
-            <div className="admin-form-group"><label>Body HTML</label>
-              <textarea className="admin-input" style={{ maxWidth: '100%', height: '150px', resize: 'vertical', fontFamily: 'monospace', fontSize: '0.82rem' }} value={modal.body || ''} onChange={e => setModal({ ...modal, body: e.target.value })} placeholder="<p>Article content in HTML...</p>" /></div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="admin-form-group"><label>Order</label><input className="admin-input" type="number" value={modal.order ?? 0} onChange={e => setModal({ ...modal, order: parseInt(e.target.value) })} /></div>
-              <div className="admin-form-group" style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '1.25rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: 0 }}><input type="checkbox" checked={modal.isActive ?? true} onChange={e => setModal({ ...modal, isActive: e.target.checked })} />Active</label>
+
+            {/* Title & Sequence */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.25rem' }}>
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Blog Title</label>
+                <input 
+                  className="admin-input" 
+                  style={{ maxWidth: '100%', padding: '0.65rem 0.85rem' }}
+                  value={modal.title || ''} 
+                  onChange={e => handleTitleChange(e.target.value)} 
+                  placeholder="Enter blog title" 
+                />
+              </div>
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Blog Sequence</label>
+                <input 
+                  className="admin-input" 
+                  style={{ maxWidth: '100%', padding: '0.65rem 0.85rem' }}
+                  type="number" 
+                  value={modal.order ?? 0} 
+                  onChange={e => setModal({ ...modal, order: parseInt(e.target.value) || 0 })} 
+                  placeholder="Add item Sequence" 
+                />
               </div>
             </div>
-            <div className="admin-form-footer">
+
+            {/* Date, Button Text, Active, Slug */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
+              <div className="admin-form-group" style={{ marginBottom: 0 }}><label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Date</label>
+                <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.date || ''} onChange={e => setModal({ ...modal, date: e.target.value })} placeholder="20 MAY 2024" /></div>
+              <div className="admin-form-group" style={{ marginBottom: 0 }}><label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Button Text</label>
+                <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.buttonText || ''} onChange={e => setModal({ ...modal, buttonText: e.target.value })} placeholder="LET'S CONNECT" /></div>
+              <div className="admin-form-group" style={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '0.65rem', marginBottom: 0 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginBottom: 0, fontSize: '0.88rem', fontWeight: 600 }}>
+                  <input type="checkbox" checked={modal.isActive ?? true} onChange={e => setModal({ ...modal, isActive: e.target.checked })} />Active
+                </label>
+              </div>
+            </div>
+
+            <div className="admin-form-group" style={{ marginBottom: '1.25rem' }}>
+              <label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Slug <span style={{ color: '#dc2626' }}>*</span></label>
+              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.slug || ''} onChange={e => setModal({ ...modal, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })} placeholder="slug-path" />
+            </div>
+
+            <div className="admin-form-group" style={{ marginBottom: '1.25rem' }}>
+              <label style={{ fontSize: '0.88rem', fontWeight: 600 }}>Short Description</label>
+              <input className="admin-input" style={{ maxWidth: '100%' }} value={modal.shortDesc || ''} onChange={e => setModal({ ...modal, shortDesc: e.target.value })} placeholder="Brief summary shown on news card" />
+            </div>
+
+            {/* Description (Rich Text Editor) */}
+            <div className="admin-form-group" style={{ marginBottom: '1.5rem' }}>
+              <label style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.5rem', display: 'block' }}>Blog Description</label>
+              <RichTextEditor 
+                value={modal.body || ''} 
+                onChange={(html) => setModal({ ...modal, body: html })}
+                placeholder="Enter description here..."
+              />
+            </div>
+
+            <div className="admin-form-footer" style={{ borderTop: '1px solid #d1d1d6', paddingTop: '1.25rem', marginTop: '1.5rem' }}>
               <button className="admin-btn admin-btn-outline" onClick={closeModal}>Cancel</button>
-              <button className="admin-btn admin-btn-primary" onClick={handleSave} disabled={saving}>{saving ? 'Saving...' : 'Save Article'}</button>
+              <button className="admin-btn admin-btn-primary" onClick={handleSave} disabled={saving} style={{ background: '#18181b', color: '#fff' }}>
+                {saving ? 'Saving...' : 'Save Article'}
+              </button>
             </div>
           </div>
         </div>
