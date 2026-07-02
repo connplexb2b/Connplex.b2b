@@ -6,12 +6,12 @@
     "parent": "Announcements",
     "files": [
       {
-        "id": "856a89f5-01e3-4bd0-9bfc-38047ef3b6da",
-        "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 23.05.2026.pdf",
-        "storedName": "b4fbe0cb-f33a-49f3-b6a1-e563e719fbc1.pdf",
-        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/b4fbe0cb-f33a-49f3-b6a1-e563e719fbc1.pdf",
+        "id": "e2c03d04-1b79-4cfc-b179-c8c362089df2",
+        "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf",
+        "storedName": "e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf",
         "mimeType": "application/pdf",
-        "size": 552266
+        "size": 94500
       },
       {
         "id": "da37e2c9-95e2-411a-8fcd-a9b0e12d45c6",
@@ -20,8 +20,16 @@
         "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c0326e08-9df2-421e-a4b5-12cfcf5b2c9a.pdf",
         "mimeType": "application/pdf",
         "size": 555811
+      },
+      {
+        "id": "856a89f5-01e3-4bd0-9bfc-38047ef3b6da",
+        "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 23.05.2026.pdf",
+        "storedName": "b4fbe0cb-f33a-49f3-b6a1-e563e719fbc1.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/b4fbe0cb-f33a-49f3-b6a1-e563e719fbc1.pdf",
+        "mimeType": "application/pdf",
+        "size": 552266
       }
     ],
-    "updatedAt": "2026-06-30T16:13:48.000Z"
+    "updatedAt": "2026-07-01T16:13:48.000Z"
   }
 ]

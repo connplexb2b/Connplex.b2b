@@ -113,17 +113,32 @@ export default function InvestorRelationsPage() {
             if (!data.investorsPdfs) {
               data.investorsPdfs = [];
             }
-            // Check if it already exists to prevent duplicate insertion
-            const exists = data.investorsPdfs.some(
+            
+            // Check if 30.06.2026 already exists
+            const exists30 = data.investorsPdfs.some(
               (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf'
             );
-            if (!exists) {
+            if (!exists30) {
               data.investorsPdfs.unshift({
                 _id: 'da37e2c9-95e2-411a-8fcd-a9b0e12d45c6',
                 originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf',
                 fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c0326e08-9df2-421e-a4b5-12cfcf5b2c9a.pdf',
                 mimeType: 'application/pdf',
                 size: 555811
+              });
+            }
+
+            // Check if 01.07.2026 already exists (should be at the very top, so unshift last)
+            const exists01 = data.investorsPdfs.some(
+              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf'
+            );
+            if (!exists01) {
+              data.investorsPdfs.unshift({
+                _id: 'e2c03d04-1b79-4cfc-b179-c8c362089df2',
+                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf',
+                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf',
+                mimeType: 'application/pdf',
+                size: 94500
               });
             }
           }
