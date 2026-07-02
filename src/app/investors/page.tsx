@@ -138,7 +138,7 @@ export default function InvestorsPage() {
                 originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf',
                 fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf',
                 mimeType: 'application/pdf',
-                size: 94500
+                size: 602926
               });
             }
           }
