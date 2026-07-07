@@ -141,6 +141,20 @@ export default function InvestorRelationsPage() {
                 size: 602926
               });
             }
+
+            // Check if 04.07.2026 already exists (should be at the very top, so unshift last)
+            const exists04 = data.investorsPdfs.some(
+              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf'
+            );
+            if (!exists04) {
+              data.investorsPdfs.unshift({
+                _id: '8f9fc3db-2548-4fc2-ab6a-a0a20540ff62',
+                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf',
+                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/0181d7f9-7af7-45d3-b53d-0ebcadf11fc3.pdf',
+                mimeType: 'application/pdf',
+                size: 1288332
+              });
+            }
           }
           setActiveDetails(data);
         }
