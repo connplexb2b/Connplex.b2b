@@ -27,6 +27,52 @@ export default function ThankYouPage() {
                     gtag('config', 'G-GRV1S9CVTT');
                 `}
             </Script>
+            <Script id="meta-pixel" strategy="afterInteractive">
+                {`
+                    !function(f,b,e,v,n,t,s)
+                    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                    n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)}(window, document,'script',
+                    'https://connect.facebook.net/en_US/fbevents.js');
+                    fbq('init', '882439511025451');
+                    fbq('init', '1029275259464766');
+                    fbq('track', 'PageView');
+                    fbq('track', 'Lead');
+                `}
+            </Script>
+            <noscript>
+                <img
+                    height="1"
+                    width="1"
+                    style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=882439511025451&ev=PageView&noscript=1"
+                    alt=""
+                />
+                <img
+                    height="1"
+                    width="1"
+                    style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=1029275259464766&ev=PageView&noscript=1"
+                    alt=""
+                />
+                <img
+                    height="1"
+                    width="1"
+                    style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=882439511025451&ev=Lead&noscript=1"
+                    alt=""
+                />
+                <img
+                    height="1"
+                    width="1"
+                    style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=1029275259464766&ev=Lead&noscript=1"
+                    alt=""
+                />
+            </noscript>
             <div className="fra-testimonial-card-inner" style={{ maxWidth: '500px', width: '100%', margin: '0 auto', border: '1px solid var(--fra-gold)' }}>
                 <div style={{ fontSize: '4rem', color: '#c19b62', marginBottom: '20px' }}>✓</div>
                 <h1 className="fra-gold-text" style={{ fontSize: '2rem', marginBottom: '15px', fontWeight: 'bold' }}>THANK YOU!</h1>
