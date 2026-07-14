@@ -22,7 +22,6 @@ const nextConfig: NextConfig = {
       './backend/**/*',
       './scratch/**/*',
       './public/uploads/**/*',
-      './data/**/*',
     ],
   },
   async redirects() {
