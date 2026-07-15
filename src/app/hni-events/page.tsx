@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Script from "next/script";
 
 const posterImg = "/assets/odyssey-poster.jpg";
 const uncoreLogo = "/assets/new_uncore_logo.png";
@@ -35,6 +36,11 @@ function Divider() {
 
 export default function PremierNightPage() {
   const { d, h, m, s, mounted } = useCountdown();
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [isPaying, setIsPaying] = useState(false);
+
   const experiences = [
     { title: "Private Premiere", sub: "" },
     { title: "Luxury Welcome", sub: "" },
@@ -45,8 +51,97 @@ export default function PremierNightPage() {
     { title: "Immersive Experience", sub: "" },
   ];
 
+  const handlePayment = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!guestName || !guestEmail || !guestPhone) {
+      alert("Please fill in all registration fields.");
+      return;
+    }
+
+    if (!(window as any).Razorpay) {
+      alert("Razorpay payment gateway is loading. Please try again in a moment.");
+      return;
+    }
+
+    setIsPaying(true);
+    try {
+      // 1. Create order on the Next.js API endpoint
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 1000 }), // Amount in INR
+      });
+      const orderData = await res.json();
+
+      if (!res.ok || !orderData.id) {
+        alert("Failed to initiate order. Please try again.");
+        setIsPaying(false);
+        return;
+      }
+
+      // 2. Configure checkout configuration options
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Connplex Cinemas",
+        description: "HNI Premier Night Registration - The Odyssey",
+        image: uncoreLogo,
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          // 3. Send payment signature details to backend for verification
+          const verifyRes = await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+          if (verifyRes.ok && verifyData.status === "success") {
+            alert("Booking & Payment Successful! We will contact you shortly with your digital invitation.");
+            setGuestName("");
+            setGuestEmail("");
+            setGuestPhone("");
+          } else {
+            alert("Payment Verification Failed! Please check with your bank.");
+          }
+          setIsPaying(false);
+        },
+        prefill: {
+          name: guestName,
+          email: guestEmail,
+          contact: guestPhone,
+        },
+        theme: {
+          color: "#c19b62", // Custom gold theme color
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        alert(`Payment Failed! Error description: ${response.error.description}`);
+        setIsPaying(false);
+      });
+      rzp.open();
+    } catch (error) {
+      console.error("Razorpay payment transaction setup failed:", error);
+      alert("Payment transaction initialization error.");
+      setIsPaying(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden font-sans">
+      {/* Razorpay Checkout Script */}
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
+
       {/* NAV */}
       <nav className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-background/80 border-b border-[var(--gold)]/15">
         <div className="max-w-7xl mx-auto px-6 py-3 grid grid-cols-1 md:grid-cols-3 items-center gap-2 md:gap-4">
@@ -207,11 +302,57 @@ export default function PremierNightPage() {
           <p className="text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed">
             Christopher Nolan's <em>The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
           </p>
-          <p className="text-sm text-[var(--gold-soft)] mb-10 tracking-widest">
+          <p className="text-sm text-[var(--gold-soft)] mb-8 tracking-widest">
             18 JULY 2026  ·  7:55 PM  ·  CONNPLEX LUXURIANCE CINEMAS
           </p>
-          <a href="#" className="inline-block btn-gold hover:[&]:btn-gold-hover px-16 py-5 rounded-sm text-base">Book Now</a>
-          <p className="text-xs text-muted-foreground mt-6 tracking-widest">Only 70 invitations available</p>
+
+          {/* Premium Billing/Registration Form */}
+          <div className="max-w-md mx-auto p-8 border border-[var(--gold)]/25 bg-card/60 backdrop-blur rounded-sm text-left mb-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">FULL NAME</label>
+                <input
+                  type="text"
+                  value={guestName}
+                  onChange={(e) => setGuestName(e.target.value)}
+                  placeholder="Gaurav Kumar"
+                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">EMAIL ADDRESS</label>
+                <input
+                  type="email"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="gaurav.kumar@example.com"
+                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">CONTACT NUMBER</label>
+                <input
+                  type="tel"
+                  value={guestPhone}
+                  onChange={(e) => setGuestPhone(e.target.value)}
+                  placeholder="9999999999"
+                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
+                  required
+                />
+              </div>
+              <button
+                onClick={handlePayment}
+                disabled={isPaying}
+                className="w-full mt-6 inline-block text-center btn-gold hover:[&]:btn-gold-hover py-4 rounded-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {isPaying ? "Processing..." : "Book Now - ₹1,000"}
+              </button>
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground tracking-widest">Only 70 invitations available</p>
         </div>
       </section>
       {/* FOOTER */}
