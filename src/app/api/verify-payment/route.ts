@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { connectToDatabase } from "@/lib/db";
+import mongoose from "mongoose";
 
 export async function POST(req: NextRequest) {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      guestName,
+      guestEmail,
+      guestPhone,
+      amount
+    } = await req.json();
 
     // Generate signature locally using Key Secret
     const key_secret = process.env.RAZORPAY_KEY_SECRET || "YOUR_KEY_SECRET";
@@ -12,8 +22,27 @@ export async function POST(req: NextRequest) {
     const generated_signature = hmac.digest("hex");
 
     if (generated_signature === razorpay_signature) {
-      // Payment is authentic. Update order status to 'Paid' in database here if applicable.
-      return NextResponse.json({ status: "success", message: "Payment verified successfully" });
+      // Connect to MongoDB
+      await connectToDatabase();
+      const db = mongoose.connection.db;
+      if (!db) {
+        throw new Error("Database connection failed");
+      }
+
+      // Insert guest and payment details into hnibookings collection
+      await db.collection("hnibookings").insertOne({
+        guestName,
+        guestEmail,
+        guestPhone,
+        razorpay_order_id,
+        razorpay_payment_id,
+        amount: amount || 1000,
+        status: "Paid",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      return NextResponse.json({ status: "success", message: "Payment verified and booking saved successfully" });
     } else {
       // Tampered signature or invalid payment
       return NextResponse.json({ status: "failure", message: "Invalid signature verification" }, { status: 400 });

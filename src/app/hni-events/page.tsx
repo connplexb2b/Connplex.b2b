@@ -97,6 +97,10 @@ export default function PremierNightPage() {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
+              guestName,
+              guestEmail,
+              guestPhone,
+              amount: 1000,
             }),
           });
 
