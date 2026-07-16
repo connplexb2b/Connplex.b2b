@@ -74,7 +74,7 @@ export default function PremierNightPage() {
       const orderData = await res.json();
 
       if (!res.ok || !orderData.id) {
-        alert("Failed to initiate order. Please try again.");
+        alert(`Failed to initiate order. Details: ${orderData.details || orderData.error || "Please try again."}`);
         setIsPaying(false);
         return;
       }
