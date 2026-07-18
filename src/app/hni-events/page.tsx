@@ -357,6 +357,7 @@ export default function PremierNightPage() {
           </div>
 
           <p className="text-xs text-muted-foreground tracking-widest">Only 70 invitations available</p>
+          <p className="text-xs text-muted-foreground tracking-widest mt-2">First Come. First Served. Book Now</p>
         </div>
       </section>
       {/* FOOTER */}
