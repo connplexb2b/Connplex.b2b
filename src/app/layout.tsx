@@ -47,7 +47,7 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body>
+      <body className="bg-black text-white font-montserrat min-h-screen flex flex-col antialiased">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-GRV1S9CVTT"
           strategy="afterInteractive"
