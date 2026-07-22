@@ -23,7 +23,7 @@ export default function Header() {
     <>
       <header className="fixed top-0 left-0 w-full flex items-center justify-between px-[6%] z-[1000] transition-all duration-300 bg-black/90 backdrop-blur-md h-[90px] border-b border-white/5">
         <div className="flex items-center">
-          <Link href="/capex">
+          <Link href="/capex-for-developers">
             <div className="flex flex-col leading-none">
               <span className="font-outfit font-extrabold text-[1.4rem] tracking-[3px] text-primary-gold">
                 CONNPLEX
