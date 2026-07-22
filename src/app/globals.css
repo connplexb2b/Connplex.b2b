@@ -5,19 +5,20 @@
 
 @theme {
   --color-bg-dark: #050505;
-  --color-primary-gold: #eab308;
+  --color-primary-gold: #C5A059;
+  --color-hover-gold: #c99f4a;
   --color-fra-gold: #c19b62;
   --color-fra-gold-hover: #a88554;
   --color-be-gold: #D4AF37;
   --color-gold-primary: #d5b263;
   --color-gold-bright: #f1d48f;
   --color-gold-glow: rgba(213, 178, 99, 0.35);
-  --color-text-secondary: #a1a1aa;
+  --color-text-secondary: #b0b0b0;
   
-  --font-outfit: 'Outfit', sans-serif;
+  --font-outfit: var(--font-outfit), sans-serif;
   --font-inter: 'Inter', sans-serif;
   --font-oswald: 'Oswald', sans-serif;
-  --font-montserrat: 'Montserrat', sans-serif;
+  --font-montserrat: var(--font-montserrat), sans-serif;
   --font-cormorant: 'Cormorant Garamond', serif;
   --font-syncopate: 'Syncopate', sans-serif;
   --font-cinzel: 'Cinzel', serif;
@@ -173,16 +174,12 @@ body {
 }
 
 /* Page Animation Utilities */
-.reveal-up {
-  animation: fadeInUp 1s ease forwards;
-}
-.reveal-up-delay {
-  opacity: 0;
-  animation: fadeInUp 1s ease 0.3s forwards;
-}
-.reveal-up-delay-2 {
-  opacity: 0;
-  animation: fadeInUp 1s ease 0.6s forwards;
+.reveal-up { opacity: 0; animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.reveal-up-delay { opacity: 0; animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; }
+.reveal-up-delay-2 { opacity: 0; animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; }
+@keyframes reveal-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 .slide-up-delay {
   opacity: 0;
@@ -328,6 +325,28 @@ body {
 
 .font-display {
   font-family: "Cormorant Garamond", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c99f4a; }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0px 1000px #0d0d0d inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 

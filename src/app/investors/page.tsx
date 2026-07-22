@@ -183,6 +183,31 @@ export default function InvestorsPage() {
                 size: 1469538
               });
             }
+
+            // Parse date from originalname (format like DD.MM.YYYY or DD-MM-YYYY)
+            const parseDate = (name: string): Date => {
+              if (!name) return new Date(0);
+              const match = name.match(/(\d{2})[.-](\d{2})[.-](\d{4})/);
+              if (match) {
+                const day = parseInt(match[1], 10);
+                const month = parseInt(match[2], 10);
+                const year = parseInt(match[3], 10);
+                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                  return new Date(year, month - 1, day);
+                }
+              }
+              return new Date(0);
+            };
+
+            // Sort PDFs in chronological order (newest first, e.g. 2026, 2025)
+            data.investorsPdfs.sort((a: any, b: any) => {
+              const dateA = parseDate(a.originalname || '').getTime();
+              const dateB = parseDate(b.originalname || '').getTime();
+              if (dateB !== dateA) {
+                return dateB - dateA;
+              }
+              return (a.originalname || '').localeCompare(b.originalname || '');
+            });
           }
           setActiveDetails(data);
         }
