@@ -298,10 +298,10 @@ export default function Home() {
             Luxury. Technology. Cinema.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center mb-6 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[300px] sm:max-w-none px-4">
+          <div className="flex flex-col gap-3 justify-center items-center mb-6 md:mb-10 relative z-10 animate-fade-in-up [animation-delay:0.6s] w-full max-w-[300px] px-4">
             <Link
               href="/franchise-with-us"
-              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+              className="w-full bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
             >
               Franchise With Us
               <span>&rarr;</span>
@@ -310,9 +310,9 @@ export default function Home() {
               href="https://ticketing.theconnplex.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
+              className="w-full bg-[#191919]/60 backdrop-blur-md text-white px-8 py-3 rounded-full font-medium text-xs md:text-sm border border-white/10 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5 inline-flex items-center justify-center gap-2"
             >
-              Book tickets <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+              Book tickets <span>&rarr;</span>
             </a>
           </div>
 
