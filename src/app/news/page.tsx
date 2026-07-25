@@ -267,7 +267,7 @@ const NewsPage = () => {
                                 <h2 className="section-title" id="latest-news-title">LATEST NEWS</h2>
                                 <span className="gold-line" aria-hidden="true"></span>
                             </div>
-                            <button className="btn-outline-news" onClick={() => { window.location.hash = '#newsletter-section' }}>
+                            <button className="btn-outline-news" onClick={() => { document.getElementById('newsletter-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
                                 VIEW ALL NEWS <span className="arrow">→</span>
                             </button>
                         </div>
