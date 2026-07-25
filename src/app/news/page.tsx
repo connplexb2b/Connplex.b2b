@@ -261,13 +261,13 @@ const NewsPage = () => {
                 </section>
 
                 <main className="page-wrapper">
-                    <section className="news-section" aria-labelledby="latest-news-title">
+                    <section className="news-section" id="news-section" aria-labelledby="latest-news-title">
                         <div className="news-header">
                             <div className="title-with-line">
                                 <h2 className="section-title" id="latest-news-title">LATEST NEWS</h2>
                                 <span className="gold-line" aria-hidden="true"></span>
                             </div>
-                            <button className="btn-outline-news" onClick={() => { document.getElementById('newsletter-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
+                            <button className="btn-outline-news" onClick={() => { document.getElementById('news-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
                                 VIEW ALL NEWS <span className="arrow">→</span>
                             </button>
                         </div>
