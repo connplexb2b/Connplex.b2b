@@ -59,6 +59,15 @@ const auditorium2Url = "/luxury_cinema_lounge.png";
 const HEADING = "font-display uppercase tracking-[0.02em]";
 const EVENT_DATE = 1784384700000; // 2026-07-18T19:55:00+05:30
 
+const SPIDER_LOCATIONS = [
+  { name: "Connplex Luxuriance – SBR, Ahmedabad", time: "9:10 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex – Adani Shantigram, Ahmedabad", time: "9:00 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex – Gota, Ahmedabad", time: "8:00 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex – Gandhinagar", time: "8:00 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex – Vadodara", time: "9:10 PM", date: "Saturday (30th July, 1st Aug)" },
+];
+
 function useCountdown() {
   const [now, setNow] = useState(() => EVENT_DATE);
   const [mounted, setMounted] = useState(false);
@@ -385,7 +394,13 @@ function About() {
   );
 }
 
-function Journey() {
+function Journey({
+  onSelectEvent,
+  selectedEvent,
+}: {
+  onSelectEvent: (event: any) => void;
+  selectedEvent: any;
+}) {
   const highlights = [
     "70+ Premium Guests",
     "Industry Leaders",
@@ -394,15 +409,6 @@ function Journey() {
     "Premium Hospitality",
     "Luxury Networking",
     "Movie Premiere Celebration",
-  ];
-  
-  const spiderLocations = [
-    "Jajpur",
-    "Ahmedabad",
-    "Phulbani",
-    "Biswanath, Assam",
-    "Tribeca, Pune",
-    "MPM Mall, Hyderabad (TBA)",
   ];
   
   return (
@@ -462,12 +468,18 @@ function Journey() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="#book"
-                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)]"
+                <button
+                  onClick={() => onSelectEvent({
+                    movie: "The Odyssey",
+                    location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+                    date: "18 July 2026",
+                    time: "7:55 PM",
+                    amount: 1000,
+                  })}
+                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
                 >
                   Book Seats <ChevronRight className="h-4 w-4" />
-                </a>
+                </button>
               </div>
             </motion.div>
             {/* CARD 2 — Spider-Man */}
@@ -491,28 +503,60 @@ function Journey() {
                   </h3>
                 </div>
                 <div className="mb-6 font-body text-sm font-medium text-white/80 md:text-base">
-                  Coming Soon
+                  Book Your Preferred Showtime & Venue below
                 </div>
                 <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                  Locations
+                  Locations & Timings (Click to Book)
                 </div>
-                <ul className="grid gap-2.5 sm:grid-cols-2">
-                  {spiderLocations.map((loc) => (
-                    <li
-                      key={loc}
-                      className="flex items-start gap-2.5 font-body text-sm text-white/85"
-                    >
-                      <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--color-gold)]" />
-                      {loc}
-                    </li>
-                  ))}
+                <ul className="grid gap-4 sm:grid-cols-2">
+                  {SPIDER_LOCATIONS.map((loc) => {
+                    const isSelected = selectedEvent.movie === "Spider-Man" && selectedEvent.location === loc.name;
+                    return (
+                      <button
+                        key={loc.name}
+                        onClick={() => onSelectEvent({
+                          movie: "Spider-Man",
+                          location: loc.name,
+                          date: loc.date,
+                          time: loc.time,
+                          amount: 1000,
+                        })}
+                        className={`flex flex-col gap-2 rounded-xl border p-4 text-left transition-all hover:-translate-y-0.5 w-full cursor-pointer ${
+                          isSelected
+                            ? "border-[color:var(--color-gold)] bg-[color:var(--color-gold)]/10 shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+                            : "border-white/5 bg-[#141414]/30 hover:border-[color:var(--color-gold)]/30 hover:bg-[#1e1e1e]/50"
+                        }`}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          <MapPin className={`mt-1 h-4 w-4 shrink-0 ${isSelected ? "text-[color:var(--color-gold-soft)]" : "text-[color:var(--color-gold)]"}`} />
+                          <span className="font-body text-sm font-semibold text-white">
+                            {loc.name}
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 pl-[26px] font-body text-xs text-[color:var(--color-champagne)]/80">
+                          <span className="flex items-center gap-1">
+                            📅 {loc.date}
+                          </span>
+                          <span className={`flex items-center gap-1 font-medium ${isSelected ? "text-[color:var(--color-gold-soft)]" : "text-white/60"}`}>
+                            ⏰ {loc.time}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </ul>
-                <a
-                  href="#book"
-                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)]"
+                <button
+                  onClick={() => onSelectEvent({
+                    movie: "Spider-Man",
+                    location: SPIDER_LOCATIONS[0].name,
+                    date: SPIDER_LOCATIONS[0].date,
+                    time: SPIDER_LOCATIONS[0].time,
+                    amount: 1000,
+                  })}
+                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
                 >
                   Book Now <ChevronRight className="h-4 w-4" />
-                </a>
+                </button>
               </div>
             </motion.div>
           </div>
@@ -585,6 +629,8 @@ function BookingSection({
   setGuestPhone,
   isPaying,
   handlePayment,
+  selectedEvent,
+  setSelectedEvent,
 }: {
   guestName: string;
   setGuestName: (v: string) => void;
@@ -594,7 +640,39 @@ function BookingSection({
   setGuestPhone: (v: string) => void;
   isPaying: boolean;
   handlePayment: (e: React.MouseEvent) => void;
+  selectedEvent: any;
+  setSelectedEvent: (event: any) => void;
 }) {
+  const movies = ["The Odyssey", "Spider-Man"];
+  const odysseyLocations = [
+    { name: "Connplex Luxuriance – Adani Shantigram, Ahmedabad", time: "7:55 PM", date: "18 July 2026" }
+  ];
+
+  const currentLocationsList = selectedEvent.movie === "The Odyssey" ? odysseyLocations : SPIDER_LOCATIONS;
+
+  const handleMovieChange = (movie: string) => {
+    const defaultLoc = movie === "The Odyssey" ? odysseyLocations[0] : SPIDER_LOCATIONS[0];
+    setSelectedEvent({
+      movie,
+      location: defaultLoc.name,
+      date: defaultLoc.date,
+      time: defaultLoc.time,
+      amount: 1000,
+    });
+  };
+
+  const handleLocationChange = (locationName: string) => {
+    const loc = currentLocationsList.find(l => l.name === locationName);
+    if (loc) {
+      setSelectedEvent({
+        ...selectedEvent,
+        location: loc.name,
+        date: loc.date,
+        time: loc.time,
+      });
+    }
+  };
+
   return (
     <section id="book" className="relative overflow-hidden bg-[#050505] py-28 lg:py-36 border-t border-white/10">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_60%)]" />
@@ -604,15 +682,51 @@ function BookingSection({
           Claim Your <span className="text-gold-gradient">Seat</span>
         </h2>
         <p className="mt-6 max-w-2xl mx-auto font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
-          Christopher Nolan's <em className="text-[color:var(--color-gold-soft)]">The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
+          {selectedEvent.movie === "The Odyssey" ? (
+            <>
+              Christopher Nolan's <em className="text-[color:var(--color-gold-soft)]">The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
+            </>
+          ) : (
+            <>
+              Experience the web-slinging action with <em className="text-[color:var(--color-gold-soft)]">Spider-Man Premiere Night</em> — an exclusive HNI screening event with luxury hospitality.
+            </>
+          )}
         </p>
-        <p className="mt-4 font-caps text-xs tracking-[0.25em] text-[color:var(--color-gold-soft)] font-semibold">
-          18 JULY 2026 · 7:55 PM · CONNPLEX LUXURIANCE CINEMAS
+        <p className="mt-4 font-caps text-xs tracking-[0.25em] text-[color:var(--color-gold-soft)] font-semibold uppercase">
+          {selectedEvent.date} · {selectedEvent.time} · {selectedEvent.location}
         </p>
         
         {/* Form Container */}
         <div className="glass-card max-w-md mx-auto mt-12 p-8 text-left hover:border-[color:var(--color-gold)]/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)]">
           <div className="space-y-5">
+            <div>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT MOVIE</label>
+              <select
+                value={selectedEvent.movie}
+                onChange={(e) => handleMovieChange(e.target.value)}
+                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
+              >
+                {movies.map((m) => (
+                  <option key={m} value={m} className="bg-[#141414] text-white">
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT LOCATION & SHOWTIME</label>
+              <select
+                value={selectedEvent.location}
+                onChange={(e) => handleLocationChange(e.target.value)}
+                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
+              >
+                {currentLocationsList.map((loc) => (
+                  <option key={loc.name} value={loc.name} className="bg-[#141414] text-white">
+                    {loc.name} ({loc.date} @ {loc.time})
+                  </option>
+                ))}
+              </select>
+            </div>
             <div>
               <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">FULL NAME</label>
               <input
@@ -652,12 +766,12 @@ function BookingSection({
               disabled={isPaying}
               className="w-full mt-8 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isPaying ? "Processing..." : "Book Now - ₹1,000"}
+              {isPaying ? "Processing..." : `Book Now - ₹${selectedEvent.amount.toLocaleString()}`}
             </button>
           </div>
         </div>
         
-        <p className="mt-8 font-caps text-[11px] tracking-[0.28em] text-white/50 uppercase">Only 70 invitations available</p>
+        <p className="mt-8 font-caps text-[11px] tracking-[0.28em] text-white/50 uppercase">Only 70 invitations available per event</p>
         <p className="mt-2 font-caps text-[11px] tracking-[0.28em] text-white/50 uppercase">First Come. First Served.</p>
       </div>
     </section>
@@ -855,6 +969,13 @@ export default function PremiereLuxeLanding() {
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
   const [isPaying, setIsPaying] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState({
+    movie: "The Odyssey",
+    location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+    date: "18 July 2026",
+    time: "7:55 PM",
+    amount: 1000,
+  });
 
   const handlePayment = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -890,7 +1011,7 @@ export default function PremiereLuxeLanding() {
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Connplex Cinemas",
-        description: "HNI Premier Night Registration - The Odyssey",
+        description: `HNI Premier Night Registration - ${selectedEvent.movie}`,
         image: uncoreLogoUrl,
         order_id: orderData.id,
         handler: async function (response: any) {
@@ -906,6 +1027,10 @@ export default function PremiereLuxeLanding() {
               guestEmail,
               guestPhone,
               amount: 1000,
+              movie: selectedEvent.movie,
+              location: selectedEvent.location,
+              date: selectedEvent.date,
+              time: selectedEvent.time,
             }),
           });
 
@@ -943,6 +1068,14 @@ export default function PremiereLuxeLanding() {
     }
   };
 
+  const selectEventHandler = (event: any) => {
+    setSelectedEvent(event);
+    const bookSection = document.getElementById("book");
+    if (bookSection) {
+      bookSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-[color:var(--color-gold)] selection:text-black">
       {/* Razorpay Checkout Script */}
@@ -955,7 +1088,7 @@ export default function PremiereLuxeLanding() {
       <main>
         <Hero />
         <CountdownSection />
-        <Journey />
+        <Journey onSelectEvent={selectEventHandler} selectedEvent={selectedEvent} />
         <About />
         <WhyConnplex />
         <BookingSection
@@ -967,6 +1100,8 @@ export default function PremiereLuxeLanding() {
           setGuestPhone={setGuestPhone}
           isPaying={isPaying}
           handlePayment={handlePayment}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
         />
         <HostWithConnplex />
         <FinalCTA />
