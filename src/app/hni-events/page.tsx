@@ -57,7 +57,7 @@ const auditorium1Url = "/auditorium_new.jpg";
 const auditorium2Url = "/luxury_cinema_lounge.png"; 
 
 const HEADING = "font-display uppercase tracking-[0.02em]";
-const EVENT_DATE = 1784384700000; // 2026-07-18T19:55:00+05:30
+const EVENT_DATE = 1785598200000; // 2026-08-01T21:00:00+05:30
 
 const SPIDER_LOCATIONS = [
   { name: "Connplex Luxuriance – SBR, Ahmedabad", time: "9:10 PM", date: "Saturday (30th July, 1st Aug)" },
@@ -306,7 +306,7 @@ function CountdownSection() {
     <section className="relative overflow-hidden bg-[#0d0d0d] py-14 border-y border-white/10">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <p className="font-caps text-[11px] tracking-[0.36em] text-[color:var(--color-gold-soft)] uppercase mb-6">
-          THE PREMIERE OF THE ODYSSEY BEGINS IN
+          THE PREMIERE OF SPIDER-MAN BEGINS IN
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           {[
@@ -430,64 +430,12 @@ function Journey({
           {/* Gold vertical line */}
           <div className="absolute left-6 top-0 bottom-0 hidden w-px bg-gradient-to-b from-transparent via-[color:var(--color-gold)]/60 to-transparent md:left-8 md:block" />
           <div className="space-y-14">
-            {/* CARD 1 — Odyssey */}
+            {/* CARD 1 — Spider-Man */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.9 }}
-              className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
-            >
-              <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
-                <Film className="h-6 w-6 text-[color:var(--color-gold)]" />
-              </div>
-              <div className="glass-card flex-1 p-8 md:p-10 hover:border-[color:var(--color-gold)]/50 hover:-translate-y-1">
-                <div className="mb-4">
-                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                    Successfully Hosted
-                  </div>
-                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
-                    🎬 Odyssey HNI Premiere Night
-                  </h3>
-                </div>
-                <div className="mb-6 flex items-start gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
-                  <span>Connplex Luxuriance – Adani Shantigram, Ahmedabad</span>
-                </div>
-                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                  Experience Highlights
-                </div>
-                <ul className="grid gap-2.5 sm:grid-cols-2">
-                  {highlights.map((h) => (
-                    <li
-                      key={h}
-                      className="flex items-start gap-2.5 font-body text-sm text-white/85"
-                    >
-                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--color-gold)]" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => onSelectEvent({
-                    movie: "The Odyssey",
-                    location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
-                    date: "18 July 2026",
-                    time: "7:55 PM",
-                    amount: 1000,
-                  })}
-                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
-                >
-                  Book Seats <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            </motion.div>
-            {/* CARD 2 — Spider-Man */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.9, delay: 0.1 }}
               className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
             >
               <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
@@ -557,6 +505,49 @@ function Journey({
                 >
                   Book Now <ChevronRight className="h-4 w-4" />
                 </button>
+              </div>
+            </motion.div>
+            {/* CARD 2 — Odyssey */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+              className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
+            >
+              <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
+                <Film className="h-6 w-6 text-[color:var(--color-gold)]" />
+              </div>
+              <div className="glass-card flex-1 p-8 md:p-10 hover:border-[color:var(--color-gold)]/50 hover:-translate-y-1">
+                <div className="mb-4">
+                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                    Successfully Hosted
+                  </div>
+                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
+                    🎬 Odyssey HNI Premiere Night
+                  </h3>
+                </div>
+                <div className="mb-6 flex items-start gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                  <span>Connplex Luxuriance – Adani Shantigram, Ahmedabad</span>
+                </div>
+                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                  Experience Highlights
+                </div>
+                <ul className="grid gap-2.5 sm:grid-cols-2">
+                  {highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex items-start gap-2.5 font-body text-sm text-white/85"
+                    >
+                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--color-gold)]" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 inline-flex items-center gap-2 rounded-[14px] border border-white/10 bg-white/5 px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-white/40">
+                  Event Completed
+                </div>
               </div>
             </motion.div>
           </div>
@@ -643,22 +634,11 @@ function BookingSection({
   selectedEvent: any;
   setSelectedEvent: (event: any) => void;
 }) {
-  const movies = ["The Odyssey", "Spider-Man"];
-  const odysseyLocations = [
-    { name: "Connplex Luxuriance – Adani Shantigram, Ahmedabad", time: "7:55 PM", date: "18 July 2026" }
-  ];
-
-  const currentLocationsList = selectedEvent.movie === "The Odyssey" ? odysseyLocations : SPIDER_LOCATIONS;
+  const movies = ["Spider-Man"];
+  const currentLocationsList = SPIDER_LOCATIONS;
 
   const handleMovieChange = (movie: string) => {
-    const defaultLoc = movie === "The Odyssey" ? odysseyLocations[0] : SPIDER_LOCATIONS[0];
-    setSelectedEvent({
-      movie,
-      location: defaultLoc.name,
-      date: defaultLoc.date,
-      time: defaultLoc.time,
-      amount: 1000,
-    });
+    // Only Spider-Man is available
   };
 
   const handleLocationChange = (locationName: string) => {
@@ -929,14 +909,10 @@ function Footer() {
             </div>
             <ul className="space-y-3 font-body text-sm text-white/75">
               <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-[color:var(--color-gold)]" /> premieres@connplex.in
+                <Mail className="h-4 w-4 text-[color:var(--color-gold)]" /> ankita@theconnplex.com
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-[color:var(--color-gold)]" /> +91 70411 85417
-              </li>
-              <li className="flex items-center gap-3">
-                <Building2 className="h-4 w-4 text-[color:var(--color-gold)]" /> Ahmedabad · Pune ·
-                Hyderabad
+                <Phone className="h-4 w-4 text-[color:var(--color-gold)]" /> +91 92279 81125
               </li>
             </ul>
           </div>
@@ -946,7 +922,7 @@ function Footer() {
             </div>
             <ul className="space-y-3 font-body text-sm text-white/75">
               <li className="flex items-center gap-3">
-                <InstagramIcon className="h-4 w-4 text-[color:var(--color-gold)]" /> @connplex.premieres
+                <InstagramIcon className="h-4 w-4 text-[color:var(--color-gold)]" /> @connplex.cinemas
               </li>
               <li className="flex items-center gap-3">
                 <ShieldCheck className="h-4 w-4 text-[color:var(--color-gold)]" /> Invitation only
@@ -970,10 +946,10 @@ export default function PremiereLuxeLanding() {
   const [guestPhone, setGuestPhone] = useState("");
   const [isPaying, setIsPaying] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({
-    movie: "The Odyssey",
-    location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
-    date: "18 July 2026",
-    time: "7:55 PM",
+    movie: "Spider-Man",
+    location: "Connplex Luxuriance – SBR, Ahmedabad",
+    date: "Saturday (30th July, 1st Aug)",
+    time: "9:10 PM",
     amount: 1000,
   });
 
