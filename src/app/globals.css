@@ -433,5 +433,43 @@ select:-webkit-autofill:focus {
   background: linear-gradient(90deg, transparent, rgba(212,175,55,0.6), transparent);
 }
 
+@theme {
+  --color-onyx: #050505;
+  --color-jet: #0d0d0d;
+  --color-card: #111111;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-gold: #d4af37;
+  --color-gold-soft: #f5c86a;
+  --color-gold-deep: #c9992d;
+  --color-champagne: #bebebe;
+  --color-ivory: #ffffff;
+  --font-display: "LEMON MILK", "Montserrat", sans-serif;
+  --font-sans: "Inter", "Poppins", sans-serif;
+  --font-body: "Poppins", "Inter", sans-serif;
+  --font-caps: "Montserrat", sans-serif;
+}
 
+@utility text-gold-gradient {
+  background: linear-gradient(135deg, #d4af37 0%, #f5c86a 50%, #c9992d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
+@utility bg-gold-gradient {
+  background: linear-gradient(135deg, #d4af37 0%, #f5c86a 50%, #c9992d 100%);
+}
+
+@utility glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+}
+
+@utility gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.6) 50%, transparent 100%);
+}

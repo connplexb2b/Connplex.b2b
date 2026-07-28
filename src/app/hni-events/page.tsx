@@ -1,55 +1,860 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  Film,
+  Sparkles,
+  Crown,
+  Wine,
+  ShieldCheck,
+  Users,
+  MapPin,
+  Star,
+  ChevronRight,
+  Mail,
+  Phone,
+  Menu,
+  X,
+  Utensils,
+  Handshake,
+  Ticket,
+  ShoppingBag,
+  Music,
+  Rocket,
+  Megaphone,
+  Award,
+  Building2,
+  Lock,
+} from "lucide-react";
 
-const posterImg = "/assets/odyssey-poster.jpg";
-const uncoreLogo = "/assets/new_uncore_logo.png";
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+// Local assets with Unsplash fallbacks
+const connplexLogoUrl = "/logo.png";
+const uncoreLogoUrl = "/assets/new_uncore_logo.png";
+const auditorium1Url = "/auditorium_new.jpg"; 
+const auditorium2Url = "/luxury_cinema_lounge.png"; 
+
+const HEADING = "font-display uppercase tracking-[0.02em]";
 const EVENT_DATE = 1784384700000; // 2026-07-18T19:55:00+05:30
 
 function useCountdown() {
   const [now, setNow] = useState(() => EVENT_DATE);
   const [mounted, setMounted] = useState(false);
+  
   useEffect(() => {
     setMounted(true);
     setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
+  
   const diff = Math.max(0, EVENT_DATE - now);
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff / 3600000) % 24);
   const m = Math.floor((diff / 60000) % 60);
   const s = Math.floor((diff / 1000) % 60);
+  
   return { d, h, m, s, mounted };
 }
 
-function Divider() {
+function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-center gap-4 my-6">
-      <span className="h-px w-16 bg-gradient-to-r from-transparent to-[var(--gold)]" />
-      <span className="text-[var(--gold)] text-xs tracking-[0.4em]">◆</span>
-      <span className="h-px w-16 bg-gradient-to-l from-transparent to-[var(--gold)]" />
+    <div className="mb-6 flex items-center justify-center gap-3">
+      <span className="h-px w-10 bg-gold-gradient" />
+      <span className="font-caps text-[11px] font-semibold uppercase tracking-[0.36em] text-[color:var(--color-gold-soft)]">
+        {children}
+      </span>
+      <span className="h-px w-10 bg-gold-gradient" />
     </div>
   );
 }
 
-export default function PremierNightPage() {
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  
+  const links = [
+    { href: "#top", label: "Home" },
+    { href: "#about", label: "About" },
+    { href: "#journey", label: "Premiere Journey" },
+    { href: "#book", label: "Book Seats" },
+    { href: "#host", label: "Host Event" },
+  ];
+  
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-black/90 backdrop-blur-xl border-b border-white/10"
+          : "bg-transparent backdrop-blur-md"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
+        <a href="#top" className="flex items-center gap-3">
+          <img
+            src={connplexLogoUrl}
+            alt="Connplex Cinemas"
+            className="h-10 w-auto md:h-11 rounded"
+            onError={(e) => {
+              // fallback if local file logo doesn't exist
+              e.currentTarget.src = "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=200";
+            }}
+          />
+        </a>
+        <nav className="hidden items-center gap-9 lg:flex">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={`${HEADING} group relative text-[11px] text-white/80 transition hover:text-[color:var(--color-gold-soft)]`}
+            >
+              {l.label}
+              <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold-gradient transition-all duration-500 group-hover:w-full" />
+            </a>
+          ))}
+        </nav>
+        <a
+          href="#book"
+          className="hidden lg:inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-6 py-2.5 font-caps text-[12px] font-semibold uppercase tracking-[0.16em] text-black shadow-[0_10px_40px_-10px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_-10px_rgba(212,175,55,0.8)]"
+        >
+          Book Seats <ChevronRight className="h-3.5 w-3.5" />
+        </a>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="lg:hidden text-[color:var(--color-gold)]"
+          aria-label="Menu"
+        >
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+      {open && (
+        <div className="lg:hidden bg-black/95 border-t border-white/10">
+          <div className="flex flex-col gap-1 px-6 py-6">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className={`${HEADING} py-3 text-xs text-white/85`}
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href="#book"
+              onClick={() => setOpen(false)}
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient px-6 py-3 font-caps text-xs font-semibold uppercase tracking-[0.16em] text-black"
+            >
+              Book Seats
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const stats = [
+    "70+ Premium Guests",
+    "Luxury Hospitality",
+    "Red Carpet Experience",
+    "Multiple Cities",
+  ];
+  
+  return (
+    <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden">
+      <motion.div style={{ y }} className="absolute inset-0">
+        <img
+          src={auditorium2Url}
+          alt="Connplex Cinemas premium auditorium"
+          className="h-full w-full object-cover animate-zoom-out"
+          width={1920}
+          height={1200}
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200";
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/55 to-[#050505]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+        <div className="absolute left-1/2 top-1/3 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--color-gold)]/15 blur-[160px]" />
+      </motion.div>
+      <motion.div
+        style={{ opacity }}
+        className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 pt-32 pb-16 text-center"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-[color:var(--color-gold)]/40 bg-black/40 px-5 py-2 font-caps text-[11px] font-semibold uppercase tracking-[0.32em] text-[color:var(--color-gold-soft)]"
+        >
+          ✨ CONNPLEX EXCLUSIVE
+        </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className={`${HEADING} max-w-4xl text-2xl leading-[1.15] text-white sm:text-3xl md:text-4xl lg:text-5xl`}
+        >
+          India's First Cinema Chain
+          <br />
+          <span className="text-gold-gradient">to Host Exclusive HNI Premiere Nights</span>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.95 }}
+          className="mt-8 max-w-2xl font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] sm:text-lg"
+        >
+          At Connplex Cinemas, we don't just premiere movies—we create unforgettable experiences.
+          From celebrities and business leaders to influencers and premium guests, our HNI Premiere
+          Nights redefine how India celebrates cinema.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.15 }}
+          className="mt-6 font-body text-sm italic text-white/70 sm:text-base"
+        >
+          An invitation-only experience. Limited seats. Unlimited memories.
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.3 }}
+          className="mt-10"
+        >
+          <a
+            href="#book"
+            className="group inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-10 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
+          >
+            Claim Your Seat
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </a>
+        </motion.div>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          animate="visible"
+          transition={{ delay: 1.5 }}
+          className="mt-14 grid w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4"
+        >
+          {stats.map((s, i) => (
+            <motion.div
+              key={s}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.5 + i * 0.1 }}
+              className="glass-card px-4 py-5 text-center"
+            >
+              <div className={`${HEADING} text-xs text-white sm:text-sm`}>{s}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+function CountdownSection() {
   const { d, h, m, s, mounted } = useCountdown();
+  
+  return (
+    <section className="relative overflow-hidden bg-[#0d0d0d] py-14 border-y border-white/10">
+      <div className="mx-auto max-w-5xl px-6 text-center">
+        <p className="font-caps text-[11px] tracking-[0.36em] text-[color:var(--color-gold-soft)] uppercase mb-6">
+          THE PREMIERE OF THE ODYSSEY BEGINS IN
+        </p>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+          {[
+            { label: "Days", val: d },
+            { label: "Hours", val: h },
+            { label: "Minutes", val: m },
+            { label: "Seconds", val: s },
+          ].map((item) => (
+            <div key={item.label} className="glass-card py-6 px-4 hover:border-[color:var(--color-gold)]/40">
+              <span className="font-display text-4xl sm:text-5xl text-gold-gradient tabular-nums block font-bold">
+                {mounted ? String(item.val).padStart(2, "0") : "00"}
+              </span>
+              <span className="font-caps text-[10px] tracking-[0.25em] text-white/50 uppercase mt-2 block">
+                {item.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="about" className="relative overflow-hidden bg-[#0d0d0d] py-28 lg:py-36">
+      <div className="pointer-events-none absolute inset-0 opacity-40">
+        <div className="absolute left-1/4 top-1/3 h-96 w-96 rounded-full bg-[color:var(--color-gold)]/15 blur-[140px]" />
+      </div>
+      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2 lg:gap-20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 1 }}
+          className="relative"
+        >
+          <div className="glass-card relative overflow-hidden rounded-3xl p-2">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
+              <img
+                src={auditorium1Url}
+                alt="Luxury cinema auditorium prepared for a premiere"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                width={1200}
+                height={1500}
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200";
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            </div>
+          </div>
+          <div className="absolute -inset-6 -z-10 rounded-3xl bg-[color:var(--color-gold)]/10 blur-3xl" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9 }}
+        >
+          <SectionEyebrow>About</SectionEyebrow>
+          <h2 className={`${HEADING} text-4xl leading-tight text-white sm:text-5xl md:text-6xl`}>
+            The Future of{" "}
+            <span className="text-gold-gradient">Movie Premieres</span>
+          </h2>
+          <div className="mt-8 space-y-6 font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
+            <p>
+              Connplex proudly introduced a first-of-its-kind concept in the Indian cinema
+              industry—exclusive HNI Premiere Nights.
+            </p>
+            <p>
+              Every event is thoughtfully curated with luxury hospitality, premium dining,
+              networking opportunities, entertainment, exclusive merchandise, and the first
+              opportunity to experience blockbuster films before the public.
+            </p>
+            <p>
+              Whether it's Ahmedabad, Pune, Hyderabad, Odisha, or Assam, every Connplex premiere is
+              designed to become a landmark celebration.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Journey() {
+  const highlights = [
+    "70+ Premium Guests",
+    "Industry Leaders",
+    "Influencers & Media",
+    "Exclusive Red Carpet Experience",
+    "Premium Hospitality",
+    "Luxury Networking",
+    "Movie Premiere Celebration",
+  ];
+  
+  const spiderLocations = [
+    "Jajpur",
+    "Ahmedabad",
+    "Phulbani",
+    "Biswanath, Assam",
+    "Tribeca, Pune",
+    "MPM Mall, Hyderabad (TBA)",
+  ];
+  
+  return (
+    <section id="journey" className="relative bg-[#050505] py-28 lg:py-36">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center">
+          <SectionEyebrow>Premiere Journey</SectionEyebrow>
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.9 }}
+            className={`${HEADING} text-4xl leading-tight text-white sm:text-5xl md:text-6xl`}
+          >
+            <span className="text-gold-gradient">Premiere Journey</span>
+          </motion.h2>
+        </div>
+        <div className="relative mx-auto mt-20 max-w-5xl">
+          {/* Gold vertical line */}
+          <div className="absolute left-6 top-0 bottom-0 hidden w-px bg-gradient-to-b from-transparent via-[color:var(--color-gold)]/60 to-transparent md:left-8 md:block" />
+          <div className="space-y-14">
+            {/* CARD 1 — Odyssey */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.9 }}
+              className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
+            >
+              <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
+                <Film className="h-6 w-6 text-[color:var(--color-gold)]" />
+              </div>
+              <div className="glass-card flex-1 p-8 md:p-10 hover:border-[color:var(--color-gold)]/50 hover:-translate-y-1">
+                <div className="mb-4">
+                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                    Successfully Hosted
+                  </div>
+                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
+                    🎬 Odyssey HNI Premiere Night
+                  </h3>
+                </div>
+                <div className="mb-6 flex items-start gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                  <span>Connplex Luxuriance – Adani Shantigram, Ahmedabad</span>
+                </div>
+                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                  Experience Highlights
+                </div>
+                <ul className="grid gap-2.5 sm:grid-cols-2">
+                  {highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex items-start gap-2.5 font-body text-sm text-white/85"
+                    >
+                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--color-gold)]" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#book"
+                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)]"
+                >
+                  Book Seats <ChevronRight className="h-4 w-4" />
+                </a>
+              </div>
+            </motion.div>
+            {/* CARD 2 — Spider-Man */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+              className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
+            >
+              <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
+                <Star className="h-6 w-6 text-[color:var(--color-gold)]" />
+              </div>
+              <div className="glass-card flex-1 p-8 md:p-10 hover:border-[color:var(--color-gold)]/50 hover:-translate-y-1">
+                <div className="mb-4">
+                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                    Upcoming Event
+                  </div>
+                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
+                    🕷 Spider-Man Premiere Night
+                  </h3>
+                </div>
+                <div className="mb-6 font-body text-sm font-medium text-white/80 md:text-base">
+                  Coming Soon
+                </div>
+                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                  Locations
+                </div>
+                <ul className="grid gap-2.5 sm:grid-cols-2">
+                  {spiderLocations.map((loc) => (
+                    <li
+                      key={loc}
+                      className="flex items-start gap-2.5 font-body text-sm text-white/85"
+                    >
+                      <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--color-gold)]" />
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#book"
+                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)]"
+                >
+                  Book Now <ChevronRight className="h-4 w-4" />
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyConnplex() {
+  const features: { icon: React.ComponentType<{ className?: string }>; title: string }[] = [
+    { icon: Crown, title: "Premium Experience" },
+    { icon: Mail, title: "Exclusive Invitations" },
+    { icon: Star, title: "Celebrity & Influencer Presence" },
+    { icon: Wine, title: "Luxury Hospitality" },
+    { icon: Handshake, title: "Networking with Business Leaders" },
+    { icon: Utensils, title: "Premium Food & Beverages" },
+    { icon: Ticket, title: "Red Carpet Experience" },
+    { icon: ShoppingBag, title: "Exclusive Merchandise" },
+    { icon: Film, title: "First Day First Show Experience" },
+    { icon: Music, title: "Curated Entertainment" },
+  ];
+  
+  return (
+    <section className="relative overflow-hidden bg-[#0d0d0d] py-28 lg:py-36">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.08),transparent_60%)]" />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="text-center">
+          <SectionEyebrow>Why Connplex Premiere Nights?</SectionEyebrow>
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.9 }}
+            className={`${HEADING} mx-auto max-w-4xl text-4xl leading-tight text-white sm:text-5xl md:text-6xl`}
+          >
+            More Than A Movie.{" "}
+            <span className="text-gold-gradient">It is an experience.</span>
+          </motion.h2>
+        </div>
+        <div className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {features.map((f, i) => (
+            <motion.div
+              key={f.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.9, delay: (i % 5) * 0.08 }}
+              className="glass-card group relative overflow-hidden p-6 hover:-translate-y-1 hover:border-[color:var(--color-gold)]/60 hover:shadow-[0_25px_60px_-20px_rgba(212,175,55,0.35)]"
+            >
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--color-gold)]/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl border border-[color:var(--color-gold)]/30 bg-gradient-to-br from-[color:var(--color-gold)]/10 to-transparent">
+                <f.icon className="h-5 w-5 text-[color:var(--color-gold)]" />
+              </div>
+              <h3 className={`${HEADING} text-sm text-white md:text-base`}>{f.title}</h3>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BookingSection({
+  guestName,
+  setGuestName,
+  guestEmail,
+  setGuestEmail,
+  guestPhone,
+  setGuestPhone,
+  isPaying,
+  handlePayment,
+}: {
+  guestName: string;
+  setGuestName: (v: string) => void;
+  guestEmail: string;
+  setGuestEmail: (v: string) => void;
+  guestPhone: string;
+  setGuestPhone: (v: string) => void;
+  isPaying: boolean;
+  handlePayment: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <section id="book" className="relative overflow-hidden bg-[#050505] py-28 lg:py-36 border-t border-white/10">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.08),transparent_60%)]" />
+      <div className="relative mx-auto max-w-4xl px-6 text-center">
+        <SectionEyebrow>Invite-Only Registration</SectionEyebrow>
+        <h2 className={`${HEADING} text-4xl leading-tight text-white sm:text-5xl md:text-6xl`}>
+          Claim Your <span className="text-gold-gradient">Seat</span>
+        </h2>
+        <p className="mt-6 max-w-2xl mx-auto font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
+          Christopher Nolan's <em className="text-[color:var(--color-gold-soft)]">The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
+        </p>
+        <p className="mt-4 font-caps text-xs tracking-[0.25em] text-[color:var(--color-gold-soft)] font-semibold">
+          18 JULY 2026 · 7:55 PM · CONNPLEX LUXURIANCE CINEMAS
+        </p>
+        
+        {/* Form Container */}
+        <div className="glass-card max-w-md mx-auto mt-12 p-8 text-left hover:border-[color:var(--color-gold)]/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)]">
+          <div className="space-y-5">
+            <div>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">FULL NAME</label>
+              <input
+                type="text"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                placeholder="Gaurav Kumar"
+                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
+                required
+              />
+            </div>
+            <div>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">EMAIL ADDRESS</label>
+              <input
+                type="email"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+                placeholder="gaurav.kumar@example.com"
+                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
+                required
+              />
+            </div>
+            <div>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">CONTACT NUMBER</label>
+              <input
+                type="tel"
+                value={guestPhone}
+                onChange={(e) => setGuestPhone(e.target.value)}
+                placeholder="9999999999"
+                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
+                required
+              />
+            </div>
+            
+            <button
+              onClick={handlePayment}
+              disabled={isPaying}
+              className="w-full mt-8 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {isPaying ? "Processing..." : "Book Now - ₹1,000"}
+            </button>
+          </div>
+        </div>
+        
+        <p className="mt-8 font-caps text-[11px] tracking-[0.28em] text-white/50 uppercase">Only 70 invitations available</p>
+        <p className="mt-2 font-caps text-[11px] tracking-[0.28em] text-white/50 uppercase">First Come. First Served.</p>
+      </div>
+    </section>
+  );
+}
+
+function HostWithConnplex() {
+  const cards: { icon: React.ComponentType<{ className?: string }>; title: string }[] = [
+    { icon: Film, title: "Movie Premieres" },
+    { icon: Rocket, title: "Corporate Launches" },
+    { icon: Lock, title: "Private Screenings" },
+    { icon: Megaphone, title: "Brand Activations" },
+    { icon: Users, title: "Influencer Events" },
+    { icon: ShoppingBag, title: "Product Launches" },
+    { icon: Award, title: "Award Nights" },
+  ];
+  
+  return (
+    <section
+      id="host"
+      className="relative overflow-hidden bg-gradient-to-b from-[#050505] via-[#0d0d0d] to-[#050505] py-28 lg:py-36"
+    >
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9 }}
+          className="mx-auto max-w-4xl text-center"
+        >
+          <SectionEyebrow>Host With Connplex</SectionEyebrow>
+          <h2 className={`${HEADING} text-4xl leading-tight text-white sm:text-5xl md:text-6xl`}>
+            Host With <span className="text-gold-gradient">Connplex</span>
+          </h2>
+          <p className={`${HEADING} mt-8 text-base text-white/85 sm:text-lg md:text-xl`}>
+            Want To Host Your Brand Launch, Movie Premiere or Corporate Event?
+          </p>
+          <p className="mt-6 font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
+            Connplex offers premium cinema spaces for
+          </p>
+        </motion.div>
+        <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {cards.map((c, i) => (
+            <motion.div
+              key={c.title}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.9, delay: (i % 4) * 0.08 }}
+              className="glass-card group p-7 text-center hover:-translate-y-1 hover:border-[color:var(--color-gold)]/60 hover:shadow-[0_25px_60px_-20px_rgba(212,175,55,0.35)]"
+            >
+              <div className="mx-auto mb-5 grid h-14 w-14 place-items-center rounded-xl border border-[color:var(--color-gold)]/30 bg-gradient-to-br from-[color:var(--color-gold)]/10 to-transparent">
+                <c.icon className="h-6 w-6 text-[color:var(--color-gold)]" />
+              </div>
+              <h3 className={`${HEADING} text-base text-white`}>{c.title}</h3>
+            </motion.div>
+          ))}
+        </div>
+        <div className="mt-14 text-center">
+          <a
+            href="#book"
+            className="inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-10 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
+          >
+            Book An Event <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section
+      id="contact"
+      className="relative overflow-hidden bg-[#050505] py-28 lg:py-40"
+    >
+      <div className="pointer-events-none absolute inset-0">
+        <img
+          src={auditorium2Url}
+          alt=""
+          aria-hidden
+          className="h-full w-full object-cover opacity-20"
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200";
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-black/80 to-[#050505]" />
+        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--color-gold)]/12 blur-[160px]" />
+      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.9 }}
+        className="relative mx-auto max-w-4xl px-6 text-center"
+      >
+        <div className="mb-8 flex items-center justify-center gap-3">
+          <span className="h-px w-16 bg-gold-gradient" />
+          <Crown className="h-5 w-5 text-[color:var(--color-gold)]" />
+          <span className="h-px w-16 bg-gold-gradient" />
+        </div>
+        <h2 className={`${HEADING} text-4xl leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl`}>
+          The Next Premiere Could Be{" "}
+          <span className="text-gold-gradient">Yours.</span>
+        </h2>
+        <p className="mx-auto mt-8 max-w-2xl font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
+          Whether you're a movie lover, brand partner, or corporate client, Connplex HNI Premiere
+          Nights offer an unmatched cinematic experience.
+        </p>
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="#book"
+            className="inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-9 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
+          >
+            Explore Upcoming Events <ChevronRight className="h-4 w-4" />
+          </a>
+          <a
+            href="#host"
+            className="inline-flex items-center gap-3 rounded-[14px] border border-[color:var(--color-gold)]/50 bg-black/40 px-9 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-gold-soft)] transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--color-gold)] hover:bg-[color:var(--color-gold)]/10"
+          >
+            Partner With Connplex
+          </a>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="relative border-t border-white/10 bg-black py-14">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid gap-10 md:grid-cols-4">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-3">
+              <img
+                src={connplexLogoUrl}
+                alt="Connplex Cinemas"
+                className="h-11 w-auto rounded"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=200";
+                }}
+              />
+            </div>
+            <p className="mt-6 max-w-md font-body text-sm leading-[1.9] text-[color:var(--color-champagne)]">
+              India's first cinema chain to host exclusive HNI Premiere Nights — where luxury,
+              cinema and community meet.
+            </p>
+          </div>
+          <div>
+            <div className={`${HEADING} mb-5 text-[11px] tracking-[0.28em] text-[color:var(--color-gold-soft)]`}>
+              Reach Us
+            </div>
+            <ul className="space-y-3 font-body text-sm text-white/75">
+              <li className="flex items-center gap-3">
+                <Mail className="h-4 w-4 text-[color:var(--color-gold)]" /> premieres@connplex.in
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="h-4 w-4 text-[color:var(--color-gold)]" /> +91 70411 85417
+              </li>
+              <li className="flex items-center gap-3">
+                <Building2 className="h-4 w-4 text-[color:var(--color-gold)]" /> Ahmedabad · Pune ·
+                Hyderabad
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div className={`${HEADING} mb-5 text-[11px] tracking-[0.28em] text-[color:var(--color-gold-soft)]`}>
+              Follow
+            </div>
+            <ul className="space-y-3 font-body text-sm text-white/75">
+              <li className="flex items-center gap-3">
+                <InstagramIcon className="h-4 w-4 text-[color:var(--color-gold)]" /> @connplex.premieres
+              </li>
+              <li className="flex items-center gap-3">
+                <ShieldCheck className="h-4 w-4 text-[color:var(--color-gold)]" /> Invitation only
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="gold-divider mt-12" />
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 font-caps text-[11px] text-white/50 md:flex-row">
+          <div className="uppercase tracking-[0.28em]">© {new Date().getFullYear()} Connplex Cinemas</div>
+          <div className="uppercase tracking-[0.28em]">HNI Premiere Nights</div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function PremiereLuxeLanding() {
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
   const [isPaying, setIsPaying] = useState(false);
-
-  const experiences = [
-    { title: "Private Premiere", sub: "" },
-    { title: "Luxury Welcome", sub: "" },
-    { title: "Gourmet Experience", sub: "" },
-    { title: "Premium Gifts", sub: "" },
-    { title: "Red Carpet Moments", sub: "" },
-    { title: "Elite Networking", sub: "" },
-    { title: "Immersive Experience", sub: "" },
-  ];
 
   const handlePayment = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -86,7 +891,7 @@ export default function PremierNightPage() {
         currency: orderData.currency,
         name: "Connplex Cinemas",
         description: "HNI Premier Night Registration - The Odyssey",
-        image: uncoreLogo,
+        image: uncoreLogoUrl,
         order_id: orderData.id,
         handler: async function (response: any) {
           // 3. Send payment signature details to backend for verification
@@ -121,7 +926,7 @@ export default function PremierNightPage() {
           contact: guestPhone,
         },
         theme: {
-          color: "#c19b62", // Custom gold theme color
+          color: "#d4af37", // Custom gold theme color
         },
       };
 
@@ -139,237 +944,34 @@ export default function PremierNightPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-[color:var(--color-gold)] selection:text-black">
       {/* Razorpay Checkout Script */}
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
       />
-
-      {/* NAV */}
-      <nav className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-background/80 border-b border-[var(--gold)]/15">
-        <div className="max-w-7xl mx-auto px-6 py-3 grid grid-cols-1 md:grid-cols-3 items-center gap-2 md:gap-4">
-          <a href="https://www.uncoredigital.com" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center md:justify-start gap-2 md:gap-3 hover:opacity-80 transition order-2 md:order-1">
-            <span className="text-[9px] md:text-[10px] tracking-[0.25em] text-muted-foreground uppercase">hosted by</span>
-            <img src={uncoreLogo} alt="Uncore Digital" className="h-5 md:h-7 w-auto shrink-0" />
-          </a>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-2 order-1 md:order-2">
-            <span className="font-display text-xl md:text-2xl tracking-widest text-gold-gradient">CONNPLEX</span>
-            <span className="text-[8px] md:text-[10px] tracking-[0.35em] text-muted-foreground">LUXURIANCE CINEMAS</span>
-          </div>
-          <a href="#book" className="hidden md:inline-block btn-gold hover:[&]:btn-gold-hover px-6 py-2.5 rounded-sm text-xs justify-self-end order-3">
-            Book Now
-          </a>
-        </div>
-      </nav>
-      {/* HERO */}
-      <section className="relative min-h-screen flex items-center pt-24 pb-16">
-        <div className="absolute inset-0 opacity-40" style={{ background: "var(--gradient-radial-glow)" }} />
-        <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-          <div className="animate-fade-up">
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-6">
-              <span className="text-foreground">Premier Night</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-md mb-8 leading-relaxed">
-              Christopher Nolan's <em className="text-[var(--gold-soft)]">The Odyssey</em> — witnessed before the world, in a room built for the few.
-            </p>
-            <div className="flex flex-wrap items-center gap-6 mb-10">
-              <div>
-                <p className="text-xs tracking-[0.3em] text-muted-foreground mb-1">DATE</p>
-                <p className="font-display text-2xl text-foreground">18 July 2026</p>
-              </div>
-              <div className="h-10 w-px bg-[var(--gold)]/30" />
-              <div>
-                <p className="text-xs tracking-[0.3em] text-muted-foreground mb-1">TIME</p>
-                <p className="font-display text-2xl text-foreground">7:55 PM</p>
-              </div>
-              <div className="h-10 w-px bg-[var(--gold)]/30" />
-              <div>
-                <p className="text-xs tracking-[0.3em] text-muted-foreground mb-1">LOCATION</p>
-                <p className="font-display text-xl md:text-2xl text-foreground max-w-[18ch]">Connplex Luxuriance Adani Shantigram</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <a href="#book" className="btn-gold hover:[&]:btn-gold-hover px-10 py-4 rounded-sm text-sm">Book Now</a>
-              <a href="#experience" className="px-10 py-4 rounded-sm text-sm tracking-[0.15em] uppercase font-semibold border border-[var(--gold)]/40 text-foreground hover:bg-[var(--gold)]/10 transition">
-                The Experience
-              </a>
-            </div>
-          </div>
-          <div className="relative animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            <div className="absolute -inset-4 bg-gradient-to-br from-[var(--gold)]/30 via-transparent to-[var(--gold)]/10 blur-2xl" />
-            <div className="relative rounded-sm overflow-hidden border border-[var(--gold)]/30" style={{ boxShadow: "var(--shadow-elegant)" }}>
-              <img src={posterImg} alt="The Odyssey — a film by Christopher Nolan" className="w-full h-auto block" />
-            </div>
-            <div className="absolute -bottom-4 -right-4 bg-background border border-[var(--gold)]/40 px-5 py-3 text-xs tracking-[0.3em] text-[var(--gold-soft)]">
-              07.18.26 · CONNPLEX
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* COUNTDOWN */}
-      <section className="border-y border-[var(--gold)]/20 bg-card/40">
-        <div className="max-w-5xl mx-auto px-6 py-12 text-center">
-          <p className="text-xs tracking-[0.5em] text-muted-foreground mb-6">THE PREMIERE BEGINS IN</p>
-          <div className="grid grid-cols-4 gap-4 md:gap-8">
-            {[
-              { v: d, l: "Days" },
-              { v: h, l: "Hours" },
-              { v: m, l: "Minutes" },
-              { v: s, l: "Seconds" },
-            ].map((x) => (
-              <div key={x.l} className="border border-[var(--gold)]/20 py-6 px-2 bg-background/40">
-                <div className="font-display text-4xl md:text-6xl text-gold-gradient tabular-nums">
-                  {mounted ? String(x.v).padStart(2, "0") : "00"}
-                </div>
-                <div className="text-[10px] md:text-xs tracking-[0.3em] text-muted-foreground mt-2">{x.l.toUpperCase()}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* EXPERIENCE */}
-      <section id="experience" className="py-28">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto">
-            <p className="text-[var(--gold)] text-xs tracking-[0.5em] mb-4">WHERE CINEMA MEETS PRIVILEGE</p>
-            <h2 className="font-display text-4xl md:text-6xl mb-4">
-              An Evening <span className="text-gold-gradient italic">Reserved</span> for the Few
-            </h2>
-            <Divider />
-            <p className="text-muted-foreground leading-relaxed">
-              An exclusive premiere experience crafted for India's Ultra High Net Worth Individuals.
-              Be the first to experience the magic before the world does.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-px bg-[var(--gold)]/20 mt-16 border border-[var(--gold)]/20">
-            {experiences.map((ex) => (
-              <div key={ex.title} className="bg-background p-6 text-center hover:bg-card transition group">
-                <div className="w-10 h-10 mx-auto mb-4 border border-[var(--gold)]/40 rotate-45 flex items-center justify-center group-hover:border-[var(--gold)] transition">
-                  <div className="w-2 h-2 bg-[var(--gold)] -rotate-45" />
-                </div>
-                <h3 className="font-display text-base text-[var(--gold-soft)] mb-2 uppercase tracking-wider">{ex.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{ex.sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* EXCLUSIVITY STATS */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 opacity-20" style={{ background: "var(--gradient-radial-glow)" }} />
-        <div className="max-w-6xl mx-auto px-6 relative">
-          <div className="border border-[var(--gold)]/30 bg-card/60 backdrop-blur p-10 md:p-16">
-            <div className="text-center mb-12">
-              <h3 className="font-display text-3xl md:text-5xl">
-                <span className="text-gold-gradient">Exclusivity</span> by Design
-              </h3>
-              <p className="text-muted-foreground mt-3 italic">Because true luxury isn't for everyone.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-              <div>
-                <div className="font-display text-6xl text-gold-gradient">70</div>
-                <div className="text-xs tracking-[0.3em] text-muted-foreground mt-3">EXCLUSIVE INVITATIONS</div>
-              </div>
-              <div className="md:border-x border-[var(--gold)]/20">
-                <div className="font-display text-6xl text-gold-gradient">₹1,000</div>
-                <div className="text-xs tracking-[0.3em] text-muted-foreground mt-3">PER PERSON</div>
-              </div>
-              <div>
-                <div className="font-display text-6xl text-gold-gradient">2–3 Hrs</div>
-                <div className="text-xs tracking-[0.3em] text-muted-foreground mt-3">OF PURE LUXURY</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* QUOTE */}
-      <section className="py-24 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <p className="font-display italic text-3xl md:text-5xl leading-tight text-[var(--gold-soft)]">
-            "Not everyone gets a seat."
-          </p>
-          <Divider />
-          <p className="text-xs tracking-[0.5em] text-muted-foreground">
-            AN UNFORGETTABLE EVENING OF CINEMA · CONVERSATIONS · CLASS
-          </p>
-        </div>
-      </section>
-      {/* CTA / BOOK */}
-      <section id="book" className="py-28 relative border-t border-[var(--gold)]/20">
-        <div className="absolute inset-0 opacity-40" style={{ background: "var(--gradient-radial-glow)" }} />
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
-          <p className="text-[var(--gold)] text-xs tracking-[0.5em] mb-6">INVITE-ONLY REGISTRATION</p>
-          <h2 className="font-display text-5xl md:text-7xl mb-6">
-            Claim Your <span className="text-gold-gradient italic">Seat</span>
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed">
-            Christopher Nolan's <em>The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
-          </p>
-          <p className="text-sm text-[var(--gold-soft)] mb-8 tracking-widest">
-            18 JULY 2026  ·  7:55 PM  ·  CONNPLEX LUXURIANCE CINEMAS
-          </p>
-
-          {/* Premium Billing/Registration Form */}
-          <div className="max-w-md mx-auto p-8 border border-[var(--gold)]/25 bg-card/60 backdrop-blur rounded-sm text-left mb-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">FULL NAME</label>
-                <input
-                  type="text"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  placeholder="Gaurav Kumar"
-                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">EMAIL ADDRESS</label>
-                <input
-                  type="email"
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                  placeholder="gaurav.kumar@example.com"
-                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-[10px] tracking-[0.2em] text-muted-foreground mb-1">CONTACT NUMBER</label>
-                <input
-                  type="tel"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  placeholder="9999999999"
-                  className="w-full bg-background border border-[var(--gold)]/25 px-4 py-2.5 text-sm rounded-sm text-foreground focus:outline-none focus:border-[var(--gold)] transition"
-                  required
-                />
-              </div>
-              <button
-                onClick={handlePayment}
-                disabled={isPaying}
-                className="w-full mt-6 inline-block text-center btn-gold hover:[&]:btn-gold-hover py-4 rounded-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                {isPaying ? "Processing..." : "Book Now - ₹1,000"}
-              </button>
-            </div>
-          </div>
-
-          <p className="text-xs text-muted-foreground tracking-widest">Only 70 invitations available</p>
-          <p className="text-xs text-muted-foreground tracking-widest mt-2">First Come. First Served. Book Now</p>
-        </div>
-      </section>
-      {/* FOOTER */}
-      <footer className="border-t border-[var(--gold)]/20 py-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-xl tracking-widest text-gold-gradient">CONNPLEX</span>
-            <span className="text-[9px] tracking-[0.35em] text-muted-foreground">LUXURIANCE CINEMAS</span>
-          </div>
-          <p className="text-xs text-muted-foreground tracking-widest">© 2026 · PREMIER NIGHTS · EXCLUSIVE · PRIVATE · EXTRAORDINARY</p>
-        </div>
-      </footer>
+      
+      <Navbar />
+      <main>
+        <Hero />
+        <CountdownSection />
+        <Journey />
+        <About />
+        <WhyConnplex />
+        <BookingSection
+          guestName={guestName}
+          setGuestName={setGuestName}
+          guestEmail={guestEmail}
+          setGuestEmail={setGuestEmail}
+          guestPhone={guestPhone}
+          setGuestPhone={setGuestPhone}
+          isPaying={isPaying}
+          handlePayment={handlePayment}
+        />
+        <HostWithConnplex />
+        <FinalCTA />
+      </main>
+      <Footer />
     </div>
   );
 }
