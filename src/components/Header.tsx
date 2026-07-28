@@ -54,7 +54,7 @@ export default function Header({ logoSrc = '/logo.png' }: { logoSrc?: string }) 
             className={`bg-white !text-black font-bold rounded-full transition-all duration-300 hover:bg-[#c99f4a] hover:!text-black hover:-translate-y-0.5 text-center whitespace-nowrap text-[0.9rem] px-4 sm:px-6 py-[0.8rem] ${isOpen ? 'hidden' : 'block'}`}
           >
             <span className="hidden sm:inline">Book a Call With Consultant</span>
-            <span className="inline sm:hidden">Book</span>
+            <span className="inline sm:hidden">Connect with us</span>
           </a>
 
           {/* Hamburger Menu Toggle with 44px minimum tap target */}
