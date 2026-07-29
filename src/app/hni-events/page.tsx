@@ -622,6 +622,8 @@ function BookingSection({
   handlePayment,
   selectedEvent,
   setSelectedEvent,
+  selectedSeats,
+  setSelectedSeats,
 }: {
   guestName: string;
   setGuestName: (v: string) => void;
@@ -633,6 +635,8 @@ function BookingSection({
   handlePayment: (e: React.MouseEvent) => void;
   selectedEvent: any;
   setSelectedEvent: (event: any) => void;
+  selectedSeats: string[];
+  setSelectedSeats: (seats: string[]) => void;
 }) {
   const movies = ["Spider-Man"];
   const currentLocationsList = SPIDER_LOCATIONS;
@@ -644,6 +648,7 @@ function BookingSection({
   const handleLocationChange = (locationName: string) => {
     const loc = currentLocationsList.find(l => l.name === locationName);
     if (loc) {
+      setSelectedSeats([]);
       setSelectedEvent({
         ...selectedEvent,
         location: loc.name,
@@ -707,6 +712,123 @@ function BookingSection({
                 ))}
               </select>
             </div>
+
+            {/* SEATING LAYOUT */}
+            {(() => {
+              // Deterministically generate booked seats based on location name
+              const bookedSeats = React.useMemo(() => {
+                const booked = new Set<string>();
+                if (!selectedEvent.location) return booked;
+                const seed = selectedEvent.location.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                const rList = ["A", "B", "C", "D", "E", "F"];
+                for (let r = 0; r < rList.length; r++) {
+                  for (let s = 1; s <= 10; s++) {
+                    const seatId = `${rList[r]}${s}`;
+                    const val = (seed * (r + 1) * (s + 3) + s * 17) % 100;
+                    // ~45% of seats occupied
+                    if (val < 45) {
+                      booked.add(seatId);
+                    }
+                  }
+                }
+                return booked;
+              }, [selectedEvent.location]);
+
+              const rows = ["A", "B", "C", "D", "E", "F"];
+              const cols = [1, 2, "aisle", 3, 4, 5, 6, 7, 8, "aisle", 9, 10];
+
+              const handleSeatClick = (seatId: string) => {
+                if (bookedSeats.has(seatId)) return;
+                if (selectedSeats.includes(seatId)) {
+                  setSelectedSeats(selectedSeats.filter((s: string) => s !== seatId));
+                } else {
+                  if (selectedSeats.length >= 10) {
+                    alert("You can select up to 10 seats per booking.");
+                    return;
+                  }
+                  setSelectedSeats([...selectedSeats, seatId]);
+                }
+              };
+
+              return (
+                <div className="mt-6 border-t border-white/5 pt-6">
+                  <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-4 font-medium uppercase text-center">
+                    Select Seats (Premium Recliners)
+                  </label>
+                  
+                  {/* Curved Cinema Screen */}
+                  <div className="w-full flex flex-col items-center mb-6">
+                    <div className="w-4/5 h-[3px] bg-gradient-to-r from-transparent via-[color:var(--color-gold-soft)] to-transparent rounded-full shadow-[0_1px_10px_rgba(212,175,55,0.8)]" />
+                    <span className="text-[8px] font-caps tracking-[0.4em] text-white/30 mt-1.5 uppercase font-semibold">Screen</span>
+                  </div>
+
+                  {/* Seat Grid */}
+                  <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
+                    {rows.map((row) => (
+                      <div key={row} className="flex items-center gap-1.5 min-w-max">
+                        <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
+                        {cols.map((col, idx) => {
+                          if (col === "aisle") {
+                            return <div key={`aisle-${idx}`} className="w-3" />;
+                          }
+                          const seatId = `${row}${col}`;
+                          const isBooked = bookedSeats.has(seatId);
+                          const isSelected = selectedSeats.includes(seatId);
+                          
+                          return (
+                            <button
+                              key={seatId}
+                              type="button"
+                              disabled={isBooked}
+                              onClick={() => handleSeatClick(seatId)}
+                              className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
+                                isBooked
+                                  ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
+                                  : isSelected
+                                  ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
+                                  : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
+                              }`}
+                              title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                            >
+                              {col}
+                            </button>
+                          );
+                        })}
+                        <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="flex items-center justify-center gap-6 mt-4 text-[9px] font-caps tracking-wider text-white/50">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-t-[3px] border border-white/10 bg-[#141414]/30" />
+                      <span>Available</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-t-[3px] bg-[color:var(--color-gold)] text-black" />
+                      <span>Selected</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-3 w-3 rounded-t-[3px] bg-white/5 text-white/10 line-through border border-transparent" />
+                      <span>Booked</span>
+                    </div>
+                  </div>
+
+                  {/* Seating Summary */}
+                  {selectedSeats.length > 0 && (
+                    <div className="mt-5 rounded-lg bg-[color:var(--color-gold)]/5 border border-[color:var(--color-gold)]/20 p-3 text-center">
+                      <div className="text-[10px] font-caps tracking-wider text-[color:var(--color-champagne)]">
+                        Selected Seats: <span className="font-bold text-white uppercase">{selectedSeats.join(", ")}</span>
+                      </div>
+                      <div className="mt-1 text-xs font-semibold text-[color:var(--color-gold-soft)]">
+                        Total Price: ₹{(selectedSeats.length * 1000).toLocaleString("en-IN")}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
             <div>
               <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">FULL NAME</label>
               <input
@@ -952,11 +1074,17 @@ export default function PremiereLuxeLanding() {
     time: "9:10 PM",
     amount: 1000,
   });
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
 
   const handlePayment = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!guestName || !guestEmail || !guestPhone) {
       alert("Please fill in all registration fields.");
+      return;
+    }
+
+    if (selectedSeats.length === 0) {
+      alert("Please select at least one seat.");
       return;
     }
 
@@ -971,7 +1099,7 @@ export default function PremiereLuxeLanding() {
       const res = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 1000 }), // Amount in INR
+        body: JSON.stringify({ amount: selectedSeats.length * 1000 }), // Dynamic Amount based on selected seats count
       });
       const orderData = await res.json();
 
@@ -1002,11 +1130,12 @@ export default function PremiereLuxeLanding() {
               guestName,
               guestEmail,
               guestPhone,
-              amount: 1000,
+              amount: selectedSeats.length * 1000,
               movie: selectedEvent.movie,
               location: selectedEvent.location,
               date: selectedEvent.date,
               time: selectedEvent.time,
+              seats: selectedSeats,
             }),
           });
 
@@ -1016,6 +1145,7 @@ export default function PremiereLuxeLanding() {
             setGuestName("");
             setGuestEmail("");
             setGuestPhone("");
+            setSelectedSeats([]);
           } else {
             alert("Payment Verification Failed! Please check with your bank.");
           }
@@ -1046,6 +1176,7 @@ export default function PremiereLuxeLanding() {
 
   const selectEventHandler = (event: any) => {
     setSelectedEvent(event);
+    setSelectedSeats([]);
     const bookSection = document.getElementById("book");
     if (bookSection) {
       bookSection.scrollIntoView({ behavior: "smooth" });
@@ -1078,6 +1209,8 @@ export default function PremiereLuxeLanding() {
           handlePayment={handlePayment}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
+          selectedSeats={selectedSeats}
+          setSelectedSeats={setSelectedSeats}
         />
         <HostWithConnplex />
         <FinalCTA />
