@@ -60,12 +60,12 @@ const HEADING = "font-display uppercase tracking-[0.02em]";
 const EVENT_DATE = 1785598200000; // 2026-08-01T21:00:00+05:30
 
 const SPIDER_LOCATIONS = [
-  { name: "Connplex Luxuriance – SBR, Ahmedabad", time: "9:10 PM", date: "Saturday (30th July, 1st Aug)" },
-  { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (30th July, 1st Aug)" },
-  { name: "Connplex – Adani Shantigram, Ahmedabad", time: "9:00 PM", date: "Saturday (30th July, 1st Aug)" },
-  { name: "Connplex – Gota, Ahmedabad", time: "8:00 PM", date: "Saturday (30th July, 1st Aug)" },
-  { name: "Connplex – Gandhinagar", time: "8:00 PM", date: "Saturday (30th July, 1st Aug)" },
-  { name: "Connplex – Vadodara", time: "9:10 PM", date: "Saturday (30th July, 1st Aug)" },
+  { name: "Connplex Luxuriance – SBR, Ahmedabad", time: "9:10 PM", date: "Saturday (1st Aug)" },
+  { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
+  { name: "Connplex – Adani Shantigram, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
+  { name: "Connplex – Gota, Ahmedabad", time: "8:00 PM", date: "Saturday (1st Aug)" },
+  { name: "Connplex – Gandhinagar", time: "8:00 PM", date: "Saturday (1st Aug)" },
+  { name: "Connplex – Vadodara", time: "9:10 PM", date: "Saturday (1st Aug)" },
 ];
 
 function useCountdown() {
@@ -948,7 +948,7 @@ export default function PremiereLuxeLanding() {
   const [selectedEvent, setSelectedEvent] = useState({
     movie: "Spider-Man",
     location: "Connplex Luxuriance – SBR, Ahmedabad",
-    date: "Saturday (30th July, 1st Aug)",
+    date: "Saturday (1st Aug)",
     time: "9:10 PM",
     amount: 1000,
   });
