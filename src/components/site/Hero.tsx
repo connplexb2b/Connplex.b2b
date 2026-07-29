@@ -50,7 +50,7 @@ export function Hero() {
             Connplex Investment Opportunity
           </span>
           <h1 className="mt-8 font-display text-4xl font-extrabold uppercase leading-[1.08] tracking-[0.01em] text-foreground sm:text-5xl lg:text-[3.6rem]">
-            Own a Connplex Cinema at a <span className="text-gold-gradient">Pre-Approved Location</span>
+            Own a <span className="text-gold-gradient">Ready-to-Launch</span> Connplex
           </h1>
           <div className="mt-6 max-w-xl space-y-3 text-[1.02rem] leading-relaxed text-muted-foreground">
             <p>Ready-to-launch cinema opportunities across India.</p>
