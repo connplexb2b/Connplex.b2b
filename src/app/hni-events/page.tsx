@@ -714,7 +714,46 @@ function BookingSection({
 
             {/* SEATING LAYOUT */}
             {(() => {
-              // Deterministically generate booked seats based on location name
+              const [layoutRows, setLayoutRows] = React.useState<any[] | null>(null);
+              const [isLoadingLayout, setIsLoadingLayout] = React.useState(false);
+
+              React.useEffect(() => {
+                let active = true;
+                if (!selectedEvent.location) {
+                  setLayoutRows(null);
+                  return;
+                }
+
+                async function loadLayout() {
+                  setIsLoadingLayout(true);
+                  try {
+                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}`);
+                    if (res.ok) {
+                      const data = await res.json();
+                      if (active) {
+                        if (!data.fallback && data.layout) {
+                          setLayoutRows(data.layout);
+                        } else {
+                          setLayoutRows(null);
+                        }
+                      }
+                    } else {
+                      if (active) setLayoutRows(null);
+                    }
+                  } catch (e) {
+                    if (active) setLayoutRows(null);
+                  } finally {
+                    if (active) setIsLoadingLayout(false);
+                  }
+                }
+
+                loadLayout();
+                return () => {
+                  active = false;
+                };
+              }, [selectedEvent.location]);
+
+              // Deterministically generate booked seats based on location name (Fallback Layout)
               const bookedSeats = React.useMemo(() => {
                 const booked = new Set<string>();
                 if (!selectedEvent.location) return booked;
@@ -724,7 +763,6 @@ function BookingSection({
                   for (let s = 1; s <= 10; s++) {
                     const seatId = `${rList[r]}${s}`;
                     const val = (seed * (r + 1) * (s + 3) + s * 17) % 100;
-                    // ~45% of seats occupied
                     if (val < 45) {
                       booked.add(seatId);
                     }
@@ -733,11 +771,11 @@ function BookingSection({
                 return booked;
               }, [selectedEvent.location]);
 
-              const rows = ["A", "B", "C", "D", "E", "F"];
-              const cols = [1, 2, "aisle", 3, 4, 5, 6, 7, 8, "aisle", 9, 10];
+              const fallbackRows = ["A", "B", "C", "D", "E", "F"];
+              const fallbackCols = [1, 2, "aisle", 3, 4, 5, 6, 7, 8, "aisle", 9, 10];
 
-              const handleSeatClick = (seatId: string) => {
-                if (bookedSeats.has(seatId)) return;
+              const handleSeatClick = (seatId: string, isBooked: boolean) => {
+                if (isBooked) return;
                 if (selectedSeats.includes(seatId)) {
                   setSelectedSeats(selectedSeats.filter((s: string) => s !== seatId));
                 } else {
@@ -761,42 +799,82 @@ function BookingSection({
                     <span className="text-[8px] font-caps tracking-[0.4em] text-white/30 mt-1.5 uppercase font-semibold">Screen</span>
                   </div>
 
-                  {/* Seat Grid */}
-                  <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
-                    {rows.map((row) => (
-                      <div key={row} className="flex items-center gap-1.5 min-w-max">
-                        <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
-                        {cols.map((col, idx) => {
-                          if (col === "aisle") {
-                            return <div key={`aisle-${idx}`} className="w-3" />;
-                          }
-                          const seatId = `${row}${col}`;
-                          const isBooked = bookedSeats.has(seatId);
-                          const isSelected = selectedSeats.includes(seatId);
-                          
-                          return (
-                            <button
-                              key={seatId}
-                              type="button"
-                              disabled={isBooked}
-                              onClick={() => handleSeatClick(seatId)}
-                              className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
-                                isBooked
-                                  ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
-                                  : isSelected
-                                  ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                                  : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
-                              }`}
-                              title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                            >
-                              {col}
-                            </button>
-                          );
-                        })}
-                        <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {isLoadingLayout ? (
+                    <div className="flex flex-col items-center justify-center py-10 gap-3">
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-[color:var(--color-gold)] border-t-transparent" />
+                      <span className="text-[9px] font-caps tracking-widest text-[color:var(--color-gold-soft)] uppercase animate-pulse">Loading Live Layout...</span>
+                    </div>
+                  ) : layoutRows ? (
+                    <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
+                      {layoutRows.map((row) => (
+                        <div key={row.rowName} className="flex items-center gap-1.5 min-w-max">
+                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row.rowName}</span>
+                          {row.seats.map((seat: any, idx: number) => {
+                            if (seat.isAisle) {
+                              return <div key={`aisle-${idx}`} className="w-3" />;
+                            }
+                            const isSelected = selectedSeats.includes(seat.seatId);
+                            
+                            return (
+                              <button
+                                key={seat.seatId}
+                                type="button"
+                                disabled={seat.isBooked}
+                                onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
+                                className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
+                                  seat.isBooked
+                                    ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
+                                    : isSelected
+                                    ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
+                                    : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
+                                }`}
+                                title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                              >
+                                {seat.seatNumber}
+                              </button>
+                            );
+                          })}
+                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row.rowName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
+                      {fallbackRows.map((row) => (
+                        <div key={row} className="flex items-center gap-1.5 min-w-max">
+                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
+                          {fallbackCols.map((col, idx) => {
+                            if (col === "aisle") {
+                              return <div key={`aisle-${idx}`} className="w-3" />;
+                            }
+                            const seatId = `${row}${col}`;
+                            const isBooked = bookedSeats.has(seatId);
+                            const isSelected = selectedSeats.includes(seatId);
+                            
+                            return (
+                              <button
+                                key={seatId}
+                                type="button"
+                                disabled={isBooked}
+                                onClick={() => handleSeatClick(seatId, isBooked)}
+                                className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
+                                  isBooked
+                                    ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
+                                    : isSelected
+                                    ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
+                                    : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
+                                }`}
+                                title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                              >
+                                {col}
+                              </button>
+                            );
+                          })}
+                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Legend */}
                   <div className="flex items-center justify-center gap-6 mt-4 text-[9px] font-caps tracking-wider text-white/50">
