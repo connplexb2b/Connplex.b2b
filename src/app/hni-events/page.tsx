@@ -60,7 +60,6 @@ const HEADING = "font-display uppercase tracking-[0.02em]";
 const EVENT_DATE = 1785598200000; // 2026-08-01T21:00:00+05:30
 
 const SPIDER_LOCATIONS = [
-  { name: "Connplex Luxuriance – SBR, Ahmedabad", time: "9:10 PM", date: "Saturday (1st Aug)" },
   { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
   { name: "Connplex – Adani Shantigram, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
   { name: "Connplex – Gota, Ahmedabad", time: "8:00 PM", date: "Saturday (1st Aug)" },
@@ -1069,9 +1068,9 @@ export default function PremiereLuxeLanding() {
   const [isPaying, setIsPaying] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({
     movie: "Spider-Man",
-    location: "Connplex Luxuriance – SBR, Ahmedabad",
+    location: "Connplex – Parimal Garden, Ahmedabad",
     date: "Saturday (1st Aug)",
-    time: "9:10 PM",
+    time: "9:00 PM",
     amount: 1000,
   });
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
