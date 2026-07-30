@@ -6,14 +6,12 @@ async function run() {
   try {
     await mongoose.connect(MONGO_URI);
     console.log("Connected to MongoDB");
-    const adminDb = mongoose.connection.db.admin();
-    const dbs = await adminDb.listDatabases();
-    console.log("Databases on cluster:");
-    dbs.databases.forEach(db => {
-      console.log(`- ${db.name}`);
-    });
+    const db = mongoose.connection.db;
+    
+    const bookings = await db.collection('hnibookings').find({}).toArray();
+    console.log(`JSON_START:${JSON.stringify(bookings)}:JSON_END`);
   } catch (e) {
-    console.error("Error listing databases:", e.message);
+    console.error("Error:", e.message);
   } finally {
     await mongoose.disconnect();
   }
