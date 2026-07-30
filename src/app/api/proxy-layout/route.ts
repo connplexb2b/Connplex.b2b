@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { connectToDatabase } from "@/lib/db";
+import mongoose from "mongoose";
 
 const BACKEND_MAP: Record<string, { cinemaId: string; movieId: string; regionId: string; targetTime: string }> = {
   "Connplex – Parimal Garden, Ahmedabad": {
@@ -33,12 +35,231 @@ const BACKEND_MAP: Record<string, { cinemaId: string; movieId: string; regionId:
   }
 };
 
+function isHniAllocationSeat(location: string, rowName: string, seatNumber: number): boolean {
+  const row = rowName.toUpperCase();
+  if (location.includes("Adani")) {
+    // Rows C–G & H (Seats 1–5)
+    if (["C", "D", "E", "F", "G"].includes(row)) {
+      return true;
+    }
+    if (row === "H" && seatNumber >= 1 && seatNumber <= 5) {
+      return true;
+    }
+    return false;
+  }
+  if (location.includes("Parimal")) {
+    // Rows A–F
+    return ["A", "B", "C", "D", "E", "F"].includes(row);
+  }
+  if (location.includes("Gandhinagar")) {
+    // Rows A & B (Couple Seats)
+    return ["A", "B"].includes(row);
+  }
+  if (location.includes("Gota")) {
+    // Rows A & B
+    return ["A", "B"].includes(row);
+  }
+  if (location.includes("Vadodara")) {
+    // Rows B & C
+    return ["B", "C"].includes(row);
+  }
+  return false;
+}
+
+function getPreconfiguredLayout(location: string, dbBookedSeats: Set<string>): any[] {
+  const layout: any[] = [];
+  if (location.includes("Adani")) {
+    // Rows A-H, 9 seats per row.
+    // HNI seats: Rows C-G & H (Seats 1-5)
+    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      for (let s = 1; s <= 9; s++) {
+        if (s === 3 || s === 7) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isHni = isHniAllocationSeat(location, r, s);
+        let isBooked = false;
+        if (!isHni) {
+          isBooked = true; // Block public seats on HNI page
+        } else {
+          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        }
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  } else if (location.includes("Parimal")) {
+    // Rows A-H. Rows A-E have 12 seats, F has 10 seats, G-H have 12 seats.
+    // HNI seats: Rows A-F
+    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const seatCount = r === "F" ? 10 : 12;
+      for (let s = 1; s <= seatCount; s++) {
+        if (s === 4 || s === 9) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isHni = isHniAllocationSeat(location, r, s);
+        let isBooked = false;
+        if (!isHni) {
+          isBooked = true; // Block public seats on HNI page
+        } else {
+          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        }
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  } else if (location.includes("Gandhinagar")) {
+    // Rows A-H, 10 seats. HNI seats: Rows A & B
+    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      for (let s = 1; s <= 10; s++) {
+        if (s === 3 || s === 8) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isHni = isHniAllocationSeat(location, r, s);
+        let isBooked = false;
+        if (!isHni) {
+          isBooked = true; // Block public seats on HNI page
+        } else {
+          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        }
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  } else if (location.includes("Gota")) {
+    // Rows A-H, 10 seats. HNI seats: Rows A & B
+    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      for (let s = 1; s <= 10; s++) {
+        if (s === 3 || s === 8) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isHni = isHniAllocationSeat(location, r, s);
+        let isBooked = false;
+        if (!isHni) {
+          isBooked = true; // Block public seats on HNI page
+        } else {
+          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        }
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  } else if (location.includes("Vadodara")) {
+    // Rows A-H, 10 seats. HNI seats: Rows B & C
+    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      for (let s = 1; s <= 10; s++) {
+        if (s === 3 || s === 8) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isHni = isHniAllocationSeat(location, r, s);
+        let isBooked = false;
+        if (!isHni) {
+          isBooked = true; // Block public seats on HNI page
+        } else {
+          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        }
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  } else {
+    // Default fallback
+    const rows = ["A", "B", "C", "D", "E", "F"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      for (let s = 1; s <= 10; s++) {
+        if (s === 3 || s === 9) {
+          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        }
+        const seatId = `${r}${s}`;
+        const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        seats.push({
+          seatId,
+          seatNumber: String(s),
+          isBooked,
+          isAisle: false
+        });
+      }
+      layout.push({ rowName: r, seats });
+    }
+  }
+  return layout;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const location = searchParams.get("location");
-    if (!location || !BACKEND_MAP[location]) {
+    if (!location) {
       return NextResponse.json({ fallback: true });
+    }
+
+    // 1. Fetch bookings from MongoDB
+    let dbBookedSeats = new Set<string>();
+    try {
+      await connectToDatabase();
+      const db = mongoose.connection.db;
+      if (db) {
+        const dbBookings = await db.collection("hnibookings").find({
+          location: location,
+          movie: "Spider-Man",
+          status: "Paid"
+        }).toArray();
+        dbBookings.forEach((b: any) => {
+          if (Array.isArray(b.seats)) {
+            b.seats.forEach((seat: string) => {
+              dbBookedSeats.add(seat.trim().toUpperCase());
+            });
+          }
+        });
+      }
+    } catch (dbErr) {
+      console.error("Database fetch error in proxy-layout:", dbErr);
+    }
+
+    if (!BACKEND_MAP[location]) {
+      // Return custom layout directly if location is unknown
+      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+      return NextResponse.json({ fallback: false, layout });
     }
 
     const { cinemaId, movieId, regionId, targetTime } = BACKEND_MAP[location];
@@ -47,31 +268,38 @@ export async function GET(req: NextRequest) {
     const idValue = `${movieId}|${date}|${regionId}`;
     const payload = `id=${encodeURIComponent(idValue)}&timestamp=${Date.now()}`;
 
-    // Fetch show timings
-    const showsRes = await fetch("https://backend.theconnplex.com/api/movie-detils-with-shows", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-Device-Type": "web",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-      },
-      body: payload
-    });
+    // 2. Fetch show timings
+    let showsData: any = null;
+    try {
+      const showsRes = await fetch("https://backend.theconnplex.com/api/movie-detils-with-shows", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Device-Type": "web",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        },
+        body: payload
+      });
 
-    if (!showsRes.ok) {
-      return NextResponse.json({ fallback: true, error: "Failed to fetch shows" });
+      if (showsRes.ok) {
+        showsData = await showsRes.json();
+      }
+    } catch (e) {
+      console.error("Failed to fetch show timings:", e);
     }
 
-    const showsData = await showsRes.json();
-    if (showsData.status !== 200 || !showsData.data) {
-      return NextResponse.json({ fallback: true, message: showsData.message });
+    if (!showsData || showsData.status !== 200 || !showsData.data) {
+      // If backend API fails, use pre-configured layouts
+      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+      return NextResponse.json({ fallback: false, layout });
     }
 
     const cinemas = showsData.data.cinemas || showsData.data || [];
     const cinema = cinemas.find((c: any) => (c._id || c.cId) === cinemaId);
 
     if (!cinema || !cinema.sessions || cinema.sessions.length === 0) {
-      return NextResponse.json({ fallback: true, error: "Cinema or sessions not found" });
+      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+      return NextResponse.json({ fallback: false, layout });
     }
 
     // Find matching session
@@ -85,43 +313,77 @@ export async function GET(req: NextRequest) {
     });
 
     if (!session) {
-      session = cinema.sessions[0]; // fallback to first session if time doesn't match exactly
+      session = cinema.sessions[0];
     }
 
-    // Fetch seat layout
-    const layoutRes = await fetch(`https://backend.theconnplex.com/api/seat-layout/${cinemaId}/${session.sessionId}`, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "X-Device-Type": "web"
+    // 3. Fetch seat layout
+    let layoutData: any = null;
+    try {
+      const layoutRes = await fetch(`https://backend.theconnplex.com/api/seat-layout/${cinemaId}/${session.sessionId}`, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "X-Device-Type": "web"
+        }
+      });
+
+      if (layoutRes.ok) {
+        layoutData = await layoutRes.json();
       }
-    });
-
-    if (!layoutRes.ok) {
-      return NextResponse.json({ fallback: true, error: "Failed to fetch layout" });
+    } catch (e) {
+      console.error("Failed to fetch layout from backend:", e);
     }
 
-    const layoutData = await layoutRes.json();
-    if (layoutData.status !== 200 || !layoutData.data) {
-      return NextResponse.json({ fallback: true, message: layoutData.message });
+    if (!layoutData || layoutData.status !== 200 || !layoutData.data) {
+      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+      return NextResponse.json({ fallback: false, layout });
     }
 
     // Process layout data to simple format
     const categories = layoutData.data.data || layoutData.data || [];
-    const category = categories[0]; // Take the first category (usually Recliner or premium)
+    const category = categories[0];
     
     if (!category || !category.rowData) {
-      return NextResponse.json({ fallback: true, error: "No seat layout categories" });
+      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+      return NextResponse.json({ fallback: false, layout });
     }
 
-    const layout = category.rowData.map((row: any) => ({
-      rowName: row.strRowPhyID || row.strRowPhyId,
-      seats: row.seatData.map((seat: any) => ({
-        seatId: `${row.strRowPhyID || row.strRowPhyId}${seat.strSeatNumber}`,
-        seatNumber: seat.strSeatNumber,
-        isBooked: seat.strSeatStatus === "1",
-        isAisle: !seat.Key
-      }))
-    }));
+    // Process layout while applying HNI restriction rules
+    const layout = category.rowData.map((row: any) => {
+      const rowName = row.strRowPhyID || row.strRowPhyId;
+      return {
+        rowName,
+        seats: row.seatData.map((seat: any) => {
+          const isAisle = !seat.Key;
+          if (isAisle) {
+            return {
+              seatId: "",
+              seatNumber: "",
+              isBooked: false,
+              isAisle: true
+            };
+          }
+          const seatNumber = Number(seat.strSeatNumber);
+          const seatId = `${rowName}${seat.strSeatNumber}`;
+          
+          const isHni = isHniAllocationSeat(location, rowName, seatNumber);
+          let isBooked = false;
+          if (!isHni) {
+            // Force block all public seats on HNI
+            isBooked = true;
+          } else {
+            // HNI seats are booked if booked on ticketing website or in local db
+            isBooked = seat.strSeatStatus === "1" || dbBookedSeats.has(seatId.toUpperCase());
+          }
+
+          return {
+            seatId,
+            seatNumber: seat.strSeatNumber,
+            isBooked,
+            isAisle: false
+          };
+        })
+      };
+    });
 
     return NextResponse.json({ fallback: false, layout });
   } catch (error: any) {

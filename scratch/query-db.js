@@ -6,31 +6,14 @@ async function run() {
   try {
     await mongoose.connect(MONGO_URI);
     console.log("Connected to MongoDB");
-    const db = mongoose.connection.db;
-    
-    // List collections
-    const collections = await db.listCollections().toArray();
-    console.log("Collections:", collections.map(c => c.name));
-
-    if (collections.some(c => c.name === 'hnibookings')) {
-      const bookings = await db.collection('hnibookings').find({}).toArray();
-      console.log(`Found ${bookings.length} bookings in hnibookings:`);
-      bookings.forEach((b, idx) => {
-        console.log(`Booking #${idx + 1}:`, {
-          guestName: b.guestName,
-          movie: b.movie,
-          location: b.location,
-          seats: b.seats,
-          status: b.status,
-          date: b.date,
-          time: b.time
-        });
-      });
-    } else {
-      console.log("hnibookings collection does not exist.");
-    }
+    const adminDb = mongoose.connection.db.admin();
+    const dbs = await adminDb.listDatabases();
+    console.log("Databases on cluster:");
+    dbs.databases.forEach(db => {
+      console.log(`- ${db.name}`);
+    });
   } catch (e) {
-    console.error("Error:", e);
+    console.error("Error listing databases:", e.message);
   } finally {
     await mongoose.disconnect();
   }

@@ -623,6 +623,7 @@ function BookingSection({
   setSelectedEvent,
   selectedSeats,
   setSelectedSeats,
+  refreshKey,
 }: {
   guestName: string;
   setGuestName: (v: string) => void;
@@ -636,6 +637,7 @@ function BookingSection({
   setSelectedEvent: (event: any) => void;
   selectedSeats: string[];
   setSelectedSeats: (seats: string[]) => void;
+  refreshKey: number;
 }) {
   const movies = ["Spider-Man"];
   const currentLocationsList = SPIDER_LOCATIONS;
@@ -751,7 +753,7 @@ function BookingSection({
                 return () => {
                   active = false;
                 };
-              }, [selectedEvent.location]);
+              }, [selectedEvent.location, refreshKey]);
 
               // Deterministically generate booked seats based on location name (Fallback Layout)
               const bookedSeats = React.useMemo(() => {
@@ -1152,6 +1154,7 @@ export default function PremiereLuxeLanding() {
     amount: 1000,
   });
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handlePayment = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -1223,6 +1226,7 @@ export default function PremiereLuxeLanding() {
             setGuestEmail("");
             setGuestPhone("");
             setSelectedSeats([]);
+            setRefreshKey(prev => prev + 1);
           } else {
             alert("Payment Verification Failed! Please check with your bank.");
           }
@@ -1288,6 +1292,7 @@ export default function PremiereLuxeLanding() {
           setSelectedEvent={setSelectedEvent}
           selectedSeats={selectedSeats}
           setSelectedSeats={setSelectedSeats}
+          refreshKey={refreshKey}
         />
         <HostWithConnplex />
         <FinalCTA />
