@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import mongoose from "mongoose";
 
+export const dynamic = "force-dynamic";
+
 const BACKEND_MAP: Record<string, { cinemaId: string; movieId: string; regionId: string; targetTime: string }> = {
   "Connplex – Parimal Garden, Ahmedabad": {
     cinemaId: "65bcde931e72aef23e6854ee",

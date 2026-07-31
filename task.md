@@ -1,4 +1,3 @@
-- `[x]` Update getPreconfiguredLayout for Vadodara in `src/app/api/proxy-layout/route.ts`
-- `[x]` Run a scratch script to verify all layout structures and HNI seat allocation counts
-- `[x]` Verify that the main website bundle `temp_ticketing_bundle.js` blocking rules for Vadodara are set up correctly
+- `[x]` Add force-dynamic export to `src/app/api/proxy-layout/route.ts`
+- `[x]` Add cache-busting and no-store to layout fetch in `src/app/hni-events/page.tsx`
 - `[x]` Run Next.js build (`npm run build`) to ensure there are no compilation errors

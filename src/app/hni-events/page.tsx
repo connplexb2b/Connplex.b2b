@@ -729,7 +729,7 @@ function BookingSection({
                 async function loadLayout() {
                   setIsLoadingLayout(true);
                   try {
-                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}`);
+                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}&t=${Date.now()}`, { cache: 'no-store' });
                     if (res.ok) {
                       const data = await res.json();
                       if (active) {
