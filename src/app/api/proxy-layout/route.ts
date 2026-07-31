@@ -69,57 +69,114 @@ function isHniAllocationSeat(location: string, rowName: string, seatNumber: numb
 function getPreconfiguredLayout(location: string, dbBookedSeats: Set<string>): any[] {
   const layout: any[] = [];
   if (location.includes("Adani")) {
-    // Rows A-H, 9 seats per row.
-    // HNI seats: Rows C-G & H (Seats 1-5)
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    // Rows A-H.
+    // Row H: 5 seats (1-5), aisle, aisle, 3 seats (8-10)
+    // Rows C-G: 6 seats (1-6), aisle, 3 seats (8-10)
+    // Rows A-B: 5 seats (1-5), aisle, 5 seats (6-10)
+    const rows = ["H", "G", "F", "E", "D", "C", "B", "A"];
     for (const r of rows) {
       const seats: any[] = [];
-      for (let s = 1; s <= 9; s++) {
-        if (s === 3 || s === 7) {
-          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+      if (r === "H") {
+        for (let s = 1; s <= 5; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
         }
-        const seatId = `${r}${s}`;
-        const isHni = isHniAllocationSeat(location, r, s);
-        let isBooked = false;
-        if (!isHni) {
-          isBooked = true; // Block public seats on HNI page
-        } else {
-          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 8; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
         }
-        seats.push({
-          seatId,
-          seatNumber: String(s),
-          isBooked,
-          isAisle: false
-        });
+      } else if (["C", "D", "E", "F", "G"].includes(r)) {
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 8; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        for (let s = 1; s <= 5; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 6; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
+        }
       }
       layout.push({ rowName: r, seats });
     }
   } else if (location.includes("Parimal")) {
-    // Rows A-H. Rows A-E have 12 seats, F has 10 seats, G-H have 12 seats.
-    // HNI seats: Rows A-F
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    // Rows A-I.
+    // Row I: 3 seats, aisle, 3 seats, aisle, 3 seats
+    // Rows B-H: 6 seats, aisle, 4 seats
+    // Row A: 6 seats, 2 seats, aisle, 4 seats
+    const rows = ["I", "H", "G", "F", "E", "D", "C", "B", "A"];
     for (const r of rows) {
       const seats: any[] = [];
-      const seatCount = r === "F" ? 10 : 12;
-      for (let s = 1; s <= seatCount; s++) {
-        if (s === 4 || s === 9) {
-          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+      if (r === "I") {
+        for (let s = 1; s <= 3; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
         }
-        const seatId = `${r}${s}`;
-        const isHni = isHniAllocationSeat(location, r, s);
-        let isBooked = false;
-        if (!isHni) {
-          isBooked = true; // Block public seats on HNI page
-        } else {
-          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 4; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
         }
-        seats.push({
-          seatId,
-          seatNumber: String(s),
-          isBooked,
-          isAisle: false
-        });
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 9; s++) {
+          const seatId = `${r}${s}`;
+          seats.push({ seatId, seatNumber: String(s), isBooked: true, isAisle: false });
+        }
+      } else if (r === "A") {
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        for (let s = 7; s <= 8; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 9; s <= 12; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = ["B", "C", "D", "E", "F"].includes(r);
+          let isBooked = false;
+          if (!isHni) {
+            isBooked = true;
+          } else {
+            isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          }
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = ["B", "C", "D", "E", "F"].includes(r);
+          let isBooked = false;
+          if (!isHni) {
+            isBooked = true;
+          } else {
+            isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          }
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
       }
       layout.push({ rowName: r, seats });
     }
