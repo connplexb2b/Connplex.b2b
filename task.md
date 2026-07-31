@@ -1,4 +1,4 @@
-- `[x]` Update getPreconfiguredLayout for Gota in `src/app/api/proxy-layout/route.ts`
+- `[x]` Update getPreconfiguredLayout for Gandhinagar in `src/app/api/proxy-layout/route.ts`
 - `[x]` Run a scratch script to verify all layout structures and HNI seat allocation counts
-- `[x]` Verify that the main website bundle `temp_ticketing_bundle.js` blocking rules for Gota are set up correctly
+- `[x]` Verify that the main website bundle `temp_ticketing_bundle.js` blocking rules for Gandhinagar are set up correctly
 - `[x]` Run Next.js build (`npm run build`) to ensure there are no compilation errors

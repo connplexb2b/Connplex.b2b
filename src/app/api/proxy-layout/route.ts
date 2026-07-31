@@ -181,28 +181,44 @@ function getPreconfiguredLayout(location: string, dbBookedSeats: Set<string>): a
       layout.push({ rowName: r, seats });
     }
   } else if (location.includes("Gandhinagar")) {
-    // Rows A-H, 10 seats. HNI seats: Rows A & B
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    // Rows A-F.
+    // Rows B-F: 2 empty aisles (columns 1, 2), then 8 seats (3-10).
+    // Row A: 10 seats (1-10).
+    // HNI seats: Rows A & B
+    const rows = ["F", "E", "D", "C", "B", "A"];
     for (const r of rows) {
       const seats: any[] = [];
-      for (let s = 1; s <= 10; s++) {
-        if (s === 3 || s === 8) {
-          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+      if (r === "A") {
+        for (let s = 1; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({
+            seatId,
+            seatNumber: String(s),
+            isBooked,
+            isAisle: false
+          });
         }
-        const seatId = `${r}${s}`;
-        const isHni = isHniAllocationSeat(location, r, s);
-        let isBooked = false;
-        if (!isHni) {
-          isBooked = true; // Block public seats on HNI page
-        } else {
-          isBooked = dbBookedSeats.has(seatId.toUpperCase());
+      } else {
+        // Rows B-F
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 3; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = ["B"].includes(r);
+          let isBooked = false;
+          if (!isHni) {
+            isBooked = true; // Block public seats on HNI page
+          } else {
+            isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          }
+          seats.push({
+            seatId,
+            seatNumber: String(s),
+            isBooked,
+            isAisle: false
+          });
         }
-        seats.push({
-          seatId,
-          seatNumber: String(s),
-          isBooked,
-          isAisle: false
-        });
       }
       layout.push({ rowName: r, seats });
     }
