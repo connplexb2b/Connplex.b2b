@@ -207,16 +207,14 @@ function getPreconfiguredLayout(location: string, dbBookedSeats: Set<string>): a
       layout.push({ rowName: r, seats });
     }
   } else if (location.includes("Gota")) {
-    // Rows A-H, 10 seats. HNI seats: Rows A & B
-    const rows = ["A", "B", "C", "D", "E", "F", "G", "H"];
+    // Rows A-G, 10 seats per row. No aisles.
+    // HNI seats: Rows A & B
+    const rows = ["G", "F", "E", "D", "C", "B", "A"];
     for (const r of rows) {
       const seats: any[] = [];
       for (let s = 1; s <= 10; s++) {
-        if (s === 3 || s === 8) {
-          seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
-        }
         const seatId = `${r}${s}`;
-        const isHni = isHniAllocationSeat(location, r, s);
+        const isHni = ["A", "B"].includes(r);
         let isBooked = false;
         if (!isHni) {
           isBooked = true; // Block public seats on HNI page
