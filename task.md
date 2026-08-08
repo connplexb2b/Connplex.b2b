@@ -1,0 +1,3 @@
+- `[x]` Add force-dynamic export to `src/app/api/proxy-layout/route.ts`
+- `[x]` Add cache-busting and no-store to layout fetch in `src/app/hni-events/page.tsx`
+- `[x]` Run Next.js build (`npm run build`) to ensure there are no compilation errors

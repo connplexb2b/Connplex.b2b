@@ -30,6 +30,7 @@ const Footer = () => {
                     <ul className="list-none p-0 m-0 flex flex-col gap-3">
                         <li><Link href="/feedback" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Feedback</Link></li>
                         <li><Link href="/capex-for-developers" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">CAPEX for Developer</Link></li>
+                        <li><Link href="/own-a-ready-to-launch" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Own a Ready-to-Launch Connplex</Link></li>
                         <li><Link href="/news" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">News & Upcoming Promotions</Link></li>
                         <li><Link href="/book-event" className="text-[0.85rem] text-text-secondary transition-colors duration-300 hover:text-white">Book an event</Link></li>
                     </ul>

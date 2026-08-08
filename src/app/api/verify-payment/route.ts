@@ -12,7 +12,12 @@ export async function POST(req: NextRequest) {
       guestName,
       guestEmail,
       guestPhone,
-      amount
+      amount,
+      movie,
+      location,
+      date,
+      time,
+      seats
     } = await req.json();
 
     // Generate signature locally using Key Secret
@@ -34,6 +39,11 @@ export async function POST(req: NextRequest) {
         guestName,
         guestEmail,
         guestPhone,
+        movie: movie || "The Odyssey",
+        location: location || "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+        date: date || "18 July 2026",
+        time: time || "7:55 PM",
+        seats: seats || [],
         razorpay_order_id,
         razorpay_payment_id,
         amount: amount || 1000,

@@ -73,11 +73,11 @@ export default function Footer() {
           <h4 className="text-primary-gold font-bold text-xs uppercase tracking-[2px] mb-1 font-outfit">CONNECT</h4>
           <div className="flex items-center gap-2.5 text-xs text-text-secondary">
             <i className="fa-regular fa-envelope text-primary-gold w-4"></i>
-            <a href="mailto:info@connplex.com" className="hover:text-white transition-colors">info@connplex.com</a>
+            <a href="mailto:Vishal@theconnplex.com" className="hover:text-white transition-colors">Vishal@theconnplex.com</a>
           </div>
           <div className="flex items-center gap-2.5 text-xs text-text-secondary">
             <i className="fa-solid fa-phone text-primary-gold w-4"></i>
-            <a href="tel:+919579542010" className="hover:text-white transition-colors">+91 95795 42010</a>
+            <a href="tel:+917041185417" className="hover:text-white transition-colors">+91 70411 85417</a>
           </div>
           <div className="flex items-center gap-4 mt-2">
             <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-primary-gold hover:text-white transition-colors">
