@@ -290,7 +290,7 @@ export default function Home() {
       <CinematicHero>
         <div className="flex flex-col justify-center items-center text-center w-full h-[75dvh] md:h-full px-4 pt-24 pb-4 md:pt-24 md:pb-12">
           <h1 className="text-[clamp(2.0rem,6vw,4.5rem)] md:text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.15] mb-3 md:mb-4 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
-            Unbox your Own<br />
+            Unbox your Own Smart<br />
             <span className="text-primary-gold">Cinema.</span>
           </h1>
 
