@@ -759,7 +759,7 @@ function BookingSection({
               const bookedSeats = React.useMemo(() => {
                 const booked = new Set<string>();
                 if (!selectedEvent.location) return booked;
-                const seed = selectedEvent.location.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                const seed = selectedEvent.location.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
                 const rList = ["A", "B", "C", "D", "E", "F"];
                 for (let r = 0; r < rList.length; r++) {
                   for (let s = 1; s <= 10; s++) {
