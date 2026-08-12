@@ -264,7 +264,7 @@ export default function FranchiseePortal() {
                   id="loginInput"
                   type="text"
                   className="fra-signin-input"
-                  placeholder="guptajahnvi47@gmail.com or 9511310113"
+                  placeholder="Enter Email or Contact Number"
                   value={loginInput}
                   onChange={(e) => setLoginInput(e.target.value)}
                   required
