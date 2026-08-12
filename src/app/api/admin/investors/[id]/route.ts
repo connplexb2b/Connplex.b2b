@@ -10,44 +10,59 @@ import { isAdminAuthenticated, unauthorizedResponse } from '@/lib/admin-auth';
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
-  const { id } = await params;
-  const investor = await getInvestor(id);
-  if (!investor) {
-    return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+  try {
+    const { id } = await params;
+    const investor = await getInvestor(id);
+    if (!investor) {
+      return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    }
+    return NextResponse.json(investor);
+  } catch (error: any) {
+    console.error('Error fetching investor:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-  return NextResponse.json(investor);
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
-  const { id } = await params;
-  const body = await request.json().catch(() => ({}));
+  try {
+    const { id } = await params;
+    const body = await request.json().catch(() => ({}));
 
-  const title = typeof body.title === 'string' ? body.title.trim() : undefined;
-  const type =
-    body.type === 'pdf' || body.type === 'audio' ? (body.type as InvestorFileType) : undefined;
-  const parent = typeof body.parent === 'string' ? body.parent.trim() : undefined;
+    const title = typeof body.title === 'string' ? body.title.trim() : undefined;
+    const type =
+      body.type === 'pdf' || body.type === 'audio' ? (body.type as InvestorFileType) : undefined;
+    const parent = typeof body.parent === 'string' ? body.parent.trim() : undefined;
 
-  if (title === '') {
-    return NextResponse.json({ error: 'Title cannot be empty' }, { status: 400 });
+    if (title === '') {
+      return NextResponse.json({ error: 'Title cannot be empty' }, { status: 400 });
+    }
+
+    const investor = await updateInvestor(id, { title, type, parent });
+    if (!investor) {
+      return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(investor);
+  } catch (error: any) {
+    console.error('Error updating investor:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-
-  const investor = await updateInvestor(id, { title, type, parent });
-  if (!investor) {
-    return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
-  }
-
-  return NextResponse.json(investor);
 }
 
 export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
-  const { id } = await params;
+  try {
+    const { id } = await params;
 
-  const success = await deleteInvestor(id);
-  if (!success) {
-    return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    const success = await deleteInvestor(id);
+    if (!success) {
+      return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error('Error deleting investor:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }
