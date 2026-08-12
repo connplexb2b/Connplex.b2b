@@ -102,143 +102,204 @@ export default function InvestorsPage() {
         setDetailsLoading(true);
         const res = await fetch(`${BASE_API_URL}/user/get-single-investor-by-user?title=${encodeURIComponent(activeCategory)}`);
         const json = await res.json();
-        if (json && json.status === 200) {
-          let data = json.data;
-          const isOtherAnnouncement = 
-            activeCategory.toLowerCase() === 'other announcements' || 
-            activeCategory.toLowerCase() === 'other announcement' ||
-            activeCategory.toLowerCase() === 'other annoucment';
-          
-          if (isOtherAnnouncement && data) {
-            if (!data.investorsPdfs) {
-              data.investorsPdfs = [];
-            }
-            
-            // Check if 30.06.2026 already exists
-            const exists30 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf'
-            );
-            if (!exists30) {
-              data.investorsPdfs.unshift({
-                _id: 'da37e2c9-95e2-411a-8fcd-a9b0e12d45c6',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c0326e08-9df2-421e-a4b5-12cfcf5b2c9a.pdf',
-                mimeType: 'application/pdf',
-                size: 555811
-              });
-            }
+        let data = (json && json.status === 200) ? json.data : null;
 
-            // Check if 01.07.2026 already exists (should be at the very top, so unshift last)
-            const exists01 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf'
-            );
-            if (!exists01) {
-              data.investorsPdfs.unshift({
-                _id: 'e2c03d04-1b79-4cfc-b179-c8c362089df2',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf',
-                mimeType: 'application/pdf',
-                size: 602926
-              });
-            }
-
-            // Check if 04.07.2026 already exists (should be at the very top, so unshift last)
-            const exists04 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf'
-            );
-            if (!exists04) {
-              data.investorsPdfs.unshift({
-                _id: '8f9fc3db-2548-4fc2-ab6a-a0a20540ff62',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/0181d7f9-7af7-45d3-b53d-0ebcadf11fc3.pdf',
-                mimeType: 'application/pdf',
-                size: 1288332
-              });
-            }
-
-            // Check if 11.07.2026 already exists (should be at the very top, so unshift last)
-            const exists11 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 11.07.2026.pdf'
-            );
-            if (!exists11) {
-              data.investorsPdfs.unshift({
-                _id: '6dda9d3f-52ed-42e5-8650-e161c00b38db',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 11.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/66d9e3bc-6241-4968-8c20-250f9f3e4e14.pdf',
-                mimeType: 'application/pdf',
-                size: 1645
-              });
-            }
-
-            // Check if 21.07.2026 already exists (should be at the very top, so unshift last)
-            const exists21 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 21.07.2026.pdf'
-            );
-            if (!exists21) {
-              data.investorsPdfs.unshift({
-                _id: 'f7d8c0b5-7af7-45d3-b53d-0ebcadf11fc3',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 21.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/f7d8c0b5-7af7-45d3-b53d-0ebcadf11fc3.pdf',
-                mimeType: 'application/pdf',
-                size: 1469538
-              });
-            }
-
-            // Check if 29.07.2026 already exists (should be at the very top, so unshift last)
-            const exists29 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 29.07.2026.pdf'
-            );
-            if (!exists29) {
-              data.investorsPdfs.unshift({
-                _id: 'b8a92b23-3a1d-4001-8b43-982ee33df716',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 29.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/b8a92b23-3a1d-4001-8b43-982ee33df716.pdf',
-                mimeType: 'application/pdf',
-                size: 1645
-              });
-            }
-
-            // Check if 31.07.2026 already exists (should be at the very top, so unshift last)
-            const exists31 = data.investorsPdfs.some(
-              (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 31.07.2026.pdf'
-            );
-            if (!exists31) {
-              data.investorsPdfs.unshift({
-                _id: 'a3b92b23-3a1d-4001-8b43-982ee33df718',
-                originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 31.07.2026.pdf',
-                fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/a3b92b23-3a1d-4001-8b43-982ee33df718.pdf',
-                mimeType: 'application/pdf',
-                size: 1624
-              });
-            }
-
-            // Parse date from originalname (format like DD.MM.YYYY or DD-MM-YYYY)
-            const parseDate = (name: string): Date => {
-              if (!name) return new Date(0);
-              const match = name.match(/(\d{2})[.-](\d{2})[.-](\d{4})/);
-              if (match) {
-                const day = parseInt(match[1], 10);
-                const month = parseInt(match[2], 10);
-                const year = parseInt(match[3], 10);
-                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-                  return new Date(year, month - 1, day);
-                }
-              }
-              return new Date(0);
+        const isOtherAnnouncement = 
+          activeCategory.toLowerCase() === 'other announcements' || 
+          activeCategory.toLowerCase() === 'other announcement' ||
+          activeCategory.toLowerCase() === 'other annoucment';
+        
+        if (isOtherAnnouncement) {
+          if (!data) {
+            data = {
+              _id: '4887120f-272d-4780-852b-9620e1f4e1ef',
+              title: activeCategory,
+              type: 'pdf',
+              parent: 'Announcements',
+              investorsPdfs: []
             };
-
-            // Sort PDFs in chronological order (newest first, e.g. 2026, 2025)
-            data.investorsPdfs.sort((a: any, b: any) => {
-              const dateA = parseDate(a.originalname || '').getTime();
-              const dateB = parseDate(b.originalname || '').getTime();
-              if (dateB !== dateA) {
-                return dateB - dateA;
-              }
-              return (a.originalname || '').localeCompare(b.originalname || '');
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+          
+          // Check if 30.06.2026 already exists
+          const exists30 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf'
+          );
+          if (!exists30) {
+            data.investorsPdfs.unshift({
+              _id: 'da37e2c9-95e2-411a-8fcd-a9b0e12d45c6',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 30.06.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c0326e08-9df2-421e-a4b5-12cfcf5b2c9a.pdf',
+              mimeType: 'application/pdf',
+              size: 555811
             });
           }
-          setActiveDetails(data);
+
+          // Check if 01.07.2026 already exists (should be at the very top, so unshift last)
+          const exists01 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf'
+          );
+          if (!exists01) {
+            data.investorsPdfs.unshift({
+              _id: 'e2c03d04-1b79-4cfc-b179-c8c362089df2',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 01.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/e2c03d04-1b79-4cfc-b179-c8c362089df2.pdf',
+              mimeType: 'application/pdf',
+              size: 602926
+            });
+          }
+
+          // Check if 04.07.2026 already exists (should be at the very top, so unshift last)
+          const exists04 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf'
+          );
+          if (!exists04) {
+            data.investorsPdfs.unshift({
+              _id: '8f9fc3db-2548-4fc2-ab6a-a0a20540ff62',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 04.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/0181d7f9-7af7-45d3-b53d-0ebcadf11fc3.pdf',
+              mimeType: 'application/pdf',
+              size: 1288332
+            });
+          }
+
+          // Check if 11.07.2026 already exists (should be at the very top, so unshift last)
+          const exists11 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 11.07.2026.pdf'
+          );
+          if (!exists11) {
+            data.investorsPdfs.unshift({
+              _id: '6dda9d3f-52ed-42e5-8650-e161c00b38db',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 11.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/66d9e3bc-6241-4968-8c20-250f9f3e4e14.pdf',
+              mimeType: 'application/pdf',
+              size: 1645
+            });
+          }
+
+          // Check if 21.07.2026 already exists (should be at the very top, so unshift last)
+          const exists21 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 21.07.2026.pdf'
+          );
+          if (!exists21) {
+            data.investorsPdfs.unshift({
+              _id: 'f7d8c0b5-7af7-45d3-b53d-0ebcadf11fc3',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 21.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/f7d8c0b5-7af7-45d3-b53d-0ebcadf11fc3.pdf',
+              mimeType: 'application/pdf',
+              size: 1469538
+            });
+          }
+
+          // Check if 29.07.2026 already exists (should be at the very top, so unshift last)
+          const exists29 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 29.07.2026.pdf'
+          );
+          if (!exists29) {
+            data.investorsPdfs.unshift({
+              _id: 'b8a92b23-3a1d-4001-8b43-982ee33df716',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 29.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/b8a92b23-3a1d-4001-8b43-982ee33df716.pdf',
+              mimeType: 'application/pdf',
+              size: 1645
+            });
+          }
+
+          // Check if 31.07.2026 already exists (should be at the very top, so unshift last)
+          const exists31 = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Intimation under Regulation 30 of SEBI(LODR) - 31.07.2026.pdf'
+          );
+          if (!exists31) {
+            data.investorsPdfs.unshift({
+              _id: 'a3b92b23-3a1d-4001-8b43-982ee33df718',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 31.07.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/a3b92b23-3a1d-4001-8b43-982ee33df718.pdf',
+              mimeType: 'application/pdf',
+              size: 1624
+            });
+          }
         }
+
+        // Fetch local database details to merge uploads
+        try {
+          const localRes = await fetch('/api/investors');
+          if (localRes.ok) {
+            const localData = await localRes.json();
+            const localMatching = localData.find(
+              (inv: any) =>
+                inv.title.toLowerCase().trim() === activeCategory.toLowerCase().trim() ||
+                (activeCategory.toLowerCase() === 'other announcements' && inv.title.toLowerCase() === 'other annoucment') ||
+                (activeCategory.toLowerCase() === 'other announcement' && inv.title.toLowerCase() === 'other annoucment') ||
+                (activeCategory.toLowerCase() === 'other annoucment' && inv.title.toLowerCase() === 'other annoucment')
+            );
+            
+            if (localMatching && localMatching.files && localMatching.files.length > 0) {
+              if (!data) {
+                data = {
+                  _id: localMatching.id,
+                  title: activeCategory,
+                  type: localMatching.type,
+                  parent: localMatching.parent,
+                  investorsPdfs: []
+                };
+              }
+              if (!data.investorsPdfs) {
+                data.investorsPdfs = [];
+              }
+              
+              localMatching.files.forEach((f: any) => {
+                const exists = data.investorsPdfs.some(
+                  (existing: any) =>
+                    existing._id === f.id ||
+                    existing.originalname === f.originalName ||
+                    existing.fileName === f.url
+                );
+                if (!exists) {
+                  data.investorsPdfs.push({
+                    _id: f.id,
+                    originalname: f.originalName,
+                    fileName: f.url,
+                    mimeType: f.mimeType,
+                    size: f.size
+                  });
+                }
+              });
+            }
+          }
+        } catch (localErr) {
+          console.error('Error fetching local investors:', localErr);
+        }
+
+        if (data && data.investorsPdfs && data.investorsPdfs.length > 0) {
+          // Parse date from originalname (format like DD.MM.YYYY or DD-MM-YYYY)
+          const parseDate = (name: string): Date => {
+            if (!name) return new Date(0);
+            const match = name.match(/(\d{2})[.-](\d{2})[.-](\d{4})/);
+            if (match) {
+              const day = parseInt(match[1], 10);
+              const month = parseInt(match[2], 10);
+              const year = parseInt(match[3], 10);
+              if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                return new Date(year, month - 1, day);
+              }
+            }
+            return new Date(0);
+          };
+
+          // Sort PDFs in chronological order (newest first, e.g. 2026, 2025)
+          data.investorsPdfs.sort((a: any, b: any) => {
+            const dateA = parseDate(a.originalname || '').getTime();
+            const dateB = parseDate(b.originalname || '').getTime();
+            if (dateB !== dateA) {
+              return dateB - dateA;
+            }
+            return (a.originalname || '').localeCompare(b.originalname || '');
+          });
+        }
+
+        setActiveDetails(data);
       } catch (err) {
         console.error('Error loading category details:', err);
       } finally {

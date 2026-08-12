@@ -15,11 +15,12 @@ const ALLOWED_COLLECTIONS = [
 
 export async function GET(request: Request) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
+  let limit = 20;
   try {
     const { searchParams } = new URL(request.url);
     const collection = searchParams.get('collection') || 'contactmessages';
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    limit = parseInt(searchParams.get('limit') || '20');
     const search = searchParams.get('search') || '';
 
     if (!ALLOWED_COLLECTIONS.includes(collection)) {

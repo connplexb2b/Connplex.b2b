@@ -34,7 +34,7 @@ export default function CinematicHero({ children }: CinematicHeroProps) {
     if (typeof window !== "undefined") {
       normalizedScroll = ScrollTrigger.normalizeScroll({
         type: "touch,pointer",
-        momentum: true,
+        momentum: true as any,
       });
     }
 

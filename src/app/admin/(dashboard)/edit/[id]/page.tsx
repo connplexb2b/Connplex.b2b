@@ -6,7 +6,8 @@ import MediaForm from '@/components/admin/MediaForm';
 import type { MediaEntry } from '@/lib/media-utils';
 
 export default function AdminEditPage() {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams();
+  const id = params?.id as string;
   const [entry, setEntry] = useState<MediaEntry | null>(null);
   const [loading, setLoading] = useState(true);
 

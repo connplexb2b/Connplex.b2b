@@ -66,7 +66,7 @@ export async function GET(
     headers.set('Content-Type', 'application/octet-stream');
   }
 
-  return new NextResponse(fileBuffer, {
+  return new NextResponse(fileBuffer as any, {
     status: 200,
     headers: headers,
   });

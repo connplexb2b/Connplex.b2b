@@ -94,7 +94,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
         onInput={handleInput}
         onBlur={handleInput}
         style={{ minHeight: '240px', padding: '1rem', outline: 'none', fontSize: '0.9rem', lineHeight: 1.6, overflowY: 'auto' }}
-        placeholder={placeholder}
+        {...{ placeholder }}
       />
     </div>
   );

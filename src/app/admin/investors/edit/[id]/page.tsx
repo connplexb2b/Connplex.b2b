@@ -6,7 +6,8 @@ import type { Investor } from '@/lib/media-utils';
 import { getAcceptForType, formatFileSize } from '@/lib/media-utils';
 
 export default function EditInvestorPage() {
-  const { id } = useParams<{ id: string }>();
+  const params = useParams();
+  const id = params?.id as string;
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [investor, setInvestor] = useState<Investor | null>(null);

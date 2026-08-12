@@ -35,6 +35,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <div style={{ padding: '0.4rem 1.5rem 0.2rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)' }}>Content</div>
           {navLink('/admin/stats', 'Website Stats', 'fa-chart-bar')}
           {navLink('/admin/news', 'News & Promotions', 'fa-newspaper')}
+          {navLink('/admin/investors', 'Investors Section', 'fa-building-columns')}
           <div style={{ padding: '0.6rem 1.5rem 0.2rem', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', marginTop: '0.25rem' }}>Data & SEO</div>
           {navLink('/admin/analytics', 'Analytics', 'fa-chart-line')}
           {navLink('/admin/seo', 'SEO Manager', 'fa-magnifying-glass')}
