@@ -953,96 +953,100 @@ function BookingSection({
                   ) : (
                     <div className="bg-white text-black rounded-xl p-4 sm:p-6 shadow-inner border border-white/10">
                       {layoutRows ? (
-                        <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
-                          {(() => {
-                            let lastCategory = "";
-                            return layoutRows.map((row) => {
-                              const showCategoryHeader = row.category && row.category !== lastCategory;
-                              if (row.category) lastCategory = row.category;
+                        <div className="overflow-x-auto w-full py-2">
+                          <div className="inline-flex flex-col items-center min-w-full gap-2.5 select-none">
+                            {(() => {
+                              let lastCategory = "";
+                              return layoutRows.map((row) => {
+                                const showCategoryHeader = row.category && row.category !== lastCategory;
+                                if (row.category) lastCategory = row.category;
 
-                              return (
-                                <React.Fragment key={row.rowName}>
-                                  {showCategoryHeader && (
-                                    <div className="w-full text-left pl-2 mt-4 mb-2 border-b border-black/10 pb-1">
-                                      <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
-                                        {row.category} - ₹{selectedEvent.amount.toLocaleString("en-IN")}
-                                      </span>
+                                return (
+                                  <React.Fragment key={row.rowName}>
+                                    {showCategoryHeader && (
+                                      <div className="w-full text-left pl-2 mt-4 mb-2 border-b border-black/10 pb-1">
+                                        <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
+                                          {row.category} - ₹{selectedEvent.amount.toLocaleString("en-IN")}
+                                        </span>
+                                      </div>
+                                    )}
+                                    <div className="flex items-center gap-1.5 min-w-max">
+                                      <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
+                                      {row.seats.map((seat: any, idx: number) => {
+                                        if (seat.isAisle) {
+                                          return <div key={`aisle-${idx}`} className="w-4" />;
+                                        }
+                                        const isSelected = selectedSeats.includes(seat.seatId);
+                                        
+                                        return (
+                                          <button
+                                            key={seat.seatId}
+                                            type="button"
+                                            disabled={seat.isBooked}
+                                            onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
+                                            className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
+                                              seat.isBooked
+                                                ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
+                                                : isSelected
+                                                ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
+                                                : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
+                                            }`}
+                                            title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                                          >
+                                            {seat.seatNumber}
+                                          </button>
+                                        );
+                                      })}
+                                      <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
                                     </div>
-                                  )}
-                                  <div className="flex items-center gap-1.5 min-w-max">
-                                    <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
-                                    {row.seats.map((seat: any, idx: number) => {
-                                      if (seat.isAisle) {
-                                        return <div key={`aisle-${idx}`} className="w-4" />;
-                                      }
-                                      const isSelected = selectedSeats.includes(seat.seatId);
-                                      
-                                      return (
-                                        <button
-                                          key={seat.seatId}
-                                          type="button"
-                                          disabled={seat.isBooked}
-                                          onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
-                                          className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
-                                            seat.isBooked
-                                              ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
-                                              : isSelected
-                                              ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
-                                              : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
-                                          }`}
-                                          title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                                        >
-                                          {seat.seatNumber}
-                                        </button>
-                                      );
-                                    })}
-                                    <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
-                                  </div>
-                                </React.Fragment>
-                              );
-                            });
-                          })()}
+                                  </React.Fragment>
+                                );
+                              });
+                            })()}
+                          </div>
                         </div>
                       ) : (
-                        <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
-                          <div className="w-full text-left pl-2 mt-2 mb-2 border-b border-black/10 pb-1">
-                            <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
-                              Premium Recliner - ₹{selectedEvent.amount.toLocaleString("en-IN")}
-                            </span>
-                          </div>
-                          {fallbackRows.map((row) => (
-                            <div key={row} className="flex items-center gap-1.5 min-w-max">
-                              <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
-                              {fallbackCols.map((col, idx) => {
-                                if (col === "aisle") {
-                                  return <div key={`aisle-${idx}`} className="w-4" />;
-                                }
-                                const seatId = `${row}${col}`;
-                                const isBooked = bookedSeats.has(seatId);
-                                const isSelected = selectedSeats.includes(seatId);
-                                
-                                return (
-                                  <button
-                                    key={seatId}
-                                    type="button"
-                                    disabled={isBooked}
-                                    onClick={() => handleSeatClick(seatId, isBooked)}
-                                    className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
-                                      isBooked
-                                        ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
-                                        : isSelected
-                                        ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
-                                        : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
-                                    }`}
-                                    title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                                  >
-                                    {col}
-                                  </button>
-                                );
-                              })}
-                              <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
+                        <div className="overflow-x-auto w-full py-2">
+                          <div className="inline-flex flex-col items-center min-w-full gap-2.5 select-none">
+                            <div className="w-full text-left pl-2 mt-2 mb-2 border-b border-black/10 pb-1">
+                              <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
+                                Premium Recliner - ₹{selectedEvent.amount.toLocaleString("en-IN")}
+                              </span>
                             </div>
-                          ))}
+                            {fallbackRows.map((row) => (
+                              <div key={row} className="flex items-center gap-1.5 min-w-max">
+                                <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
+                                {fallbackCols.map((col, idx) => {
+                                  if (col === "aisle") {
+                                    return <div key={`aisle-${idx}`} className="w-4" />;
+                                  }
+                                  const seatId = `${row}${col}`;
+                                  const isBooked = bookedSeats.has(seatId);
+                                  const isSelected = selectedSeats.includes(seatId);
+                                  
+                                  return (
+                                    <button
+                                      key={seatId}
+                                      type="button"
+                                      disabled={isBooked}
+                                      onClick={() => handleSeatClick(seatId, isBooked)}
+                                      className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
+                                        isBooked
+                                          ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
+                                          : isSelected
+                                          ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
+                                          : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
+                                      }`}
+                                      title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                                    >
+                                      {col}
+                                    </button>
+                                  );
+                                })}
+                                <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
 
