@@ -57,7 +57,7 @@ const auditorium1Url = "/auditorium_new.jpg";
 const auditorium2Url = "/luxury_cinema_lounge.png"; 
 
 const HEADING = "font-display uppercase tracking-[0.02em]";
-const EVENT_DATE = 1785598200000; // 2026-08-01T21:00:00+05:30
+const EVENT_DATE = new Date("2026-08-29T21:00:00+05:30").getTime();
 
 const SPIDER_LOCATIONS = [
   { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
@@ -65,6 +65,38 @@ const SPIDER_LOCATIONS = [
   { name: "Connplex – Gota, Ahmedabad", time: "8:00 PM", date: "Saturday (1st Aug)" },
   { name: "Connplex – Gandhinagar", time: "8:00 PM", date: "Saturday (1st Aug)" },
   { name: "Connplex – Vadodara", time: "9:10 PM", date: "Saturday (1st Aug)" },
+];
+
+const PREMIER_LOCATIONS = [
+  { name: "Connplex Luxuriance – Vaishnodevi", amount: 1500 },
+  { name: "Connplex Luxuriance – Rajkot", amount: 1500 },
+  { name: "Connplex Luxuriance – Ahilyanagar", amount: 1500 },
+  { name: "Connplex Luxuriance – Kankarbagh", amount: 1500 },
+  { name: "Connplex Luxuriance – Siwan", amount: 1500, tier3: true },
+  { name: "Connplex Luxuriance – Bhagalpur", amount: 1500, tier3: true },
+  { name: "Connplex Luxuriance – Vadodara", amount: 1500 },
+  { name: "Connplex Luxuriance – MPM Mall", amount: 1500 },
+  { name: "Connplex Luxuriance – Muzaffarpur", amount: 1500, tier3: true },
+  { name: "Connplex Luxuriance – Tribeca", amount: 1500 },
+  { name: "Connplex Luxuriance – Adani Shantigram", amount: 1500 },
+  { name: "Connplex Luxuriance – Jajpur", amount: 1500, tier3: true },
+  { name: "Connplex Luxuriance – Mundhra", amount: 1000, tier3: true },
+  { name: "Connplex Luxuriance – Junagadh", amount: 1100 },
+  { name: "Connplex Luxuriance – Darbhnga", amount: 1100, tier3: true },
+  { name: "Connplex Luxuriance – Jagdalpur", amount: 1100, tier3: true },
+  { name: "Connplex Luxuriance – Phulbani", amount: 1100, tier3: true },
+  { name: "Connplex Luxuriance – Mahesana", amount: 1100 },
+  { name: "Connplex Luxuriance – Bhikhna pahadi", amount: 1100, tier3: true },
+  { name: "Connplex Luxuriance – Jd mall", amount: 1100 },
+  { name: "Connplex Luxuriance – Solapur", amount: 1100, tier3: true },
+  { name: "Connplex Luxuriance – Balotra", amount: 1500, tier3: true },
+  { name: "Connplex Luxuriance – Sangmner", amount: 1000 },
+  { name: "Connplex Luxuriance – Prahladnagar", amount: 1000 },
+  { name: "Connplex Luxuriance – Biswanath assam", amount: 1000, tier3: true },
+  { name: "Connplex Luxuriance – Bilaspur", amount: 1000 },
+  { name: "Connplex Luxuriance – Gandhinagar", amount: 1000 },
+  { name: "Connplex Luxuriance – Madhubani", amount: 1000, tier3: true },
+  { name: "Connplex Luxuriance – SR arcade - bihar", amount: 1000, tier3: true },
 ];
 
 function useCountdown() {
@@ -305,7 +337,7 @@ function CountdownSection() {
     <section className="relative overflow-hidden bg-[#0d0d0d] py-14 border-y border-white/10">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <p className="font-caps text-[11px] tracking-[0.36em] text-[color:var(--color-gold-soft)] uppercase mb-6">
-          THE PREMIERE OF SPIDER-MAN BEGINS IN
+          THE HNI PREMIERE NIGHT BEGINS IN
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           {[
@@ -429,7 +461,7 @@ function Journey({
           {/* Gold vertical line */}
           <div className="absolute left-6 top-0 bottom-0 hidden w-px bg-gradient-to-b from-transparent via-[color:var(--color-gold)]/60 to-transparent md:left-8 md:block" />
           <div className="space-y-14">
-            {/* CARD 1 — Spider-Man */}
+            {/* CARD 1 — HNI Premiere Night (Upcoming) */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -438,72 +470,82 @@ function Journey({
               className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
             >
               <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
+                <Crown className="h-6 w-6 text-[color:var(--color-gold)]" />
+              </div>
+              <div className="glass-card flex-1 p-8 md:p-10 border-[color:var(--color-gold)]/30 hover:border-[color:var(--color-gold)]/60 hover:-translate-y-1 shadow-[0_15px_45px_-10px_rgba(212,175,55,0.15)]">
+                <div className="mb-4">
+                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)] animate-pulse">
+                    ✨ Upcoming Event · Ticket Sales Open
+                  </div>
+                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
+                    🎬 HNI Premiere Night
+                  </h3>
+                </div>
+                <div className="mb-6 flex flex-col gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
+                  <div className="flex items-start gap-2">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                    <span>29 Premium Luxuriance Locations (Vaishnodevi, Rajkot, Vadodara, Adani Shantigram, MPM Mall, Solapur, Bilaspur, and more)</span>
+                  </div>
+                  <div className="flex items-start gap-2 mt-1">
+                    <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                    <span>Exclusive Pricing: ₹1,000 / ₹1,100 / ₹1,500 per seat (exclusively on this landing page)</span>
+                  </div>
+                </div>
+                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                  Standard Event Timings
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 mb-6">
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 1</div>
+                    <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 2</div>
+                    <div className="font-body font-semibold text-white mt-0.5">30 August 2026 (9:00 PM)</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => onSelectEvent({
+                    movie: "HNI Premiere Night",
+                    location: PREMIER_LOCATIONS[0].name,
+                    date: "Saturday (29th Aug)",
+                    time: "9:00 PM",
+                    amount: PREMIER_LOCATIONS[0].amount,
+                  })}
+                  className="inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
+                >
+                  Book Now <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </motion.div>
+
+            {/* CARD 2 — Spider-Man (Completed) */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.9, delay: 0.1 }}
+              className="relative flex flex-col gap-6 md:flex-row md:items-start md:gap-10"
+            >
+              <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
                 <Star className="h-6 w-6 text-[color:var(--color-gold)]" />
               </div>
               <div className="glass-card flex-1 p-8 md:p-10 hover:border-[color:var(--color-gold)]/50 hover:-translate-y-1">
                 <div className="mb-4">
                   <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                    Upcoming Event
+                    Event Completed
                   </div>
                   <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
                     🕷 Spider-Man Premiere Night
                   </h3>
                 </div>
-                <div className="mb-6 font-body text-sm font-medium text-white/80 md:text-base">
-                  Book Your Preferred Showtime & Venue below
+                <div className="mb-6 flex items-start gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                  <span>Connplex Cinemas – Parimal, Adani, Gota, Gandhinagar, Vadodara</span>
                 </div>
-                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                  Locations & Timings (Click to Book)
+                <div className="mt-8 inline-flex items-center gap-2 rounded-[14px] border border-white/10 bg-white/5 px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-white/40">
+                  Event Completed
                 </div>
-                <ul className="grid gap-4 sm:grid-cols-2">
-                  {SPIDER_LOCATIONS.map((loc) => {
-                    const isSelected = selectedEvent.movie === "Spider-Man" && selectedEvent.location === loc.name;
-                    return (
-                      <button
-                        key={loc.name}
-                        onClick={() => onSelectEvent({
-                          movie: "Spider-Man",
-                          location: loc.name,
-                          date: loc.date,
-                          time: loc.time,
-                          amount: 1000,
-                        })}
-                        className={`flex flex-col gap-2 rounded-xl border p-4 text-left transition-all hover:-translate-y-0.5 w-full cursor-pointer ${
-                          isSelected
-                            ? "border-[color:var(--color-gold)] bg-[color:var(--color-gold)]/10 shadow-[0_0_20px_rgba(212,175,55,0.2)]"
-                            : "border-white/5 bg-[#141414]/30 hover:border-[color:var(--color-gold)]/30 hover:bg-[#1e1e1e]/50"
-                        }`}
-                      >
-                        <div className="flex items-start gap-2.5">
-                          <MapPin className={`mt-1 h-4 w-4 shrink-0 ${isSelected ? "text-[color:var(--color-gold-soft)]" : "text-[color:var(--color-gold)]"}`} />
-                          <span className="font-body text-sm font-semibold text-white">
-                            {loc.name}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 pl-[26px] font-body text-xs text-[color:var(--color-champagne)]/80">
-                          <span className="flex items-center gap-1">
-                            📅 {loc.date}
-                          </span>
-                          <span className={`flex items-center gap-1 font-medium ${isSelected ? "text-[color:var(--color-gold-soft)]" : "text-white/60"}`}>
-                            ⏰ {loc.time}
-                          </span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </ul>
-                <button
-                  onClick={() => onSelectEvent({
-                    movie: "Spider-Man",
-                    location: SPIDER_LOCATIONS[0].name,
-                    date: SPIDER_LOCATIONS[0].date,
-                    time: SPIDER_LOCATIONS[0].time,
-                    amount: 1000,
-                  })}
-                  className="mt-8 inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
-                >
-                  Book Now <ChevronRight className="h-4 w-4" />
-                </button>
               </div>
             </motion.div>
             {/* CARD 2 — Odyssey */}
@@ -639,23 +681,56 @@ function BookingSection({
   setSelectedSeats: (seats: string[]) => void;
   refreshKey: number;
 }) {
-  const movies = ["Spider-Man"];
-  const currentLocationsList = SPIDER_LOCATIONS;
+  const movies = ["Spider-Man", "HNI Premiere Night"];
+  const currentLocationsList = selectedEvent.movie === "Spider-Man" ? SPIDER_LOCATIONS : PREMIER_LOCATIONS;
 
-  const handleMovieChange = (movie: string) => {
-    // Only Spider-Man is available
-  };
-
-  const handleLocationChange = (locationName: string) => {
-    const loc = currentLocationsList.find(l => l.name === locationName);
-    if (loc) {
+  const handleMovieChange = (movieName: string) => {
+    if (movieName === "Spider-Man") {
+      const loc = SPIDER_LOCATIONS[0];
       setSelectedSeats([]);
       setSelectedEvent({
-        ...selectedEvent,
+        movie: "Spider-Man",
         location: loc.name,
         date: loc.date,
         time: loc.time,
+        amount: 1000,
       });
+    } else {
+      const loc = PREMIER_LOCATIONS[0];
+      setSelectedSeats([]);
+      setSelectedEvent({
+        movie: "HNI Premiere Night",
+        location: loc.name,
+        date: "Saturday (29th Aug)",
+        time: "9:00 PM",
+        amount: loc.amount,
+      });
+    }
+  };
+
+  const handleLocationChange = (locationName: string) => {
+    if (selectedEvent.movie === "Spider-Man") {
+      const loc = SPIDER_LOCATIONS.find(l => l.name === locationName);
+      if (loc) {
+        setSelectedSeats([]);
+        setSelectedEvent({
+          ...selectedEvent,
+          location: loc.name,
+          date: loc.date,
+          time: loc.time,
+          amount: 1000,
+        });
+      }
+    } else {
+      const loc = PREMIER_LOCATIONS.find(l => l.name === locationName);
+      if (loc) {
+        setSelectedSeats([]);
+        setSelectedEvent({
+          ...selectedEvent,
+          location: loc.name,
+          amount: loc.amount,
+        });
+      }
     }
   };
 
@@ -671,6 +746,10 @@ function BookingSection({
           {selectedEvent.movie === "The Odyssey" ? (
             <>
               Christopher Nolan's <em className="text-[color:var(--color-gold-soft)]">The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
+            </>
+          ) : selectedEvent.movie === "HNI Premiere Night" ? (
+            <>
+              Indulge in a premium cinematic experience with the <em className="text-[color:var(--color-gold-soft)]">HNI Premiere Night</em> — an exclusive screening across participating Luxuriance properties.
             </>
           ) : (
             <>
@@ -700,19 +779,60 @@ function BookingSection({
               </select>
             </div>
             <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT LOCATION & SHOWTIME</label>
+              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT LOCATION</label>
               <select
                 value={selectedEvent.location}
                 onChange={(e) => handleLocationChange(e.target.value)}
                 className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
               >
-                {currentLocationsList.map((loc) => (
+                {currentLocationsList.map((loc: any) => (
                   <option key={loc.name} value={loc.name} className="bg-[#141414] text-white">
-                    {loc.name} ({loc.date} @ {loc.time})
+                    {selectedEvent.movie === "Spider-Man"
+                      ? `${loc.name} (${loc.date} @ ${loc.time})`
+                      : `${loc.name} (₹${loc.amount.toLocaleString()})`}
                   </option>
                 ))}
               </select>
             </div>
+
+            {selectedEvent.movie === "HNI Premiere Night" && (
+              <div>
+                <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT DATE & SHOWTIME</label>
+                <select
+                  value={selectedEvent.date}
+                  onChange={(e) => {
+                    setSelectedSeats([]);
+                    setSelectedEvent({
+                      ...selectedEvent,
+                      date: e.target.value,
+                    });
+                  }}
+                  className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
+                >
+                  <option value="Saturday (29th Aug)" className="bg-[#141414] text-white">
+                    Saturday (29th Aug) @ 9:00 PM
+                  </option>
+                  <option value="Sunday (30th Aug)" className="bg-[#141414] text-white">
+                    Sunday (30th Aug) @ 9:00 PM
+                  </option>
+                </select>
+              </div>
+            )}
+
+            {selectedEvent.movie === "HNI Premiere Night" && (
+              <div className="text-[11px] text-[color:var(--color-champagne)]/70 bg-white/5 border border-white/10 rounded-lg p-3 mt-1">
+                <div className="flex justify-between items-center">
+                  <span>Price per seat: <strong className="text-white">₹{selectedEvent.amount.toLocaleString()}</strong></span>
+                  <span className="text-[9px] uppercase tracking-wider text-[color:var(--color-gold-soft)] font-semibold">Exclusively HNI</span>
+                </div>
+                {PREMIER_LOCATIONS.find(l => l.name === selectedEvent.location)?.tier3 && (
+                  <div className="mt-2 text-[10px] text-amber-500 font-medium leading-relaxed border-t border-white/5 pt-1.5 flex items-start gap-1">
+                    <span className="shrink-0 font-bold">⚠️</span>
+                    <span>Pricing for this Tier-3 location is subject to final market feasibility review.</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* SEATING LAYOUT */}
             {(() => {
@@ -729,7 +849,7 @@ function BookingSection({
                 async function loadLayout() {
                   setIsLoadingLayout(true);
                   try {
-                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}&t=${Date.now()}`, { cache: 'no-store' });
+                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}&movie=${encodeURIComponent(selectedEvent.movie)}&date=${encodeURIComponent(selectedEvent.date)}&time=${encodeURIComponent(selectedEvent.time)}&t=${Date.now()}`, { cache: 'no-store' });
                     if (res.ok) {
                       const data = await res.json();
                       if (active) {
@@ -753,7 +873,7 @@ function BookingSection({
                 return () => {
                   active = false;
                 };
-              }, [selectedEvent.location, refreshKey]);
+              }, [selectedEvent.location, selectedEvent.movie, selectedEvent.date, selectedEvent.time, refreshKey]);
 
               // Deterministically generate booked seats based on location name (Fallback Layout)
               const bookedSeats = React.useMemo(() => {
@@ -792,107 +912,135 @@ function BookingSection({
               return (
                 <div className="mt-6 border-t border-white/5 pt-6">
                   <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-4 font-medium uppercase text-center">
-                    Select Seats (Premium Recliners)
+                    Select Seats (BookMyShow Layout Style)
                   </label>
-                  
-                  {/* Curved Cinema Screen */}
-                  <div className="w-full flex flex-col items-center mb-6">
-                    <div className="w-4/5 h-[3px] bg-gradient-to-r from-transparent via-[color:var(--color-gold-soft)] to-transparent rounded-full shadow-[0_1px_10px_rgba(212,175,55,0.8)]" />
-                    <span className="text-[8px] font-caps tracking-[0.4em] text-white/30 mt-1.5 uppercase font-semibold">Screen</span>
-                  </div>
 
                   {isLoadingLayout ? (
                     <div className="flex flex-col items-center justify-center py-10 gap-3">
                       <div className="h-6 w-6 animate-spin rounded-full border-2 border-[color:var(--color-gold)] border-t-transparent" />
                       <span className="text-[9px] font-caps tracking-widest text-[color:var(--color-gold-soft)] uppercase animate-pulse">Loading Live Layout...</span>
                     </div>
-                  ) : layoutRows ? (
-                    <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
-                      {layoutRows.map((row) => (
-                        <div key={row.rowName} className="flex items-center gap-1.5 min-w-max">
-                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row.rowName}</span>
-                          {row.seats.map((seat: any, idx: number) => {
-                            if (seat.isAisle) {
-                              return <div key={`aisle-${idx}`} className="w-3" />;
-                            }
-                            const isSelected = selectedSeats.includes(seat.seatId);
-                            
-                            return (
-                              <button
-                                key={seat.seatId}
-                                type="button"
-                                disabled={seat.isBooked}
-                                onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
-                                className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
-                                  seat.isBooked
-                                    ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
-                                    : isSelected
-                                    ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                                    : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
-                                }`}
-                                title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                              >
-                                {seat.seatNumber}
-                              </button>
-                            );
-                          })}
-                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row.rowName}</span>
-                        </div>
-                      ))}
-                    </div>
                   ) : (
-                    <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
-                      {fallbackRows.map((row) => (
-                        <div key={row} className="flex items-center gap-1.5 min-w-max">
-                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
-                          {fallbackCols.map((col, idx) => {
-                            if (col === "aisle") {
-                              return <div key={`aisle-${idx}`} className="w-3" />;
-                            }
-                            const seatId = `${row}${col}`;
-                            const isBooked = bookedSeats.has(seatId);
-                            const isSelected = selectedSeats.includes(seatId);
-                            
-                            return (
-                              <button
-                                key={seatId}
-                                type="button"
-                                disabled={isBooked}
-                                onClick={() => handleSeatClick(seatId, isBooked)}
-                                className={`h-6 w-6 rounded-t-[5px] text-[8px] font-bold font-caps flex items-center justify-center border transition-all ${
-                                  isBooked
-                                    ? "bg-white/5 border-white/5 text-white/10 cursor-not-allowed line-through"
-                                    : isSelected
-                                    ? "bg-[color:var(--color-gold)] border-[color:var(--color-gold)] text-black shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                                    : "bg-[#141414]/30 border-white/10 text-white/60 hover:border-[color:var(--color-gold)]/40 hover:text-white"
-                                }`}
-                                title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                              >
-                                {col}
-                              </button>
-                            );
-                          })}
-                          <span className="w-4 text-[10px] text-white/30 font-bold font-caps text-center">{row}</span>
+                    <div className="bg-white text-black rounded-xl p-4 sm:p-6 shadow-inner border border-white/10">
+                      {layoutRows ? (
+                        <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
+                          {(() => {
+                            let lastCategory = "";
+                            return layoutRows.map((row) => {
+                              const showCategoryHeader = row.category && row.category !== lastCategory;
+                              if (row.category) lastCategory = row.category;
+
+                              return (
+                                <React.Fragment key={row.rowName}>
+                                  {showCategoryHeader && (
+                                    <div className="w-full text-left pl-2 mt-4 mb-2 border-b border-black/10 pb-1">
+                                      <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
+                                        {row.category} - ₹{selectedEvent.amount.toLocaleString("en-IN")}
+                                      </span>
+                                    </div>
+                                  )}
+                                  <div className="flex items-center gap-1.5 min-w-max">
+                                    <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
+                                    {row.seats.map((seat: any, idx: number) => {
+                                      if (seat.isAisle) {
+                                        return <div key={`aisle-${idx}`} className="w-4" />;
+                                      }
+                                      const isSelected = selectedSeats.includes(seat.seatId);
+                                      
+                                      return (
+                                        <button
+                                          key={seat.seatId}
+                                          type="button"
+                                          disabled={seat.isBooked}
+                                          onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
+                                          className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
+                                            seat.isBooked
+                                              ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
+                                              : isSelected
+                                              ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
+                                              : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
+                                          }`}
+                                          title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                                        >
+                                          {seat.seatNumber}
+                                        </button>
+                                      );
+                                    })}
+                                    <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
+                                  </div>
+                                </React.Fragment>
+                              );
+                            });
+                          })()}
                         </div>
-                      ))}
+                      ) : (
+                        <div className="flex flex-col gap-2.5 items-center select-none overflow-x-auto py-2">
+                          <div className="w-full text-left pl-2 mt-2 mb-2 border-b border-black/10 pb-1">
+                            <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
+                              Premium Recliner - ₹{selectedEvent.amount.toLocaleString("en-IN")}
+                            </span>
+                          </div>
+                          {fallbackRows.map((row) => (
+                            <div key={row} className="flex items-center gap-1.5 min-w-max">
+                              <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
+                              {fallbackCols.map((col, idx) => {
+                                if (col === "aisle") {
+                                  return <div key={`aisle-${idx}`} className="w-4" />;
+                                }
+                                const seatId = `${row}${col}`;
+                                const isBooked = bookedSeats.has(seatId);
+                                const isSelected = selectedSeats.includes(seatId);
+                                
+                                return (
+                                  <button
+                                    key={seatId}
+                                    type="button"
+                                    disabled={isBooked}
+                                    onClick={() => handleSeatClick(seatId, isBooked)}
+                                    className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
+                                      isBooked
+                                        ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
+                                        : isSelected
+                                        ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
+                                        : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
+                                    }`}
+                                    title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
+                                  >
+                                    {col}
+                                  </button>
+                                );
+                              })}
+                              <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* BookMyShow Screen at the bottom */}
+                      <div className="w-full flex flex-col items-center mt-8 border-t border-black/5 pt-6">
+                        <div className="w-3/5 relative h-3 mb-1">
+                          <div className="absolute inset-0 border-t-2 border-black/20 rounded-[50%/8px_8px_0_0]" />
+                        </div>
+                        <span className="text-[9px] font-sans tracking-[0.3em] text-black/35 uppercase font-medium">All eyes this way</span>
+                      </div>
+
+                      {/* Legend */}
+                      <div className="flex items-center justify-center gap-6 mt-6 text-[10px] font-sans tracking-wide text-black/60 font-medium border-t border-black/5 pt-4">
+                        <div className="flex items-center gap-1.5">
+                          <div className="h-3 w-3 rounded-[2px] border border-[#4abd5d]/45 bg-white text-[#4abd5d]" />
+                          <span>Available</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="h-3 w-3 rounded-[2px] bg-[#4abd5d]" />
+                          <span>Selected</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="h-3 w-3 rounded-[2px] bg-[#e4e4e4]" />
+                          <span>Sold</span>
+                        </div>
+                      </div>
                     </div>
                   )}
-
-                  {/* Legend */}
-                  <div className="flex items-center justify-center gap-6 mt-4 text-[9px] font-caps tracking-wider text-white/50">
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-t-[3px] border border-white/10 bg-[#141414]/30" />
-                      <span>Available</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-t-[3px] bg-[color:var(--color-gold)] text-black" />
-                      <span>Selected</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="h-3 w-3 rounded-t-[3px] bg-white/5 text-white/10 line-through border border-transparent" />
-                      <span>Booked</span>
-                    </div>
-                  </div>
 
                   {/* Seating Summary */}
                   {selectedSeats.length > 0 && (
@@ -901,7 +1049,7 @@ function BookingSection({
                         Selected Seats: <span className="font-bold text-white uppercase">{selectedSeats.join(", ")}</span>
                       </div>
                       <div className="mt-1 text-xs font-semibold text-[color:var(--color-gold-soft)]">
-                        Total Price: ₹{(selectedSeats.length * 1000).toLocaleString("en-IN")}
+                        Total Price: ₹{(selectedSeats.length * selectedEvent.amount).toLocaleString("en-IN")}
                       </div>
                     </div>
                   )}
@@ -944,10 +1092,10 @@ function BookingSection({
             
             <button
               onClick={handlePayment}
-              disabled={isPaying}
+              disabled={isPaying || selectedSeats.length === 0}
               className="w-full mt-8 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              {isPaying ? "Processing..." : `Book Now - ₹${selectedEvent.amount.toLocaleString()}`}
+              {isPaying ? "Processing..." : selectedSeats.length > 0 ? `Book Now - ₹${(selectedSeats.length * selectedEvent.amount).toLocaleString()}` : "Select Seats to Book"}
             </button>
           </div>
         </div>
@@ -1147,11 +1295,11 @@ export default function PremiereLuxeLanding() {
   const [guestPhone, setGuestPhone] = useState("");
   const [isPaying, setIsPaying] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({
-    movie: "Spider-Man",
-    location: "Connplex – Parimal Garden, Ahmedabad",
-    date: "Saturday (1st Aug)",
+    movie: "HNI Premiere Night",
+    location: PREMIER_LOCATIONS[0].name,
+    date: "Saturday (29th Aug)",
     time: "9:00 PM",
-    amount: 1000,
+    amount: PREMIER_LOCATIONS[0].amount,
   });
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -1179,7 +1327,7 @@ export default function PremiereLuxeLanding() {
       const res = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: selectedSeats.length * 1000 }), // Dynamic Amount based on selected seats count
+        body: JSON.stringify({ amount: selectedSeats.length * selectedEvent.amount }), // Dynamic Amount based on selected seats count
       });
       const orderData = await res.json();
 
@@ -1210,7 +1358,7 @@ export default function PremiereLuxeLanding() {
               guestName,
               guestEmail,
               guestPhone,
-              amount: selectedSeats.length * 1000,
+              amount: selectedSeats.length * selectedEvent.amount,
               movie: selectedEvent.movie,
               location: selectedEvent.location,
               date: selectedEvent.date,

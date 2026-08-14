@@ -399,6 +399,165 @@ function getPreconfiguredLayout(location: string, dbBookedSeats: Set<string>): a
   return layout;
 }
 
+function getHniEventLayout(location: string, dbBookedSeats: Set<string>): any[] {
+  const layout: any[] = [];
+  const locUpper = location.toUpperCase();
+
+  // Large screen locations:
+  const isLarge = ["VAISHNODEVI", "RAJKOT", "VADODARA", "ADANI", "TRIBECA", "MPM MALL", "PRAHLADNAGAR"].some(name => locUpper.includes(name));
+  
+  // Medium screen locations:
+  const isMedium = ["KANKARBAGH", "SIWAN", "BHAGALPUR", "MUZAFFARPUR", "SOLAPUR", "DARBHNGA", "DARBHANGA", "JAGDALPUR", "GANDHINAGAR", "BILASPUR"].some(name => locUpper.includes(name));
+
+  if (isLarge) {
+    // 10 rows: J (top) to A (bottom)
+    const rows = ["J", "I", "H", "G", "F", "E", "D", "C", "B", "A"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = ["J", "I", "H"].includes(r) ? "Premium Recliner" : ["G", "F", "E", "D"].includes(r) ? "Executive" : "Normal";
+      
+      if (["J", "I", "H"].includes(r)) {
+        // Recliners: 10 seats (1-3, aisle, 4-7, aisle, 8-10)
+        for (let s = 1; s <= 3; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 4; s <= 7; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 8; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Normal/Executive: 14 seats (1-4, aisle, 5-10, aisle, 11-14)
+        for (let s = 1; s <= 4; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 5; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 11; s <= 14; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+      layout.push({ rowName: r, category, seats });
+    }
+  } else if (isMedium) {
+    // 8 rows: H (top) to A (bottom)
+    const rows = ["H", "G", "F", "E", "D", "C", "B", "A"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = ["H", "G"].includes(r) ? "Premium Recliner" : ["F", "E", "D"].includes(r) ? "Executive" : "Normal";
+
+      if (["H", "G"].includes(r)) {
+        // Recliners: 8 seats (1-2, aisle, 3-6, aisle, 7-8)
+        for (let s = 1; s <= 2; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 3; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 8; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Normal/Executive: 12 seats (1-3, aisle, 4-9, aisle, 10-12)
+        for (let s = 1; s <= 3; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 4; s <= 9; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 10; s <= 12; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+      layout.push({ rowName: r, category, seats });
+    }
+  } else {
+    // Boutique layout (default fallback for remaining locations)
+    // 6 rows: F (top) to A (bottom)
+    const rows = ["F", "E", "D", "C", "B", "A"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = ["F"].includes(r) ? "Premium Recliner" : ["E", "D", "C"].includes(r) ? "Executive" : "Normal";
+
+      if (r === "F") {
+        // Recliners: 6 seats (1-2, aisle, 3-4, aisle, 5-6)
+        for (let s = 1; s <= 2; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 3; s <= 4; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 5; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Normal/Executive: 10 seats (1-2, aisle, 3-8, aisle, 9-10)
+        for (let s = 1; s <= 2; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 3; s <= 8; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 9; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isBooked = dbBookedSeats.has(seatId.toUpperCase());
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+      layout.push({ rowName: r, category, seats });
+    }
+  }
+  return layout;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -407,17 +566,25 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ fallback: true });
     }
 
+    const movie = searchParams.get("movie") || "Spider-Man";
+    const date = searchParams.get("date");
+    const time = searchParams.get("time");
+
     // 1. Fetch bookings from MongoDB
     let dbBookedSeats = new Set<string>();
     try {
       await connectToDatabase();
       const db = mongoose.connection.db;
       if (db) {
-        const dbBookings = await db.collection("hnibookings").find({
+        const query: any = {
           location: location,
-          movie: "Spider-Man",
+          movie: movie,
           status: "Paid"
-        }).toArray();
+        };
+        if (date) query.date = date;
+        if (time) query.time = time;
+
+        const dbBookings = await db.collection("hnibookings").find(query).toArray();
         dbBookings.forEach((b: any) => {
           if (Array.isArray(b.seats)) {
             b.seats.forEach((seat: string) => {
@@ -430,16 +597,16 @@ export async function GET(req: NextRequest) {
       console.error("Database fetch error in proxy-layout:", dbErr);
     }
 
-    if (!BACKEND_MAP[location]) {
-      // Return custom layout directly if location is unknown
-      const layout = getPreconfiguredLayout(location, dbBookedSeats);
+    if (movie === "HNI Premiere Night" || movie === "Premier Night" || !BACKEND_MAP[location]) {
+      // Return custom layout directly if location is unknown or if it's the new premier night event
+      const layout = getHniEventLayout(location, dbBookedSeats);
       return NextResponse.json({ fallback: false, layout });
     }
 
     const { cinemaId, movieId, regionId, targetTime } = BACKEND_MAP[location];
-    const date = "2026-08-01"; // Saturday (1st Aug)
+    const showDate = "2026-08-01"; // Saturday (1st Aug)
 
-    const idValue = `${movieId}|${date}|${regionId}`;
+    const idValue = `${movieId}|${showDate}|${regionId}`;
     const payload = `id=${encodeURIComponent(idValue)}&timestamp=${Date.now()}`;
 
     // 2. Fetch show timings
