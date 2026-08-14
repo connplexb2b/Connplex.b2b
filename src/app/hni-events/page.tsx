@@ -131,7 +131,7 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Navbar() {
+function Navbar({ onBookClick }: { onBookClick?: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   
@@ -175,6 +175,12 @@ function Navbar() {
             <a
               key={l.href}
               href={l.href}
+              onClick={(e) => {
+                if (l.href === "#book" && onBookClick) {
+                  e.preventDefault();
+                  onBookClick();
+                }
+              }}
               className={`${HEADING} group relative text-[11px] text-white/80 transition hover:text-[color:var(--color-gold-soft)]`}
             >
               {l.label}
@@ -184,6 +190,12 @@ function Navbar() {
         </nav>
         <a
           href="#book"
+          onClick={(e) => {
+            if (onBookClick) {
+              e.preventDefault();
+              onBookClick();
+            }
+          }}
           className="hidden lg:inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-6 py-2.5 font-caps text-[12px] font-semibold uppercase tracking-[0.16em] text-black shadow-[0_10px_40px_-10px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_-10px_rgba(212,175,55,0.8)]"
         >
           Book Seats <ChevronRight className="h-3.5 w-3.5" />
@@ -203,7 +215,13 @@ function Navbar() {
               <a
                 key={l.href}
                 href={l.href}
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  setOpen(false);
+                  if (l.href === "#book" && onBookClick) {
+                    e.preventDefault();
+                    onBookClick();
+                  }
+                }}
                 className={`${HEADING} py-3 text-xs text-white/85`}
               >
                 {l.label}
@@ -211,7 +229,13 @@ function Navbar() {
             ))}
             <a
               href="#book"
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                setOpen(false);
+                if (onBookClick) {
+                  e.preventDefault();
+                  onBookClick();
+                }
+              }}
               className="mt-4 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient px-6 py-3 font-caps text-xs font-semibold uppercase tracking-[0.16em] text-black"
             >
               Book Seats
@@ -223,7 +247,7 @@ function Navbar() {
   );
 }
 
-function Hero() {
+function Hero({ onBookClick }: { onBookClick?: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -300,6 +324,12 @@ function Hero() {
         >
           <a
             href="#book"
+            onClick={(e) => {
+              if (onBookClick) {
+                e.preventDefault();
+                onBookClick();
+              }
+            }}
             className="group inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-10 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
           >
             Claim Your Seat
@@ -1107,7 +1137,7 @@ function BookingSection({
   );
 }
 
-function HostWithConnplex() {
+function HostWithConnplex({ onBookClick }: { onBookClick?: () => void }) {
   const cards: { icon: React.ComponentType<{ className?: string }>; title: string }[] = [
     { icon: Film, title: "Movie Premieres" },
     { icon: Rocket, title: "Corporate Launches" },
@@ -1162,6 +1192,12 @@ function HostWithConnplex() {
         <div className="mt-14 text-center">
           <a
             href="#book"
+            onClick={(e) => {
+              if (onBookClick) {
+                e.preventDefault();
+                onBookClick();
+              }
+            }}
             className="inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-10 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
           >
             Book An Event <ChevronRight className="h-4 w-4" />
@@ -1172,7 +1208,7 @@ function HostWithConnplex() {
   );
 }
 
-function FinalCTA() {
+function FinalCTA({ onBookClick }: { onBookClick?: () => void }) {
   return (
     <section
       id="contact"
@@ -1205,8 +1241,7 @@ function FinalCTA() {
           <span className="h-px w-16 bg-gold-gradient" />
         </div>
         <h2 className={`${HEADING} text-4xl leading-[1.05] text-white sm:text-5xl md:text-6xl lg:text-7xl`}>
-          The Next Premiere Could Be{" "}
-          <span className="text-gold-gradient">Yours.</span>
+          The Next Premiere Could Be <span className="text-gold-gradient">Yours.</span>
         </h2>
         <p className="mx-auto mt-8 max-w-2xl font-body text-base font-light leading-[1.9] text-[color:var(--color-champagne)] md:text-lg">
           Whether you're a movie lover, brand partner, or corporate client, Connplex HNI Premiere
@@ -1215,6 +1250,12 @@ function FinalCTA() {
         <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <a
             href="#book"
+            onClick={(e) => {
+              if (onBookClick) {
+                e.preventDefault();
+                onBookClick();
+              }
+            }}
             className="inline-flex items-center gap-3 rounded-[14px] bg-gold-gradient px-9 py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_20px_60px_-15px_rgba(212,175,55,0.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-15px_rgba(212,175,55,0.9)]"
           >
             Explore Upcoming Events <ChevronRight className="h-4 w-4" />
@@ -1378,6 +1419,15 @@ function RecommendedEvents({
                   {e.status}
                 </div>
 
+                {/* Hover Play/Book Icon Overlay */}
+                {e.isUpcoming && (
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="rounded-xl bg-gold-gradient text-black font-caps text-[11px] font-bold uppercase tracking-widest px-5 py-2.5 shadow-[0_10px_30px_rgba(212,175,55,0.5)] transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                      Book Now
+                    </span>
+                  </div>
+                )}
+
                 {/* BMS Rating Overlay Bar */}
                 <div className="absolute bottom-0 left-0 right-0 bg-black/85 px-4 py-2.5 flex items-center justify-between text-xs text-white border-t border-white/5">
                   <div className="flex items-center gap-1">
@@ -1418,6 +1468,7 @@ export default function PremiereLuxeLanding() {
   });
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showBookingForm, setShowBookingForm] = useState(false);
 
   const handlePayment = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -1521,10 +1572,23 @@ export default function PremiereLuxeLanding() {
   const selectEventHandler = (event: any) => {
     setSelectedEvent(event);
     setSelectedSeats([]);
-    const bookSection = document.getElementById("book");
-    if (bookSection) {
-      bookSection.scrollIntoView({ behavior: "smooth" });
-    }
+    setShowBookingForm(true);
+    setTimeout(() => {
+      const bookSection = document.getElementById("book");
+      if (bookSection) {
+        bookSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
+  const handleShowBooking = () => {
+    setShowBookingForm(true);
+    setTimeout(() => {
+      const bookSection = document.getElementById("book");
+      if (bookSection) {
+        bookSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
   };
 
   return (
@@ -1535,31 +1599,33 @@ export default function PremiereLuxeLanding() {
         strategy="lazyOnload"
       />
       
-      <Navbar />
+      <Navbar onBookClick={handleShowBooking} />
       <main>
-        <Hero />
+        <Hero onBookClick={handleShowBooking} />
         <CountdownSection />
         <RecommendedEvents onSelectEvent={selectEventHandler} />
         <Journey onSelectEvent={selectEventHandler} selectedEvent={selectedEvent} />
         <About />
         <WhyConnplex />
-        <BookingSection
-          guestName={guestName}
-          setGuestName={setGuestName}
-          guestEmail={guestEmail}
-          setGuestEmail={setGuestEmail}
-          guestPhone={guestPhone}
-          setGuestPhone={setGuestPhone}
-          isPaying={isPaying}
-          handlePayment={handlePayment}
-          selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
-          selectedSeats={selectedSeats}
-          setSelectedSeats={setSelectedSeats}
-          refreshKey={refreshKey}
-        />
-        <HostWithConnplex />
-        <FinalCTA />
+        {showBookingForm && (
+          <BookingSection
+            guestName={guestName}
+            setGuestName={setGuestName}
+            guestEmail={guestEmail}
+            setGuestEmail={setGuestEmail}
+            guestPhone={guestPhone}
+            setGuestPhone={setGuestPhone}
+            isPaying={isPaying}
+            handlePayment={handlePayment}
+            selectedEvent={selectedEvent}
+            setSelectedEvent={setSelectedEvent}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            refreshKey={refreshKey}
+          />
+        )}
+        <HostWithConnplex onBookClick={handleShowBooking} />
+        <FinalCTA onBookClick={handleShowBooking} />
       </main>
       <Footer />
     </div>
