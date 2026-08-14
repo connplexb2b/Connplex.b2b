@@ -1289,6 +1289,121 @@ function Footer() {
   );
 }
 
+function RecommendedEvents({
+  onSelectEvent
+}: {
+  onSelectEvent: (event: any) => void;
+}) {
+  const events = [
+    {
+      movie: "HNI Premiere Night",
+      poster: "/movies/hni_premiere_night_poster.png",
+      status: "TICKETS OPEN",
+      statusColor: "bg-[#DF1827]",
+      rating: "9.8",
+      votes: "5.2K+ Votes",
+      genre: "Premium Red Carpet / Multi-City",
+      isUpcoming: true,
+      amount: PREMIER_LOCATIONS[0].amount,
+      location: PREMIER_LOCATIONS[0].name,
+      date: "Saturday (29th Aug)",
+      time: "9:00 PM"
+    },
+    {
+      movie: "Spider-Man",
+      poster: "/movies/spiderman_ticketing.png",
+      status: "COMPLETED",
+      statusColor: "bg-white/20 backdrop-blur-md",
+      rating: "9.5",
+      votes: "3.1K+ Votes",
+      genre: "Action / Sci-Fi / Adventure",
+      isUpcoming: false
+    },
+    {
+      movie: "The Odyssey",
+      poster: "/assets/odyssey-poster.jpg",
+      status: "COMPLETED",
+      statusColor: "bg-white/20 backdrop-blur-md",
+      rating: "9.2",
+      votes: "2.4K+ Votes",
+      genre: "Sci-Fi / Space / Drama",
+      isUpcoming: false
+    }
+  ];
+
+  const handleCardClick = (e: any) => {
+    if (e.isUpcoming) {
+      onSelectEvent({
+        movie: e.movie,
+        location: e.location,
+        date: e.date,
+        time: e.time,
+        amount: e.amount
+      });
+    } else {
+      alert(`The ${e.movie} HNI Premiere Night event has been successfully completed and is closed for bookings.`);
+    }
+  };
+
+  return (
+    <section className="relative overflow-hidden bg-[#0a0a0a] py-20 lg:py-28 border-t border-white/10">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.05),transparent_60%)]" />
+      <div className="relative mx-auto max-w-5xl px-6">
+        <div className="mb-12 text-left">
+          <h2 className={`${HEADING} text-3xl font-bold text-white tracking-wide`}>
+            Recommended Events
+          </h2>
+          <p className="mt-2 font-body text-sm font-light text-[color:var(--color-champagne)]/60">
+            Book live premiere tickets or explore past premium cinema events
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {events.map((e) => (
+            <div
+              key={e.movie}
+              onClick={() => handleCardClick(e)}
+              className="group cursor-pointer flex flex-col text-left"
+            >
+              <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(212,175,55,0.15)] bg-[#111]">
+                <img
+                  src={e.poster}
+                  alt={e.movie}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                
+                {/* BMS Status Badge */}
+                <div className={`absolute top-3 right-3 text-[10px] font-bold text-white px-2.5 py-1 rounded-[4px] uppercase tracking-wider ${e.statusColor}`}>
+                  {e.status}
+                </div>
+
+                {/* BMS Rating Overlay Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black/85 px-4 py-2.5 flex items-center justify-between text-xs text-white border-t border-white/5">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[#DF1827] text-sm font-bold">★</span>
+                    <span className="font-bold text-white">{e.rating}</span>
+                    <span className="text-white/45">/10</span>
+                  </div>
+                  <span className="text-white/70 font-semibold">{e.votes}</span>
+                </div>
+              </div>
+
+              {/* Title & Genre below poster */}
+              <h3 className="mt-4 font-body font-bold text-lg text-white group-hover:text-[color:var(--color-gold-soft)] transition-colors line-clamp-1">
+                {e.movie === "Spider-Man" ? "Spider-Man Premiere Night" : e.movie === "The Odyssey" ? "Odyssey HNI Premiere Night" : e.movie}
+              </h3>
+              <p className="mt-1 font-body text-xs text-white/50">
+                {e.genre}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function PremiereLuxeLanding() {
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
@@ -1424,6 +1539,7 @@ export default function PremiereLuxeLanding() {
       <main>
         <Hero />
         <CountdownSection />
+        <RecommendedEvents onSelectEvent={selectEventHandler} />
         <Journey onSelectEvent={selectEventHandler} selectedEvent={selectedEvent} />
         <About />
         <WhyConnplex />
