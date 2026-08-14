@@ -711,7 +711,7 @@ function BookingSection({
   setSelectedSeats: (seats: string[]) => void;
   refreshKey: number;
 }) {
-  const movies = ["Spider-Man", "HNI Premiere Night"];
+  const movies = ["HNI Premiere Night"];
   const currentLocationsList = selectedEvent.movie === "Spider-Man" ? SPIDER_LOCATIONS : PREMIER_LOCATIONS;
 
   const handleMovieChange = (movieName: string) => {
