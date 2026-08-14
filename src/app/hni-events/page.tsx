@@ -942,7 +942,7 @@ function BookingSection({
               return (
                 <div className="mt-6 border-t border-white/5 pt-6">
                   <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-4 font-medium uppercase text-center">
-                    Select Seats (BookMyShow Layout Style)
+                    Select Seats
                   </label>
 
                   {isLoadingLayout ? (
