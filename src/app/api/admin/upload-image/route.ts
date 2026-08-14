@@ -12,13 +12,14 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get('file');
 
-    if (!(file instanceof File)) {
+    if (!file || typeof (file as any).name !== 'string') {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
+    const fileObj = file as any;
     // Validate file is indeed an image
-    const isImage = file.type.startsWith('image/') || 
-                    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(file.name);
+    const isImage = fileObj.type.startsWith('image/') || 
+                    /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(fileObj.name);
     if (!isImage) {
       return NextResponse.json({ error: 'Only image files are allowed' }, { status: 400 });
     }
@@ -26,9 +27,9 @@ export async function POST(request: Request) {
     const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
 
-    const ext = path.extname(file.name).toLowerCase() || '.png';
+    const ext = path.extname(fileObj.name).toLowerCase() || '.png';
     const storedName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const buffer = Buffer.from(await fileObj.arrayBuffer());
     
     await fs.writeFile(path.join(UPLOAD_DIR, storedName), buffer);
 

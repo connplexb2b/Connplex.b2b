@@ -45,6 +45,9 @@ export async function readInvestors(): Promise<Investor[]> {
 
 export async function writeInvestors(investors: Investor[]): Promise<void> {
   await fs.mkdir(path.dirname(DATA_PATH), { recursive: true });
+  try {
+    await fs.chmod(DATA_PATH, 0o666);
+  } catch (e) {}
   await fs.writeFile(DATA_PATH, JSON.stringify(investors, null, 2), 'utf-8');
 }
 

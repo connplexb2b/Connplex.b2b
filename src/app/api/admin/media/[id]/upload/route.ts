@@ -10,11 +10,12 @@ export async function POST(request: Request, context: RouteContext) {
   const formData = await request.formData();
   const file = formData.get('file');
 
-  if (!(file instanceof File) || file.size === 0) {
+  const fileObj = file as any;
+  if (!fileObj || typeof fileObj.name !== 'string' || fileObj.size === 0) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
   }
 
-  const result = await addFileToEntry(id, file);
+  const result = await addFileToEntry(id, fileObj);
   if ('error' in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }

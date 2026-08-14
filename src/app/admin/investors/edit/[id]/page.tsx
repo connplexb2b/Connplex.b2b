@@ -71,7 +71,10 @@ export default function EditInvestorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: title.trim() }),
       });
-      if (!res.ok) throw new Error('Failed to update investor');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to update investor');
+      }
 
       // upload pending files
       for (const file of pendingFiles) {

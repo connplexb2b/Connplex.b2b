@@ -35,8 +35,9 @@ export async function POST(request: Request) {
     const files = formData.getAll('files');
 
     for (const item of files) {
-      if (item instanceof File && item.size > 0) {
-        const result = await addFileToEntry(entry.id, item);
+      const fileItem = item as any;
+      if (fileItem && typeof fileItem.name === 'string' && fileItem.size > 0) {
+        const result = await addFileToEntry(entry.id, fileItem);
         if ('error' in result) {
           return NextResponse.json({ error: result.error }, { status: 400 });
         }

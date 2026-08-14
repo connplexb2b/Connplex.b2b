@@ -45,6 +45,9 @@ export async function readMediaEntries(): Promise<MediaEntry[]> {
 
 export async function writeMediaEntries(entries: MediaEntry[]): Promise<void> {
   await fs.mkdir(path.dirname(DATA_PATH), { recursive: true });
+  try {
+    await fs.chmod(DATA_PATH, 0o666);
+  } catch (e) {}
   await fs.writeFile(DATA_PATH, JSON.stringify(entries, null, 2), 'utf-8');
 }
 
