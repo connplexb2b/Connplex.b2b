@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { connectToDatabase } from '@/lib/db';
+import { InvestorFileContent } from '@/models/InvestorFileContent';
 
 export async function GET(
   request: Request,
@@ -11,6 +13,7 @@ export async function GET(
   const filename = path.basename(unsafeFilename);
   
   let fileBuffer: Buffer | null = null;
+  let customMimeType: string | null = null;
 
   // 1. Direct search in public/uploads/
   const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
@@ -45,25 +48,47 @@ export async function GET(
     } catch {}
   }
 
+  // 4. Search in MongoDB InvestorFileContent
+  if (!fileBuffer) {
+    try {
+      await connectToDatabase();
+      const doc = await InvestorFileContent.findOne({ filename }).lean();
+      if (doc && doc.data) {
+        fileBuffer = doc.data as Buffer;
+        customMimeType = doc.mimeType;
+      }
+    } catch (dbErr) {
+      console.error('Failed to search file in MongoDB:', dbErr);
+    }
+  }
+
   if (!fileBuffer) {
     return new NextResponse('File not found', { status: 404 });
   }
 
   const headers = new Headers();
   const lowerName = filename.toLowerCase();
-  if (lowerName.endsWith('.pdf')) {
-    headers.set('Content-Type', 'application/pdf');
-    headers.set('Content-Disposition', 'inline');
-  } else if (lowerName.endsWith('.png')) {
-    headers.set('Content-Type', 'image/png');
-  } else if (lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg')) {
-    headers.set('Content-Type', 'image/jpeg');
-  } else if (lowerName.endsWith('.webp')) {
-    headers.set('Content-Type', 'image/webp');
-  } else if (lowerName.endsWith('.gif')) {
-    headers.set('Content-Type', 'image/gif');
+  
+  if (customMimeType) {
+    headers.set('Content-Type', customMimeType);
+    if (customMimeType === 'application/pdf') {
+      headers.set('Content-Disposition', 'inline');
+    }
   } else {
-    headers.set('Content-Type', 'application/octet-stream');
+    if (lowerName.endsWith('.pdf')) {
+      headers.set('Content-Type', 'application/pdf');
+      headers.set('Content-Disposition', 'inline');
+    } else if (lowerName.endsWith('.png')) {
+      headers.set('Content-Type', 'image/png');
+    } else if (lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg')) {
+      headers.set('Content-Type', 'image/jpeg');
+    } else if (lowerName.endsWith('.webp')) {
+      headers.set('Content-Type', 'image/webp');
+    } else if (lowerName.endsWith('.gif')) {
+      headers.set('Content-Type', 'image/gif');
+    } else {
+      headers.set('Content-Type', 'application/octet-stream');
+    }
   }
 
   return new NextResponse(fileBuffer as any, {
