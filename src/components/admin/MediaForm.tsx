@@ -57,7 +57,8 @@ export default function MediaForm({ mode, initial }: MediaFormProps) {
       method: 'DELETE',
     });
     if (!res.ok) {
-      setError('Failed to remove file');
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || 'Failed to remove file');
       return;
     }
     const entry = (await res.json()) as MediaEntry;

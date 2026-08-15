@@ -45,7 +45,8 @@ export default function EditInvestorPage() {
         method: 'DELETE',
       });
       if (!res.ok) {
-        throw new Error('Failed to remove file');
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to remove file');
       }
       const updated = await res.json();
       setInvestor(updated);

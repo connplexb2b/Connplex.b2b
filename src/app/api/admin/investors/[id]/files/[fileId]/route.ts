@@ -7,12 +7,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; fileId: string }> }
 ) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
-  const { id, fileId } = await params;
+  try {
+    const { id, fileId } = await params;
 
-  const investor = await removeFileFromInvestor(id, fileId);
-  if (!investor) {
-    return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    const investor = await removeFileFromInvestor(id, fileId);
+    if (!investor) {
+      return NextResponse.json({ error: 'Investor not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(investor);
+  } catch (error: any) {
+    console.error('Error deleting investor file:', error);
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-
-  return NextResponse.json(investor);
 }

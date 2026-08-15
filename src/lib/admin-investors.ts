@@ -169,7 +169,11 @@ export async function removeFileFromInvestor(
   if (!file) return investor;
 
   const filePath = path.join(UPLOAD_DIR, investorId, file.storedName);
-  await fs.rm(filePath, { force: true });
+  try {
+    await fs.rm(filePath, { force: true });
+  } catch (err) {
+    console.warn(`Failed to delete physical file ${filePath}:`, err);
+  }
 
   investor.files = investor.files.filter((f) => f.id !== fileId);
   investor.updatedAt = new Date().toISOString();

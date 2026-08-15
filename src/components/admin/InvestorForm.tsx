@@ -60,7 +60,8 @@ export default function InvestorForm({ mode, initial }: InvestorFormProps) {
       method: 'DELETE',
     });
     if (!res.ok) {
-      setError('Failed to remove file');
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || 'Failed to remove file');
       return;
     }
     const investor = (await res.json()) as Investor;

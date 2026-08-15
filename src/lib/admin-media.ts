@@ -169,7 +169,11 @@ export async function removeFileFromEntry(
   if (!file) return entry;
 
   const filePath = path.join(UPLOAD_DIR, entryId, file.storedName);
-  await fs.rm(filePath, { force: true });
+  try {
+    await fs.rm(filePath, { force: true });
+  } catch (err) {
+    console.warn(`Failed to delete physical file ${filePath}:`, err);
+  }
 
   entry.files = entry.files.filter((f) => f.id !== fileId);
   entry.updatedAt = new Date().toISOString();
