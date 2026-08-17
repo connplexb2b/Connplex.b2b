@@ -853,8 +853,18 @@ function BookingSection({
         </p>
         
         {/* Form Container */}
-        <div className="glass-card max-w-md mx-auto mt-12 p-8 text-left hover:border-[color:var(--color-gold)]/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)]">
-          <div className="space-y-5">
+        <div className="glass-card max-w-md mx-auto mt-12 p-8 text-left hover:border-[color:var(--color-gold)]/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] relative overflow-hidden">
+          {/* Background Image with Dark Overlay */}
+          <div className="absolute inset-0 z-0 pointer-events-none select-none">
+            <img
+              src="/movies/toxic_background.jpg"
+              alt="Toxic Background"
+              className="w-full h-full object-cover opacity-25"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/90 to-[#0b0b0b]/95" />
+          </div>
+
+          <div className="space-y-5 relative z-10">
             <div>
               <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT MOVIE</label>
               <select
