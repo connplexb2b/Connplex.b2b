@@ -68,7 +68,7 @@ const SPIDER_LOCATIONS = [
 ];
 
 const PREMIER_LOCATIONS = [
-  { name: "Connplex Luxuriance – Vaishnodevi", amount: 1500 },
+  { name: "Connplex Luxuriance – Vaishnodevi, Ahmedabad", amount: 1500 },
   { name: "Connplex Luxuriance – Rajkot", amount: 1500 },
   { name: "Connplex Luxuriance – Ahilyanagar", amount: 1500 },
   { name: "Connplex Luxuriance – Kankarbagh", amount: 1500 },
