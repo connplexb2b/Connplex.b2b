@@ -890,7 +890,7 @@ function BookingSection({
                   <option key={loc.name} value={loc.name} className="bg-[#141414] text-white">
                     {selectedEvent.movie === "Spider-Man"
                       ? `${loc.name} (${loc.date} @ ${loc.time})`
-                      : `${loc.name} (₹${loc.amount.toLocaleString()})`}
+                      : loc.name}
                   </option>
                 ))}
               </select>
