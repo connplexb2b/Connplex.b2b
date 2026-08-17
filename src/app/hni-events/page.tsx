@@ -1356,7 +1356,7 @@ function RecommendedEvents({
   const events = [
     {
       movie: "HNI Premiere Night",
-      poster: "/movies/hni_premiere_night_poster.png",
+      poster: "/movies/hni_premiere_night_poster.jpg",
       status: "TICKETS OPEN",
       statusColor: "bg-[#DF1827]",
       rating: "9.8",
