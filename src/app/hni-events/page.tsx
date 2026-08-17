@@ -57,7 +57,7 @@ const auditorium1Url = "/auditorium_new.jpg";
 const auditorium2Url = "/luxury_cinema_lounge.png"; 
 
 const HEADING = "font-display uppercase tracking-[0.02em]";
-const EVENT_DATE = new Date("2026-08-29T21:00:00+05:30").getTime();
+const EVENT_DATE = new Date("2026-08-27T21:00:00+05:30").getTime();
 
 const SPIDER_LOCATIONS = [
   { name: "Connplex – Parimal Garden, Ahmedabad", time: "9:00 PM", date: "Saturday (1st Aug)" },
@@ -524,13 +524,21 @@ function Journey({
                 <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
                   Standard Event Timings
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 mb-6">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                     <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 1</div>
-                    <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
+                    <div className="font-body font-semibold text-white mt-0.5">27 August 2026 (9:00 PM)</div>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                     <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 2</div>
+                    <div className="font-body font-semibold text-white mt-0.5">28 August 2026 (9:00 PM)</div>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 3</div>
+                    <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 4</div>
                     <div className="font-body font-semibold text-white mt-0.5">30 August 2026 (9:00 PM)</div>
                   </div>
                 </div>
@@ -538,7 +546,7 @@ function Journey({
                   onClick={() => onSelectEvent({
                     movie: "HNI Premiere Night",
                     location: PREMIER_LOCATIONS[0].name,
-                    date: "Saturday (29th Aug)",
+                    date: "Thursday (27th Aug)",
                     time: "9:00 PM",
                     amount: PREMIER_LOCATIONS[0].amount,
                   })}
@@ -731,7 +739,7 @@ function BookingSection({
       setSelectedEvent({
         movie: "HNI Premiere Night",
         location: loc.name,
-        date: "Saturday (29th Aug)",
+        date: "Thursday (27th Aug)",
         time: "9:00 PM",
         amount: loc.amount,
       });
@@ -839,6 +847,12 @@ function BookingSection({
                   }}
                   className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
                 >
+                  <option value="Thursday (27th Aug)" className="bg-[#141414] text-white">
+                    Thursday (27th Aug) @ 9:00 PM
+                  </option>
+                  <option value="Friday (28th Aug)" className="bg-[#141414] text-white">
+                    Friday (28th Aug) @ 9:00 PM
+                  </option>
                   <option value="Saturday (29th Aug)" className="bg-[#141414] text-white">
                     Saturday (29th Aug) @ 9:00 PM
                   </option>
@@ -1351,7 +1365,7 @@ function RecommendedEvents({
       isUpcoming: true,
       amount: PREMIER_LOCATIONS[0].amount,
       location: PREMIER_LOCATIONS[0].name,
-      date: "Saturday (29th Aug)",
+      date: "Thursday (27th Aug)",
       time: "9:00 PM"
     },
     {
@@ -1466,7 +1480,7 @@ export default function PremiereLuxeLanding() {
   const [selectedEvent, setSelectedEvent] = useState({
     movie: "HNI Premiere Night",
     location: PREMIER_LOCATIONS[0].name,
-    date: "Saturday (29th Aug)",
+    date: "Thursday (27th Aug)",
     time: "9:00 PM",
     amount: PREMIER_LOCATIONS[0].amount,
   });
