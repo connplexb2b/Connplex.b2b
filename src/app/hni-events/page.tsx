@@ -1535,6 +1535,97 @@ function RecommendedEvents({
   );
 }
 
+function UpcomingEvents() {
+  const events = [
+    {
+      movie: "Ramayana",
+      poster: "/movies/ramayana_poster.png",
+      status: "COMING SOON",
+      statusColor: "bg-amber-600/80 backdrop-blur-md border border-amber-500/30",
+      rating: "9.9",
+      interest: "25K+ Interested",
+      genre: "Epic / Mythology / Action"
+    },
+    {
+      movie: "Mirzapur",
+      poster: "/movies/mirzapur_poster.png",
+      status: "COMING SOON",
+      statusColor: "bg-amber-600/80 backdrop-blur-md border border-amber-500/30",
+      rating: "9.9",
+      interest: "15K+ Interested",
+      genre: "Crime / Action / Drama"
+    }
+  ];
+
+  const handleCardClick = (movieName: string) => {
+    alert(`Bookings for the ${movieName} HNI Premiere Night are not open yet. Stay tuned!`);
+  };
+
+  return (
+    <section className="relative overflow-hidden bg-[#050505] py-20 lg:py-28 border-t border-white/10">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(212,175,55,0.05),transparent_60%)]" />
+      <div className="relative mx-auto max-w-5xl px-6">
+        <div className="mb-12 text-left">
+          <h2 className={`${HEADING} text-3xl font-bold text-white tracking-wide`}>
+            Upcoming Events
+          </h2>
+          <p className="mt-2 font-body text-sm font-light text-[color:var(--color-champagne)]/60">
+            Exclusive premium cinema events coming soon to Connplex Luxuriance
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl">
+          {events.map((e) => (
+            <div
+              key={e.movie}
+              onClick={() => handleCardClick(e.movie)}
+              className="group cursor-pointer flex flex-col text-left"
+            >
+              <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(212,175,55,0.15)] bg-[#111]">
+                <img
+                  src={e.poster}
+                  alt={e.movie}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                
+                {/* Coming Soon Status Badge */}
+                <div className={`absolute top-3 right-3 text-[10px] font-bold text-white px-2.5 py-1 rounded-[4px] uppercase tracking-wider ${e.statusColor}`}>
+                  {e.status}
+                </div>
+
+                {/* Hover Coming Soon Overlay */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <span className="rounded-xl border border-[color:var(--color-gold)]/40 bg-black/60 text-[color:var(--color-gold-soft)] font-caps text-[11px] font-bold uppercase tracking-widest px-5 py-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                    Coming Soon
+                  </span>
+                </div>
+
+                {/* Rating / Interest Overlay Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black/85 px-4 py-2.5 flex items-center justify-between text-xs text-white border-t border-white/5">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[color:var(--color-gold-soft)] text-sm font-bold">★</span>
+                    <span className="font-bold text-white">{e.rating}</span>
+                  </div>
+                  <span className="text-white/70 font-semibold">{e.interest}</span>
+                </div>
+              </div>
+
+              {/* Title & Genre below poster */}
+              <h3 className="mt-4 font-body font-bold text-lg text-white group-hover:text-[color:var(--color-gold-soft)] transition-colors line-clamp-1">
+                {e.movie} HNI Premiere Night
+              </h3>
+              <p className="mt-1 font-body text-xs text-white/50">
+                {e.genre}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function PremiereLuxeLanding() {
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
@@ -1685,6 +1776,7 @@ export default function PremiereLuxeLanding() {
         <Hero onBookClick={handleShowBooking} />
         <CountdownSection />
         <RecommendedEvents onSelectEvent={selectEventHandler} />
+        <UpcomingEvents />
         <Journey onSelectEvent={selectEventHandler} selectedEvent={selectedEvent} />
         <About />
         <WhyConnplex />
