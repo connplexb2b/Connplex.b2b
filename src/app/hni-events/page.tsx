@@ -502,58 +502,111 @@ function Journey({
               <div className="relative z-10 grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[color:var(--color-gold)]/50 bg-[#0d0d0d] shadow-[0_0_40px_-10px_rgba(212,175,55,0.5)]">
                 <Crown className="h-6 w-6 text-[color:var(--color-gold)]" />
               </div>
-              <div className="glass-card flex-1 p-8 md:p-10 border-[color:var(--color-gold)]/30 hover:border-[color:var(--color-gold)]/60 hover:-translate-y-1 shadow-[0_15px_45px_-10px_rgba(212,175,55,0.15)]">
-                <div className="mb-4">
-                  <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)] animate-pulse">
-                    ✨ Upcoming Event · Ticket Sales Open
-                  </div>
-                  <h3 className={`${HEADING} text-2xl text-white md:text-3xl`}>
-                    🎬 HNI Premiere Night
-                  </h3>
+              <div className="glass-card flex-1 p-8 md:p-10 border-[color:var(--color-gold)]/30 hover:border-[color:var(--color-gold)]/60 hover:-translate-y-1 shadow-[0_15px_45px_-10px_rgba(212,175,55,0.15)] relative overflow-hidden">
+                {/* Background Image with Dark Overlay */}
+                <div className="absolute inset-0 z-0 pointer-events-none select-none">
+                  <img
+                    src="/movies/hni_background.png"
+                    alt="HNI Background"
+                    className="w-full h-full object-cover opacity-25"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/85 to-[#0b0b0b]/95" />
                 </div>
-                <div className="mb-6 flex flex-col gap-2 font-body text-sm text-[color:var(--color-champagne)] md:text-base">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
-                    <span>29 Premium Luxuriance Locations (Vaishnodevi, Rajkot, Vadodara, Adani Shantigram, MPM Mall, Solapur, Bilaspur, and more)</span>
+
+                {/* Content Container */}
+                <div className="relative z-10">
+                  <div className="mb-6">
+                    <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)] animate-pulse">
+                      ✨ Upcoming Event · Ticket Sales Open
+                    </div>
+                    <h3 className={`${HEADING} text-3xl text-white md:text-4xl font-bold`}>
+                      HNI PREMIERE NIGHT
+                    </h3>
+                    <p className="mt-2 font-body text-sm md:text-base text-white/90 font-medium italic">
+                      Experience Next Blockbuster Movie Before Everyone Else.
+                    </p>
+                    <div className="mt-4 flex items-start gap-2 text-[color:var(--color-champagne)] text-sm md:text-base font-body">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
+                      <span>Exclusive Premiere Experience Across 29 Premium Luxuriance Locations</span>
+                    </div>
                   </div>
-                  <div className="flex items-start gap-2 mt-1">
-                    <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--color-gold)]" />
-                    <span>Exclusive Pricing: ₹1,000 / ₹1,100 / ₹1,500 per seat (exclusively on this landing page)</span>
+
+                  <div className="mb-8 bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h4 className="font-caps text-xs font-semibold tracking-wider text-[color:var(--color-gold-soft)] mb-4 uppercase">
+                      Your Premiere Experience Includes:
+                    </h4>
+                    <ul className="grid gap-3.5 sm:grid-cols-2 text-sm font-body text-white/90">
+                      <li className="flex items-center gap-3">
+                        <span className="text-lg">🎁</span>
+                        <span>₹1,200 Worth Goodie Bag – <strong className="text-[color:var(--color-gold-soft)]">Complimentary</strong></span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="text-lg">🍿</span>
+                        <span>Curated F&B Experience Included</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="text-lg">🔴</span>
+                        <span>Red Carpet Premiere Experience</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="text-lg">📸</span>
+                        <span>Exclusive HNI Photo Moments</span>
+                      </li>
+                      <li className="flex items-center gap-3">
+                        <span className="text-lg">🎬</span>
+                        <span>Premium Premiere Screening</span>
+                      </li>
+                      <li className="flex items-center gap-3 col-span-1 sm:col-span-2">
+                        <span className="text-lg">✨</span>
+                        <span>A Special Experience Curated for Our HNI Guests</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                    Standard Event Timings
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                      <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 1</div>
+                      <div className="font-body font-semibold text-white mt-0.5">27 August 2026 (9:00 PM)</div>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                      <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 2</div>
+                      <div className="font-body font-semibold text-white mt-0.5">28 August 2026 (9:00 PM)</div>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                      <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 3</div>
+                      <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-3">
+                      <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 4</div>
+                      <div className="font-body font-semibold text-white mt-0.5">30 August 2026 (9:00 PM)</div>
+                    </div>
+                  </div>
+
+                  <div className="mb-6 py-3 border-y border-white/5 text-center font-caps text-[10px] sm:text-xs font-semibold tracking-[0.16em] text-[color:var(--color-gold-soft)] uppercase">
+                    LIMITED SEATS • EXCLUSIVE INVITATION • PREMIUM EXPERIENCE
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={() => onSelectEvent({
+                        movie: "HNI Premiere Night",
+                        location: PREMIER_LOCATIONS[0].name,
+                        date: "Thursday (27th Aug)",
+                        time: "9:00 PM",
+                        amount: PREMIER_LOCATIONS[0].amount,
+                      })}
+                      className="inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient px-8 py-4 font-caps text-[12px] font-bold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer w-full sm:w-auto self-start"
+                    >
+                      BOOK YOUR PREMIERE EXPERIENCE <ChevronRight className="h-4 w-4" />
+                    </button>
+                    <p className="font-body text-[10px] text-white/40 italic">
+                      * Terms & conditions apply. Goodie bag and F&B inclusions may vary by location
+                    </p>
                   </div>
                 </div>
-                <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                  Standard Event Timings
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 1</div>
-                    <div className="font-body font-semibold text-white mt-0.5">27 August 2026 (9:00 PM)</div>
-                  </div>
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 2</div>
-                    <div className="font-body font-semibold text-white mt-0.5">28 August 2026 (9:00 PM)</div>
-                  </div>
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 3</div>
-                    <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
-                  </div>
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-3">
-                    <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 4</div>
-                    <div className="font-body font-semibold text-white mt-0.5">30 August 2026 (9:00 PM)</div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => onSelectEvent({
-                    movie: "HNI Premiere Night",
-                    location: PREMIER_LOCATIONS[0].name,
-                    date: "Thursday (27th Aug)",
-                    time: "9:00 PM",
-                    amount: PREMIER_LOCATIONS[0].amount,
-                  })}
-                  className="inline-flex items-center gap-2 rounded-[14px] bg-gold-gradient px-7 py-3 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer"
-                >
-                  Book Now <ChevronRight className="h-4 w-4" />
-                </button>
               </div>
             </motion.div>
 
