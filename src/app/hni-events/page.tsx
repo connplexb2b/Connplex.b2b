@@ -848,8 +848,39 @@ function BookingSection({
             </>
           )}
         </p>
+
+        {selectedEvent.movie === "HNI Premiere Night" && (
+          <div className="max-w-xl mx-auto mt-8 mb-6 bg-white/5 border border-white/10 rounded-2xl p-6 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+            <div className="grid gap-4 sm:grid-cols-2 text-sm font-body text-white/95">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">🎁</span>
+                <span>₹1,200 Worth of Exclusive Goodies</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">🍿</span>
+                <span>Curated F&B Experience</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">🔴</span>
+                <span>Red Carpet Premiere Experience</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📸</span>
+                <span>Exclusive HNI Photo Moments</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">🎬</span>
+                <span>Premium Premiere Screening</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">✨</span>
+                <span>Exclusive Experience Curated for HNI Guests</span>
+              </div>
+            </div>
+          </div>
+        )}
         <p className="mt-4 font-caps text-xs tracking-[0.25em] text-[color:var(--color-gold-soft)] font-semibold uppercase">
-          {selectedEvent.date} · {selectedEvent.time} · {selectedEvent.location}
+          {selectedEvent.date} · {selectedEvent.time} · {selectedEvent.location.replace(/Luxuriance\s*/i, "")}
         </p>
         
         {/* Form Container */}
@@ -890,7 +921,7 @@ function BookingSection({
                   <option key={loc.name} value={loc.name} className="bg-[#141414] text-white">
                     {selectedEvent.movie === "Spider-Man"
                       ? `${loc.name} (${loc.date} @ ${loc.time})`
-                      : loc.name}
+                      : loc.name.replace(/Luxuriance\s*/i, "")}
                   </option>
                 ))}
               </select>
