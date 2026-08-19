@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@100;200;300;400;500;600;700&family=Syncopate:wght@400;700&family=Cinzel:wght@400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -15,7 +16,8 @@
   --color-gold-glow: rgba(213, 178, 99, 0.35);
   --color-text-secondary: #b0b0b0;
   
-  --font-outfit: var(--font-outfit), sans-serif;
+  --font-sora: 'Sora', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
   --font-inter: 'Inter', sans-serif;
   --font-oswald: 'Oswald', sans-serif;
   --font-montserrat: var(--font-montserrat), sans-serif;
@@ -472,4 +474,57 @@ select:-webkit-autofill:focus {
 @utility gold-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.6) 50%, transparent 100%);
+}
+
+.gameplex-theme {
+  --radius: 0.25rem;
+  --background: oklch(0.07 0.004 60);
+  --foreground: oklch(0.97 0.006 80);
+  --primary: oklch(0.82 0.14 84);
+  --primary-foreground: oklch(0.12 0.008 60);
+  --secondary: oklch(0.16 0.01 65);
+  --muted: oklch(0.16 0.01 65);
+  --muted-foreground: oklch(0.79 0.012 80);
+  --border: oklch(1 0 0 / 12%);
+  --gold: oklch(0.82 0.14 84);
+  --gradient-gold: linear-gradient(100deg, oklch(0.68 0.13 70), oklch(0.9 0.09 90), oklch(0.75 0.14 60));
+  --shadow-gold: 0 24px 70px -30px oklch(0.82 0.14 84 / 0.55);
+
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.gameplex-theme h1,
+.gameplex-theme h2,
+.gameplex-theme h3,
+.gameplex-theme h4,
+.gameplex-theme h5,
+.gameplex-theme h6 {
+  font-family: 'Sora', sans-serif;
+}
+
+.gameplex-theme .text-gold-gradient {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gameplex-theme .eyebrow {
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.gameplex-theme .glow-ring {
+  box-shadow: var(--shadow-gold);
+}
+
+.gameplex-theme .gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
