@@ -18,17 +18,9 @@ function fetchGet(url) {
 
 async function run() {
   try {
-    const data = await fetchGet('https://webadmin.theconnplex.com/api/user/get-all-investors-by-user');
+    const data = await fetchGet('https://webadmin.theconnplex.com/api/user/get-single-investor-by-user?title=General%20Meeting');
     console.log('webadmin.theconnplex.com status:', data.status);
-    if (data && data.data) {
-      console.log('Categories count:', data.data.length);
-      data.data.forEach((c) => {
-        console.log(`Parent: "${c.parent}", Title: "${c.title}"`);
-        if (c.children) {
-          c.children.forEach(child => console.log(`  - Child Title: "${child.title}"`));
-        }
-      });
-    }
+    console.log('Data:', JSON.stringify(data.data, null, 2));
   } catch (err) {
     console.error(err);
   }

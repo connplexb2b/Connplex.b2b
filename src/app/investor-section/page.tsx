@@ -236,6 +236,34 @@ export default function InvestorRelationsPage() {
           }
         }
 
+        const isGeneralMeeting = activeCategory.toLowerCase() === 'general meeting';
+        if (isGeneralMeeting) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b5677025884',
+              title: activeCategory,
+              type: 'Files',
+              parent: 'Announcements',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+          const existsPreDispatch = data.investorsPdfs.some(
+            (f: any) => f.originalname === 'Pre-dispatch Notice_Newspaper Advt..20082026.pdf'
+          );
+          if (!existsPreDispatch) {
+            data.investorsPdfs.unshift({
+              _id: 'da38e2d4-1b79-4cfc-b179-c8c362089df5',
+              originalname: 'Pre-dispatch Notice_Newspaper Advt..20082026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/da38e2d4-1b79-4cfc-b179-c8c362089df5.pdf',
+              mimeType: 'application/pdf',
+              size: 2718006
+            });
+          }
+        }
+
         // Fetch local database details to merge uploads
         try {
           const localRes = await fetch('/api/investors');

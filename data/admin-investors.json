@@ -108,5 +108,23 @@
       }
     ],
     "updatedAt": "2026-08-20T08:34:32.091Z"
+  },
+  {
+    "id": "6805e8297f482b5677025884",
+    "title": "General Meeting",
+    "type": "Files",
+    "parent": "Announcements",
+    "files": [
+      {
+        "id": "da38e2d4-1b79-4cfc-b179-c8c362089df5",
+        "originalName": "Pre-dispatch Notice_Newspaper Advt..20082026.pdf",
+        "storedName": "da38e2d4-1b79-4cfc-b179-c8c362089df5.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025884/da38e2d4-1b79-4cfc-b179-c8c362089df5.pdf",
+        "mimeType": "application/pdf",
+        "size": 2718006,
+        "title": "Pre-dispatch Notice_Newspaper Advt..20082026"
+      }
+    ],
+    "updatedAt": "2026-08-20T14:14:00.000Z"
   }
 ]
