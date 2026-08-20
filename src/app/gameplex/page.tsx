@@ -118,7 +118,7 @@ export default function GameplexHomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/20 z-10" />
 
         {/* Hero Content */}
-        <div className="relative z-20 flex h-full flex-col justify-end pb-24 sm:pb-32 px-5 sm:px-10 max-w-[1800px] mx-auto">
+        <div className="absolute inset-0 z-20 flex flex-col justify-end pb-24 sm:pb-32 px-5 sm:px-10 max-w-[1800px] mx-auto">
           <Reveal>
             <span className="eyebrow block mb-4">A Connplex Initiative</span>
             <h1 className="max-w-5xl text-4xl font-extrabold sm:text-7xl md:text-8xl tracking-tight leading-none text-white font-sora">
@@ -398,7 +398,7 @@ export default function GameplexHomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/40 z-10" />
 
         {/* Content Centered */}
-        <div className="relative z-20 flex h-full flex-col justify-center px-5 sm:px-10 max-w-5xl mx-auto text-center">
+        <div className="absolute inset-0 z-20 flex flex-col justify-center px-5 sm:px-10 max-w-5xl mx-auto text-center">
           <Reveal>
             <span className="eyebrow block mb-4">Round the clock demand</span>
             <h2 className="text-4xl sm:text-6xl font-bold font-sora text-white leading-tight">
@@ -450,7 +450,7 @@ export default function GameplexHomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[oklch(0.07_0.004_60)] via-black/20 to-black/60 z-10" />
 
         {/* Centered text overlay */}
-        <div className="relative z-20 flex h-full flex-col items-center justify-center text-center px-5 sm:px-10 max-w-4xl mx-auto">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-5 sm:px-10 max-w-4xl mx-auto">
           <Reveal>
             <span className="eyebrow block mb-4">Engineered for Tomorrow</span>
             <h2 className="text-3xl sm:text-5xl font-bold font-sora text-white leading-tight">

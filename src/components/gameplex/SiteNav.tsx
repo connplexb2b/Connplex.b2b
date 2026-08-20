@@ -47,7 +47,7 @@ export function SiteNav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 bg-[#050505] transition-all duration-500 ${
+      className={`fixed inset-x-0 top-0 z-50 bg-[#050505]/80 backdrop-blur-md transition-all duration-500 ${
         scrolled ? "border-b border-border shadow-lg" : "border-b border-border/60"
       }`}
     >
