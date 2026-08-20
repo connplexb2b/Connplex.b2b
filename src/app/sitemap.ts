@@ -39,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/sky-inn',
     '/terms-and-conditions',
     '/franchiseads',
+    '/flashsale',
   ];
 
   const sitemapEntries: MetadataRoute.Sitemap = staticRoutes.map(route => ({
