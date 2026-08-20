@@ -1,119 +1,100 @@
 "use client";
 
+import { PageHero } from "@/components/gameplex/PageHero";
+import { CTABand } from "@/components/gameplex/CTABand";
 import { Reveal } from "@/components/gameplex/Reveal";
 import { pillars } from "@/lib/gameplex-data";
-import { ShieldCheck, TrendingUp, HelpCircle } from "lucide-react";
+
+const stages = [
+  { n: "01", t: "Location", d: "Market study, catchment analysis and site shortlisting." },
+  { n: "02", t: "Design", d: "International-standard layouts and zone planning." },
+  { n: "03", t: "Build", d: "Vendor coordination, fit-out and equipment sourcing." },
+  { n: "04", t: "Training", d: "Team hiring frameworks and hospitality training." },
+  { n: "05", t: "Launch", d: "Pre-launch campaigns and opening-week activation." },
+  { n: "06", t: "Operate", d: "Ongoing operations, tech and marketing support." },
+] as const;
 
 export default function FranchisePage() {
   return (
-    <div className="py-20 px-5 sm:px-10 max-w-[1800px] mx-auto font-sans">
-      {/* Header */}
-      <div className="max-w-3xl mx-auto text-center mb-20">
-        <Reveal>
-          <span className="eyebrow block mb-4">Invest in Entertainment</span>
-          <h1 className="text-4xl sm:text-6xl font-bold font-sora text-white mb-6">
-            The Franchise <span className="text-gold-gradient">Model</span>
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Connplex's award-winning franchise infrastructure meets next-gen socializing. Secure a high-yield, premium asset backed by professional operations.
-          </p>
-        </Reveal>
-      </div>
+    <div className="gameplex-theme min-h-screen bg-background text-foreground pt-12">
+      <PageHero
+        eyebrow="Why Investors Choose GamePlex"
+        title="More Than a Franchise."
+        accent="A Partnership."
+        subtitle="We don't hand over a brand. We build the business with you."
+      />
 
-      {/* Grid of 6 Pillars */}
-      <div className="mb-24">
-        <Reveal>
-          <h2 className="text-2xl sm:text-3xl font-bold font-sora text-center text-white mb-12">
-            The 6 Pillars of <span className="text-gold-gradient">Investor Success</span>
-          </h2>
-        </Reveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {pillars.map((pl, idx) => (
-            <Reveal key={pl.title} delay={idx * 0.05}>
-              <div className="group relative overflow-hidden rounded-xl border border-border/50 hover:border-primary/50 bg-secondary/10 p-8 transition-all duration-500 shadow-xl flex flex-col justify-between h-full">
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-xs font-semibold tracking-widest text-primary/70 font-outfit uppercase">Pillar {pl.n}</span>
-                    <span className="text-xs font-bold text-white bg-secondary border border-border/80 rounded-full px-3 py-1 font-outfit uppercase tracking-wider">{pl.stat}</span>
-                  </div>
-                  <h3 className="text-xl font-bold font-sora text-white mb-4">{pl.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">{pl.copy}</p>
+      {/* Pillars Section */}
+      <section className="pb-16 font-sans">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+            {pillars.map((p, i) => (
+              <Reveal key={p.n} delay={i * 0.05}>
+                <div className="h-full bg-background p-8 transition-colors hover:bg-secondary/40">
+                  <p className="text-xs text-muted-foreground m-0">{p.n}</p>
+                  <p className="mt-6 font-display text-4xl font-bold text-gold-gradient font-sora m-0">
+                    {p.stat}
+                  </p>
+                  <p className="mt-3 font-display text-lg font-bold text-white font-sora m-0">{p.title}</p>
+                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed m-0">{p.copy}</p>
                 </div>
-
-                {/* Decorative background image hint */}
-                <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden bg-black/40">
-                  <img
-                    src={pl.image}
-                    alt={pl.imageAlt}
-                    className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* FAQs or Operational Details */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center py-16 border-t border-border/40">
-        <div>
+      {/* Roadmap Section */}
+      <section className="py-20 border-t border-border/30 font-sans">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <Reveal>
-            <span className="eyebrow block mb-4">Operations & Management</span>
-            <h2 className="text-3xl sm:text-4xl font-bold font-sora text-white mb-6">
-              Hands-off for Investors. <br />
-              <span className="text-gold-gradient">Managed by Experts.</span>
+            <h2 className="max-w-3xl text-3xl font-bold sm:text-5xl text-white font-sora leading-tight">
+              From site selection to opening night —{" "}
+              <span className="text-gold-gradient font-bold">our team works alongside yours.</span>
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-6">
-              Connplex operates GamePlex locations under a professional management structure. Investors provide capital and site support, while our central operations handle staffing, booking systems, vendor agreements, and everyday maintenance.
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <ShieldCheck className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-white">Full Transparency</h4>
-                  <p className="text-sm text-muted-foreground">Access live dashboards for occupancy, game counts, and bar receipts 24/7.</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <TrendingUp className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-white">Optimized Yield</h4>
-                  <p className="text-sm text-muted-foreground">Strategic layouts engineered to drive high-margin food, beverage, and private event bookings.</p>
-                </div>
-              </div>
-            </div>
           </Reveal>
-        </div>
 
-        <div className="bg-secondary/20 border border-border/60 rounded-2xl p-8 sm:p-10 space-y-6">
-          <Reveal>
-            <h3 className="text-2xl font-bold font-sora text-white mb-6 flex items-center space-x-3">
-              <HelpCircle className="h-6 w-6 text-primary" />
-              <span>Investment FAQ</span>
-            </h3>
-            
-            <div className="space-y-6">
-              <div>
-                <h4 className="font-bold text-white mb-2">What is the lock-in period?</h4>
-                <p className="text-sm text-muted-foreground">GamePlex franchise models operate on a standard 5-to-9 year commercial lease agreement, designed for consistent long-term returns.</p>
-              </div>
-              <div className="w-full h-px bg-border/40" />
-              <div>
-                <h4 className="font-bold text-white mb-2">Are there royalty charges?</h4>
-                <p className="text-sm text-muted-foreground">Yes, royalty is structured as a percentage of gross revenues, aligning Connplex's operations team directly with your location's growth.</p>
-              </div>
-              <div className="w-full h-px bg-border/40" />
-              <div>
-                <h4 className="font-bold text-white mb-2">Do you assist in location selection?</h4>
-                <p className="text-sm text-muted-foreground">Absolutely. Our real-estate team validates catchment areas, footfall mapping, and target demographics before approving any site.</p>
-              </div>
-            </div>
-          </Reveal>
+          <div className="mt-14 space-y-px overflow-hidden rounded-xl border border-border bg-border">
+            {stages.map((s, i) => (
+              <Reveal key={s.n} delay={i * 0.04}>
+                <div className="grid items-baseline gap-3 bg-background p-7 transition-colors hover:bg-secondary/40 sm:grid-cols-[80px_220px_1fr]">
+                  <span className="text-xs text-primary font-eyebrow font-semibold">{s.n}</span>
+                  <span className="font-display text-xl font-bold text-white font-sora">{s.t}</span>
+                  <span className="text-sm text-muted-foreground leading-relaxed">{s.d}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Showcase City Image Backrop */}
+      <section className="relative overflow-hidden h-[70vh] w-full font-sans">
+        <img
+          src="/assets/gameplex/city.jpg"
+          alt="Illuminated entertainment landmark in an Indian city at night"
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
+          onError={(e) => {
+            e.currentTarget.src = "/assets/gameplex/philosophy-1-clean.jpg"; // fallback
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
+        <div className="absolute inset-0 flex items-center relative z-10">
+          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+            <Reveal>
+              <h2 className="max-w-2xl text-3xl font-bold sm:text-5xl text-white font-sora leading-tight m-0">
+                Built for Today. <span className="text-gold-gradient font-bold">Designed for Tomorrow.</span>
+              </h2>
+              <p className="mt-6 max-w-xl text-muted-foreground text-base leading-relaxed m-0">
+                India is entering a new era of experience-led entertainment. GamePlex is built to lead it. We provide pre-validated demographics checks, real-estate analytics, and end-to-end setups so you can own a landmark commercial asset.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <CTABand />
     </div>
   );
 }

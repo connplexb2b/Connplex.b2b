@@ -1,0 +1,115 @@
+import { createFileRoute } from "@tanstack/react-router";
+import cityImg from "@/assets/city.jpg";
+import { PageHero, CTABand } from "@/components/site/Sections";
+import { Reveal } from "@/components/site/Reveal";
+import { pillars } from "@/lib/site-data";
+
+export const Route = createFileRoute("/franchise")({
+  head: () => ({
+    meta: [
+      { title: "Franchise Partnership — Why Investors Choose GamePlex" },
+      {
+        name: "description",
+        content:
+          "More than a franchise. GamePlex supports site selection, design, training, launch and operations — investment begins from ₹2 Crore.",
+      },
+      { property: "og:title", content: "GamePlex Franchise — A Partnership, Not a Handover" },
+      {
+        property: "og:description",
+        content: "Brand, design, operations, technology, marketing and growth support.",
+      },
+    ],
+  }),
+  component: FranchisePage,
+});
+
+const stages = [
+  { n: "01", t: "Location", d: "Market study, catchment analysis and site shortlisting." },
+  { n: "02", t: "Design", d: "International-standard layouts and zone planning." },
+  { n: "03", t: "Build", d: "Vendor coordination, fit-out and equipment sourcing." },
+  { n: "04", t: "Training", d: "Team hiring frameworks and hospitality training." },
+  { n: "05", t: "Launch", d: "Pre-launch campaigns and opening-week activation." },
+  { n: "06", t: "Operate", d: "Ongoing operations, tech and marketing support." },
+];
+
+function FranchisePage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Why Investors Choose GamePlex"
+        title="More Than a Franchise."
+        accent="A Partnership."
+        subtitle="We don't hand over a brand. We build the business with you."
+      />
+
+      <section className="pb-16">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+            {pillars.map((p, i) => (
+              <Reveal key={p.n} delay={i * 0.05}>
+                <div className="h-full bg-background p-8 transition-colors hover:bg-secondary">
+                  <p className="text-xs text-muted-foreground">{p.n}</p>
+                  <p className="mt-6 font-display text-4xl font-bold text-gold-gradient">
+                    {p.stat}
+                  </p>
+                  <p className="mt-3 font-display text-lg font-bold">{p.title}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{p.copy}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Reveal>
+            <h2 className="max-w-3xl text-3xl font-bold sm:text-5xl">
+              From site selection to opening night —{" "}
+              <span className="text-gold-gradient">our team works alongside yours.</span>
+            </h2>
+          </Reveal>
+
+          <div className="mt-14 space-y-px overflow-hidden rounded-xl border border-border bg-border">
+            {stages.map((s, i) => (
+              <Reveal key={s.n} delay={i * 0.04}>
+                <div className="grid items-baseline gap-3 bg-background p-7 transition-colors hover:bg-secondary sm:grid-cols-[80px_220px_1fr]">
+                  <span className="text-xs text-primary">{s.n}</span>
+                  <span className="font-display text-xl font-bold">{s.t}</span>
+                  <span className="text-sm text-muted-foreground">{s.d}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden">
+        <img
+          src={cityImg}
+          alt="Illuminated entertainment landmark in an Indian city at night"
+          loading="lazy"
+          width={1920}
+          height={1088}
+          className="h-[70svh] w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/40" />
+        <div className="absolute inset-0 flex items-center">
+          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
+            <Reveal>
+              <h2 className="max-w-2xl text-3xl font-bold sm:text-5xl">
+                Built for Today. <span className="text-gold-gradient">Designed for Tomorrow.</span>
+              </h2>
+              <p className="mt-6 max-w-xl text-muted-foreground">
+                India is entering a new era of experience-led entertainment. GamePlex is built to
+                lead it.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <CTABand />
+    </>
+  );
+}

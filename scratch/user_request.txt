@@ -1,0 +1,607 @@
+<USER_REQUEST>
+Add a premium, high-end entertainment franchise site for "GamePlex by Connplex" to my project. The site must feature a luxury dark theme with gold gradients, smooth scrolling animations, vertical architectural gridlines, 3D interactive tilt cards, and a multi-page setup.
+Please implement the following pages and components:
+1. Home (index): Hero video header (slow-motion), interactive category strip (Gaming, Bowling, etc.), video motion showcase, photo gallery grids, investment formats card section, and the operations/marketing ecosystem pillars grid.
+2. Experiences: Beautiful page layout grouping 14 distinct experiences under "Play", "Dine", and "Celebrate".
+3. Formats: Displays the three investment formats (Mini: ₹2 Cr, Standard: ₹4 Cr, Grand: ₹6 Cr) with area and highlights.
+4. Franchise: Partnership details outlining 6 key pillars (Brand, Design, etc.) and a 6-stage roadmap from location selection to launch.
+5. Contact: Franchise deck enquiry form with input validation, format selectors, and details.
+6. SiteNav & SiteFooter: Center-wordmark responsive navigation, mobile drawer, and high-end footer.
+Please use clean Tailwind classes, framer-motion (or motion/react) for smooth entry transitions and 3D hover tilt effects, and a custom CSS system featuring luxury gold gradients, border styles, and modern typography (Sora, Plus Jakarta Sans, Outfit, Cinzel). I will provide the code structure and direct URLs for the images and videos.
+📹 Media Assets & Download Links
+Since Lovable stores videos and high-res images in its cloud storage, you can download them directly from the URLs below or configure your project to point to them.
+
+Videos
+Asset File	Size	Direct Lovable S3 CDN Link
+Hero Slow-Mo Walkthrough (vid-hero-luxury.mp4)	3.5 MB	Download Link
+Bowling VIP lanes (vid-bowling-lux.mp4)	6.0 MB	Download Link
+Go-Kart Race Track (vid-gokart-race.mp4)	5.3 MB	Download Link
+Dining & Cocktails (vid-dining.mp4)	8.5 MB	Download Link
+Tomorrow Walkthrough (vid-tomorrow.mp4)	4.8 MB	Download Link
+General Walkthrough (vid-hero-walkthrough.mp4)	5.2 MB	Download Link
+Key Images
+Asset File	Direct Lovable S3 CDN Link
+GamePlex Logo Wordmark (gameplex-logo.png)	Download Link
+Mini Format Poster (gameplex-mini.jpg)	Download Link
+Standard Format Poster (gameplex-standard.jpg)	Download Link
+Grand Format Poster (gameplex-grand.jpg)	Download Link
+Dining Lounge Banner (dining-lounge-gameplex.jpg)	Download Link
+Midnight Bowling Banner (banner-midnight-bowling.png)	Download Link
+Brand Pillar Poster (pillar-brand.jpg)	Download Link
+Design Pillar Poster (pillar-design.jpg)	Download Link
+Operations Pillar Poster (pillar-operations.jpg)	Download Link
+Technology Pillar Poster (pillar-technology.jpg)	Download Link
+Marketing Pillar Poster (pillar-marketing.jpg)	Download Link
+Growth Pillar Poster (pillar-growth.jpg)	Download Link
+Luxury Background Pattern (gameplex-luxury-bg.jpg)	Download Link
+TIP
+
+Alternatively, if you host the project on Lovable.dev, you can use the relative endpoint /__l5e/assets-v1/{asset_id}/{filename} as configured in the .asset.json configuration maps. For outside hosting (Vercel, Netlify, or standard servers), download these files and place them inside your local public/assets/ or src/assets/ directory.
+
+🎨 Theme & Layout CSS Style Tokens
+Add this to your CSS file (e.g., src/styles.css or equivalent) to define the luxury font tokens, gold gradients, and border-glow variables:
+
+css
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-gold: var(--gold);
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-eyebrow: "Outfit", sans-serif;
+  --font-deco: "Cinzel", serif;
+}
+:root {
+  --radius: 0.25rem;
+  --background: oklch(0.07 0.004 60);
+  --foreground: oklch(0.97 0.006 80);
+  --surface: oklch(0.12 0.008 65);
+  --card: oklch(0.11 0.008 65);
+  --primary: oklch(0.82 0.14 84);
+  --border: oklch(1 0 0 / 12%);
+  --gold: oklch(0.82 0.14 84);
+  --gradient-gold: linear-gradient(100deg, oklch(0.68 0.13 70), oklch(0.9 0.09 90), oklch(0.75 0.14 60));
+  --shadow-gold: 0 24px 70px -30px oklch(0.82 0.14 84 / 0.55);
+}
+@utility text-gold-gradient {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility surface-card {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--gold) 7%, transparent), transparent 55%), var(--surface);
+  border: 1px solid var(--border);
+}
+@utility gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+@utility eyebrow {
+  font-family: var(--font-eyebrow);
+  font-weight: 600;
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+@utility glow-ring {
+  box-shadow: var(--shadow-gold);
+}
+@utility perspective-card {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+Make sure you import the Google Fonts inside your root HTML layout (index.html or equivalent):
+
+html
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+🛠️ Codebase Components
+Here is the exact code for the premium UI animations, card tilts, structures, and layout data.
+
+1. Data File (src/lib/site-data.ts)
+typescript
+
+export const formats = [
+  {
+    code: "GamePlex Mini",
+    tagline: "Compact by Design. Complete by Experience.",
+    area: "5,000 Sq. Ft.",
+    investment: "₹2 Cr.",
+    description: "Perfect for growing cities where premium entertainment is still untapped.",
+    highlights: ["Bowling · 6 lanes", "Arcade & redemption", "Café & lounge", "Party room"],
+    image: "/assets/gameplex-mini.jpg",
+    imageAlt: "Luxury compact GamePlex Mini venue",
+  },
+  {
+    code: "GamePlex Standard",
+    tagline: "The Signature Experience.",
+    area: "10,000 Sq. Ft.",
+    investment: "₹4 Cr.",
+    description: "Designed for cities where entertainment becomes a destination.",
+    highlights: ["Bowling · 10 lanes", "VR & racing simulators", "Restaurant & coffee lounge", "Kids zone + party rooms"],
+    image: "/assets/gameplex-standard.jpg",
+    imageAlt: "Mid-size GamePlex Standard venue",
+  },
+  {
+    code: "GamePlex Grand",
+    tagline: "Our Flagship Destination.",
+    area: "15,000 Sq. Ft.",
+    investment: "₹6 Cr.",
+    description: "A landmark entertainment venue combining gaming, dining and celebration at scale.",
+    highlights: ["Bowling · 16 lanes", "Full immersive VR arena", "Restaurant, café & live stage", "Corporate & event spaces"],
+    image: "/assets/gameplex-grand.jpg",
+    imageAlt: "Flagship GamePlex Grand entertainment complex",
+  },
+] as const;
+export const experiences = [
+  { icon: "🎳", name: "Premium Bowling", group: "Play" },
+  { icon: "🕹️", name: "Arcade & Redemption Games", group: "Play" },
+  { icon: "🏎️", name: "Racing Simulators", group: "Play" },
+  { icon: "🏏", name: "Cricket Simulators", group: "Play" },
+  { icon: "🥽", name: "Virtual Reality Zone", group: "Play" },
+  { icon: "🎯", name: "Interactive Skill Games", group: "Play" },
+  { icon: "👨👩👧", name: "Kids Play Area", group: "Celebrate" },
+  { icon: "🎉", name: "Birthday Party Rooms", group: "Celebrate" },
+  { icon: "🏢", name: "Corporate Event Spaces", group: "Celebrate" },
+  { icon: "🍽️", name: "Restaurant & Café", group: "Dine" },
+  { icon: "☕", name: "Coffee Lounge", group: "Dine" },
+  { icon: "🎵", name: "Live Entertainment & Events", group: "Celebrate" },
+  { icon: "📸", name: "Instagrammable Experiences", group: "Play" },
+  { icon: "🎁", name: "Merchandise & Gift Shop", group: "Dine" },
+] as const;
+export const pillars = [
+  { n: "01", title: "Brand", stat: "Market-Leading", copy: "Built to dominate premium entertainment in every city.", image: "/assets/pillar-brand.jpg" },
+  { n: "02", title: "Design", stat: "Revenue-First", copy: "Layouts engineered for guest flow and higher spend.", image: "/assets/pillar-design.jpg" },
+  { n: "03", title: "Operations", stat: "Seamless", copy: "Everything handled, from launch to daily management.", image: "/assets/pillar-operations.jpg" },
+  { n: "04", title: "Technology", stat: "24/7", copy: "Integrated booking and management.", image: "/assets/pillar-technology.jpg" },
+  { n: "05", title: "Marketing", stat: "PAN-India", copy: "National campaigns driving awareness.", image: "/assets/pillar-marketing.jpg" },
+  { n: "06", title: "Growth", stat: "3 Formats", copy: "Scalable formats for every market.", image: "/assets/pillar-growth.jpg" },
+] as const;
+2. Scroll Animation Component (src/components/site/Reveal.tsx)
+tsx
+
+import { motion } from "motion/react";
+import type { ReactNode } from "react";
+export function Reveal({
+  children,
+  delay = 0,
+  y = 28,
+  className,
+}: {
+  children: ReactNode;
+  delay?: number;
+  y?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+3. Interactive 3D Card Hover Component (src/components/site/TiltCard.tsx)
+tsx
+
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import type { ReactNode } from "react";
+export function TiltCard({
+  children,
+  className = "",
+  intensity = 10,
+}: {
+  children: ReactNode;
+  className?: string;
+  intensity?: number;
+}) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 18 });
+  const sy = useSpring(y, { stiffness: 180, damping: 18 });
+  const rotateX = useTransform(sy, [-0.5, 0.5], [intensity, -intensity]);
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-intensity, intensity]);
+  return (
+    <div className="perspective-card">
+      <motion.div
+        className={className}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          x.set((e.clientX - r.left) / r.width - 0.5);
+          y.set((e.clientY - r.top) / r.height - 0.5);
+        }}
+        onPointerLeave={() => {
+          x.set(0);
+          y.set(0);
+        }}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+4. Background Grid Lines (src/components/site/GridLines.tsx)
+tsx
+
+export function GridLines() {
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 hidden md:block">
+      <div className="mx-auto grid h-full max-w-[1800px] grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="border-l border-border/40 last:border-r" />
+        ))}
+      </div>
+    </div>
+  );
+}
+5. Header Navigation & Links (src/components/site/SiteNav.tsx)
+tsx
+
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+const leftLinks = [
+  { to: "/experiences", label: "Experiences" },
+  { to: "/formats", label: "Formats" },
+] as const;
+const rightLinks = [
+  { to: "/franchise", label: "Franchise" },
+  { to: "/contact", label: "Contact" },
+] as const;
+const allLinks = [{ to: "/", label: "Home" }, ...leftLinks, ...rightLinks] as const;
+const linkClass =
+  "flex h-full items-center justify-center border-l border-border/50 px-6 font-eyebrow text-[0.68rem] font-medium uppercase tracking-[0.28em] text-muted-foreground transition-colors hover:text-primary data-[status=active]:text-primary";
+export function SiteNav() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return (
+    <header className={`fixed inset-x-0 top-0 z-50 bg-background transition-all duration-500 ${scrolled ? "border-b border-border shadow-lg" : "border-b border-border/60"}`}>
+      <nav className="mx-auto hidden h-24 max-w-[1800px] items-stretch md:flex">
+        <div className="flex flex-1 items-stretch justify-end">
+          {leftLinks.map((l) => (
+            <Link key={l.to} to={l.to} className={linkClass}>{l.label}</Link>
+          ))}
+        </div>
+        <Link to="/" className="group flex shrink-0 items-center justify-center border-x border-border/50 px-8">
+          <img src="/assets/gameplex-logo.png" alt="GamePlex by Connplex" className="h-16 w-auto object-contain" />
+        </Link>
+        <div className="flex flex-1 items-stretch">
+          {rightLinks.map((l) => (
+            <Link key={l.to} to={l.to} className={linkClass}>{l.label}</Link>
+          ))}
+          <Link to="/contact" className="ml-auto flex items-center border-l border-border/50 px-8 font-eyebrow text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-primary">Inquire Now</Link>
+        </div>
+      </nav>
+      {/* Mobile bar */}
+      <div className="flex h-20 items-center justify-between px-5 md:hidden">
+        <Link to="/" onClick={() => setOpen(false)}>
+          <img src="/assets/gameplex-logo.png" alt="GamePlex by Connplex" className="h-12 w-auto object-contain" />
+        </Link>
+        <button aria-label={open ? "Close menu" : "Open menu"} className="text-primary" onClick={() => setOpen((v) => !v)}>
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+      {open && (
+        <div className="border-t border-border bg-background/97 px-5 pb-6 pt-2 backdrop-blur-xl md:hidden">
+          {allLinks.map((l) => (
+            <Link key={l.label} to={l.to} onClick={() => setOpen(false)} className="block border-b border-border/50 py-4 font-eyebrow text-xs uppercase tracking-[0.28em] text-muted-foreground">{l.label}</Link>
+          ))}
+          <Link to="/contact" onClick={() => setOpen(false)} className="mt-6 block rounded-full bg-primary px-5 py-3 text-center font-eyebrow text-xs font-bold uppercase tracking-[0.28em] text-primary-foreground">Inquire Now</Link>
+        </div>
+      )}
+    </header>
+  );
+}
+📄 Pages (Routes)
+Below is the standalone code for the primary pages.
+
+1. Home / Landing Page (src/routes/index.tsx)
+tsx
+
+import { Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
+import { Gamepad2, CircleDot, Joystick, Martini, PartyPopper } from "lucide-react";
+import { Reveal } from "@/components/site/Reveal";
+import { CTABand } from "@/components/site/Sections";
+import { formats } from "@/lib/site-data";
+const zoneReels = [
+  { src: "/assets/vid-bowling-lux.mp4", label: "Bowling", sub: "VIP lanes, up to 16" },
+  { src: "/assets/vid-gokart-race.mp4", label: "Go-Karting & Arcade", sub: "Indoor track + 100 games" },
+  { src: "/assets/vid-dining.mp4", label: "Dining & Bar", sub: "Kitchen, café & cocktails" },
+];
+const zonePhotos = [
+  { src: "/assets/gal-4.jpg", label: "VR Arena" },
+  { src: "/assets/gal-3.jpg", label: "Birthday Parties" },
+  { src: "/assets/gal-7.jpg", label: "Racing Sims" },
+  { src: "/assets/gal-6.jpg", label: "Restaurant" },
+  { src: "/assets/gal-1.jpg", label: "Kids Zone" },
+  { src: "/assets/gal-8.jpg", label: "Corporate Events" },
+  { src: "/assets/gal-2.jpg", label: "Bar & Lounge" },
+  { src: "/assets/gal-5.jpg", label: "Live Events" },
+];
+export function IndexPage() {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    const setSlow = () => {
+      video.defaultPlaybackRate = 0.55;
+      video.playbackRate = 0.55;
+      video.play().catch(() => {});
+    };
+    setSlow();
+    video.addEventListener("loadedmetadata", setSlow);
+    return () => video.removeEventListener("loadedmetadata", setSlow);
+  }, []);
+  return (
+    <>
+      {/* Hero Slow Mo Video */}
+      <section className="relative h-[100svh] w-full overflow-hidden bg-background pt-20 md:pt-24">
+        <video
+          ref={ref}
+          src="/assets/vid-hero-luxury.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/30" />
+      </section>
+      {/* Category Selection Bar */}
+      <section className="relative z-10 border-y border-border bg-background">
+        <div className="mx-auto grid max-w-[1800px] grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+          {[
+            { Icon: Gamepad2, label: "Gaming" },
+            { Icon: CircleDot, label: "Bowling" },
+            { Icon: Joystick, label: "Activities" },
+            { Icon: Martini, label: "Dining & Bar" },
+            { Icon: PartyPopper, label: "Events" },
+          ].map((c, i) => (
+            <Link
+              key={c.label}
+              to="/experiences"
+              className={`group flex flex-col items-center gap-4 border-border/60 px-6 py-12 transition-colors hover:bg-secondary ${i > 0 ? "border-l" : ""}`}
+            >
+              <c.Icon size={30} strokeWidth={1.3} className="text-primary transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-110" />
+              <span className="font-eyebrow text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-muted-foreground group-hover:text-primary">{c.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+      {/* Zones - Video & Photo Motion Showcase */}
+      <section className="relative border-b border-border py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Reveal>
+            <p className="eyebrow">Inside GamePlex</p>
+            <h2 className="mt-5 max-w-3xl text-3xl font-bold sm:text-5xl">See It <span className="text-gold-gradient">In Motion.</span></h2>
+          </Reveal>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {zoneReels.map((z, i) => (
+              <Reveal key={z.label} delay={i * 0.08}>
+                <div className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-border">
+                  <video src={z.src} autoPlay loop muted playsInline preload="auto" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <p className="font-display text-xl font-bold text-gold-gradient">{z.label}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{z.sub}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {zonePhotos.map((z, i) => (
+              <Reveal key={z.label} delay={i * 0.04}>
+                <div className="group relative aspect-[4/5] overflow-hidden rounded-xl border border-border">
+                  <img src={z.src} alt={z.label} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
+                  <p className="absolute inset-x-0 bottom-0 p-4 font-display text-sm font-semibold">{z.label}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* Formats Section */}
+      <section className="py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Reveal>
+            <p className="eyebrow">Formats</p>
+            <h2 className="mt-5 text-3xl font-bold sm:text-5xl">Built Around <span className="text-gold-gradient">Every City.</span></h2>
+          </Reveal>
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {formats.map((f, i) => (
+              <Reveal key={f.code} delay={i * 0.1}>
+                <Link to="/formats" className="group block overflow-hidden rounded-xl border border-border">
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img src={f.image} alt={f.imageAlt} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-6">
+                      <p className="font-display text-2xl font-bold text-gold-gradient sm:text-3xl">{f.code}</p>
+                      <p className="mt-2 text-sm font-medium text-foreground/90">{f.tagline}</p>
+                      <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-4 text-sm">
+                        <span className="text-muted-foreground">{f.area}</span>
+                        <span className="font-semibold text-primary">from {f.investment}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      <CTABand />
+    </>
+  );
+}
+2. Experiences Page (src/routes/experiences.tsx)
+tsx
+
+import { PageHero, CTABand } from "@/components/site/Sections";
+import { Reveal } from "@/components/site/Reveal";
+import { TiltCard } from "@/components/site/TiltCard";
+import { experiences } from "@/lib/site-data";
+const groups = ["Play", "Dine", "Celebrate"] as const;
+export function ExperiencesPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Entertainment Beyond Gaming"
+        title="Fourteen reasons to"
+        accent="come back."
+        subtitle="Every GamePlex is thoughtfully designed to maximise customer engagement, repeat visits and multiple revenue streams."
+      />
+      <section className="pb-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <Reveal>
+            <img src="/assets/experiences.jpg" alt="VR zone, simulators and arcade" className="w-full rounded-2xl border border-border object-cover" />
+          </Reveal>
+        </div>
+      </section>
+      {groups.map((g) => (
+        <section key={g} className="py-14">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal><p className="eyebrow">{g}</p></Reveal>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {experiences.filter((e) => e.group === g).map((e, i) => (
+                <Reveal key={e.name} delay={i * 0.05}>
+                  <TiltCard intensity={8} className="surface-card flex h-full items-center gap-4 rounded-xl p-6 transition-colors hover:border-primary/60">
+                    <span className="text-3xl">{e.icon}</span>
+                    <p className="font-display text-base font-bold">{e.name}</p>
+                  </TiltCard>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+      <section className="py-20">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-2">
+          <Reveal>
+            <img src="/assets/dining-lounge-gameplex.jpg" alt="Dining lounge" className="w-full rounded-2xl border border-border object-cover" />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="text-3xl font-bold sm:text-4xl">Dining is not an add-on. It's a <span className="text-gold-gradient">second business.</span></h2>
+            <p className="mt-6 leading-relaxed text-muted-foreground">A full restaurant, café and coffee lounge keeps guests on-site longer, lifts average spend per head and turns a gaming visit into an evening out.</p>
+          </Reveal>
+        </div>
+      </section>
+      <CTABand />
+    </>
+  );
+}
+3. Contact / Enquiry Page (src/routes/contact.tsx)
+tsx
+
+import { useState } from "react";
+import { toast } from "sonner";
+import { PageHero } from "@/components/site/Sections";
+import { Reveal } from "@/components/site/Reveal";
+import { formats } from "@/lib/site-data";
+export function ContactPage() {
+  const [selected, setSelected] = useState("GamePlex Standard");
+  const [sending, setSending] = useState(false);
+  return (
+    <>
+      <PageHero
+        eyebrow="Become part of the GamePlex story"
+        title="Own one."
+        accent="Shape your city."
+        subtitle="Tell us about your city and we'll send the franchise deck along with an investment breakdown."
+      />
+      <section className="pb-28">
+        <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <Reveal>
+            <form
+              className="surface-card rounded-2xl p-8"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSending(true);
+                const data = new FormData(e.currentTarget);
+                setTimeout(() => {
+                  setSending(false);
+                  (e.target as HTMLFormElement).reset();
+                  toast.success(`Thanks ${String(data.get("name") || "").split(" ")[0]}! Our expansion team will reach out within 48 hours.`);
+                }, 700);
+              }}
+            >
+              <div className="grid gap-5 sm:grid-cols-2">
+                <label className="block text-sm font-medium">Full name<input name="name" required placeholder="Your name" className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary" /></label>
+                <label className="block text-sm font-medium">Phone<input name="phone" required placeholder="+91 " className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary" /></label>
+                <label className="block text-sm font-medium">Email<input name="email" type="email" required placeholder="you@company.com" className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary" /></label>
+                <label className="block text-sm font-medium">City<input name="city" required placeholder="City of interest" className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary" /></label>
+              </div>
+              <p className="mt-8 eyebrow">Format of interest</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                {formats.map((f) => (
+                  <button
+                    key={f.code}
+                    type="button"
+                    onClick={() => setSelected(f.code)}
+                    className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors ${selected === f.code ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
+                  >
+                    {f.code}
+                  </button>
+                ))}
+              </div>
+              <input type="hidden" name="format" value={selected} />
+              <label className="mt-8 block text-sm font-medium">
+                Message
+                <textarea name="message" rows={4} placeholder="Tell us about your city, site or investment timeline." className="mt-2 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary" />
+              </label>
+              <button type="submit" disabled={sending} className="mt-8 w-full rounded-full bg-primary px-8 py-4 font-display font-bold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-60">
+                {sending ? "Sending…" : "Request franchise deck"}
+              </button>
+            </form>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="space-y-8">
+              <div className="surface-card rounded-2xl p-8">
+                <p className="eyebrow">Investment</p>
+                <p className="mt-3 font-display text-5xl font-bold text-gold-gradient">₹2 Cr+</p>
+                <p className="mt-3 text-sm text-muted-foreground">Entry investment for GamePlex Mini. Standard from ₹4 Cr, Grand from ₹6 Cr.</p>
+              </div>
+              <div className="surface-card rounded-2xl p-8">
+                <p className="eyebrow">Talk to us</p>
+                <a href="mailto:franchise@gameplex.in" className="mt-4 block font-display text-lg font-bold hover:text-primary">franchise@gameplex.in</a>
+                <a href="tel:+919000000000" className="mt-2 block font-display text-lg font-bold hover:text-primary">+91 90000 00000</a>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
+}
+
+add this page in gameplex.theconnplex.com
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-20T15:38:45+05:30.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.5 Flash (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
