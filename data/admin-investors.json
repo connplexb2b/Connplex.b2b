@@ -6,6 +6,15 @@
     "parent": "Announcements",
     "files": [
       {
+        "id": "c7f9d8a1-b6e2-4f3d-9c8b-5a1e2f3d4e5f",
+        "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 19.08.2026.pdf",
+        "storedName": "c7f9d8a1-b6e2-4f3d-9c8b-5a1e2f3d4e5f.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/c7f9d8a1-b6e2-4f3d-9c8b-5a1e2f3d4e5f.pdf",
+        "mimeType": "application/pdf",
+        "size": 857605,
+        "title": "Intimation under Regulation 30 of SEBI(LODR) - 19.08.2026"
+      },
+      {
         "id": "7e8181d3-8e8c-4452-995e-3f24a4a7fcb1",
         "originalName": "Intimation under Regulation 29 of SEBI(LODR) - 14.08.2026.pdf",
         "storedName": "7e8181d3-8e8c-4452-995e-3f24a4a7fcb1.pdf",
@@ -98,6 +107,6 @@
         "size": 33
       }
     ],
-    "updatedAt": "2026-08-19T11:50:53.664Z"
+    "updatedAt": "2026-08-20T08:34:32.091Z"
   }
 ]
