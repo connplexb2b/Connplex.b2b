@@ -18,7 +18,7 @@ function fetchGet(url) {
 
 async function run() {
   try {
-    const data = await fetchGet('https://webadmin.theconnplex.com/api/user/get-single-investor-by-user?title=General%20Meeting');
+    const data = await fetchGet('https://webadmin.theconnplex.com/api/user/get-single-investor-by-user?title=investor%20Grievances');
     console.log('webadmin.theconnplex.com status:', data.status);
     console.log('Data:', JSON.stringify(data.data, null, 2));
   } catch (err) {

@@ -264,6 +264,20 @@ export default function InvestorsPage() {
           }
         }
 
+        const isGrievance = activeCategory.toLowerCase() === 'investor grievances';
+        if (isGrievance) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b5677025897',
+              title: activeCategory,
+              type: 'Content',
+              parent: '',
+              investorsPdfs: []
+            };
+          }
+          data.content = `<p><strong>For any investor complaints/grievances, kindly contact us -</strong></p><p>CS Jaydeep Dahyabhai Prajapati,&nbsp;<br>Company Secretary &amp; Compliance Officer.</p><p><strong>Address:</strong> &nbsp;C-Block, 10 Floor, Krish Cubical, Govardhan Party Plot,<br>Avalon Hotel Road, Sindhu Bhavan Marg, Thaltej, Ahmedabad, Gujarat 380059</p><p><strong>Tel. No.:</strong> +91 07935289865/ 07935288291</p><p><strong>E-mail:</strong> cs@theconnplex.com, investor@theconnplex.com</p><p>&nbsp;</p><p><strong>Registrar &amp; Share Transfer Agent</strong></p><p><strong>ACCURATE SECURITIES AND REGISTRY PRIVATE LIMITED</strong><br><strong>Address:</strong> B1105 - 1108, K P Epitome, Nr. Makarba Lake, Nr. Siddhi Vinayak Towers,<br>Makarba, Ahmedabad - 380051.<br><strong>Tel. No.:</strong> +91-79-48000319<br><strong>Email:</strong> investor@accuratesecurities.com<br><strong>Website:</strong> www.accuratesecurities.com</p>`;
+        }
+
         // Fetch local database details to merge uploads
         try {
           const localRes = await fetch('/api/investors');
@@ -277,7 +291,7 @@ export default function InvestorsPage() {
                 (activeCategory.toLowerCase() === 'other annoucment' && inv.title.toLowerCase() === 'other annoucment')
             );
             
-            if (localMatching && localMatching.files && localMatching.files.length > 0) {
+            if (localMatching) {
               if (!data) {
                 data = {
                   _id: localMatching.id,
@@ -287,27 +301,32 @@ export default function InvestorsPage() {
                   investorsPdfs: []
                 };
               }
-              if (!data.investorsPdfs) {
-                data.investorsPdfs = [];
+              if (localMatching.content) {
+                data.content = localMatching.content;
               }
-              
-              localMatching.files.forEach((f: any) => {
-                const exists = data.investorsPdfs.some(
-                  (existing: any) =>
-                    existing._id === f.id ||
-                    existing.originalname === f.originalName ||
-                    existing.fileName === f.url
-                );
-                if (!exists) {
-                  data.investorsPdfs.push({
-                    _id: f.id,
-                    originalname: f.originalName,
-                    fileName: f.url,
-                    mimeType: f.mimeType,
-                    size: f.size
-                  });
+              if (localMatching.files && localMatching.files.length > 0) {
+                if (!data.investorsPdfs) {
+                  data.investorsPdfs = [];
                 }
-              });
+                
+                localMatching.files.forEach((f: any) => {
+                  const exists = data.investorsPdfs.some(
+                    (existing: any) =>
+                      existing._id === f.id ||
+                      existing.originalname === f.originalName ||
+                      existing.fileName === f.url
+                  );
+                  if (!exists) {
+                    data.investorsPdfs.push({
+                      _id: f.id,
+                      originalname: f.originalName,
+                      fileName: f.url,
+                      mimeType: f.mimeType,
+                      size: f.size
+                    });
+                  }
+                });
+              }
             }
           }
         } catch (localErr) {
