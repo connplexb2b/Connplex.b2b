@@ -161,5 +161,23 @@
       }
     ],
     "updatedAt": "2026-08-21T06:24:15.336Z"
+  },
+  {
+    "id": "6805e8297f482b5677025887",
+    "title": "Annual Returns",
+    "type": "Files",
+    "parent": "",
+    "files": [
+      {
+        "id": "98288c2a-be17-49b0-900d-25693f77f1ae",
+        "originalName": "draft MGT-7_CCL.pdf",
+        "storedName": "98288c2a-be17-49b0-900d-25693f77f1ae.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025887/98288c2a-be17-49b0-900d-25693f77f1ae.pdf",
+        "mimeType": "application/pdf",
+        "size": 1356275,
+        "title": "draft MGT-7_CCL"
+      }
+    ],
+    "updatedAt": "2026-08-21T06:40:38.874Z"
   }
 ]
