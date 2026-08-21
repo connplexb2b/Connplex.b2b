@@ -66,6 +66,54 @@ export async function POST(req: NextRequest) {
       { upsert: true }
     );
 
+    // Trigger Webhook
+    try {
+      const getFormattedPhone = () => {
+        let phone = bookingDoc.payload.guestPhone || bookingDoc.user_phone || "";
+        const cleaned = phone.toString().replace(/\D/g, "");
+        if (cleaned.length === 10) {
+          return `91${cleaned}`;
+        }
+        return cleaned;
+      };
+      const formattedPhone = getFormattedPhone();
+
+      const webhookPayload = {
+        user_phone: formattedPhone,
+        event_key: bookingDoc.event_key || "hni-event",
+        payload: {
+          _id: bookingDoc.payload._id.toString(),
+          guestName: bookingDoc.payload.guestName,
+          guestEmail: bookingDoc.payload.guestEmail,
+          guestPhone: bookingDoc.payload.guestPhone,
+          movie: bookingDoc.payload.movie,
+          location: bookingDoc.payload.location,
+          date: bookingDoc.payload.date,
+          time: bookingDoc.payload.time,
+          seats: bookingDoc.payload.seats,
+          razorpay_order_id: bookingDoc.payload.razorpay_order_id,
+          razorpay_payment_id: bookingDoc.payload.razorpay_payment_id,
+          amount: bookingDoc.payload.amount,
+          status: bookingDoc.payload.status,
+          createdAt: bookingDoc.payload.createdAt.toISOString(),
+          updatedAt: bookingDoc.payload.updatedAt.toISOString(),
+        }
+      };
+
+      const webhookRes = await fetch("https://api.bitamin.com/webhook/theconnplex/019dbfa5-ead7-761d-944d-9260ef66b5aa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(webhookPayload),
+      });
+      if (!webhookRes.ok) {
+        console.error(`Webhook call failed in hni-event route with status: ${webhookRes.status}`);
+      }
+    } catch (webhookError) {
+      console.error("Error triggering webhook in hni-event route:", webhookError);
+    }
+
     return NextResponse.json({
       status: "success",
       message: "HNI Event created/updated successfully",
