@@ -251,17 +251,42 @@ return n0.version="2.30.1",r0(sr),n0.fn=J0,n0.min=Ml,n0.max=Ns,n0.now=Wr,n0.utc=
       const row = rowName.toUpperCase();
       const time = showTime.replace(/\s+/g, ' ').toLowerCase();
       let isHni = false;
-      if (cId === "65bcde931e72aef23e6854ee" && time === "9:00 pm") {
-        if (["A", "B", "C", "D", "E", "F"].includes(row)) isHni = true;
+      let hniPrice = 1200;
+      if (cId === "65bcde931e72aef23e6854f4" && time === "8:35 pm") {
+        if (["D", "E"].includes(row)) { isHni = true; hniPrice = 1500; }
+      } else if (cId === "65bcde931e72aef23e6854d0" && time === "9:30 pm") {
+        if (["A", "B"].includes(row)) { isHni = true; hniPrice = 1500; }
+      } else if (cId === "69bd5d744c5762dfaf7ace54" && time === "10:00 pm") {
+        if (["D", "E"].includes(row)) { isHni = true; hniPrice = 1500; }
+      } else if (cId === "6a15837a2585fc9aa9c18b22" && time === "8:15 pm") {
+        if (["E", "F"].includes(row)) { isHni = true; hniPrice = 1500; }
       } else if (cId === "6a15837a2585fc9aa9c18b22" && time === "9:00 pm") {
-        if (["C", "D", "E", "F", "G"].includes(row)) isHni = true;
-        if (row === "H" && seatNumber >= 1 && seatNumber <= 5) isHni = true;
-      } else if (cId === "664746aabddbaefe64f57506" && time === "8:00 pm") {
-        if (["A", "B"].includes(row)) isHni = true;
+        if (["C", "D", "E", "F", "G"].includes(row)) { isHni = true; hniPrice = 1000; }
+        if (row === "H" && seatNumber >= 1 && seatNumber <= 5) { isHni = true; hniPrice = 1000; }
+      } else if (cId === "693bbc382494f189420225c3" && time === "9:30 pm") {
+        if (["A", "B"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "6a4670744a5d2aee11b1bd66" && time === "7:30 pm") {
+        if (["A", "B"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "6a54d28d436989d460e2694e" && time === "10:00 pm") {
+        if (["J", "K"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "65bcde931e72aef23e6854dc" && time === "8:15 pm") {
+        if (["E", "F"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "68f0eb1e6b214eac1c3591c9" && time === "10:30 pm") {
+        if (["G", "H"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "6791edd5de416bc41488f485" && time === "9:45 pm") {
+        if (["E", "F"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "661667b087618af0798f1130" && time === "9:30 pm") {
+        if (["E", "F"].includes(row)) { isHni = true; hniPrice = 1200; }
       } else if (cId === "661667b087618af0798f1130" && time === "8:00 pm") {
-        if (["A", "B"].includes(row)) isHni = true;
+        if (["A", "B"].includes(row)) { isHni = true; hniPrice = 1000; }
+      } else if (cId === "667ea18996192fd16dd6fcfa" && time === "9:45 pm") {
+        if (["E", "F"].includes(row)) { isHni = true; hniPrice = 1200; }
+      } else if (cId === "65bcde931e72aef23e6854ee" && time === "9:00 pm") {
+        if (["A", "B", "C", "D", "E", "F"].includes(row)) { isHni = true; hniPrice = 1000; }
+      } else if (cId === "664746aabddbaefe64f57506" && time === "8:00 pm") {
+        if (["A", "B"].includes(row)) { isHni = true; hniPrice = 1000; }
       } else if (cId === "67da83c720709248d1509053" && time === "9:10 pm") {
-        if (["B", "C"].includes(row)) isHni = true;
+        if (["B", "C"].includes(row)) { isHni = true; hniPrice = 1000; }
       }
       if (isHni) {
         const overlay = document.createElement("div");
@@ -301,7 +326,7 @@ return n0.version="2.30.1",r0(sr),n0.fn=J0,n0.min=Ml,n0.max=Ns,n0.now=Wr,n0.utc=
         
         modal.innerHTML = `
           <h2 style="color: #d4af37; font-size: 1.8rem; margin-top: 0; margin-bottom: 20px;">🎬 Wait! Don’t Miss This Exclusive Offer</h2>
-          <p style="font-size: 1.1rem; color: #eee; margin-bottom: 20px; line-height: 1.5;">Book your HNI Premiere Night ticket for just ₹1,000 and receive:</p>
+          <p style="font-size: 1.1rem; color: #eee; margin-bottom: 20px; line-height: 1.5;">Book your HNI Premiere Night ticket for just ₹${hniPrice} and receive:</p>
           <ul style="text-align: left; list-style: none; padding: 0; margin: 0 0 25px 0; font-size: 1.05rem; line-height: 1.8; color: #ccc;">
             <li style="margin-bottom: 8px;">✅ Premium food – <strong>FREE</strong></li>
             <li style="margin-bottom: 8px;">✅ Cold Drinks – <strong>FREE</strong></li>
@@ -311,7 +336,7 @@ return n0.version="2.30.1",r0(sr),n0.fn=J0,n0.min=Ml,n0.max=Ns,n0.now=Wr,n0.utc=
           </ul>
           <div style="background: rgba(212, 175, 55, 0.1); border: 1px dashed #d4af37; padding: 12px; border-radius: 8px; margin-bottom: 25px;">
             <p style="margin: 0; font-size: 1.1rem; color: #fff;">Total Experience Value: <span style="text-decoration: line-through; color: #888;">₹2,200+</span></p>
-            <p style="margin: 5px 0 0 0; font-size: 1.3rem; color: #d4af37; font-weight: bold;">Your Price: Only ₹1,000</p>
+            <p style="margin: 5px 0 0 0; font-size: 1.3rem; color: #d4af37; font-weight: bold;">Your Price: Only ₹${hniPrice}</p>
           </div>
           <p style="font-size: 1rem; color: #eee; margin-bottom: 20px; font-weight: bold;">🎟️ Limited Seats Available , 🎟️ Book Your Seat Now</p>
           <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 25px;">Bookings are available exclusively through the HNI Event Page.</p>

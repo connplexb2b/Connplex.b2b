@@ -68,35 +68,18 @@ const SPIDER_LOCATIONS = [
 ];
 
 const PREMIER_LOCATIONS = [
-  { name: "Connplex Luxuriance – Vaishnodevi, Ahmedabad", amount: 1500 },
-  { name: "Connplex Luxuriance – Rajkot", amount: 1500 },
-  { name: "Connplex Luxuriance – Ahilyanagar", amount: 1500 },
-  { name: "Connplex Luxuriance – Kankarbagh", amount: 1500 },
-  { name: "Connplex Luxuriance – Siwan", amount: 1500, tier3: true },
-  { name: "Connplex Luxuriance – Bhagalpur", amount: 1500, tier3: true },
-  { name: "Connplex Luxuriance – Vadodara", amount: 1500 },
-  { name: "Connplex Luxuriance – MPM Mall", amount: 1500 },
-  { name: "Connplex Luxuriance – Muzaffarpur", amount: 1500, tier3: true },
-  { name: "Connplex Luxuriance – Tribeca", amount: 1500 },
-  { name: "Connplex Luxuriance – Adani Shantigram", amount: 1500 },
-  { name: "Connplex Luxuriance – Jajpur", amount: 1500, tier3: true },
-  { name: "Connplex Luxuriance – Mundhra", amount: 1000, tier3: true },
-  { name: "Connplex Luxuriance – Junagadh", amount: 1100 },
-  { name: "Connplex Luxuriance – Darbhnga", amount: 1100, tier3: true },
-  { name: "Connplex Luxuriance – Jagdalpur", amount: 1100, tier3: true },
-  { name: "Connplex Luxuriance – Phulbani", amount: 1100, tier3: true },
-  { name: "Connplex Luxuriance – Mahesana", amount: 1100 },
-  { name: "Connplex Luxuriance – Bhikhna pahadi", amount: 1100, tier3: true },
-  { name: "Connplex Luxuriance – Jd mall", amount: 1100 },
-  { name: "Connplex Luxuriance – Solapur", amount: 1100, tier3: true },
-  { name: "Connplex Luxuriance – Balotra", amount: 1500, tier3: true },
-  { name: "Connplex Luxuriance – Sangmner", amount: 1000 },
-  { name: "Connplex Luxuriance – Prahladnagar", amount: 1000 },
-  { name: "Connplex Luxuriance – Biswanath assam", amount: 1000, tier3: true },
-  { name: "Connplex Luxuriance – Bilaspur", amount: 1000 },
-  { name: "Connplex Luxuriance – Gandhinagar", amount: 1000 },
-  { name: "Connplex Luxuriance – Madhubani", amount: 1000, tier3: true },
-  { name: "Connplex Luxuriance – SR arcade - bihar", amount: 1000, tier3: true },
+  { name: "Connplex Luxuriance – Vaishnodevi, Ahmedabad", amount: 1500, time: "8:35 PM" },
+  { name: "Connplex Luxuriance – Ahilyanagar", amount: 1500, time: "9:30 PM" },
+  { name: "Connplex Luxuriance – Tribeca", amount: 1500, time: "10:00 PM" },
+  { name: "Connplex Luxuriance – Adani Shantigram", amount: 1500, time: "8:15 PM" },
+  { name: "Connplex Luxuriance – Mundhra", amount: 1200, time: "9:30 PM", tier3: true },
+  { name: "Connplex Luxuriance – Junagadh", amount: 1200, time: "7:30 PM" },
+  { name: "Connplex Luxuriance – Jagdalpur", amount: 1200, time: "10:00 PM", tier3: true },
+  { name: "Connplex Luxuriance – Mehsana", amount: 1200, time: "8:15 PM" },
+  { name: "Connplex Luxuriance – Sangmner", amount: 1200, time: "10:30 PM" },
+  { name: "Connplex Luxuriance – Bilaspur", amount: 1200, time: "9:45 PM" },
+  { name: "Connplex Luxuriance – Gandhinagar", amount: 1200, time: "9:30 PM" },
+  { name: "Connplex Luxuriance – Siwan", amount: 1200, time: "9:45 PM", tier3: true },
 ];
 
 function useCountdown() {
@@ -793,7 +776,7 @@ function BookingSection({
         movie: "Toxic Premier Nights",
         location: loc.name,
         date: "Thursday (27th Aug)",
-        time: "9:00 PM",
+        time: loc.time || "9:00 PM",
         amount: loc.amount,
       });
     }
@@ -819,6 +802,7 @@ function BookingSection({
         setSelectedEvent({
           ...selectedEvent,
           location: loc.name,
+          time: loc.time || "9:00 PM",
           amount: loc.amount,
         });
       }
@@ -1460,7 +1444,7 @@ function RecommendedEvents({
       amount: PREMIER_LOCATIONS[0].amount,
       location: PREMIER_LOCATIONS[0].name,
       date: "Thursday (27th Aug)",
-      time: "9:00 PM"
+      time: PREMIER_LOCATIONS[0].time || "9:00 PM"
     },
     {
       movie: "Spider-Man",
@@ -1666,7 +1650,7 @@ export default function PremiereLuxeLanding() {
     movie: "Toxic Premier Nights",
     location: PREMIER_LOCATIONS[0].name,
     date: "Thursday (27th Aug)",
-    time: "9:00 PM",
+    time: PREMIER_LOCATIONS[0].time || "9:00 PM",
     amount: PREMIER_LOCATIONS[0].amount,
   });
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
