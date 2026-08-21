@@ -1,13 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function SiteFooter() {
+  const pathname = usePathname();
+
+  const getHref = (to: string) => {
+    if (pathname?.startsWith("/gameplex")) {
+      if (to === "/") return "/gameplex";
+      return `/gameplex${to}`;
+    }
+    return to;
+  };
+
   return (
     <footer className="relative z-10 border-t border-[oklch(1_0_0_/_12%)] bg-[#050505] py-16 text-muted-foreground font-sans">
       <div className="mx-auto max-w-[1800px] px-5 sm:px-10">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           {/* Column 1: Brand Blurb */}
           <div className="space-y-6">
-            <Link href="/" className="inline-block">
+            <Link href={getHref("/")} className="inline-block">
               <span className="text-2xl font-bold tracking-[0.15em] text-white uppercase font-cinzel">
                 GAME<span className="text-gold-gradient font-semibold">PLEX</span>
               </span>
@@ -24,22 +37,22 @@ export function SiteFooter() {
             </h4>
             <ul className="space-y-4 text-sm">
               <li>
-                <Link href="/experiences" className="hover:text-white transition-colors">
+                <Link href={getHref("/experiences")} className="hover:text-white transition-colors">
                   Experiences
                 </Link>
               </li>
               <li>
-                <Link href="/formats" className="hover:text-white transition-colors">
+                <Link href={getHref("/formats")} className="hover:text-white transition-colors">
                   Formats
                 </Link>
               </li>
               <li>
-                <Link href="/franchise" className="hover:text-white transition-colors">
+                <Link href={getHref("/franchise")} className="hover:text-white transition-colors">
                   Franchise
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href={getHref("/contact")} className="hover:text-white transition-colors">
                   Contact & Inquiries
                 </Link>
               </li>
@@ -63,7 +76,7 @@ export function SiteFooter() {
               </p>
             </div>
             <Link
-              href="/contact"
+              href={getHref("/contact")}
               className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-white hover:text-[color:var(--gold)] transition-colors group"
             >
               <span>Download Pitch Deck</span>

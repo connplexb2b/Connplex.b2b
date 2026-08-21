@@ -29,11 +29,19 @@ export function SiteNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const getHref = (to: string) => {
+    if (pathname?.startsWith("/gameplex")) {
+      if (to === "/") return "/gameplex";
+      return `/gameplex${to}`;
+    }
+    return to;
+  };
+
   const getLinkClass = (to: string) => {
     // Check if the link is active on the subdomain or subpath
     // Support both '/experiences' and '/gameplex/experiences' in dev/production environments
     const isActive = pathname === to || pathname === `/gameplex${to}`;
-    return `flex h-full items-center justify-center border-l border-border/50 px-6 font-eyebrow text-[0.68rem] font-medium uppercase tracking-[0.28em] transition-colors ${
+    return `flex h-full items-center justify-center px-6 font-eyebrow text-[0.68rem] font-medium uppercase tracking-[0.28em] transition-colors ${
       isActive ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"
     }`;
   };
@@ -51,20 +59,21 @@ export function SiteNav() {
         scrolled ? "border-b border-border shadow-lg" : "border-b border-border/60"
       }`}
     >
-      <nav className="mx-auto hidden h-24 max-w-[1800px] items-stretch md:flex">
-        {/* Left side links */}
-        <div className="flex flex-1 items-stretch justify-end">
-          {leftLinks.map((l) => (
-            <Link key={l.to} href={l.to} className={getLinkClass(l.to)}>
-              {l.label}
-            </Link>
-          ))}
-        </div>
+      <nav className="mx-auto hidden h-24 max-w-[1800px] grid-cols-6 items-stretch border-x border-border/50 divide-x divide-border/50 md:grid">
+        {/* Experiences */}
+        <Link href={getHref("/experiences")} className={getLinkClass("/experiences")}>
+          Experiences
+        </Link>
+
+        {/* Formats */}
+        <Link href={getHref("/formats")} className={getLinkClass("/formats")}>
+          Formats
+        </Link>
 
         {/* Center Wordmark Logo */}
         <Link
-          href="/"
-          className="group flex shrink-0 items-center justify-center border-x border-border/50 px-8"
+          href={getHref("/")}
+          className="group flex shrink-0 items-center justify-center px-8"
         >
           <img
             src="/assets/gameplex/gameplex-logo.png"
@@ -85,25 +94,29 @@ export function SiteNav() {
           </span>
         </Link>
 
-        {/* Right side links */}
-        <div className="flex flex-1 items-stretch">
-          {rightLinks.map((l) => (
-            <Link key={l.to} href={l.to} className={getLinkClass(l.to)}>
-              {l.label}
-            </Link>
-          ))}
-          <Link
-            href="/contact"
-            className="ml-auto flex items-center border-l border-border/50 px-8 font-eyebrow text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-primary transition-all hover:brightness-110"
-          >
-            Inquire Now
-          </Link>
-        </div>
+        {/* Franchise */}
+        <Link href={getHref("/franchise")} className={getLinkClass("/franchise")}>
+          Franchise
+        </Link>
+
+        {/* Contact */}
+        <Link href={getHref("/contact")} className={getLinkClass("/contact")}>
+          Contact
+        </Link>
+
+        {/* Inquire Now */}
+        <Link
+          href={getHref("/contact")}
+          className="flex h-full flex-col items-center justify-center px-6 text-center font-eyebrow text-[0.68rem] font-bold uppercase tracking-[0.28em] text-primary transition-all hover:brightness-110"
+        >
+          <span>Inquire</span>
+          <span>Now</span>
+        </Link>
       </nav>
 
       {/* Mobile bar */}
       <div className="flex h-20 items-center justify-between px-5 md:hidden">
-        <Link href="/" onClick={() => setOpen(false)} className="group flex items-center">
+        <Link href={getHref("/")} onClick={() => setOpen(false)} className="group flex items-center">
           <img
             src="/assets/gameplex/gameplex-logo.png"
             alt="GamePlex by Connplex"
@@ -136,7 +149,7 @@ export function SiteNav() {
           {allLinks.map((l) => (
             <Link
               key={l.label}
-              href={l.to}
+              href={getHref(l.to)}
               onClick={() => setOpen(false)}
               className={getMobileLinkClass(l.to)}
             >
@@ -144,7 +157,7 @@ export function SiteNav() {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href={getHref("/contact")}
             onClick={() => setOpen(false)}
             className="mt-6 block rounded-full bg-primary px-5 py-3 text-center font-eyebrow text-xs font-bold uppercase tracking-[0.28em] text-primary-foreground transition-transform hover:scale-[1.02]"
           >

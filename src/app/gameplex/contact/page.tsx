@@ -13,6 +13,7 @@ function ContactForm() {
   const [sending, setSending] = useState(false);
 
   useEffect(() => {
+    if (!searchParams) return;
     const formatParam = searchParams.get("format");
     if (formatParam && formats.some((f) => f.code === formatParam)) {
       setSelected(formatParam);
