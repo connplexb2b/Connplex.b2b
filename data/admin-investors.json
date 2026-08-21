@@ -116,6 +116,15 @@
     "parent": "Announcements",
     "files": [
       {
+        "id": "1a5ee887-c894-473c-b54c-8a7fc77c0c70",
+        "originalName": "Annual Report_FY 2025-26.pdf",
+        "storedName": "1a5ee887-c894-473c-b54c-8a7fc77c0c70.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025884/1a5ee887-c894-473c-b54c-8a7fc77c0c70.pdf",
+        "mimeType": "application/pdf",
+        "size": 6838188,
+        "title": "NOTICE OF 11TH ANNUAL GENERAL MEETING"
+      },
+      {
         "id": "da38e2d4-1b79-4cfc-b179-c8c362089df5",
         "originalName": "Pre-dispatch Notice_Newspaper Advt..20082026.pdf",
         "storedName": "da38e2d4-1b79-4cfc-b179-c8c362089df5.pdf",
@@ -125,7 +134,7 @@
         "title": "Pre-dispatch Notice_Newspaper Advt..20082026"
       }
     ],
-    "updatedAt": "2026-08-20T14:14:00.000Z"
+    "updatedAt": "2026-08-21T06:08:00.058Z"
   },
   {
     "id": "6805e8297f482b5677025897",
