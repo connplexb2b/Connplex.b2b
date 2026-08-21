@@ -588,7 +588,13 @@ export async function GET(req: NextRequest) {
         dbBookings.forEach((b: any) => {
           if (Array.isArray(b.seats)) {
             b.seats.forEach((seat: string) => {
-              dbBookedSeats.add(seat.trim().toUpperCase());
+              let normalizedSeat = seat.trim().toUpperCase();
+              // Normalize formats like "Row A - Seat 5" to "A5"
+              const match = normalizedSeat.match(/ROW\s+([A-Z])\s*-\s*SEAT\s+(\d+)/);
+              if (match) {
+                normalizedSeat = match[1] + match[2];
+              }
+              dbBookedSeats.add(normalizedSeat);
             });
           }
         });
