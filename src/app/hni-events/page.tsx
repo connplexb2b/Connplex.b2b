@@ -520,7 +520,7 @@ function Journey({
                       ✨ Upcoming Event · Ticket Sales Open
                     </div>
                     <h3 className={`${HEADING} text-3xl text-white md:text-4xl font-bold`}>
-                      HNI PREMIERE NIGHT
+                      Toxic Premier Nights
                     </h3>
                     <p className="mt-2 font-body text-sm md:text-base text-white/90 font-medium italic">
                       Experience Next Blockbuster Movie Before Everyone Else.
@@ -592,7 +592,7 @@ function Journey({
                   <div className="flex flex-col gap-3">
                     <button
                       onClick={() => onSelectEvent({
-                        movie: "HNI Premiere Night",
+                        movie: "Toxic Premier Nights",
                         location: PREMIER_LOCATIONS[0].name,
                         date: "Thursday (27th Aug)",
                         time: "9:00 PM",
@@ -772,7 +772,7 @@ function BookingSection({
   setSelectedSeats: (seats: string[]) => void;
   refreshKey: number;
 }) {
-  const movies = ["HNI Premiere Night"];
+  const movies = ["Toxic Premier Nights"];
   const currentLocationsList = selectedEvent.movie === "Spider-Man" ? SPIDER_LOCATIONS : PREMIER_LOCATIONS;
 
   const handleMovieChange = (movieName: string) => {
@@ -790,7 +790,7 @@ function BookingSection({
       const loc = PREMIER_LOCATIONS[0];
       setSelectedSeats([]);
       setSelectedEvent({
-        movie: "HNI Premiere Night",
+        movie: "Toxic Premier Nights",
         location: loc.name,
         date: "Thursday (27th Aug)",
         time: "9:00 PM",
@@ -838,9 +838,9 @@ function BookingSection({
             <>
               Christopher Nolan's <em className="text-[color:var(--color-gold-soft)]">The Odyssey</em> — an intimate premiere with Damon, Holland, Hathaway, Pattinson, Nyong'o, Zendaya & Theron on screen.
             </>
-          ) : selectedEvent.movie === "HNI Premiere Night" ? (
+          ) : selectedEvent.movie === "Toxic Premier Nights" ? (
             <>
-              Indulge in a premium cinematic experience with the <em className="text-[color:var(--color-gold-soft)]">HNI Premiere Night</em> — an exclusive screening across participating Luxuriance properties.
+              Indulge in a premium cinematic experience with the <em className="text-[color:var(--color-gold-soft)]">Toxic Premier Nights</em> — an exclusive screening across participating Luxuriance properties.
             </>
           ) : (
             <>
@@ -849,7 +849,7 @@ function BookingSection({
           )}
         </p>
 
-        {selectedEvent.movie === "HNI Premiere Night" && (
+        {selectedEvent.movie === "Toxic Premier Nights" && (
           <div className="max-w-xl mx-auto mt-8 mb-6 bg-white/5 border border-white/10 rounded-2xl p-6 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
             <div className="grid gap-4 sm:grid-cols-2 text-sm font-body text-white/95">
               <div className="flex items-center gap-3">
@@ -927,7 +927,7 @@ function BookingSection({
               </select>
             </div>
 
-            {selectedEvent.movie === "HNI Premiere Night" && (
+            {selectedEvent.movie === "Toxic Premier Nights" && (
               <div>
                 <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT DATE & SHOWTIME</label>
                 <select
@@ -957,7 +957,7 @@ function BookingSection({
               </div>
             )}
 
-            {selectedEvent.movie === "HNI Premiere Night" && (
+            {selectedEvent.movie === "Toxic Premier Nights" && (
               <div className="text-[11px] text-[color:var(--color-champagne)]/70 bg-white/5 border border-white/10 rounded-lg p-3 mt-1">
                 <div className="flex justify-between items-center">
                   <span>Price per seat: <strong className="text-white">₹{selectedEvent.amount.toLocaleString()}</strong></span>
@@ -1449,8 +1449,8 @@ function RecommendedEvents({
 }) {
   const events = [
     {
-      movie: "HNI Premiere Night",
-      poster: "/movies/hni_premiere_night_poster.jpg",
+      movie: "Toxic Premier Nights",
+      poster: "/movies/toxic_premier_nights.jpg",
       status: "TICKETS OPEN",
       statusColor: "bg-[#DF1827]",
       rating: "9.8",
@@ -1494,7 +1494,7 @@ function RecommendedEvents({
         amount: e.amount
       });
     } else {
-      alert(`The ${e.movie} HNI Premiere Night event has been successfully completed and is closed for bookings.`);
+      alert(`The ${e.movie} event has been successfully completed and is closed for bookings.`);
     }
   };
 
@@ -1589,7 +1589,7 @@ function UpcomingEvents() {
   ];
 
   const handleCardClick = (movieName: string) => {
-    alert(`Bookings for the ${movieName} HNI Premiere Night are not open yet. Stay tuned!`);
+    alert(`Bookings for the ${movieName} event are not open yet. Stay tuned!`);
   };
 
   return (
@@ -1663,7 +1663,7 @@ export default function PremiereLuxeLanding() {
   const [guestPhone, setGuestPhone] = useState("");
   const [isPaying, setIsPaying] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({
-    movie: "HNI Premiere Night",
+    movie: "Toxic Premier Nights",
     location: PREMIER_LOCATIONS[0].name,
     date: "Thursday (27th Aug)",
     time: "9:00 PM",

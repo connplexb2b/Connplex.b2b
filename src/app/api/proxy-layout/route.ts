@@ -597,7 +597,7 @@ export async function GET(req: NextRequest) {
       console.error("Database fetch error in proxy-layout:", dbErr);
     }
 
-    if (movie === "HNI Premiere Night" || movie === "Premier Night" || !BACKEND_MAP[location]) {
+    if (movie === "Toxic Premier Nights" || movie === "Toxic premier nights" || movie === "HNI Premiere Night" || movie === "Premier Night" || !BACKEND_MAP[location]) {
       // Return custom layout directly if location is unknown or if it's the new premier night event
       const layout = getHniEventLayout(location, dbBookedSeats);
       return NextResponse.json({ fallback: false, layout });
