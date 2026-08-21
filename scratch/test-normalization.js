@@ -13,21 +13,33 @@ async function run() {
 
     // Simulate query in proxy-layout route
     const query = {
-      location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
-      movie: "Toxic premier nights",
-      status: "Paid",
-      date: "18 July 2026",
-      time: "7:55 PM"
+      $or: [
+        {
+          location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+          movie: "Toxic premier nights",
+          status: "Paid",
+          date: "18 July 2026",
+          time: "7:55 PM"
+        },
+        {
+          "payload.location": "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+          "payload.movie": "Toxic premier nights",
+          "payload.status": "Paid",
+          "payload.date": "18 July 2026",
+          "payload.time": "7:55 PM"
+        }
+      ]
     };
 
-    console.log("Running query:", query);
+    console.log("Running query:", JSON.stringify(query, null, 2));
     const dbBookings = await collection.find(query).toArray();
     console.log("Found bookings:", dbBookings.length);
 
     let dbBookedSeats = new Set();
     dbBookings.forEach((b) => {
-      if (Array.isArray(b.seats)) {
-        b.seats.forEach((seat) => {
+      const bookingData = b.payload ? b.payload : b;
+      if (Array.isArray(bookingData.seats)) {
+        bookingData.seats.forEach((seat) => {
           let normalizedSeat = seat.trim().toUpperCase();
           // Normalize formats like "Row A - Seat 5" to "A5"
           const match = normalizedSeat.match(/ROW\s+([A-Z])\s*-\s*SEAT\s+(\d+)/);

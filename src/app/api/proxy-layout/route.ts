@@ -577,17 +577,29 @@ export async function GET(req: NextRequest) {
       const db = mongoose.connection.db;
       if (db) {
         const query: any = {
-          location: location,
-          movie: movie,
-          status: "Paid"
+          $or: [
+            {
+              location: location,
+              movie: movie,
+              status: "Paid",
+              ...(date ? { date } : {}),
+              ...(time ? { time } : {})
+            },
+            {
+              "payload.location": location,
+              "payload.movie": movie,
+              "payload.status": "Paid",
+              ...(date ? { "payload.date": date } : {}),
+              ...(time ? { "payload.time": time } : {})
+            }
+          ]
         };
-        if (date) query.date = date;
-        if (time) query.time = time;
 
         const dbBookings = await db.collection("hnibookings").find(query).toArray();
         dbBookings.forEach((b: any) => {
-          if (Array.isArray(b.seats)) {
-            b.seats.forEach((seat: string) => {
+          const bookingData = b.payload ? b.payload : b;
+          if (Array.isArray(bookingData.seats)) {
+            bookingData.seats.forEach((seat: string) => {
               let normalizedSeat = seat.trim().toUpperCase();
               // Normalize formats like "Row A - Seat 5" to "A5"
               const match = normalizedSeat.match(/ROW\s+([A-Z])\s*-\s*SEAT\s+(\d+)/);

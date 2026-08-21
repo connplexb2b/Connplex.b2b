@@ -13,20 +13,25 @@ async function run() {
 
     const eventDoc = {
       _id: new mongoose.Types.ObjectId("64df32813e8b03d23433ea2b"),
-      guestName: "John Doe",
-      guestEmail: "johndoe@example.com",
-      guestPhone: "9876543210",
-      movie: "Toxic premier nights",
-      location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
-      date: "18 July 2026",
-      time: "7:55 PM",
-      seats: ["Row A - Seat 5", "Row A - Seat 6"],
-      razorpay_order_id: "order_HniXYZ123",
-      razorpay_payment_id: "pay_HniABC456",
-      amount: 1000,
-      status: "Paid",
-      createdAt: new Date("2026-08-21T08:06:00.000Z"),
-      updatedAt: new Date("2026-08-21T08:06:00.000Z")
+      user_phone: "919561214185",
+      event_key: "hni-event",
+      payload: {
+        _id: new mongoose.Types.ObjectId("64df32813e8b03d23433ea2b"),
+        guestName: "John Doe",
+        guestEmail: "johndoe@example.com",
+        guestPhone: "9876543210",
+        movie: "Toxic premier nights",
+        location: "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+        date: "18 July 2026",
+        time: "7:55 PM",
+        seats: ["Row A - Seat 5", "Row A - Seat 6"],
+        razorpay_order_id: "order_HniXYZ123",
+        razorpay_payment_id: "pay_HniABC456",
+        amount: 1000,
+        status: "Paid",
+        createdAt: new Date("2026-08-21T08:06:00.000Z"),
+        updatedAt: new Date("2026-08-21T08:06:00.000Z")
+      }
     };
 
     // Clean up duplicate ID

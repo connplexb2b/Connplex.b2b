@@ -38,20 +38,25 @@ export async function POST(req: NextRequest) {
 
     const bookingDoc = {
       _id: docId,
-      guestName: payload.guestName || "John Doe",
-      guestEmail: payload.guestEmail || "johndoe@example.com",
-      guestPhone: payload.guestPhone || "9876543210",
-      movie: payload.movie || "Toxic premier nights",
-      location: payload.location || "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
-      date: payload.date || "18 July 2026",
-      time: payload.time || "7:55 PM",
-      seats: payload.seats || [],
-      razorpay_order_id: payload.razorpay_order_id || "order_HniXYZ123",
-      razorpay_payment_id: payload.razorpay_payment_id || "pay_HniABC456",
-      amount: payload.amount || 1000,
-      status: payload.status || "Paid",
-      createdAt: payload.createdAt ? new Date(payload.createdAt) : new Date(),
-      updatedAt: payload.updatedAt ? new Date(payload.updatedAt) : new Date(),
+      user_phone: user_phone || "919561214185",
+      event_key: event_key || "hni-event",
+      payload: {
+        _id: docId,
+        guestName: payload.guestName || "John Doe",
+        guestEmail: payload.guestEmail || "johndoe@example.com",
+        guestPhone: payload.guestPhone || "9876543210",
+        movie: payload.movie || "Toxic premier nights",
+        location: payload.location || "Connplex Luxuriance – Adani Shantigram, Ahmedabad",
+        date: payload.date || "18 July 2026",
+        time: payload.time || "7:55 PM",
+        seats: payload.seats || [],
+        razorpay_order_id: payload.razorpay_order_id || "order_HniXYZ123",
+        razorpay_payment_id: payload.razorpay_payment_id || "pay_HniABC456",
+        amount: payload.amount || 1000,
+        status: payload.status || "Paid",
+        createdAt: payload.createdAt ? new Date(payload.createdAt) : new Date(),
+        updatedAt: payload.updatedAt ? new Date(payload.updatedAt) : new Date(),
+      }
     };
 
     // Upsert the document by its _id
@@ -66,7 +71,11 @@ export async function POST(req: NextRequest) {
       message: "HNI Event created/updated successfully",
       data: {
         ...bookingDoc,
-        _id: bookingDoc._id.toString()
+        _id: bookingDoc._id.toString(),
+        payload: {
+          ...bookingDoc.payload,
+          _id: bookingDoc.payload._id.toString()
+        }
       }
     });
   } catch (error: any) {
