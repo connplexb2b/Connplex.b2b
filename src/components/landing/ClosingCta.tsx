@@ -16,7 +16,7 @@ export function ClosingCta() {
           Ready To Claim Your Offer?
         </p>
         <Button asChild variant="gold" size="xl" className="mt-6">
-          <a href="#apply">Yes, I Want My 50% Benefit →</a>
+          <a href="#apply">Yes, I Want My Upto 50% Benefit →</a>
         </Button>
         <p className="mt-6 text-xs text-muted-foreground">
           Offer subject to eligibility, territory availability and final franchise agreement.

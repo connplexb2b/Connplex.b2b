@@ -81,7 +81,7 @@ export function LeadForm() {
           </h2>
           <p className="mt-5 max-w-md text-muted-foreground">
             Share your details and our franchise desk will walk you through investment,
-            site feasibility and the 50% franchise-fee offer for your city.
+            site feasibility and the upto 50% franchise-fee offer for your city.
           </p>
           <div className="mt-10 grid max-w-md grid-cols-2 gap-px bg-border">
             {[

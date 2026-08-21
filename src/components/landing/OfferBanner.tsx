@@ -66,7 +66,7 @@ export function OfferBanner() {
             </p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               {[
-                "50% franchise fee benefit",
+                "upto 50% franchise fee benefit",
                 "Priority city / territory discussion",
                 "Complimentary feasibility & site study",
                 "Format recommendation based on your location",
@@ -110,15 +110,15 @@ export function OfferBanner() {
             <div className="mt-8 space-y-4 border-t border-border pt-6 text-sm">
               <p className="text-muted-foreground">
                 After the offer window closes, the franchise fee returns to the standard
-                ₹25,00,000.
+                ₹15,00,000.
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Standard franchise fee</span>
-                <span className="text-muted-foreground line-through">₹25,00,000</span>
+                <span className="text-muted-foreground line-through">₹15,00,000</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="uppercase tracking-widest text-foreground">Your fee today</span>
-                <span className="font-display text-3xl text-gradient-gold">₹12,50,000</span>
+                <span className="font-display text-3xl text-gradient-gold">₹11,50,000</span>
               </div>
             </div>
           </div>

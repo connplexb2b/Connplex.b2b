@@ -9,12 +9,12 @@ export function UnlockedStrip() {
           Not Everyone Gets <span className="text-gradient-gold">This Offer</span>
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-          Your first Connplex cinema qualifies you for 50% off the standard franchise fee.
+          Your first Connplex cinema qualifies you for upto 50% off the standard franchise fee.
           Choose your city. Complete your evaluation. Lock your opportunity before this benefit
           expires.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          {["50% Off", "First-Time Partners", "Limited Invitation"].map((t) => (
+          {["Upto 50% Off", "First-Time Partners", "Limited Invitation"].map((t) => (
             <span
               key={t}
               className="border border-gold/40 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-gold"

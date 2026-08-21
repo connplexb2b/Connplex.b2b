@@ -23,13 +23,13 @@ export function Hero() {
           A Private Invitation For First-Time Partners
         </span>
         <h1 className="mt-7 max-w-4xl text-5xl leading-[0.95] sm:text-7xl lg:text-8xl">
-          Your <span className="text-gradient-gold">50% Franchise Fee</span>
+          Your <span className="text-gradient-gold">upto 50% Franchise Fee</span>
           <br />
           Benefit Is Waiting.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
           You&apos;ve taken the first step toward owning a Connplex Cinema. To make your entry
-          into the cinema business easier, we&apos;re extending an exclusive 50% waiver on your
+          into the cinema business easier, we&apos;re extending an exclusive upto 50% waiver on your
           franchise fee — available for a limited time and only for first-time Connplex partners.
         </p>
 
@@ -39,12 +39,12 @@ export function Hero() {
               Standard Franchise Fee
             </p>
             <p className="mt-1 font-display text-3xl text-muted-foreground line-through">
-              ₹25,00,000
+              ₹15,00,000
             </p>
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-gold">Your Exclusive Fee</p>
-            <p className="mt-1 font-display text-4xl text-gradient-gold">₹12,50,000</p>
+            <p className="mt-1 font-display text-4xl text-gradient-gold">₹11,50,000</p>
           </div>
         </div>
 

@@ -12,9 +12,9 @@ import { LeadForm } from "@/components/landing/LeadForm";
 import { Contact } from "@/components/landing/Contact";
 import { Toaster } from "sonner";
 
-const title = "Connplex Cinema Franchise | 50% Off Franchise Fee";
+const title = "Connplex Cinema Franchise | Upto 50% Off Franchise Fee";
 const description =
-  "Own a Connplex smart luxury cinema. 80% revenue share, 18-24 month ROI, launch in 90-120 days. Limited 50% franchise fee discount for first-time partners.";
+  "Own a Connplex smart luxury cinema. 80% revenue share, 18-24 month ROI, launch in 90-120 days. Limited upto 50% franchise fee discount for first-time partners.";
 
 export const metadata: Metadata = {
   title,
