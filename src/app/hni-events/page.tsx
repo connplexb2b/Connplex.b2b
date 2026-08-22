@@ -74,12 +74,9 @@ const PREMIER_LOCATIONS = [
   { name: "Connplex Luxuriance – Adani Shantigram", amount: 1500, time: "8:15 PM" },
   { name: "Connplex Luxuriance – Mundhra", amount: 1200, time: "9:30 PM", tier3: true },
   { name: "Connplex Luxuriance – Junagadh", amount: 1200, time: "7:30 PM" },
-  { name: "Connplex Luxuriance – Jagdalpur", amount: 1200, time: "10:00 PM", tier3: true },
   { name: "Connplex Luxuriance – Mehsana", amount: 1200, time: "8:15 PM" },
   { name: "Connplex Luxuriance – Sangmner", amount: 1200, time: "10:30 PM" },
-  { name: "Connplex Luxuriance – Bilaspur", amount: 1200, time: "9:45 PM" },
-  { name: "Connplex Luxuriance – Gandhinagar", amount: 1200, time: "9:30 PM" },
-  { name: "Connplex Luxuriance – Siwan", amount: 1200, time: "9:45 PM", tier3: true },
+  { name: "Connplex Luxuriance – Gandhinagar", amount: 1200, time: "9:15 PM" },
 ];
 
 function useCountdown() {

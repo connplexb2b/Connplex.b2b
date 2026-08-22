@@ -415,13 +415,10 @@ function isHniSeatForToxic(location: string, rowName: string): boolean {
     return ["E", "F"].includes(row);
   }
   if (locUpper.includes("MUNDHRA") || locUpper.includes("MUNDRA")) {
-    return ["A", "B"].includes(row);
+    return ["D"].includes(row);
   }
   if (locUpper.includes("JUNAGADH")) {
-    return ["A", "B"].includes(row);
-  }
-  if (locUpper.includes("JAGDALPUR")) {
-    return ["J", "K"].includes(row);
+    return ["F", "G"].includes(row);
   }
   if (locUpper.includes("MEHSANA") || locUpper.includes("MAHESANA")) {
     return ["E", "F"].includes(row);
@@ -429,13 +426,7 @@ function isHniSeatForToxic(location: string, rowName: string): boolean {
   if (locUpper.includes("SANGMNER") || locUpper.includes("SANGAMNER")) {
     return ["G", "H"].includes(row);
   }
-  if (locUpper.includes("BILASPUR")) {
-    return ["E", "F"].includes(row);
-  }
   if (locUpper.includes("GANDHINAGAR")) {
-    return ["E", "F"].includes(row);
-  }
-  if (locUpper.includes("SIWAN")) {
     return ["E", "F"].includes(row);
   }
   return false;
@@ -450,7 +441,7 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
   const isLarge = ["VAISHNODEVI", "RAJKOT", "VADODARA", "ADANI", "TRIBECA", "MPM MALL", "PRAHLADNAGAR", "JAGDALPUR"].some(name => locUpper.includes(name));
   
   // Medium screen locations:
-  const isMedium = ["KANKARBAGH", "SIWAN", "BHAGALPUR", "MUZAFFARPUR", "SOLAPUR", "DARBHNGA", "DARBHANGA", "GANDHINAGAR", "BILASPUR", "SANGMNER", "SANGAMNER"].some(name => locUpper.includes(name));
+  const isMedium = ["KANKARBAGH", "SIWAN", "BHAGALPUR", "MUZAFFARPUR", "SOLAPUR", "DARBHNGA", "DARBHANGA", "GANDHINAGAR", "BILASPUR", "SANGMNER", "SANGAMNER", "JUNAGADH"].some(name => locUpper.includes(name));
 
   if (isLarge) {
     // 10 rows: J (top) to A (bottom) (Jagdalpur has 11 rows: K to A)
