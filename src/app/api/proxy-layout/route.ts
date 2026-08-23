@@ -449,23 +449,23 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
 
   if (locUpper.includes("GANDHINAGAR")) {
     // Custom Gandhinagar layout matching the physical layout exactly:
-    // Rows: F, E, D, C, B, A (MILLER category)
-    // Row CL (COUPLE LOUNGER category)
-    const rows = ["F", "E", "D", "C", "B", "A"];
+    // Rows: A, B, C, D, E, F (MILLER category)
+    // Row G (COUPLE LOUNGER category)
+    const rows = ["A", "B", "C", "D", "E", "F"];
     for (const r of rows) {
       const seats: any[] = [];
       const category = "MILLER";
 
-      if (r === "F") {
-        // Row F: 12 seats continuously (1-12)
+      if (r === "A") {
+        // Row A: 12 seats continuously (1-12)
         for (let s = 1; s <= 12; s++) {
           const seatId = `${r}${s}`;
           const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
           const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
           seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
         }
-      } else if (["E", "D", "C"].includes(r)) {
-        // Rows E, D, C: 6 seats, aisle, 4 seats (1-10)
+      } else if (["B", "C", "D"].includes(r)) {
+        // Rows B, C, D: 6 seats, aisle, 4 seats (1-10)
         for (let s = 1; s <= 6; s++) {
           const seatId = `${r}${s}`;
           const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
@@ -480,7 +480,7 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
           seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
         }
       } else {
-        // Rows B, A: 6 seats, aisle, 5 seats (1-11)
+        // Rows E, F: 6 seats, aisle, 5 seats (1-11)
         for (let s = 1; s <= 6; s++) {
           const seatId = `${r}${s}`;
           const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
@@ -498,9 +498,9 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
       layout.push({ rowName: r, category, seats });
     }
 
-    // Add Couple Lounger Row
+    // Add Couple Lounger Row G
     {
-      const r = "CL";
+      const r = "G";
       const seats: any[] = [];
       for (let s = 1; s <= 3; s++) {
         seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked: true, isAisle: false });
@@ -511,7 +511,7 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
         seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked: true, isAisle: false });
         seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked: true, isAisle: false });
       }
-      layout.push({ rowName: "CL", category: "COUPLE LOUNGER", seats });
+      layout.push({ rowName: "G", category: "COUPLE LOUNGER", seats });
     }
 
     return layout;

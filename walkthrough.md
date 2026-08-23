@@ -12,9 +12,9 @@ We updated [route.ts](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connple
 - **Adani Shantigram**: 20 seats, Row E and F. (Large screen layout: Row F has 14 seats, Row E has seats 5-10).
 - **Mundhra**: 12 seats, Row D. (Changed Mundhra/Mundra to a Medium layout screen; Row D has all 12 seats).
 - **Junagadh**: 14 seats, Row F and G. (Medium screen layout: Row G has 8 recliner seats, Row F has seats 4-9).
-- **Mehsana**: 20 seats, Row E and F. (Changed Mehsana/Mahesana to a Medium layout screen; Row E and F have seats 2-11).
+- **Mehsana**: 20 seats, Row E and F. (Custom Mehsana layout matching the physical layout exactly: Sofa Slider Plus is rows A-D, Miller is rows E-F, and Lounger is row G. Rows E and F have 9 and 11 seats respectively, and both rows are fully open, totaling exactly 20 open seats).
 - **Sangmner**: 30 seats, Row G and H. (Medium screen layout: Customized to give rows G and H 15 seats each).
-- **Gandhinagar**: 22 seats, Row E and F. (Implemented a custom theater layout block matching the physical layout exactly: Rows F–A are MILLER seats, and Row CL contains COUPLE LOUNGER couple seats. Rows E and F are the only HNI-open rows, totaling exactly 22 seats).
+- **Gandhinagar**: 22 seats, Row E and F. (Custom Gandhinagar layout matching the physical layout exactly: Miller is rows A-F, and Couple Lounger is row G. Row A has 12 seats, rows B-D have 10 seats, and rows E-F have 11 seats each. Rows E and F are fully open, totaling exactly 22 open seats).
 
 ### 2. Layout Verification Tests
 - Updated the expectations in the verification script [verify-toxic-layouts.js](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connplex.b2b-main/scratch/verify-toxic-layouts.js) to match the new counts.
