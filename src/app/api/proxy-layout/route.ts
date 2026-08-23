@@ -413,9 +413,7 @@ function isHniSeatForToxic(location: string, rowName: string, seatNumber: number
     return ["A", "B"].includes(row);
   }
   if (locUpper.includes("TRIBECA")) {
-    if (row === "E") return true;
-    if (row === "D" && seat >= 5 && seat <= 9) return true;
-    return false;
+    return ["D", "E"].includes(row);
   }
   if (locUpper.includes("ADANI")) {
     return ["E", "F"].includes(row);
@@ -484,6 +482,74 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
           const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
           seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
           seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+
+      layout.push({ rowName: r, category, seats });
+    }
+
+    return layout;
+  }
+
+  if (locUpper.includes("TRIBECA")) {
+    // Custom Tribeca layout matching the physical layout exactly:
+    // Rows: A, B, C, D, E (RECLINER category)
+    const rows = ["A", "B", "C", "D", "E"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = "RECLINER";
+
+      if (r === "A") {
+        // Row A: Left 5, aisle, Middle 2, aisle, Right 4 (1-11)
+        for (let s = 1; s <= 5; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 6; s <= 7; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 8; s <= 11; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else if (["B", "C", "E"].includes(r)) {
+        // Rows B, C, E: Left 6, aisle, Right 4 (1-10)
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else if (r === "D") {
+        // Row D: Left 6, aisle, Right 3 (1-9)
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 9; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
         }
       }
 
