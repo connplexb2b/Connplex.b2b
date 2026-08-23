@@ -3,13 +3,13 @@ const http = require('http');
 const EXPECTED_SEATS = {
   "Connplex Luxuriance – Vaishnodevi, Ahmedabad": 18,
   "Connplex Luxuriance – Ahilyanagar": 20,
-  "Connplex Luxuriance – Tribeca": 23,
+  "Connplex Luxuriance – Tribeca": 19,
   "Connplex Luxuriance – Adani Shantigram": 20,
-  "Connplex Luxuriance – Mundhra": 20,
-  "Connplex Luxuriance – Junagadh": 20,
+  "Connplex Luxuriance – Mundhra": 12,
+  "Connplex Luxuriance – Junagadh": 14,
   "Connplex Luxuriance – Mehsana": 20,
   "Connplex Luxuriance – Sangmner": 30,
-  "Connplex Luxuriance – Gandhinagar": 20
+  "Connplex Luxuriance – Gandhinagar": 22
 };
 
 function fetchGet(url) {
