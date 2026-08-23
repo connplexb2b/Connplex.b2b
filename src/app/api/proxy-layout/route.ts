@@ -666,6 +666,48 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
     return layout;
   }
 
+  if (locUpper.includes("MUNDHRA") || locUpper.includes("MUNDRA")) {
+    // Custom Mundhra layout matching the physical layout exactly:
+    // Rows: A, B, C, D (COUPLE LOUNGER category)
+    const rows = ["A", "B", "C", "D"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = "COUPLE LOUNGER";
+
+      if (r === "A") {
+        // Row A: 7 couple seats continuously (1-7)
+        for (let s = 1; s <= 7; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
+          seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Rows B, C, D: 6 couple seats with aisle (3 left, aisle, 3 right)
+        for (let s = 1; s <= 3; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
+          seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 4; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
+          seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+
+      layout.push({ rowName: r, category, seats });
+    }
+
+    return layout;
+  }
+
   // Large screen locations:
   const isLarge = ["VAISHNODEVI", "RAJKOT", "VADODARA", "ADANI", "TRIBECA", "MPM MALL", "PRAHLADNAGAR", "JAGDALPUR"].some(name => locUpper.includes(name));
   

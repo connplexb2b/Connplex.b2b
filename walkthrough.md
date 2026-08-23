@@ -10,7 +10,7 @@ We updated [route.ts](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connple
 - **Ahilyanagar**: 20 seats, Row A and B. (Boutique layout: Row A and B have 10 seats each).
 - **Tribeca**: 19 seats, Row D and E. (Large screen layout: Row E has 14 seats, Row D has seats 5-9).
 - **Adani Shantigram**: 20 seats, Row E and F. (Large screen layout: Row F has 14 seats, Row E has seats 5-10).
-- **Mundhra**: 12 seats, Row D. (Changed Mundhra/Mundra to a Medium layout screen; Row D has all 12 seats).
+- **Mundhra**: 12 seats, Row D. (Custom Mundhra layout matching the physical layout exactly: Rows A-D are COUPLE LOUNGER couple seats. Row A has 7 couple seats, and Rows B-D have 6 couple seats. Row D is fully open for HNI booking, totaling exactly 12 open seats).
 - **Junagadh**: 14 seats, Row F and G. (Custom Junagadh layout matching the physical layout exactly: Sofa Slider is rows A-G, and Lounger is row H. Rows F and G have 7 seats each, and both rows are fully open, totaling exactly 14 open seats).
 - **Mehsana**: 20 seats, Row E and F. (Custom Mehsana layout matching the physical layout exactly: Sofa Slider Plus is rows A-D, Miller is rows E-F, and Lounger is row G. Rows E and F have 9 and 11 seats respectively, and both rows are fully open, totaling exactly 20 open seats).
 - **Sangmner**: 30 seats, Row G and H. (Medium screen layout: Customized to give rows G and H 15 seats each).
