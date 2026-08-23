@@ -544,24 +544,24 @@ function Journey({
                   </div>
 
                   <div className="mb-4 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                    Standard Event Timings
+                    Event Dates
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-6">
                     <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                       <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 1</div>
-                      <div className="font-body font-semibold text-white mt-0.5">27 August 2026 (9:00 PM)</div>
+                      <div className="font-body font-semibold text-white mt-0.5">27 August 2026</div>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                       <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 2</div>
-                      <div className="font-body font-semibold text-white mt-0.5">28 August 2026 (9:00 PM)</div>
+                      <div className="font-body font-semibold text-white mt-0.5">28 August 2026</div>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                       <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 3</div>
-                      <div className="font-body font-semibold text-white mt-0.5">29 August 2026 (9:00 PM)</div>
+                      <div className="font-body font-semibold text-white mt-0.5">29 August 2026</div>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-3">
                       <div className="font-caps text-[10px] text-white/50 uppercase">Show Date 4</div>
-                      <div className="font-body font-semibold text-white mt-0.5">30 August 2026 (9:00 PM)</div>
+                      <div className="font-body font-semibold text-white mt-0.5">30 August 2026</div>
                     </div>
                   </div>
 
@@ -575,7 +575,7 @@ function Journey({
                         movie: "Toxic Premier Nights",
                         location: PREMIER_LOCATIONS[0].name,
                         date: "Thursday (27th Aug)",
-                        time: "9:00 PM",
+                        time: PREMIER_LOCATIONS[0].time || "9:00 PM",
                         amount: PREMIER_LOCATIONS[0].amount,
                       })}
                       className="inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient px-8 py-4 font-caps text-[12px] font-bold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer w-full sm:w-auto self-start"
@@ -923,16 +923,16 @@ function BookingSection({
                   className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
                 >
                   <option value="Thursday (27th Aug)" className="bg-[#141414] text-white">
-                    Thursday (27th Aug) @ 9:00 PM
+                    Thursday (27th Aug) @ {selectedEvent.time}
                   </option>
                   <option value="Friday (28th Aug)" className="bg-[#141414] text-white">
-                    Friday (28th Aug) @ 9:00 PM
+                    Friday (28th Aug) @ {selectedEvent.time}
                   </option>
                   <option value="Saturday (29th Aug)" className="bg-[#141414] text-white">
-                    Saturday (29th Aug) @ 9:00 PM
+                    Saturday (29th Aug) @ {selectedEvent.time}
                   </option>
                   <option value="Sunday (30th Aug)" className="bg-[#141414] text-white">
-                    Sunday (30th Aug) @ 9:00 PM
+                    Sunday (30th Aug) @ {selectedEvent.time}
                   </option>
                 </select>
               </div>
