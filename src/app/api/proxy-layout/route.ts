@@ -405,9 +405,7 @@ function isHniSeatForToxic(location: string, rowName: string, seatNumber: number
   const seat = seatNumber;
 
   if (locUpper.includes("VAISHNODEVI")) {
-    if (row === "E") return true;
-    if (row === "D" && seat >= 5 && seat <= 8) return true;
-    return false;
+    return ["D", "E"].includes(row);
   }
   if (locUpper.includes("AHILYANAGAR")) {
     return ["A", "B"].includes(row);
@@ -440,6 +438,52 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
   const layout: any[] = [];
   const locUpper = location.toUpperCase();
   const isToxic = movie === "Toxic Premier Nights" || movie === "Toxic premier nights";
+
+  if (locUpper.includes("VAISHNODEVI")) {
+    // Custom Vaishnodevi layout matching the physical layout exactly:
+    // Rows: A, B, C, D, E (RECLINER category)
+    const rows = ["A", "B", "C", "D", "E"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = "RECLINER";
+
+      if (r === "A") {
+        // Row A: Left 6, aisle, Right 5 (1-11)
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 11; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Rows B, C, D, E: Left 5, aisle, Right 4 (1-9)
+        for (let s = 1; s <= 5; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 6; s <= 9; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+
+      layout.push({ rowName: r, category, seats });
+    }
+
+    return layout;
+  }
 
   if (locUpper.includes("AHILYANAGAR")) {
     // Custom Ahilyanagar layout matching the physical layout exactly:
