@@ -7,7 +7,7 @@ Updates have been successfully made to configure seating layouts for the HNI Pre
 ### 1. Seating Layout Configuration for Toxic Premier Nights
 We updated [route.ts](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connplex.b2b-main/src/app/api/proxy-layout/route.ts) with the exact seating specifications from the user's seating configuration list:
 - **Vaishnodevi**: 18 seats, Row D and E. (Large screen layout: Row E has 14 seats, Row D has seats 5-8).
-- **Ahilyanagar**: 20 seats, Row A and B. (Boutique layout: Row A and B have 10 seats each).
+- **Ahilyanagar**: 20 seats, Row A and B. (Custom Ahilyanagar layout matching the physical layout exactly: Rows A-F are COUPLE RECLINER couple seats. Rows A-F have 5 couple seats each. Rows A and B are fully open for HNI booking, totaling exactly 20 open seats).
 - **Tribeca**: 19 seats, Row D and E. (Custom Tribeca layout matching the physical layout exactly: Rows A-E are RECLINER category. Row A has 11 seats, Rows B, C, E have 10 seats, and Row D has 9 seats. Rows D and E are fully open for HNI booking, totaling exactly 19 open seats).
 - **Adani Shantigram**: 20 seats, Row E and F. (Custom Adani Shantigram layout matching the physical layout exactly: Rows A-F are COUPLE LOUNGER couple seats. Rows A and B have 6 couple seats, and Rows C-F have 5 couple seats. Rows E and F are fully open for HNI booking, totaling exactly 20 open seats).
 - **Mundhra**: 12 seats, Row D. (Custom Mundhra layout matching the physical layout exactly: Rows A-D are COUPLE LOUNGER couple seats. Row A has 7 couple seats, and Rows B-D have 6 couple seats. Row D is fully open for HNI booking, totaling exactly 12 open seats).

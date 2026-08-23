@@ -441,6 +441,38 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
   const locUpper = location.toUpperCase();
   const isToxic = movie === "Toxic Premier Nights" || movie === "Toxic premier nights";
 
+  if (locUpper.includes("AHILYANAGAR")) {
+    // Custom Ahilyanagar layout matching the physical layout exactly:
+    // Rows: F, E, D, C, B, A (from top to bottom)
+    // Category: COUPLE RECLINER for all rows
+    const rows = ["F", "E", "D", "C", "B", "A"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = "COUPLE RECLINER";
+
+      // 5 couple seats per row: Left 2, Right 3 (seats 1-5, split into a/b)
+      for (let s = 1; s <= 2; s++) {
+        const seatId = `${r}${s}`;
+        const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+        const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+        seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
+        seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+      }
+      seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+      for (let s = 3; s <= 5; s++) {
+        const seatId = `${r}${s}`;
+        const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+        const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+        seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked, isAisle: false });
+        seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked, isAisle: false });
+      }
+
+      layout.push({ rowName: r, category, seats });
+    }
+
+    return layout;
+  }
+
   if (locUpper.includes("ADANI")) {
     // Custom Adani Shantigram layout matching the physical layout exactly:
     // Rows: A, B, C, D, E, F (COUPLE LOUNGER category)
