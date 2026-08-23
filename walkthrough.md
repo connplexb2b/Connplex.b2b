@@ -14,7 +14,7 @@ We updated [route.ts](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connple
 - **Junagadh**: 14 seats, Row F and G. (Medium screen layout: Row G has 8 recliner seats, Row F has seats 4-9).
 - **Mehsana**: 20 seats, Row E and F. (Changed Mehsana/Mahesana to a Medium layout screen; Row E and F have seats 2-11).
 - **Sangmner**: 30 seats, Row G and H. (Medium screen layout: Customized to give rows G and H 15 seats each).
-- **Gandhinagar**: 22 seats, Row E and F. (Medium screen layout: Row F has 12 seats, Row E has seats 2-11).
+- **Gandhinagar**: 22 seats, Row E and F. (Implemented a custom theater layout block matching the physical layout exactly: Rows F–A are MILLER seats, and Row CL contains COUPLE LOUNGER couple seats. Rows E and F are the only HNI-open rows, totaling exactly 22 seats).
 
 ### 2. Layout Verification Tests
 - Updated the expectations in the verification script [verify-toxic-layouts.js](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connplex.b2b-main/scratch/verify-toxic-layouts.js) to match the new counts.

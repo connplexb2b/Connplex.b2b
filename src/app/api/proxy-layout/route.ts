@@ -440,9 +440,7 @@ function isHniSeatForToxic(location: string, rowName: string, seatNumber: number
     return ["G", "H"].includes(row);
   }
   if (locUpper.includes("GANDHINAGAR")) {
-    if (row === "F") return true;
-    if (row === "E" && seat >= 2 && seat <= 11) return true;
-    return false;
+    return ["E", "F"].includes(row);
   }
   return false;
 }
@@ -451,6 +449,76 @@ function getHniEventLayout(location: string, movie: string, dbBookedSeats: Set<s
   const layout: any[] = [];
   const locUpper = location.toUpperCase();
   const isToxic = movie === "Toxic Premier Nights" || movie === "Toxic premier nights";
+
+  if (locUpper.includes("GANDHINAGAR")) {
+    // Custom Gandhinagar layout matching the physical layout exactly:
+    // Rows: F, E, D, C, B, A (MILLER category)
+    // Row CL (COUPLE LOUNGER category)
+    const rows = ["F", "E", "D", "C", "B", "A"];
+    for (const r of rows) {
+      const seats: any[] = [];
+      const category = "MILLER";
+
+      if (r === "F") {
+        // Row F: 12 seats continuously (1-12)
+        for (let s = 1; s <= 12; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else if (["E", "D", "C"].includes(r)) {
+        // Rows E, D, C: 6 seats, aisle, 4 seats (1-10)
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 10; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      } else {
+        // Rows B, A: 6 seats, aisle, 5 seats (1-11)
+        for (let s = 1; s <= 6; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+        seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+        for (let s = 7; s <= 11; s++) {
+          const seatId = `${r}${s}`;
+          const isHni = isToxic ? isHniSeatForToxic(location, r, s) : true;
+          const isBooked = isHni ? dbBookedSeats.has(seatId.toUpperCase()) : true;
+          seats.push({ seatId, seatNumber: String(s), isBooked, isAisle: false });
+        }
+      }
+      layout.push({ rowName: r, category, seats });
+    }
+
+    // Add Couple Lounger Row
+    {
+      const r = "CL";
+      const seats: any[] = [];
+      for (let s = 1; s <= 3; s++) {
+        seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked: true, isAisle: false });
+        seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked: true, isAisle: false });
+      }
+      seats.push({ seatId: "", seatNumber: "", isBooked: false, isAisle: true });
+      for (let s = 4; s <= 6; s++) {
+        seats.push({ seatId: `${r}${s}a`, seatNumber: String(s), isBooked: true, isAisle: false });
+        seats.push({ seatId: `${r}${s}b`, seatNumber: String(s), isBooked: true, isAisle: false });
+      }
+      layout.push({ rowName: "CL", category: "COUPLE LOUNGER", seats });
+    }
+
+    return layout;
+  }
 
   // Large screen locations:
   const isLarge = ["VAISHNODEVI", "RAJKOT", "VADODARA", "ADANI", "TRIBECA", "MPM MALL", "PRAHLADNAGAR", "JAGDALPUR"].some(name => locUpper.includes(name));
