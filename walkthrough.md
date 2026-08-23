@@ -11,7 +11,7 @@ We updated [route.ts](file:///c:/Users/admin/Downloads/Connplex.b2b-main/Connple
 - **Tribeca**: 19 seats, Row D and E. (Large screen layout: Row E has 14 seats, Row D has seats 5-9).
 - **Adani Shantigram**: 20 seats, Row E and F. (Large screen layout: Row F has 14 seats, Row E has seats 5-10).
 - **Mundhra**: 12 seats, Row D. (Changed Mundhra/Mundra to a Medium layout screen; Row D has all 12 seats).
-- **Junagadh**: 14 seats, Row F and G. (Medium screen layout: Row G has 8 recliner seats, Row F has seats 4-9).
+- **Junagadh**: 14 seats, Row F and G. (Custom Junagadh layout matching the physical layout exactly: Sofa Slider is rows A-G, and Lounger is row H. Rows F and G have 7 seats each, and both rows are fully open, totaling exactly 14 open seats).
 - **Mehsana**: 20 seats, Row E and F. (Custom Mehsana layout matching the physical layout exactly: Sofa Slider Plus is rows A-D, Miller is rows E-F, and Lounger is row G. Rows E and F have 9 and 11 seats respectively, and both rows are fully open, totaling exactly 20 open seats).
 - **Sangmner**: 30 seats, Row G and H. (Medium screen layout: Customized to give rows G and H 15 seats each).
 - **Gandhinagar**: 22 seats, Row E and F. (Custom Gandhinagar layout matching the physical layout exactly: Miller is rows A-F, and Couple Lounger is row G. Row A has 12 seats, rows B-D have 10 seats, and rows E-F have 11 seats each. Rows E and F are fully open, totaling exactly 22 open seats).
