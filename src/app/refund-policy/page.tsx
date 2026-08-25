@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
   Building2,
-  Megaphone,
   Briefcase,
   Settings,
   AlertTriangle,
@@ -14,8 +13,18 @@ import {
   Mail,
   Phone,
   MapPin,
-  ChevronDown,
-  ChevronUp,
+  BookOpen,
+  UserCheck,
+  Coins,
+  XOctagon,
+  FileWarning,
+  Clock,
+  Percent,
+  TrendingUp,
+  Shuffle,
+  ShieldCheck,
+  Scale,
+  FileSignature
 } from "lucide-react";
 
 interface PolicyItem {
@@ -24,101 +33,238 @@ interface PolicyItem {
   title: string;
   badge?: string;
   intro: string;
-  details: string[];
+  details?: string[];
+  outro?: string;
 }
 
 const policyItems: PolicyItem[] = [
   {
     num: "01.",
-    icon: <Building2 size={28} />,
-    title: "CORPORATE BOOKINGS & PRIVATE EVENTS",
-    badge: "Event Terms",
-    intro: "Due to the extensive planning, venue blocking, resource allocation, and operational preparation involved, confirmed corporate bookings, private screenings, and event reservations are generally non-refundable.",
-    details: [
-      "Cancellations made within the agreed notice period may be eligible for partial credit or rescheduling, subject to management approval.",
-      "Requests received after operational commitments have commenced may not qualify for refunds.",
-      "Date modifications are subject to venue availability and operational feasibility.",
-    ],
+    icon: <BookOpen size={28} />,
+    title: "PURPOSE",
+    badge: "Scope",
+    intro: "This Refund Policy (\"Policy\") governs all payments made by prospective franchisees, business associates, developers, investors, territory partners, and other commercial applicants (\"Applicant\") in connection with obtaining or applying for a Connplex franchise or any other business opportunity offered by Connplex (\"Company\").",
+    outro: "This Policy forms an integral part of the franchise application process and shall be read together with all application forms, letters of intent, confidentiality agreements, franchise agreements, business proposals, and other related documents executed between the parties."
   },
   {
     num: "02.",
-    icon: <Megaphone size={28} />,
-    title: "ADVERTISING & BRAND PARTNERSHIPS",
-    badge: "Media Allocations",
-    intro: "Advertising campaigns, sponsorships, in-cinema branding, digital promotions, and experiential activations involve advance planning, inventory allocation, creative deployment, and media commitments.",
+    icon: <UserCheck size={28} />,
+    title: "NATURE OF RELATIONSHIP",
+    badge: "Legal Status",
+    intro: "The Applicant acknowledges that:",
     details: [
-      "Payments made toward confirmed advertising or partnership campaigns are generally non-refundable.",
-      "In the event of campaign modifications, Connplex may offer equivalent inventory, alternative placements, or revised campaign schedules at its discretion.",
+      "submission of an application does not create any franchise relationship;",
+      "no franchise rights are granted until execution of the definitive Franchise Agreement;",
+      "Connplex retains absolute discretion to approve or reject any application."
     ],
+    outro: "Receipt of any payment shall not be construed as acceptance of the Applicant as a franchise partner."
   },
   {
     num: "03.",
-    icon: <Briefcase size={28} />,
-    title: "FRANCHISE & BUSINESS DEVELOPMENT SERVICES",
-    badge: "Consultation Fees",
-    intro: "Connplex provides comprehensive support to developer and franchise partners. Commercial site audits and analytical audits require early resource planning.",
+    icon: <Coins size={28} />,
+    title: "CATEGORIES OF PAYMENTS",
+    badge: "Applicability",
+    intro: "This Policy applies to, including but not limited to:",
     details: [
-      "Fees paid toward franchise evaluations, feasibility studies, consultation services, project assessments, business development support, or related professional services are non-refundable once the engagement process has commenced.",
-    ],
+      "Franchise Application Fee",
+      "Processing Fee",
+      "Due Diligence Fee",
+      "Territory Reservation Amount",
+      "Initial Franchise Fee",
+      "Business Development Charges",
+      "Market Study Charges",
+      "Technical Consultancy Charges",
+      "Project Planning Charges",
+      "Training Fees",
+      "Documentation Charges",
+      "Any advance or deposit received towards commencement of the franchise process."
+    ]
   },
   {
     num: "04.",
-    icon: <Settings size={28} />,
-    title: "TECHNOLOGY & PROJECT CONSULTING",
-    badge: "Consulting Terms",
-    intro: "For specialized technical advisory, cinema design setups, and execution monitoring, deliverables are tied to commercial milestones.",
-    details: [
-      "For consulting, operational advisory, technology implementation, and project management services, refunds are not applicable for work already completed, delivered, or initiated under agreed commercial terms.",
-    ],
+    icon: <Briefcase size={28} />,
+    title: "NATURE OF PAYMENTS",
+    badge: "Consideration",
+    intro: "Unless expressly agreed otherwise in writing, all payments made to Connplex are deemed to be consideration towards business development, evaluation, administrative processing, technical consultancy, commercial planning and resource allocation. Accordingly, such payments shall be non-refundable."
   },
   {
     num: "05.",
-    icon: <AlertTriangle size={28} />,
-    title: "EXCEPTIONAL CIRCUMSTANCES",
-    badge: "Force Majeure",
-    intro: "In rare operational circumstances, Connplex guarantees business protection and alternative solutions to ensure business continuity.",
+    icon: <Settings size={28} />,
+    title: "IMMEDIATE ALLOCATION OF RESOURCES",
+    badge: "Operations",
+    intro: "Immediately upon receipt of payment, Connplex may commence various activities including feasibility studies, demographic analysis, location assessments, financial and business model evaluations, architectural and operational planning, and onboarding preparations.",
     details: [
-      "In rare situations involving force majeure events, venue unavailability, regulatory restrictions, or circumstances beyond reasonable control, Connplex may offer alternative solutions including rescheduling, service credits, or mutually agreed commercial adjustments.",
+      "Commercial feasibility studies & demographic analysis",
+      "Location assessment & financial evaluation",
+      "Architectural planning & project consultancy",
+      "Business model assessment & territory reservation",
+      "Internal management approvals & legal documentation",
+      "Operational planning, brand allocation, and training preparation",
+      "Onboarding activities & management review"
     ],
+    outro: "The Applicant acknowledges that substantial internal resources are deployed immediately upon receipt of payment."
   },
   {
     num: "06.",
-    icon: <CreditCard size={28} />,
-    title: "PAYMENT DISPUTES",
-    badge: "Banking Timelines",
-    intro: "We work to ensure secure transactions and rapid resolution of payment discrepancies across all payment channels.",
+    icon: <XOctagon size={28} />,
+    title: "NON-REFUNDABLE PAYMENTS",
+    badge: "Strictly Non-Refundable",
+    intro: "Unless otherwise expressly approved in writing by Connplex or mandated by applicable law, the following shall be strictly non-refundable:",
     details: [
-      "If a payment is processed successfully but the corresponding service engagement is not confirmed, the amount will be reviewed and, where applicable, refunded to the original payment method within the standard banking timeline.",
+      "Application Fees & Evaluation Fees",
+      "Booking Amounts & Territory Reservation Charges",
+      "Brand Fees & Processing Charges",
+      "Business Development Charges & Documentation Charges",
+      "Consultancy Fees & Technical Fees",
+      "Any other amount paid in connection with the franchise process."
+    ]
+  },
+  {
+    num: "07.",
+    icon: <FileWarning size={28} />,
+    title: "APPLICANT WITHDRAWAL",
+    badge: "Withdrawal",
+    intro: "If the Applicant withdraws from the proposed franchise for any reason whatsoever, no refund shall be payable by Connplex. This includes, but is not limited to:",
+    details: [
+      "Change in investment plans or internal business decisions",
+      "Inability to arrange finance or secure premises",
+      "Dissatisfaction with market conditions",
+      "Change in ownership or corporate restructuring",
+      "Delay in project implementation or personal reasons",
+      "Regulatory concerns or any other commercial reason."
+    ]
+  },
+  {
+    num: "08.",
+    icon: <AlertTriangle size={28} />,
+    title: "REJECTION OF APPLICATION",
+    badge: "Rejection Terms",
+    intro: "Connplex reserves the unrestricted right to reject any application where it determines that:",
+    details: [
+      "the Applicant does not satisfy financial requirements;",
+      "the proposed location is commercially unsuitable;",
+      "the territory is unavailable;",
+      "the Applicant fails due diligence;",
+      "documentation is incomplete;",
+      "regulatory concerns arise;",
+      "there is a conflict with business strategy; or",
+      "approval is otherwise not considered commercially appropriate."
     ],
-  },
-];
-
-const faqs = [
-  {
-    q: "Can corporate bookings or private screenings be rescheduled?",
-    a: "Yes, date modifications are possible but remain subject to venue availability and operational feasibility. Cancellations or modifications made within the agreed notice period are eligible for partial credit or rescheduling, subject to management approval.",
+    outro: "In such event, Connplex may, at its sole discretion: (a) retain the non-refundable processing and evaluation charges; and (b) refund such portion of the balance amount, if any, as may be determined by the Company after deducting all costs incurred."
   },
   {
-    q: "Are advertising campaign payments refundable?",
-    a: "Payments made toward confirmed advertising or brand partnership campaigns are generally non-refundable because inventory allocation and creative deployment planning begin immediately. However, Connplex may offer alternative placements or scheduling adjustments at its discretion.",
+    num: "09.",
+    icon: <Clock size={28} />,
+    title: "DELAYS BEYOND CONNPLEX'S CONTROL",
+    badge: "External Delays",
+    intro: "The Applicant agrees that no refund shall arise due to delays resulting from external variables, third-party consultants, or force majeure events:",
+    details: [
+      "Statutory approvals & governmental permissions",
+      "Mall, landlord, or construction delays",
+      "Force majeure events & litigation affecting the property",
+      "Utility connections & equipment procurement",
+      "Labour shortages & supply chain disruptions",
+      "Third-party consultants or any event beyond the reasonable control of Connplex."
+    ]
   },
   {
-    q: "What is the policy for franchise consultation and site assessment fees?",
-    a: "Fees paid toward site audits, feasibility studies, and consultation assessments are strictly non-refundable once our analytics and site inspection teams commence the evaluation process.",
+    num: "10.",
+    icon: <FileWarning size={28} />,
+    title: "MISREPRESENTATION",
+    badge: "Forfeiture",
+    intro: "If Connplex discovers that the Applicant has provided false, misleading or incomplete information, concealed material facts or misrepresented financial capability, Connplex may immediately terminate the application. All amounts paid shall stand forfeited."
   },
   {
-    q: "How long does it take for a disputed transaction refund to reflect?",
-    a: "For verified payment failures where a service was not confirmed, the refunded amount will be processed back to your original payment source within standard banking timelines (typically 5 to 7 business days).",
+    num: "11.",
+    icon: <Percent size={28} />,
+    title: "TAXES",
+    badge: "Statutory",
+    intro: "All applicable taxes including GST shall be payable in addition to the applicable charges unless otherwise specified. Any taxes already deposited with statutory authorities shall not be refundable except as required by law."
   },
+  {
+    num: "12.",
+    icon: <TrendingUp size={28} />,
+    title: "NO GUARANTEE OF SUCCESS",
+    badge: "Business Success",
+    intro: "The Applicant acknowledges that:",
+    details: [
+      "cinema performance depends upon numerous market variables;",
+      "Connplex does not guarantee revenue, profitability, occupancy, return on investment or business success;",
+      "any financial projections, business plans or feasibility studies are illustrative only and should not be treated as guaranteed outcomes."
+    ]
+  },
+  {
+    num: "13.",
+    icon: <Shuffle size={28} />,
+    title: "NON-TRANSFERABILITY",
+    badge: "Transfer Policy",
+    intro: "Payments cannot be transferred except with prior written approval from Connplex. This includes transfers to another applicant, company, project, city, franchise format, or business opportunity."
+  },
+  {
+    num: "14.",
+    icon: <Coins size={28} />,
+    title: "SET-OFF",
+    badge: "Adjustment",
+    intro: "Connplex may adjust any monies payable by the Applicant against any outstanding dues, damages, penalties, costs, expenses or liabilities owed by the Applicant."
+  },
+  {
+    num: "15.",
+    icon: <CreditCard size={28} />,
+    title: "CHARGEBACKS & PAYMENT DISPUTES",
+    badge: "Disputes",
+    intro: "Applicants shall first raise any payment-related concern directly with Connplex. Any unauthorised chargeback, payment reversal or disputed transaction shall constitute a material breach of this Policy. Connplex reserves the right to initiate appropriate legal proceedings for recovery of losses, costs and damages."
+  },
+  {
+    num: "16.",
+    icon: <ShieldCheck size={28} />,
+    title: "LIMITATION OF LIABILITY",
+    badge: "Liability",
+    intro: "To the maximum extent permitted under applicable law, Connplex shall not be liable for any indirect, consequential, special, incidental, punitive or loss of profit damages arising from the Applicant's decision to pursue or discontinue the franchise opportunity."
+  },
+  {
+    num: "17.",
+    icon: <Scale size={28} />,
+    title: "GOVERNING LAW & JURISDICTION",
+    badge: "Jurisdiction",
+    intro: "This Policy shall be governed by the laws of India. Subject to the arbitration clause below, the courts at Ahmedabad, Gujarat shall have exclusive jurisdiction."
+  },
+  {
+    num: "18.",
+    icon: <Scale size={28} />,
+    title: "DISPUTE RESOLUTION",
+    badge: "Arbitration",
+    intro: "Any dispute arising out of or relating to this Policy shall be referred to arbitration in accordance with the provisions of the Arbitration and Conciliation Act, 1996. The seat and venue of arbitration shall be Ahmedabad, Gujarat. The proceedings shall be conducted in English. The arbitral award shall be final and binding."
+  },
+  {
+    num: "19.",
+    icon: <FileSignature size={28} />,
+    title: "ACCEPTANCE",
+    badge: "Consent",
+    intro: "By making any payment, the Applicant confirms that:",
+    details: [
+      "it has carefully reviewed this Policy;",
+      "it has had sufficient opportunity to seek independent legal, financial and commercial advice;",
+      "it understands that franchise approval is subject to Connplex's evaluation;",
+      "it understands that payments are primarily for business development, evaluation and administrative services;",
+      "it voluntarily agrees that such payments are non-refundable except where expressly provided under this Policy or applicable law."
+    ]
+  },
+  {
+    num: "20.",
+    icon: <Mail size={28} />,
+    title: "CONTACT DETAILS",
+    badge: "Inquiries",
+    intro: "Connplex – Franchise Development Division",
+    details: [
+      "Email: feedback@connplex.com",
+      "Phone: +91 99245 77556",
+      "Website: www.theconnplex.com",
+      "Business Hours: Monday to Saturday | 10:00 AM – 6:00 PM (IST)"
+    ]
+  }
 ];
 
 export default function RefundPolicyPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
   return (
     <div className="min-h-screen bg-black text-white font-outfit leading-relaxed overflow-x-hidden antialiased">
       <style>{`
@@ -152,29 +298,24 @@ export default function RefundPolicyPage() {
           <div className="text-[0.8rem] text-[#A0A0A0] mb-[30px] tracking-[2px] font-medium uppercase">
             HOME / <span className="text-[#C5A059]">REFUND POLICY</span>
           </div>
-          <h1 className="text-[2.2rem] sm:text-[3rem] md:text-[4rem] lg:text-[6rem] font-extrabold leading-[0.85] mb-10 uppercase tracking-[2px]">
+          <h1 className="text-[2.2rem] sm:text-[3.2rem] md:text-[4rem] lg:text-[5rem] font-extrabold leading-[0.95] mb-10 uppercase tracking-[2px]">
             <span
               className="text-[#C5A059] block brightness-125"
               style={{ textShadow: "0 0 20px rgba(197, 160, 89, 0.4)" }}
             >
-              REFUND &
+              FRANCHISE PAYMENT
             </span>
-            CANCELLATION
+            & REFUND POLICY
           </h1>
           <div
             className="max-w-[650px] text-[#A0A0A0] text-[0.95rem] min-[481px]:text-[1.05rem] leading-[1.8] border-l-2 border-[#C5A059] pl-[15px] min-[481px]:pl-[30px]"
             style={{ animation: "ppFadeIn 1s ease-out 0.5s both" }}
           >
             <p className="font-bold text-white mb-2 text-base tracking-wide uppercase">
-              Commitment to Professional Partnerships
+              Effective Date: August 25, 2026
             </p>
             <p>
-              At Connplex, we are committed to delivering exceptional business
-              solutions across cinema development, franchise partnerships,
-              corporate events, private screenings, advertising collaborations,
-              and experiential marketing initiatives. Our refund and cancellation
-              policy is designed to ensure transparency, accountability, and
-              smooth business engagements for all stakeholders.
+              This Refund Policy governs all payments made by prospective franchisees, business associates, developers, investors, territory partners, and other commercial applicants in connection with obtaining or applying for a Connplex franchise or any other business opportunity offered by Connplex.
             </p>
           </div>
         </div>
@@ -213,61 +354,27 @@ export default function RefundPolicyPage() {
                 <p className="text-[#A0A0A0] text-[0.95rem] leading-[1.8] mb-4">
                   {item.intro}
                 </p>
-                <ul className="list-disc pl-5 text-[#A0A0A0] text-[0.9rem] leading-[1.8] flex flex-col gap-2">
-                  {item.details.map((detail, idx) => (
-                    <li key={idx}>{detail}</li>
-                  ))}
-                </ul>
+                {item.details && (
+                  <ul className="list-disc pl-5 text-[#A0A0A0] text-[0.9rem] leading-[1.8] flex flex-col gap-2 mb-4">
+                    {item.details.map((detail, idx) => (
+                      <li key={idx}>{detail}</li>
+                    ))}
+                  </ul>
+                )}
+                {item.outro && (
+                  <p className="text-[#A0A0A0] text-[0.95rem] leading-[1.8] mt-4 border-l-2 border-[#C5A059]/30 pl-3">
+                    {item.outro}
+                  </p>
+                )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* FAQ Accordion */}
-        <div className="relative z-10 mt-32 w-full max-w-[900px]">
-          <h2 className="text-[#C5A059] text-[1.8rem] font-extrabold mb-10 tracking-[2px] uppercase text-center md:text-left">
-            FREQUENTLY ASKED QUESTIONS
-          </h2>
-          <div className="flex flex-col gap-5">
-            {faqs.map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div
-                  key={idx}
-                  className="border border-[#c5a059]/20 rounded-lg overflow-hidden bg-[#0A0A0A] transition-all duration-300 hover:border-[#c5a059]/40"
-                >
-                  <button
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-6 text-left focus:outline-none cursor-pointer"
-                  >
-                    <span className="text-white font-bold text-base tracking-[0.5px] pr-4">
-                      {faq.q}
-                    </span>
-                    <span className="text-[#C5A059] shrink-0">
-                      {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                    </span>
-                  </button>
-                  <div
-                    className={`transition-all duration-300 overflow-hidden ${
-                      isOpen
-                        ? "max-h-[300px] border-t border-[#c5a059]/10"
-                        : "max-h-0"
-                    }`}
-                  >
-                    <div className="p-6 text-[#A0A0A0] text-[0.95rem] leading-[1.8]">
-                      <p>{faq.a}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Closing Statement */}
         <div className="relative z-10 mt-24 w-full max-w-[900px] border-t border-[#c5a059]/20 pt-10 text-[#A0A0A0] text-[0.95rem] leading-[1.8]">
           <p className="mb-6">
-            Connplex may revise or update this Refund & Cancellation Policy from
+            Connplex may revise or update this Franchise Payment & Refund Policy from
             time to time. Updated versions will be published on this page along
             with the revised effective date. Continued use of the platform after
             such changes constitutes acceptance of the updated policy.
@@ -305,7 +412,7 @@ export default function RefundPolicyPage() {
             TO HELP.
           </h3>
           <p className="text-[#A0A0A0] text-[1rem] mb-6">
-            For any commercial, partnership, or refund-related inquiries, please contact our business team:
+            For any commercial, franchise, or refund-related inquiries, please contact our business team:
           </p>
           <div className="italic text-[#A0A0A0] text-[0.9rem] min-[481px]:text-[0.95rem] border-l border-[#C5A059]/40 pl-4 mb-10 leading-relaxed">
             &quot;Our objective is not merely to process transactions, but to build long-term strategic partnerships that create sustainable value for both Connplex and our business partners.&quot;
@@ -315,7 +422,7 @@ export default function RefundPolicyPage() {
               <Building2 size={20} className="text-[#C5A059] shrink-0" />
               <div className="flex flex-col">
                 <span className="font-medium">Connplex Cinemas</span>
-                <span className="text-xs text-[#A0A0A0]">Business Partnerships & Corporate Relations</span>
+                <span className="text-xs text-[#A0A0A0]">Franchise Development Division</span>
               </div>
             </div>
             <div className="flex items-center gap-[20px] text-white text-base">
