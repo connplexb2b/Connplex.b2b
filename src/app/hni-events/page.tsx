@@ -497,7 +497,7 @@ function Journey({
                 <div className="relative z-10">
                   <div className="mb-6">
                     <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
-                      Booking Closed
+                      Sold Out
                     </div>
                     <h3 className={`${HEADING} text-3xl text-white md:text-4xl font-bold`}>
                       Toxic Premier Nights
@@ -571,7 +571,7 @@ function Journey({
 
                   <div className="flex flex-col gap-3">
                     <div className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-white/10 bg-white/5 px-8 py-4 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-white/40 w-full sm:w-auto self-start">
-                      Booking Closed
+                      Sold Out
                     </div>
                     <p className="font-body text-[10px] text-white/40 italic">
                       * Terms & conditions apply. Goodie bag and F&B inclusions may vary by location
@@ -872,10 +872,10 @@ function BookingSection({
               <Lock className="w-6 h-6 text-red-500" />
             </div>
             <h3 className={`${HEADING} text-2xl text-white font-bold mb-3`}>
-              Booking Closed
+              Sold Out
             </h3>
             <p className="font-body text-sm text-[color:var(--color-champagne)]/75 leading-relaxed max-w-xs mx-auto">
-              Registration and ticket bookings for the Toxic Premier Nights event are now closed.
+              Registration and ticket bookings for the Toxic Premier Nights event are now sold out.
             </p>
           </div>
         </div>
@@ -1089,7 +1089,7 @@ function RecommendedEvents({
     {
       movie: "Toxic Premier Nights",
       poster: "/movies/toxic_premier_nights.jpg",
-      status: "BOOKING CLOSED",
+      status: "SOLD OUT",
       statusColor: "bg-white/20 backdrop-blur-md",
       rating: "9.8",
       votes: "5.2K+ Votes",
@@ -1132,7 +1132,11 @@ function RecommendedEvents({
         amount: e.amount
       });
     } else {
-      alert(`The ${e.movie} event is closed for bookings.`);
+      if (e.status === "SOLD OUT") {
+        alert(`The ${e.movie} event is sold out.`);
+      } else {
+        alert(`The ${e.movie} event has been successfully completed and is closed for bookings.`);
+      }
     }
   };
 
