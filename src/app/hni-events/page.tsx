@@ -496,8 +496,8 @@ function Journey({
                 {/* Content Container */}
                 <div className="relative z-10">
                   <div className="mb-6">
-                    <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)] animate-pulse">
-                      ✨ Upcoming Event · Ticket Sales Open
+                    <div className="mb-2 font-caps text-[11px] font-semibold uppercase tracking-[0.28em] text-[color:var(--color-gold-soft)]">
+                      Booking Closed
                     </div>
                     <h3 className={`${HEADING} text-3xl text-white md:text-4xl font-bold`}>
                       Toxic Premier Nights
@@ -570,18 +570,9 @@ function Journey({
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <button
-                      onClick={() => onSelectEvent({
-                        movie: "Toxic Premier Nights",
-                        location: PREMIER_LOCATIONS[0].name,
-                        date: "Thursday (27th Aug)",
-                        time: PREMIER_LOCATIONS[0].time || "9:00 PM",
-                        amount: PREMIER_LOCATIONS[0].amount,
-                      })}
-                      className="inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient px-8 py-4 font-caps text-[12px] font-bold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] cursor-pointer w-full sm:w-auto self-start"
-                    >
-                      BOOK YOUR PREMIERE EXPERIENCE <ChevronRight className="h-4 w-4" />
-                    </button>
+                    <div className="inline-flex items-center justify-center gap-2 rounded-[14px] border border-white/10 bg-white/5 px-8 py-4 font-caps text-[12px] font-semibold uppercase tracking-[0.18em] text-white/40 w-full sm:w-auto self-start">
+                      Booking Closed
+                    </div>
                     <p className="font-body text-[10px] text-white/40 italic">
                       * Terms & conditions apply. Goodie bag and F&B inclusions may vary by location
                     </p>
@@ -865,361 +856,27 @@ function BookingSection({
         </p>
         
         {/* Form Container */}
-        <div className="glass-card max-w-md mx-auto mt-12 p-8 text-left hover:border-[color:var(--color-gold)]/40 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] relative overflow-hidden">
+        <div className="glass-card max-w-md mx-auto mt-12 p-8 text-center border-[color:var(--color-gold)]/30 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] relative overflow-hidden">
           {/* Background Image with Dark Overlay */}
           <div className="absolute inset-0 z-0 pointer-events-none select-none">
             <img
               src="/movies/toxic_background.jpg"
               alt="Toxic Background"
-              className="w-full h-full object-cover opacity-25"
+              className="w-full h-full object-cover opacity-15"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-black/95 via-black/90 to-[#0b0b0b]/95" />
           </div>
 
-          <div className="space-y-5 relative z-10">
-            <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT MOVIE</label>
-              <select
-                value={selectedEvent.movie}
-                onChange={(e) => handleMovieChange(e.target.value)}
-                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
-              >
-                {movies.map((m) => (
-                  <option key={m} value={m} className="bg-[#141414] text-white">
-                    {m}
-                  </option>
-                ))}
-              </select>
+          <div className="relative z-10 py-10">
+            <div className="w-16 h-16 bg-red-950/30 border border-red-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-6 h-6 text-red-500" />
             </div>
-            <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT LOCATION</label>
-              <select
-                value={selectedEvent.location}
-                onChange={(e) => handleLocationChange(e.target.value)}
-                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
-              >
-                {currentLocationsList.map((loc: any) => (
-                  <option key={loc.name} value={loc.name} className="bg-[#141414] text-white">
-                    {selectedEvent.movie === "Spider-Man"
-                      ? `${loc.name} (${loc.date} @ ${loc.time})`
-                      : loc.name.replace(/Luxuriance\s*/i, "")}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {selectedEvent.movie === "Toxic Premier Nights" && (
-              <div>
-                <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">SELECT DATE & SHOWTIME</label>
-                <select
-                  value={selectedEvent.date}
-                  onChange={(e) => {
-                    setSelectedSeats([]);
-                    setSelectedEvent({
-                      ...selectedEvent,
-                      date: e.target.value,
-                    });
-                  }}
-                  className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body cursor-pointer"
-                >
-                  <option value="Thursday (27th Aug)" className="bg-[#141414] text-white">
-                    Thursday (27th Aug) @ {selectedEvent.time}
-                  </option>
-                  <option value="Friday (28th Aug)" className="bg-[#141414] text-white">
-                    Friday (28th Aug) @ {selectedEvent.time}
-                  </option>
-                  <option value="Saturday (29th Aug)" className="bg-[#141414] text-white">
-                    Saturday (29th Aug) @ {selectedEvent.time}
-                  </option>
-                  <option value="Sunday (30th Aug)" className="bg-[#141414] text-white">
-                    Sunday (30th Aug) @ {selectedEvent.time}
-                  </option>
-                </select>
-              </div>
-            )}
-
-            {selectedEvent.movie === "Toxic Premier Nights" && (
-              <div className="text-[11px] text-[color:var(--color-champagne)]/70 bg-white/5 border border-white/10 rounded-lg p-3 mt-1">
-                <div className="flex justify-between items-center">
-                  <span>Price per seat: <strong className="text-white">₹{selectedEvent.amount.toLocaleString()}</strong></span>
-                  <span className="text-[9px] uppercase tracking-wider text-[color:var(--color-gold-soft)] font-semibold">Exclusively HNI</span>
-                </div>
-                {PREMIER_LOCATIONS.find(l => l.name === selectedEvent.location)?.tier3 && (
-                  <div className="mt-2 text-[10px] text-amber-500 font-medium leading-relaxed border-t border-white/5 pt-1.5 flex items-start gap-1">
-                    <span className="shrink-0 font-bold">⚠️</span>
-                    <span>Pricing for this Tier-3 location is subject to final market feasibility review.</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* SEATING LAYOUT */}
-            {(() => {
-              const [layoutRows, setLayoutRows] = React.useState<any[] | null>(null);
-              const [isLoadingLayout, setIsLoadingLayout] = React.useState(false);
-
-              React.useEffect(() => {
-                let active = true;
-                if (!selectedEvent.location) {
-                  setLayoutRows(null);
-                  return;
-                }
-
-                async function loadLayout() {
-                  setIsLoadingLayout(true);
-                  try {
-                    const res = await fetch(`/api/proxy-layout?location=${encodeURIComponent(selectedEvent.location)}&movie=${encodeURIComponent(selectedEvent.movie)}&date=${encodeURIComponent(selectedEvent.date)}&time=${encodeURIComponent(selectedEvent.time)}&t=${Date.now()}`, { cache: 'no-store' });
-                    if (res.ok) {
-                      const data = await res.json();
-                      if (active) {
-                        if (!data.fallback && data.layout) {
-                          setLayoutRows(data.layout);
-                        } else {
-                          setLayoutRows(null);
-                        }
-                      }
-                    } else {
-                      if (active) setLayoutRows(null);
-                    }
-                  } catch (e) {
-                    if (active) setLayoutRows(null);
-                  } finally {
-                    if (active) setIsLoadingLayout(false);
-                  }
-                }
-
-                loadLayout();
-                return () => {
-                  active = false;
-                };
-              }, [selectedEvent.location, selectedEvent.movie, selectedEvent.date, selectedEvent.time, refreshKey]);
-
-              // Deterministically generate booked seats based on location name (Fallback Layout)
-              const bookedSeats = React.useMemo(() => {
-                const booked = new Set<string>();
-                if (!selectedEvent.location) return booked;
-                const seed = selectedEvent.location.split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
-                const rList = ["A", "B", "C", "D", "E", "F"];
-                for (let r = 0; r < rList.length; r++) {
-                  for (let s = 1; s <= 10; s++) {
-                    const seatId = `${rList[r]}${s}`;
-                    const val = (seed * (r + 1) * (s + 3) + s * 17) % 100;
-                    if (val < 45) {
-                      booked.add(seatId);
-                    }
-                  }
-                }
-                return booked;
-              }, [selectedEvent.location]);
-
-              const fallbackRows = ["A", "B", "C", "D", "E", "F"];
-              const fallbackCols = [1, 2, "aisle", 3, 4, 5, 6, 7, 8, "aisle", 9, 10];
-
-              const handleSeatClick = (seatId: string, isBooked: boolean) => {
-                if (isBooked) return;
-                if (selectedSeats.includes(seatId)) {
-                  setSelectedSeats(selectedSeats.filter((s: string) => s !== seatId));
-                } else {
-                  if (selectedSeats.length >= 10) {
-                    alert("You can select up to 10 seats per booking.");
-                    return;
-                  }
-                  setSelectedSeats([...selectedSeats, seatId]);
-                }
-              };
-
-              return (
-                <div className="mt-6 border-t border-white/5 pt-6">
-                  <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-4 font-medium uppercase text-center">
-                    Select Seats
-                  </label>
-
-                  {isLoadingLayout ? (
-                    <div className="flex flex-col items-center justify-center py-10 gap-3">
-                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-[color:var(--color-gold)] border-t-transparent" />
-                      <span className="text-[9px] font-caps tracking-widest text-[color:var(--color-gold-soft)] uppercase animate-pulse">Loading Live Layout...</span>
-                    </div>
-                  ) : (
-                    <div className="bg-white text-black rounded-xl p-4 sm:p-6 shadow-inner border border-white/10">
-                      {layoutRows ? (
-                        <div className="overflow-x-auto w-full py-2">
-                          <div className="inline-flex flex-col items-center min-w-full gap-2.5 select-none">
-                            {(() => {
-                              let lastCategory = "";
-                              return layoutRows.map((row) => {
-                                const showCategoryHeader = row.category && row.category !== lastCategory;
-                                if (row.category) lastCategory = row.category;
-
-                                return (
-                                  <React.Fragment key={row.rowName}>
-                                    {showCategoryHeader && (
-                                      <div className="w-full text-left pl-2 mt-4 mb-2 border-b border-black/10 pb-1">
-                                        <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
-                                          {row.category} - ₹{selectedEvent.amount.toLocaleString("en-IN")}
-                                        </span>
-                                      </div>
-                                    )}
-                                    <div className="flex items-center gap-1.5 min-w-max">
-                                      <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
-                                      {row.seats.map((seat: any, idx: number) => {
-                                        if (seat.isAisle) {
-                                          return <div key={`aisle-${idx}`} className="w-4" />;
-                                        }
-                                        const isSelected = selectedSeats.includes(seat.seatId);
-                                        
-                                        return (
-                                          <button
-                                            key={seat.seatId}
-                                            type="button"
-                                            disabled={seat.isBooked}
-                                            onClick={() => handleSeatClick(seat.seatId, seat.isBooked)}
-                                            className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
-                                              seat.isBooked
-                                                ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
-                                                : isSelected
-                                                ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
-                                                : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
-                                            }`}
-                                            title={`${seat.seatId} ${seat.isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                                          >
-                                            {seat.seatNumber}
-                                          </button>
-                                        );
-                                      })}
-                                      <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row.rowName}</span>
-                                    </div>
-                                  </React.Fragment>
-                                );
-                              });
-                            })()}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="overflow-x-auto w-full py-2">
-                          <div className="inline-flex flex-col items-center min-w-full gap-2.5 select-none">
-                            <div className="w-full text-left pl-2 mt-2 mb-2 border-b border-black/10 pb-1">
-                              <span className="text-[10px] font-bold text-black/60 uppercase tracking-wider">
-                                Premium Recliner - ₹{selectedEvent.amount.toLocaleString("en-IN")}
-                              </span>
-                            </div>
-                            {fallbackRows.map((row) => (
-                              <div key={row} className="flex items-center gap-1.5 min-w-max">
-                                <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
-                                {fallbackCols.map((col, idx) => {
-                                  if (col === "aisle") {
-                                    return <div key={`aisle-${idx}`} className="w-4" />;
-                                  }
-                                  const seatId = `${row}${col}`;
-                                  const isBooked = bookedSeats.has(seatId);
-                                  const isSelected = selectedSeats.includes(seatId);
-                                  
-                                  return (
-                                    <button
-                                      key={seatId}
-                                      type="button"
-                                      disabled={isBooked}
-                                      onClick={() => handleSeatClick(seatId, isBooked)}
-                                      className={`h-6 w-6 rounded-[3px] text-[8px] font-semibold flex items-center justify-center border transition-all ${
-                                        isBooked
-                                          ? "bg-[#e4e4e4] border-[#e4e4e4] text-black/15 cursor-not-allowed"
-                                          : isSelected
-                                          ? "bg-[#4abd5d] border-[#4abd5d] text-white shadow-[0_2px_8px_rgba(74,189,93,0.4)]"
-                                          : "bg-white border-[#4abd5d]/45 text-[#4abd5d] hover:bg-[#4abd5d] hover:text-white hover:border-[#4abd5d]"
-                                      }`}
-                                      title={`${seatId} ${isBooked ? "(Booked)" : isSelected ? "(Selected)" : "(Available)"}`}
-                                    >
-                                      {col}
-                                    </button>
-                                  );
-                                })}
-                                <span className="w-5 text-[10px] text-black/40 font-bold font-caps text-center">{row}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* BookMyShow Screen at the bottom */}
-                      <div className="w-full flex flex-col items-center mt-8 border-t border-black/5 pt-6">
-                        <div className="w-3/5 relative h-3 mb-1">
-                          <div className="absolute inset-0 border-t-2 border-black/20 rounded-[50%/8px_8px_0_0]" />
-                        </div>
-                        <span className="text-[9px] font-sans tracking-[0.3em] text-black/35 uppercase font-medium">All eyes this way</span>
-                      </div>
-
-                      {/* Legend */}
-                      <div className="flex items-center justify-center gap-6 mt-6 text-[10px] font-sans tracking-wide text-black/60 font-medium border-t border-black/5 pt-4">
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-3 w-3 rounded-[2px] border border-[#4abd5d]/45 bg-white text-[#4abd5d]" />
-                          <span>Available</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-3 w-3 rounded-[2px] bg-[#4abd5d]" />
-                          <span>Selected</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <div className="h-3 w-3 rounded-[2px] bg-[#e4e4e4]" />
-                          <span>Sold</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Seating Summary */}
-                  {selectedSeats.length > 0 && (
-                    <div className="mt-5 rounded-lg bg-[color:var(--color-gold)]/5 border border-[color:var(--color-gold)]/20 p-3 text-center">
-                      <div className="text-[10px] font-caps tracking-wider text-[color:var(--color-champagne)]">
-                        Selected Seats: <span className="font-bold text-white uppercase">{selectedSeats.join(", ")}</span>
-                      </div>
-                      <div className="mt-1 text-xs font-semibold text-[color:var(--color-gold-soft)]">
-                        Total Price: ₹{(selectedSeats.length * selectedEvent.amount).toLocaleString("en-IN")}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-            <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">FULL NAME</label>
-              <input
-                type="text"
-                value={guestName}
-                onChange={(e) => setGuestName(e.target.value)}
-                placeholder="Gaurav Kumar"
-                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
-                required
-              />
-            </div>
-            <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">EMAIL ADDRESS</label>
-              <input
-                type="email"
-                value={guestEmail}
-                onChange={(e) => setGuestEmail(e.target.value)}
-                placeholder="gaurav.kumar@example.com"
-                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
-                required
-              />
-            </div>
-            <div>
-              <label className="block font-caps text-[10px] tracking-[0.2em] text-[color:var(--color-champagne)] mb-2 font-medium">CONTACT NUMBER</label>
-              <input
-                type="tel"
-                value={guestPhone}
-                onChange={(e) => setGuestPhone(e.target.value)}
-                placeholder="9999999999"
-                className="w-full bg-[#050505] border border-white/10 px-4 py-3 text-sm rounded-[10px] text-white placeholder-white/30 focus:outline-none focus:border-[color:var(--color-gold)] transition-colors font-body"
-                required
-              />
-            </div>
-            
-            <button
-              onClick={handlePayment}
-              disabled={isPaying || selectedSeats.length === 0}
-              className="w-full mt-8 inline-flex items-center justify-center gap-2 rounded-[14px] bg-gold-gradient py-4 font-caps text-[13px] font-semibold uppercase tracking-[0.18em] text-black shadow-[0_15px_45px_-15px_rgba(212,175,55,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_25px_55px_-15px_rgba(212,175,55,0.85)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              {isPaying ? "Processing..." : selectedSeats.length > 0 ? `Book Now - ₹${(selectedSeats.length * selectedEvent.amount).toLocaleString()}` : "Select Seats to Book"}
-            </button>
+            <h3 className={`${HEADING} text-2xl text-white font-bold mb-3`}>
+              Booking Closed
+            </h3>
+            <p className="font-body text-sm text-[color:var(--color-champagne)]/75 leading-relaxed max-w-xs mx-auto">
+              Registration and ticket bookings for the Toxic Premier Nights event are now closed.
+            </p>
           </div>
         </div>
         
@@ -1432,12 +1089,12 @@ function RecommendedEvents({
     {
       movie: "Toxic Premier Nights",
       poster: "/movies/toxic_premier_nights.jpg",
-      status: "TICKETS OPEN",
-      statusColor: "bg-[#DF1827]",
+      status: "BOOKING CLOSED",
+      statusColor: "bg-white/20 backdrop-blur-md",
       rating: "9.8",
       votes: "5.2K+ Votes",
       genre: "Premium Red Carpet / Multi-City",
-      isUpcoming: true,
+      isUpcoming: false,
       amount: PREMIER_LOCATIONS[0].amount,
       location: PREMIER_LOCATIONS[0].name,
       date: "Thursday (27th Aug)",
@@ -1475,7 +1132,7 @@ function RecommendedEvents({
         amount: e.amount
       });
     } else {
-      alert(`The ${e.movie} event has been successfully completed and is closed for bookings.`);
+      alert(`The ${e.movie} event is closed for bookings.`);
     }
   };
 
