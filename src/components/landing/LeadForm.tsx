@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,17 +20,6 @@ export function LeadForm() {
   const [timeline, setTimeline] = useState("immediate");
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    // Dynamic load of Razorpay Checkout script if it isn't already loaded
-    if (document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]')) {
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
-
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !/^\d{10}$/.test(phone.replace(/\D/g, "").slice(-10)) || !city.trim()) {
@@ -38,104 +27,29 @@ export function LeadForm() {
       return;
     }
 
-    if (!(window as any).Razorpay) {
-      toast.error("Payment gateway is loading. Please try again in a moment.");
-      return;
-    }
-
     setSubmitting(true);
 
     try {
-      // 1. Create Razorpay order for 1,250,000 INR
-      const orderRes = await fetch("/api/create-order", {
+      // 1. Create HDFC payment session
+      const sessionRes = await fetch("/api/hdfc/create-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 1250000 }),
+        body: JSON.stringify({
+          fullName: name.trim(),
+          phone: phone.trim(),
+          city: city.trim(),
+          timeframe: timeline,
+        }),
       });
 
-      const orderData = await orderRes.json();
-      if (!orderRes.ok || !orderData.id) {
-        throw new Error(orderData.details || orderData.error || "Failed to create payment order.");
+      const sessionData = await sessionRes.json();
+      if (!sessionRes.ok || !sessionData.paymentLink) {
+        throw new Error(sessionData.details || sessionData.error || "Failed to create payment session.");
       }
 
-      // 2. Configure and Open Razorpay Checkout (similar style to HNI events payment)
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "Connplex Cinemas",
-        description: "Franchise Booking - Exclusive Offer",
-        image: "/assets/new_uncore_logo.png",
-        order_id: orderData.id,
-        handler: async function (response: any) {
-          // Submit lead info along with payment verification parameters
-          const payload = {
-            fullName: name.trim(),
-            email: "inquiry@theconnplex.com",
-            phone: phone.trim(),
-            state: "N/A",
-            city: city.trim(),
-            preferredInvestment: "N/A",
-            preferredCity: city.trim(),
-            company: "N/A",
-            businessType: "N/A",
-            hasProperty: "No",
-            timeframe: timeline === "immediate" ? "Immediate" : timeline === "week" ? "Within a week" : "Within a month",
-            message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeline}\nCoupon Code: 50% Off Franchise Fee\nPayment Status: Paid\nOrder ID: ${response.razorpay_order_id}\nPayment ID: ${response.razorpay_payment_id}`,
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            amountPaid: 1250000,
-            paymentStatus: "Paid"
-          };
-
-          try {
-            const res = await fetch("/api/forms/contact-messages", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(payload),
-            });
-
-            const data = await res.json();
-            if (!res.ok) {
-              throw new Error(data.message || "Failed to submit request.");
-            }
-
-            toast.success("Payment Successful! Thank you, our franchise team will call you shortly.");
-            setName("");
-            setPhone("");
-            setCity("");
-            setTimeline("immediate");
-          } catch (err: any) {
-            toast.error(err.message || "Payment recorded but failed to submit form details. Please contact support.");
-          } finally {
-            setSubmitting(false);
-          }
-        },
-        prefill: {
-          name: name.trim(),
-          email: "inquiry@theconnplex.com",
-          contact: phone.trim(),
-        },
-        theme: {
-          color: "#d4af37",
-        },
-        modal: {
-          ondismiss: function () {
-            toast.info("Payment cancelled.");
-            setSubmitting(false);
-          }
-        }
-      };
-
-      const rzp = new (window as any).Razorpay(options);
-      rzp.on("payment.failed", function (response: any) {
-        toast.error(`Payment Failed! ${response.error.description}`);
-        setSubmitting(false);
-      });
-      rzp.open();
+      // 2. Redirect the user to HDFC hosted payment page
+      toast.success("Redirecting to HDFC Payment Gateway...");
+      window.location.href = sessionData.paymentLink;
 
     } catch (err: any) {
       toast.error(err.message || "Something went wrong during payment setup.");
