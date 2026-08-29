@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const timelineLabel = timeframe === "immediate" ? "Immediate" : timeframe === "week" ? "Within a week" : "Within a month";
     await db.collection("contactmessages").insertOne({
       fullName,
-      email: "inquiry@theconnplex.com",
+      email: "marketing@theconnplex.com",
       phone,
       state: "N/A",
       city,
@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
       businessType: "N/A",
       hasProperty: "No",
       timeframe: timelineLabel,
-      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: 50% Off Franchise Fee\nPayment Status: Pending\nOrder ID: ${orderId}`,
+      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: ₹5,00,000 Franchise Fee Discount\nPayment Status: Pending\nOrder ID: ${orderId}`,
       hdfc_order_id: orderId,
-      amountPaid: 1250000,
+      amountPaid: 1000000,
       paymentStatus: "Pending",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -50,10 +50,10 @@ export async function POST(req: NextRequest) {
 
     const payload = {
       order_id: orderId,
-      amount: "1250000.00",
+      amount: "1000000.00",
       customer_id: phone,
       customer_phone: phone,
-      customer_email: "inquiry@theconnplex.com",
+      customer_email: "marketing@theconnplex.com",
       return_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/flashsale/callback`,
       payment_page_client_id: clientId,
       action: "paymentPage"

@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 
 const reasons = [
-  { k: "Your benefit", v: "upto 50% off franchise fee" },
+  { k: "Your benefit", v: "upto ₹5,00,000 discount on franchise fee" },
   { k: "Your advantage", v: "Priority territory discussion" },
   { k: "Your support", v: "Site feasibility + turnkey execution" },
   { k: "Your opportunity", v: "Build your own cinema with Connplex" },
 ];
 
 const rows = [
-  { label: "Franchise Fee", std: "₹15,00,000", you: "₹11,50,000" },
-  { label: "Your Saving", std: "—", you: "₹3,50,000" },
+  { label: "Franchise Fee", std: "₹15,00,000", you: "₹10,00,000" },
+  { label: "Your Saving", std: "—", you: "₹5,00,000" },
   { label: "Feasibility Study", std: "Paid / Standard", you: "Included" },
   { label: "Territory Discussion", std: "Standard", you: "Priority" },
 ];
@@ -17,7 +17,7 @@ const rows = [
 const urgency = [
   { t: "Limited Invitation", d: "Only for first-time Connplex partners." },
   { t: "Limited Territories", d: "One opportunity per selected city or territory." },
-  { t: "Limited Time", d: "The upto 50% franchise-fee benefit ends with this expansion cycle." },
+  { t: "Limited Time", d: "The ₹5,00,000 franchise-fee discount ends with this expansion cycle." },
 ];
 
 export function WhyYou() {
@@ -68,7 +68,7 @@ export function WhyYou() {
               </tbody>
             </table>
             <p className="mt-7 text-lg">
-              You save <span className="text-gradient-gold font-display text-2xl">₹12.5 Lakh</span>{" "}
+              You save <span className="text-gradient-gold font-display text-2xl">₹5 Lakh</span>{" "}
               by joining during this offer window.
             </p>
             <Button asChild variant="gold" size="xl" className="mt-7 w-full">

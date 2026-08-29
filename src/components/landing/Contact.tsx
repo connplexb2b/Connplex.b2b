@@ -1,8 +1,8 @@
 import { Mail, MapPin, Phone, Globe } from "lucide-react";
 
 const items = [
-  { icon: Phone, label: "Phone", value: "+91 99245 77556", href: "tel:+919924577556" },
-  { icon: Mail, label: "Email", value: "inquiry@theconnplex.com", href: "mailto:inquiry@theconnplex.com" },
+  { icon: Phone, label: "Phone", value: "+91 99245 77557", href: "tel:+919924577557" },
+  { icon: Mail, label: "Email", value: "marketing@theconnplex.com", href: "mailto:marketing@theconnplex.com" },
   { icon: Globe, label: "Website", value: "www.theconnplex.com", href: "https://www.theconnplex.com" },
   { icon: MapPin, label: "Head Office", value: "Ahmedabad, Gujarat", href: undefined },
 ];

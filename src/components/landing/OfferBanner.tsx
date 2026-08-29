@@ -22,7 +22,7 @@ function useCountdown(target: number) {
 }
 
 export function OfferBanner() {
-  const [target] = useState(() => Date.now() + 21 * 86400000);
+  const [target] = useState(() => Date.now() + 3 * 86400000);
   const t = useCountdown(target);
   const units = [
     { v: t.days, l: "Days" },
@@ -66,7 +66,7 @@ export function OfferBanner() {
             </p>
             <ul className="mt-5 space-y-3 text-sm text-muted-foreground">
               {[
-                "upto 50% franchise fee benefit",
+                "upto ₹5,00,000 franchise fee discount",
                 "Priority city / territory discussion",
                 "Complimentary feasibility & site study",
                 "Format recommendation based on your location",
@@ -118,7 +118,7 @@ export function OfferBanner() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="uppercase tracking-widest text-foreground">Your fee today</span>
-                <span className="font-display text-3xl text-gradient-gold">₹11,50,000</span>
+                <span className="font-display text-3xl text-gradient-gold">₹10,00,000</span>
               </div>
             </div>
           </div>

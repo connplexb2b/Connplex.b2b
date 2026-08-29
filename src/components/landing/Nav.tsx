@@ -12,8 +12,8 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-        <a href="#top" className="font-display text-2xl tracking-[0.25em] text-gradient-gold">
-          CONNPLEX
+        <a href="#top" className="flex items-center">
+          <img src="/logo.png" alt="Connplex Cinemas" className="h-8 w-auto sm:h-9" />
         </a>
         <nav className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
