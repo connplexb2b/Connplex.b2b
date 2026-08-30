@@ -5,25 +5,23 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-const timelines = [
-  { value: "immediate", label: "Immediately" },
-  { value: "week", label: "Within a week" },
-  { value: "month", label: "Within a month" },
-];
 
 export function LeadForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
-  const [timeline, setTimeline] = useState("immediate");
+  const [agreed, setAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !/^\d{10}$/.test(phone.replace(/\D/g, "").slice(-10)) || !city.trim()) {
       toast.error("Please enter your name, a valid 10-digit number and your city.");
+      return;
+    }
+
+    if (!agreed) {
+      toast.error("Please read and agree to the Terms & Conditions and Privacy Policy.");
       return;
     }
 
@@ -38,7 +36,7 @@ export function LeadForm() {
           fullName: name.trim(),
           phone: phone.trim(),
           city: city.trim(),
-          timeframe: timeline,
+          timeframe: "immediate",
         }),
       });
 
@@ -122,24 +120,37 @@ export function LeadForm() {
               className="h-12 bg-background/60"
             />
           </div>
-          <div className="space-y-3">
-            <Label>How soon do you want to start?</Label>
-            <RadioGroup value={timeline} onValueChange={setTimeline} className="grid gap-3">
-              {timelines.map((t) => (
-                <Label
-                  key={t.value}
-                  htmlFor={t.value}
-                  className={`flex cursor-pointer items-center gap-3 border px-4 py-3 text-sm transition-colors ${
-                    timeline === t.value
-                      ? "border-gold bg-gold/10 text-foreground"
-                      : "border-border text-muted-foreground hover:border-gold/40"
-                  }`}
-                >
-                  <RadioGroupItem value={t.value} id={t.value} disabled={submitting} />
-                  {t.label}
-                </Label>
-              ))}
-            </RadioGroup>
+          <div className="flex items-start gap-3 py-1">
+            <input
+              id="agree"
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              disabled={submitting}
+              className="h-4 w-4 mt-0.5 rounded border border-border bg-background/60 text-gold focus:ring-1 focus:ring-gold accent-gold cursor-pointer"
+              required
+            />
+            <Label htmlFor="agree" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
+              I have read and agree to the{" "}
+              <a
+                href="/terms-and-conditions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold underline hover:text-gold/80 transition-colors"
+              >
+                Terms & Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold underline hover:text-gold/80 transition-colors"
+              >
+                Privacy Policy
+              </a>
+              .
+            </Label>
           </div>
           <Button type="submit" variant="gold" size="xl" disabled={submitting} className="w-full">
             {submitting ? "Submitting..." : "Unlock My Exclusive Offer →"}
