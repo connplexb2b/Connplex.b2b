@@ -39,12 +39,12 @@ export function Hero() {
               Standard Franchise Fee
             </p>
             <p className="mt-1 font-display text-3xl text-muted-foreground line-through">
-              ₹15,00,000
+              ₹15,00,000 + GST
             </p>
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-gold">Your Exclusive Fee</p>
-            <p className="mt-1 font-display text-4xl text-gradient-gold">₹10,00,000</p>
+            <p className="mt-1 font-display text-4xl text-gradient-gold">₹10,00,000 + GST</p>
           </div>
         </div>
 

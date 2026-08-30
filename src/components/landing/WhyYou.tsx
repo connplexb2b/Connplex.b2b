@@ -8,7 +8,7 @@ const reasons = [
 ];
 
 const rows = [
-  { label: "Franchise Fee", std: "₹15,00,000", you: "₹10,00,000" },
+  { label: "Franchise Fee", std: "₹15,00,000 + GST", you: "₹10,00,000 + GST" },
   { label: "Your Saving", std: "—", you: "₹5,00,000" },
   { label: "Feasibility Study", std: "Paid / Standard", you: "Included" },
   { label: "Territory Discussion", std: "Standard", you: "Priority" },
