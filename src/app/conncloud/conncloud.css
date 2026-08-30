@@ -1,0 +1,152 @@
+/* Styling variables and overrides for ConnCloud Enterprise SaaS Portal */
+
+:root {
+  --cc-bg: #0b1220;
+  --cc-card: #111827;
+  --cc-card-hover: #1f2937;
+  --cc-border: rgba(255, 255, 255, 0.08);
+  --cc-border-focus: rgba(30, 64, 175, 0.5);
+  
+  --cc-primary: #1e40af;
+  --cc-primary-light: #3b82f6;
+  --cc-primary-hover: #1d4ed8;
+  --cc-primary-glow: rgba(30, 64, 175, 0.3);
+
+  --cc-accent: #f5b041;
+  --cc-accent-hover: #e09b2f;
+  --cc-accent-glow: rgba(245, 176, 65, 0.2);
+
+  --cc-success: #10b981;
+  --cc-warning: #f59e0b;
+  --cc-danger: #ef4444;
+  --cc-info: #06b6d4;
+
+  --cc-text: #f9fafb;
+  --cc-text-secondary: #9ca3af;
+  --cc-text-muted: #6b7280;
+}
+
+/* Base styles for ConnCloud container */
+.conncloud-body {
+  background-color: var(--cc-bg);
+  color: var(--cc-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* Custom scrollbars */
+.cc-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.cc-scrollbar::-webkit-scrollbar-track {
+  background: var(--cc-bg);
+}
+.cc-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+.cc-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Animations */
+@keyframes ccPulseLive {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.cc-pulse-live {
+  animation: ccPulseLive 2s infinite;
+}
+
+/* Layout utilities */
+.cc-card {
+  background-color: var(--cc-card);
+  border: 1px solid var(--cc-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cc-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.cc-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--cc-border);
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+}
+
+.cc-input:focus {
+  border-color: var(--cc-primary-light);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px var(--cc-primary-glow);
+}
+
+.cc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cc-btn-primary {
+  background-color: var(--cc-primary);
+  color: #fff;
+  border: 1px solid var(--cc-primary);
+}
+
+.cc-btn-primary:hover {
+  background-color: var(--cc-primary-hover);
+  box-shadow: 0 4px 12px var(--cc-primary-glow);
+}
+
+.cc-btn-accent {
+  background-color: var(--cc-accent);
+  color: #0b1220;
+  border: 1px solid var(--cc-accent);
+  font-weight: 600;
+}
+
+.cc-btn-accent:hover {
+  background-color: var(--cc-accent-hover);
+  box-shadow: 0 4px 12px var(--cc-accent-glow);
+}
+
+.cc-btn-outline {
+  background-color: transparent;
+  color: var(--cc-text);
+  border: 1px solid var(--cc-border);
+}
+
+.cc-btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Skeleton loader animations */
+@keyframes ccSkeleton {
+  0% { background-color: rgba(255, 255, 255, 0.03); }
+  50% { background-color: rgba(255, 255, 255, 0.08); }
+  100% { background-color: rgba(255, 255, 255, 0.03); }
+}
+
+.cc-skeleton {
+  animation: ccSkeleton 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}

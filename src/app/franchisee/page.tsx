@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import './franchisee.css';
 
 // Credentials defined by the user
@@ -47,6 +48,7 @@ interface CampaignItem {
 }
 
 export default function FranchiseePortal() {
+  const router = useRouter();
   // Session State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -70,6 +72,7 @@ export default function FranchiseePortal() {
     const session = localStorage.getItem('franchisee_session');
     if (session === 'authenticated') {
       setIsAuthenticated(true);
+      router.push('/conncloud/dashboard');
     }
     setIsLoading(false);
   }, []);
@@ -100,6 +103,7 @@ export default function FranchiseePortal() {
         setIsAuthenticated(true);
         localStorage.setItem('franchisee_session', 'authenticated');
         showToast('Successfully signed in! Welcome back.');
+        router.push('/conncloud/dashboard');
       } else {
         setLoginError('Invalid credentials. Check your email/contact number and password.');
       }
@@ -211,8 +215,23 @@ export default function FranchiseePortal() {
 
   // Switch tabs
   const handleNavClick = (tab: string) => {
-    setActiveTab(tab);
-    showToast(`Viewing ${tab} page (Prototype Demo)`);
+    const slugMap: Record<string, string> = {
+      'Dashboard': 'dashboard',
+      'Analytics': 'analytics',
+      'Finance': 'finance',
+      'Movies': 'movies',
+      'Ticket Sales': 'ticket-sales',
+      'Food & Beverage': 'fnb',
+      'Staff': 'staff',
+      'Operations': 'operations',
+      'Marketing': 'marketing',
+      'Reports': 'reports',
+      'Documents': 'documents',
+      'Support': 'support',
+      'Settings': 'settings'
+    };
+    const slug = slugMap[tab] || '';
+    router.push(`/conncloud/${slug}`);
   };
 
   // Quick action helper
