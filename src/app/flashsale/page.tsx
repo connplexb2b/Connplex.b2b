@@ -10,6 +10,7 @@ import { Support } from "@/components/landing/Support";
 import { Formats } from "@/components/landing/Formats";
 import { LeadForm } from "@/components/landing/LeadForm";
 import { Contact } from "@/components/landing/Contact";
+import { Faq } from "@/components/landing/Faq";
 import { Toaster } from "sonner";
 
 const title = "Connplex Cinema Franchise | Upto ₹5,00,000 Franchise Fee Discount";
@@ -43,6 +44,7 @@ export default function FlashSalePage() {
       <Support />
       <Formats />
       <LeadForm />
+      <Faq />
       <ClosingCta />
       <Contact />
     </main>
