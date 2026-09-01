@@ -32,11 +32,6 @@ const nextConfig: NextConfig = {
         destination: '/franchise-with-us',
         permanent: true,
       },
-      {
-        source: '/cinemaads',
-        destination: '/Cinemaads',
-        permanent: true,
-      },
     ];
   },
 };
