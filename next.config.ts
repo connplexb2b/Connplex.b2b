@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
@@ -29,6 +30,11 @@ const nextConfig: NextConfig = {
       {
         source: '/franchise',
         destination: '/franchise-with-us',
+        permanent: true,
+      },
+      {
+        source: '/cinemaads',
+        destination: '/Cinemaads',
         permanent: true,
       },
     ];
