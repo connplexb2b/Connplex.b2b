@@ -139,6 +139,34 @@ export function LeadForm() {
               className="h-12 bg-background/60"
             />
           </div>
+          <div className="space-y-2">
+            <Label className="text-xs font-medium text-muted-foreground">
+              Terms and Conditions
+            </Label>
+            <div className="rounded-md border border-border/80 bg-background/50 p-4 text-xs leading-relaxed text-muted-foreground/90 space-y-3 max-h-60 overflow-y-auto">
+              <ul className="space-y-1.5 list-disc pl-4 marker:text-gold/70">
+                <li>FLASH SALE valid only</li>
+                <li>Fee Paid under FLASH SALE is NON-REFUNDABLE &amp; NON-TRANSFERABLE</li>
+                <li>License is City - specific , Not Site - specific at application Stage</li>
+                <li>License validity - 24 months from date of issuance</li>
+                <li>Final franchise agreement subject to : site feasibility , technical approvals , brand compliance</li>
+              </ul>
+
+              <div className="space-y-1 pt-1">
+                <p className="font-semibold text-foreground">CONNPLEX reserves rights to :</p>
+                <ul className="space-y-1 list-disc pl-4 marker:text-gold/70">
+                  <li>Reject unsuitable locations</li>
+                  <li>reassign alternate city if original city is saturated</li>
+                </ul>
+              </div>
+
+              <div className="space-y-1 pt-1 border-t border-border/40 text-[11px]">
+                <p>No exclusivity guaranteed unless explicitly mentioned in agreement</p>
+                <p>Any misrepresentation leads to immediate cancellation without refund</p>
+                <p>GST Compliance Mandatory as per Government norms</p>
+              </div>
+            </div>
+          </div>
           <div className="flex items-start gap-3 py-1">
             <input
               id="agree"
@@ -150,29 +178,11 @@ export function LeadForm() {
               required
             />
             <Label htmlFor="agree" className="text-xs text-muted-foreground leading-normal cursor-pointer select-none">
-              I have read and agree to the{" "}
-              <a
-                href="/terms-and-conditions"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gold underline hover:text-gold/80 transition-colors"
-              >
-                Terms & Conditions
-              </a>{" "}
-              and{" "}
-              <a
-                href="/privacy-policy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gold underline hover:text-gold/80 transition-colors"
-              >
-                Privacy Policy
-              </a>
-              .
+              I agree the Terms and conditions
             </Label>
           </div>
           <Button type="submit" variant="gold" size="xl" disabled={submitting} className="w-full">
-            {submitting ? "Submitting..." : "Unlock My Exclusive Offer →"}
+            {submitting ? "Redirecting..." : "Pay Now"}
           </Button>
           <p className="text-center text-xs text-muted-foreground">
             Your details stay confidential and are used only for franchise discussions.
