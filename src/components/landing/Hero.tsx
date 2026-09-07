@@ -22,7 +22,7 @@ export function Hero() {
         <span className="w-fit border border-gold/50 px-4 py-1.5 text-xs uppercase tracking-[0.35em] text-gold">
           A Private Invitation For First-Time Partners
         </span>
-        <h1 className="mt-7 max-w-4xl text-5xl leading-[0.95] sm:text-7xl lg:text-8xl">
+        <h1 className="mt-7 max-w-4xl text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight">
           Your <span className="text-gradient-gold">₹5,00,000 Franchise Fee</span>
           <br />
           Discount Is Waiting.
