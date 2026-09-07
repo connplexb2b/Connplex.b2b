@@ -28,8 +28,8 @@ export function LeadForm() {
     setSubmitting(true);
 
     try {
-      // 1. Create HDFC payment session
-      const sessionRes = await fetch("/api/hdfc/create-session", {
+      // 1. Create CCAvenue payment session
+      const sessionRes = await fetch("/api/ccavenue/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -41,14 +41,33 @@ export function LeadForm() {
       });
 
       const sessionData = await sessionRes.json();
-      if (!sessionRes.ok || !sessionData.paymentLink) {
-        throw new Error(sessionData.details || sessionData.error || "Failed to create payment session.");
+      if (!sessionRes.ok || !sessionData.encRequest) {
+        throw new Error(sessionData.details || sessionData.error || "Failed to initiate payment gateway.");
       }
 
-      // 2. Redirect the user to HDFC hosted payment page
-      toast.success("Redirecting to HDFC Payment Gateway...");
-      window.location.href = sessionData.paymentLink;
+      // 2. Redirect the user to HDFC CCAvenue hosted payment page via auto-submitting POST form
+      toast.success("Redirecting to HDFC CCAvenue Gateway...");
 
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action =
+        sessionData.actionUrl ||
+        "https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction";
+
+      const encInput = document.createElement("input");
+      encInput.type = "hidden";
+      encInput.name = "encRequest";
+      encInput.value = sessionData.encRequest;
+      form.appendChild(encInput);
+
+      const accessCodeInput = document.createElement("input");
+      accessCodeInput.type = "hidden";
+      accessCodeInput.name = "access_code";
+      accessCodeInput.value = sessionData.accessCode;
+      form.appendChild(accessCodeInput);
+
+      document.body.appendChild(form);
+      form.submit();
     } catch (err: any) {
       toast.error(err.message || "Something went wrong during payment setup.");
       setSubmitting(false);
