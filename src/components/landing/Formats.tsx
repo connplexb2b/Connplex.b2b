@@ -8,14 +8,14 @@ const formats = [
   {
     name: "Smart",
     img: smartImg,
-    price: "₹2.0 Cr",
+    price: "₹2.5 Cr",
     tagline: "Efficient luxury format for fast-growing markets.",
     points: ["2 screens · compact footprint", "Laser projection + Dolby sound", "Ideal for Tier 3 cities"],
   },
   {
     name: "Signature",
     img: signatureImg,
-    price: "₹2.5 Cr",
+    price: "₹3.0 Cr",
     tagline: "Premium mid-sized multiplex experience.",
     points: ["3–4 screens · all recliners", "Cine Brew Café included", "Best fit for Tier 2 hubs"],
     featured: true,

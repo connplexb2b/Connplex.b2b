@@ -87,7 +87,7 @@ export function OfferBanner() {
               them.
             </p>
             <Button asChild variant="gold" size="xl" className="mt-9">
-              <a href="#apply">Lock My Offer →</a>
+              <a href="#apply">Unlock My Offer →</a>
             </Button>
           </div>
 
