@@ -345,7 +345,8 @@ const INITIAL_CINEMAS: Cinema[] = [
   { cinemaId: 'c1', name: 'Connplex Jodhpur', location: 'Jodhpur, Rajasthan', screens: 4, status: 'Active', operatingHours: '09:00 AM - 12:00 AM' },
   { cinemaId: 'c2', name: 'Connplex Jaipur', location: 'Jaipur, Rajasthan', screens: 6, status: 'Active', operatingHours: '08:30 AM - 01:00 AM' },
   { cinemaId: 'c3', name: 'Connplex Ahmedabad', location: 'Ahmedabad, Gujarat', screens: 5, status: 'Active', operatingHours: '09:00 AM - 11:30 PM' },
-  { cinemaId: 'c4', name: 'Connplex Udaipur', location: 'Udaipur, Rajasthan', screens: 4, status: 'Active', operatingHours: '10:00 AM - 11:00 PM' }
+  { cinemaId: 'c4', name: 'Connplex Udaipur', location: 'Udaipur, Rajasthan', screens: 4, status: 'Active', operatingHours: '10:00 AM - 11:00 PM' },
+  { cinemaId: 'c5', name: 'Connplex Ahilyanagar', location: 'Ahilyanagar, Maharashtra', screens: 2, status: 'Active', operatingHours: '09:00 AM - 11:30 PM' }
 ];
 
 const INITIAL_SCREENS: Screen[] = [
@@ -370,7 +371,10 @@ const INITIAL_SCREENS: Screen[] = [
   { screenId: 's16', cinemaId: 'c4', name: 'Screen 1', capacity: 150, format: '2D', status: 'Healthy' },
   { screenId: 's17', cinemaId: 'c4', name: 'Screen 2', capacity: 150, format: '3D', status: 'Healthy' },
   { screenId: 's18', cinemaId: 'c4', name: 'Screen 3', capacity: 120, format: '2D', status: 'Healthy' },
-  { screenId: 's19', cinemaId: 'c4', name: 'Screen 4', capacity: 100, format: '2D', status: 'Healthy' }
+  { screenId: 's19', cinemaId: 'c4', name: 'Screen 4', capacity: 100, format: '2D', status: 'Healthy' },
+
+  { screenId: 's20', cinemaId: 'c5', name: 'Screen 1 (Luxuriance Couple Recliner)', capacity: 20, format: '2D', status: 'Healthy' },
+  { screenId: 's21', cinemaId: 'c5', name: 'Screen 2 (Gold Class)', capacity: 60, format: '2D', status: 'Healthy' }
 ];
 
 const INITIAL_MOVIES: Movie[] = [
@@ -634,7 +638,8 @@ const INITIAL_CAMPAIGNS: MarketingCampaign[] = [
 const INITIAL_DOCS: Document[] = [
   { documentId: 'doc1', name: 'Connplex Corporate Franchise Agreement.pdf', category: 'Agreement', version: 'V4.2', uploadedBy: 'S. K. Singhal (VP Law)', expiryDate: '2031-12-31', permissions: ['Super Admin', 'Corporate Admin', 'Franchise Owner'] },
   { documentId: 'doc2', name: 'Standard Operational Policy (SOP) - Screen Health.pdf', category: 'SOP', version: 'V8.0', uploadedBy: 'Sanjay Jain (Ops)', expiryDate: '2028-06-30', permissions: ['All Managers'] },
-  { documentId: 'doc3', name: 'GST Filing Report - FY 2025-26.xlsx', category: 'Finance', version: 'V1.0', uploadedBy: 'Anil Gupta (CA)', expiryDate: '2027-04-30', permissions: ['Franchise Owner', 'Finance Manager'] }
+  { documentId: 'doc3', name: 'GST Filing Report - FY 2025-26.xlsx', category: 'Finance', version: 'V1.0', uploadedBy: 'Anil Gupta (CA)', expiryDate: '2027-04-30', permissions: ['Franchise Owner', 'Finance Manager'] },
+  { documentId: 'doc_ahilyanagar', name: 'Ahilyanagar_Vista_Daily_Ticket_FnB_Sync_Guide.pdf', category: 'SOP', version: 'V1.0', uploadedBy: 'System Integration Lead', expiryDate: '2028-12-31', permissions: ['All Managers', 'Developers'] }
 ];
 
 const INITIAL_NOTIFS: Notification[] = [

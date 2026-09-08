@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ConnCloudStore, Cinema } from '../../../lib/conncloudData';
+import AhilyanagarApiIntegration from '../AhilyanagarApiIntegration';
 
 interface DashboardViewProps {
   selectedCinemaId: string;
@@ -14,6 +15,8 @@ export default function DashboardView({
   onNavigate,
   triggerNotification
 }: DashboardViewProps) {
+  const [showAhilyanagarSync, setShowAhilyanagarSync] = useState(false);
+
   // Pull data from central state store
   const cinemas = ConnCloudStore.getCinemas();
   const screens = ConnCloudStore.getScreens().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
@@ -94,7 +97,7 @@ export default function DashboardView({
 
   return (
     <div className="space-y-6">
-      {/* Banner */}
+      {/* Executive Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wide">
@@ -124,6 +127,39 @@ export default function DashboardView({
           </button>
         </div>
       </section>
+
+      {/* Ahilyanagar Vista API Integration Section - Highlighted when Ahilyanagar is selected or user toggles */}
+      {selectedCinemaId === 'c5' ? (
+        <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={true} />
+      ) : (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-black/40 to-transparent border border-amber-500/20 text-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-sm shrink-0">
+              <i className="fa-solid fa-server"></i>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white">Ahilyanagar Location: Vista API &amp; Daily Sync Service</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300">Ready</span>
+              </div>
+              <p className="text-gray-400 text-[11px] mt-0.5">
+                Complete day-wise Ticket and F&amp;B synchronization documentation, scheduled Node.js/Python code &amp; AI Prompt for Ahilyanagar.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowAhilyanagarSync(!showAhilyanagarSync)}
+            className="cc-btn cc-btn-outline text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1.5"
+          >
+            <i className="fa-solid fa-code text-amber-400"></i>
+            <span>{showAhilyanagarSync ? 'Hide API Guide' : 'View Ahilyanagar API Guide'}</span>
+          </button>
+        </div>
+      )}
+
+      {selectedCinemaId !== 'c5' && showAhilyanagarSync && (
+        <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={true} />
+      )}
 
       {/* KPI Cards Grid */}
       <section className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">

@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import './franchisee.css';
+import AhilyanagarApiIntegration from '../../components/conncloud/AhilyanagarApiIntegration';
 
 // Credentials defined by the user
 const VALID_EMAIL = 'guptajahnvi47@gmail.com';
@@ -47,6 +49,111 @@ interface CampaignItem {
   status: 'ACTIVE' | 'SCHEDULED';
 }
 
+interface LocationConfig {
+  id: string;
+  name: string;
+  shortLabel: string;
+  fullName: string;
+  city: string;
+  state: string;
+  cinemaId: string;
+  screens: ScreenShow[];
+  hasApiIntegration?: boolean;
+}
+
+const LOCATIONS: Record<string, LocationConfig> = {
+  ahilyanagar: {
+    id: 'ahilyanagar',
+    name: 'Ahilyanagar',
+    shortLabel: 'Ahilyanagar (Vista API Ready)',
+    fullName: 'CONNPLEX LUXURIANCE, AHILYANAGAR',
+    city: 'Ahilyanagar',
+    state: 'Maharashtra',
+    cinemaId: 'c5',
+    hasApiIntegration: true,
+    screens: [
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Raftaar', time: '2:30 PM - 5:10 PM', occupancy: 85 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Cosmic Drift', time: '6:00 PM - 8:45 PM', occupancy: 95 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Ishq Junction', time: '3:00 PM - 5:35 PM', occupancy: 70 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Shadow Protocol', time: '6:30 PM - 9:00 PM', occupancy: 60 }
+    ]
+  },
+  gandhinagar: {
+    id: 'gandhinagar',
+    name: 'Gandhinagar',
+    shortLabel: 'Gandhinagar (Capital 2)',
+    fullName: 'CONNPLEX CAPITAL 2, GANDHINAGAR',
+    city: 'Gandhinagar',
+    state: 'Gujarat',
+    cinemaId: 'c0',
+    screens: [
+      { screen: 'Screen 1', movie: 'Raftaar', time: '2:30 PM - 5:10 PM', occupancy: 82 },
+      { screen: 'Screen 2', movie: 'Cosmic Drift', time: '3:00 PM - 5:45 PM', occupancy: 64 },
+      { screen: 'Screen 3', movie: 'Ishq Junction', time: '2:45 PM - 5:20 PM', occupancy: 91 },
+      { screen: 'Screen 4', movie: 'Shadow Protocol', time: '4:00 PM - 6:30 PM', occupancy: 57 },
+      { screen: 'Screen 5', movie: 'Dil Ki Baazi', time: '3:15 PM - 5:50 PM', occupancy: 73 },
+      { screen: 'Screen 6', movie: 'The Last Circuit', time: '4:30 PM - 7:00 PM', occupancy: 48 }
+    ]
+  },
+  jodhpur: {
+    id: 'jodhpur',
+    name: 'Jodhpur',
+    shortLabel: 'Connplex Jodhpur',
+    fullName: 'CONNPLEX JODHPUR',
+    city: 'Jodhpur',
+    state: 'Rajasthan',
+    cinemaId: 'c1',
+    screens: [
+      { screen: 'Screen 1 (Gold)', movie: 'Raftaar', time: '1:30 PM - 4:10 PM', occupancy: 78 },
+      { screen: 'Screen 2', movie: 'Cosmic Drift', time: '2:15 PM - 5:00 PM', occupancy: 65 },
+      { screen: 'Screen 3', movie: 'Ishq Junction', time: '4:30 PM - 7:00 PM', occupancy: 88 },
+      { screen: 'Screen 4', movie: 'Shadow Protocol', time: '5:15 PM - 7:45 PM', occupancy: 52 }
+    ]
+  },
+  jaipur: {
+    id: 'jaipur',
+    name: 'Jaipur',
+    shortLabel: 'Connplex Jaipur',
+    fullName: 'CONNPLEX JAIPUR',
+    city: 'Jaipur',
+    state: 'Rajasthan',
+    cinemaId: 'c2',
+    screens: [
+      { screen: 'Screen 1 (IMAX)', movie: 'Cosmic Drift', time: '3:00 PM - 5:45 PM', occupancy: 92 },
+      { screen: 'Screen 2', movie: 'Raftaar', time: '2:30 PM - 5:10 PM', occupancy: 80 },
+      { screen: 'Screen 3', movie: 'Ishq Junction', time: '4:00 PM - 6:30 PM', occupancy: 74 },
+      { screen: 'Screen 5 (4DX)', movie: 'Shadow Protocol', time: '5:30 PM - 8:00 PM', occupancy: 86 }
+    ]
+  },
+  ahmedabad: {
+    id: 'ahmedabad',
+    name: 'Ahmedabad',
+    shortLabel: 'Connplex Ahmedabad',
+    fullName: 'CONNPLEX AHMEDABAD',
+    city: 'Ahmedabad',
+    state: 'Gujarat',
+    cinemaId: 'c3',
+    screens: [
+      { screen: 'Screen 1', movie: 'Raftaar', time: '2:00 PM - 4:40 PM', occupancy: 84 },
+      { screen: 'Screen 2', movie: 'Cosmic Drift', time: '3:15 PM - 6:00 PM', occupancy: 68 },
+      { screen: 'Screen 3', movie: 'Ishq Junction', time: '5:00 PM - 7:30 PM', occupancy: 79 }
+    ]
+  },
+  udaipur: {
+    id: 'udaipur',
+    name: 'Udaipur',
+    shortLabel: 'Connplex Udaipur',
+    fullName: 'CONNPLEX UDAIPUR',
+    city: 'Udaipur',
+    state: 'Rajasthan',
+    cinemaId: 'c4',
+    screens: [
+      { screen: 'Screen 1', movie: 'Raftaar', time: '2:45 PM - 5:25 PM', occupancy: 75 },
+      { screen: 'Screen 2', movie: 'Shadow Protocol', time: '4:15 PM - 6:45 PM', occupancy: 62 }
+    ]
+  }
+};
+
 export default function FranchiseePortal() {
   const router = useRouter();
   // Session State
@@ -63,16 +170,25 @@ export default function FranchiseePortal() {
   const [activeTab, setActiveTab] = useState<string>('Dashboard');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState<boolean>(false);
+  const [selectedLocationKey, setSelectedLocationKey] = useState<string>('ahilyanagar');
   const [toast, setToast] = useState<string | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const locationDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check login state on mount
+  // Check login state and url parameters on mount
   useEffect(() => {
     const session = localStorage.getItem('franchisee_session');
     if (session === 'authenticated') {
       setIsAuthenticated(true);
-      router.push('/conncloud/dashboard');
+    }
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const loc = params.get('location') || params.get('cinema');
+      if (loc && LOCATIONS[loc.toLowerCase()]) {
+        setSelectedLocationKey(loc.toLowerCase());
+      }
     }
     setIsLoading(false);
   }, []);
@@ -82,6 +198,9 @@ export default function FranchiseePortal() {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setProfileDropdownOpen(false);
+      }
+      if (locationDropdownRef.current && !locationDropdownRef.current.contains(event.target as Node)) {
+        setLocationDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -102,8 +221,7 @@ export default function FranchiseePortal() {
       if ((isEmailValid || isContactValid) && password === VALID_PASSWORD) {
         setIsAuthenticated(true);
         localStorage.setItem('franchisee_session', 'authenticated');
-        showToast('Successfully signed in! Welcome back.');
-        router.push('/conncloud/dashboard');
+        showToast('Successfully signed in! Welcome to Franchise Portal.');
       } else {
         setLoginError('Invalid credentials. Check your email/contact number and password.');
       }
@@ -145,15 +263,10 @@ export default function FranchiseePortal() {
     { label: "Customer Rating", value: "4.6★", trend: "+0.2", isUp: true, sparkline: [4.4, 4.4, 4.5, 4.5, 4.5, 4.6, 4.6] }
   ];
 
-  // Screen Shows (Live Operations Snapshot)
-  const shows: ScreenShow[] = [
-    { screen: "Screen 1", movie: "Raftaar", time: "2:30 PM - 5:10 PM", occupancy: 82 },
-    { screen: "Screen 2", movie: "Cosmic Drift", time: "3:00 PM - 5:45 PM", occupancy: 64 },
-    { screen: "Screen 3", movie: "Ishq Junction", time: "2:45 PM - 5:20 PM", occupancy: 91 },
-    { screen: "Screen 4", movie: "Shadow Protocol", time: "4:00 PM - 6:30 PM", occupancy: 57 },
-    { screen: "Screen 5", movie: "Dil Ki Baazi", time: "3:15 PM - 5:50 PM", occupancy: 73 },
-    { screen: "Screen 6", movie: "The Last Circuit", time: "4:30 PM - 7:00 PM", occupancy: 48 }
-  ];
+  const currentLocation = LOCATIONS[selectedLocationKey] || LOCATIONS['ahilyanagar'];
+
+  // Screen Shows (Live Operations Snapshot based on current cinema)
+  const shows: ScreenShow[] = currentLocation.screens;
 
   // Calendar Events
   const events: EventItem[] = [
@@ -236,6 +349,15 @@ export default function FranchiseePortal() {
 
   // Quick action helper
   const handleActionClick = (actionName: string) => {
+    if (actionName === 'Ahilyanagar API Sync') {
+      setSelectedLocationKey('ahilyanagar');
+      showToast('Loaded Ahilyanagar Vista API Integration documentation.');
+      setTimeout(() => {
+        const el = document.getElementById('ahilyanagar-api-integration');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
     showToast(`Triggered Action: ${actionName}`);
   };
 
@@ -402,6 +524,93 @@ export default function FranchiseePortal() {
           </div>
 
           <div className="fra-topbar-actions">
+            {/* Location Switcher */}
+            <div className="relative" ref={locationDropdownRef} style={{ position: 'relative' }}>
+              <button
+                type="button"
+                onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
+                className="fra-btn fra-btn-outline"
+                style={{ padding: '0.45rem 0.8rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <i className="fa-solid fa-location-dot" style={{ color: selectedLocationKey === 'ahilyanagar' ? '#f59e0b' : 'var(--fra-gold)' }}></i>
+                <span>{currentLocation.name}</span>
+                {currentLocation.hasApiIntegration && (
+                  <span style={{ fontSize: '9px', background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 5px', borderRadius: '4px', fontWeight: 'bold' }}>
+                    API READY
+                  </span>
+                )}
+                <i className="fa-solid fa-chevron-down" style={{ fontSize: '9px', color: 'var(--fra-text-muted)' }}></i>
+              </button>
+
+              {locationDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '0.5rem',
+                  background: '#111827',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '10px',
+                  padding: '0.4rem',
+                  minWidth: '240px',
+                  boxShadow: '0 15px 35px rgba(0,0,0,0.6)',
+                  zIndex: 50,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '3px'
+                }}>
+                  <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', padding: '6px 8px', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                    Switch Cinema Property
+                  </div>
+                  {Object.values(LOCATIONS).map((loc) => (
+                    <button
+                      key={loc.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedLocationKey(loc.id);
+                        setLocationDropdownOpen(false);
+                        showToast(`Switched location to ${loc.name}`);
+                      }}
+                      style={{
+                        textAlign: 'left',
+                        padding: '0.5rem 0.65rem',
+                        fontSize: '0.75rem',
+                        color: selectedLocationKey === loc.id ? '#ffffff' : '#9ca3af',
+                        background: selectedLocationKey === loc.id ? 'rgba(37, 99, 235, 0.25)' : 'transparent',
+                        borderRadius: '6px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        transition: 'background 0.2s'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <i className="fa-solid fa-film" style={{ fontSize: '10px', color: selectedLocationKey === loc.id ? '#60a5fa' : '#6b7280' }}></i>
+                        <span>{loc.shortLabel}</span>
+                      </div>
+                      {loc.hasApiIntegration && (
+                        <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: '900' }}>
+                          VISTA SYNC
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Launch ConnCloud Suite */}
+            <Link
+              href={`/conncloud/dashboard?cinema=${currentLocation.cinemaId}`}
+              className="fra-btn fra-btn-outline"
+              style={{ padding: '0.45rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <span>ConnCloud SaaS</span>
+              <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '9px' }}></i>
+            </Link>
+
             <button className="fra-icon-btn" onClick={() => showToast('No new notifications')}>
               <i className="fa-solid fa-bell"></i>
               <span className="fra-badge">3</span>
@@ -451,13 +660,25 @@ export default function FranchiseePortal() {
             <div className="fra-banner-left">
               <span className="fra-live-indicator">
                 <span className="fra-live-dot"></span>
-                LIVE — CONNPLEX CAPITAL 2, GANDHINAGAR
+                LIVE — {currentLocation.fullName}
               </span>
               <h1>Welcome back, Franchisee Partner</h1>
               <p>Here&apos;s what&apos;s happening across your cinema today — Wednesday, Aug 6, 2026.</p>
             </div>
             
             <div className="fra-banner-actions">
+              {selectedLocationKey === 'ahilyanagar' && (
+                <button 
+                  className="fra-btn"
+                  style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', fontWeight: 'bold' }}
+                  onClick={() => {
+                    const el = document.getElementById('ahilyanagar-api-integration');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  <i className="fa-solid fa-server mr-1"></i> Vista API Sync Docs
+                </button>
+              )}
               <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('Export Revenue')}>
                 <i className="fa-solid fa-download"></i> Export Revenue
               </button>
@@ -466,6 +687,64 @@ export default function FranchiseePortal() {
               </button>
             </div>
           </section>
+
+          {/* Quick Location Pills Bar */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            overflowX: 'auto',
+            padding: '0.5rem 0',
+            marginBottom: '0.75rem'
+          }}>
+            <span style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+              Cinema Property:
+            </span>
+            {Object.values(LOCATIONS).map((loc) => (
+              <button
+                key={loc.id}
+                type="button"
+                onClick={() => {
+                  setSelectedLocationKey(loc.id);
+                  showToast(`Viewing ${loc.name}`);
+                }}
+                style={{
+                  padding: '0.35rem 0.8rem',
+                  borderRadius: '20px',
+                  fontSize: '11px',
+                  fontWeight: selectedLocationKey === loc.id ? 'bold' : 'normal',
+                  background: selectedLocationKey === loc.id 
+                    ? (loc.id === 'ahilyanagar' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3))' : 'rgba(37, 99, 235, 0.3)')
+                    : '#131924',
+                  color: selectedLocationKey === loc.id ? '#ffffff' : '#9ca3af',
+                  border: selectedLocationKey === loc.id 
+                    ? (loc.id === 'ahilyanagar' ? '1px solid rgba(245, 158, 11, 0.6)' : '1px solid rgba(37, 99, 235, 0.6)')
+                    : '1px solid rgba(255, 255, 255, 0.06)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {loc.id === 'ahilyanagar' && <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>}
+                <span>{loc.name}</span>
+                {loc.hasApiIntegration && (
+                  <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: '900' }}>
+                    API READY
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Ahilyanagar Vista API Integration Section - Highlighted for Ahilyanagar location */}
+          {selectedLocationKey === 'ahilyanagar' && (
+            <div style={{ marginBottom: '1.75rem' }}>
+              <AhilyanagarApiIntegration onNotification={showToast} defaultExpanded={true} />
+            </div>
+          )}
 
           {/* Metrics Grid */}
           <section className="fra-metrics-grid">
@@ -496,7 +775,7 @@ export default function FranchiseePortal() {
                 <h2 className="fra-section-title">
                   Live Operations Snapshot
                 </h2>
-                <span className="fra-header-badge">6 SHOWS ACTIVE</span>
+                <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
               </div>
 
               <div className="fra-table-wrap">
@@ -548,6 +827,7 @@ export default function FranchiseePortal() {
               </div>
               <div className="fra-actions-grid">
                 {[
+                  { label: "Ahilyanagar API Sync", icon: "fa-server" },
                   { label: "Download Daily Report", icon: "fa-download" },
                   { label: "Download Monthly Report", icon: "fa-file-arrow-down" },
                   { label: "Create Maintenance Ticket", icon: "fa-ticket" },

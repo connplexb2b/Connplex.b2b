@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ConnCloudStore } from '../../../lib/conncloudData';
+import AhilyanagarApiIntegration from '../AhilyanagarApiIntegration';
 
 export default function SettingsView() {
-  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit'>('profile');
+  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations'>('profile');
 
   // Pull audits
   const audits = ConnCloudStore.getAuditLogs();
@@ -13,7 +14,8 @@ export default function SettingsView() {
     { module: 'Ledger & Expenses', superAdmin: 'Full', manager: 'Approve Only', finance: 'Full', auditor: 'View Only' },
     { module: 'Movies Show Allocation', superAdmin: 'Full', manager: 'Full', finance: 'None', auditor: 'View Only' },
     { module: 'F&B Inventory', superAdmin: 'Full', manager: 'Full', finance: 'View Only', auditor: 'View Only' },
-    { module: 'IoT System Settings', superAdmin: 'Full', manager: 'View Only', finance: 'None', auditor: 'None' }
+    { module: 'IoT System Settings', superAdmin: 'Full', manager: 'View Only', finance: 'None', auditor: 'None' },
+    { module: 'External Vista API & Sync', superAdmin: 'Full', manager: 'Full', finance: 'View Only', auditor: 'View Only' }
   ];
 
   return (
@@ -23,7 +25,8 @@ export default function SettingsView() {
         {[
           { id: 'profile', label: 'Cinema Profile' },
           { id: 'permissions', label: 'Role Permissions Matrix' },
-          { id: 'audit', label: 'System Audit Logs' }
+          { id: 'audit', label: 'System Audit Logs' },
+          { id: 'integrations', label: 'Ahilyanagar API & Vista Sync' }
         ].map((sec) => (
           <button
             key={sec.id}
@@ -117,6 +120,13 @@ export default function SettingsView() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 4. INTEGRATIONS */}
+      {subTab === 'integrations' && (
+        <div className="space-y-4">
+          <AhilyanagarApiIntegration />
         </div>
       )}
     </div>

@@ -72,6 +72,20 @@ export default function ConnCloudPage() {
     if (session === 'authenticated') {
       setIsAuthenticated(true);
     }
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cinemaParam = urlParams.get('cinema') || urlParams.get('location');
+      if (cinemaParam) {
+        if (cinemaParam.toLowerCase().includes('ahilyanagar') || cinemaParam === 'c5') {
+          setSelectedCinema('c5');
+        } else {
+          const match = ConnCloudStore.getCinemas().find(c => 
+            c.cinemaId === cinemaParam || c.name.toLowerCase().includes(cinemaParam.toLowerCase())
+          );
+          if (match) setSelectedCinema(match.cinemaId);
+        }
+      }
+    }
     setAuthLoading(false);
   }, []);
 
@@ -436,6 +450,15 @@ export default function ConnCloudPage() {
           {/* Controls: Cinema Switcher, Date Switcher, Search, User settings */}
           <div className="flex items-center gap-4 ml-auto w-full md:w-auto justify-between md:justify-end">
             
+            {/* Link to Franchisee Portal */}
+            <Link
+              href="/franchisee?location=ahilyanagar"
+              className="cc-btn cc-btn-outline py-1.5 text-xs hidden sm:flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-store text-amber-400"></i>
+              <span>Franchisee Portal</span>
+            </Link>
+
             {/* Cinema Switcher */}
             <div className="relative" ref={cinemaRef}>
               <button 
@@ -444,10 +467,15 @@ export default function ConnCloudPage() {
               >
                 <i className="fa-solid fa-building text-blue-400"></i>
                 <span>{selectedCinema === 'all' ? 'All Cinemas' : ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinema)?.name}</span>
+                {selectedCinema === 'c5' && (
+                  <span className="px-1 py-0.2 rounded text-[8px] font-black bg-amber-500/20 text-amber-300">
+                    API
+                  </span>
+                )}
                 <i className="fa-solid fa-chevron-down text-[10px] text-gray-500"></i>
               </button>
               {cinemaSelectOpen && (
-                <div className="absolute top-full left-0 mt-2 bg-[#111827] border border-white/10 p-1.5 rounded-lg shadow-2xl w-48 z-50 flex flex-col gap-0.5 animate-dropdownFade">
+                <div className="absolute top-full left-0 mt-2 bg-[#111827] border border-white/10 p-1.5 rounded-lg shadow-2xl w-56 z-50 flex flex-col gap-0.5 animate-dropdownFade">
                   <button 
                     onClick={() => { setSelectedCinema('all'); setCinemaSelectOpen(false); triggerNotification('Switched to all Cinemas.'); }}
                     className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white"
@@ -458,9 +486,14 @@ export default function ConnCloudPage() {
                     <button
                       key={c.cinemaId}
                       onClick={() => { setSelectedCinema(c.cinemaId); setCinemaSelectOpen(false); triggerNotification(`Selected ${c.name}`); }}
-                      className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white"
+                      className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center justify-between"
                     >
-                      {c.name}
+                      <span>{c.name}</span>
+                      {c.cinemaId === 'c5' && (
+                        <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                          VISTA API
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
