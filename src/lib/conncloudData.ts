@@ -89,6 +89,7 @@ export interface FinanceTransaction {
   vendor?: string;
   approver?: string;
   attachment?: string;
+  description?: string;
 }
 
 export interface Staff {
@@ -1060,13 +1061,13 @@ export class ConnCloudStore {
             });
 
             newFnb.push({
-              orderId: `fb_ah_${fnbIdCounter++}`,
+              transactionId: `fb_ah_${fnbIdCounter++}`,
+              productId: 'fb3',
+              quantity: Math.floor(ticketsSold * 0.35) || 1,
+              price: 320,
+              category: 'Popcorn & Combos',
               cinemaId: 'c5',
-              date: dateString,
-              time,
-              items: [{ productId: 'fb3', quantity: Math.floor(ticketsSold * 0.35) || 1, price: 320 }],
-              totalAmount: fnbAmt,
-              paymentMethod: 'UPI'
+              date: dateString
             });
           });
         });
