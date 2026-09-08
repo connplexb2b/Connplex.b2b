@@ -608,7 +608,10 @@ const INITIAL_STAFF: Staff[] = [
   { employeeId: 'st5', name: 'Rohit Mehta', department: 'Operations', designation: 'Projectionist', joiningDate: '2022-04-12', status: 'Active' },
   { employeeId: 'st6', name: 'Sanya Malhotra', department: 'HR', designation: 'Staff Scheduler', joiningDate: '2025-03-01', status: 'Active' },
   { employeeId: 'st7', name: 'Deepak Patel', department: 'Housekeeping', designation: 'Lead Janitor', joiningDate: '2023-06-25', status: 'Active' },
-  { employeeId: 'st8', name: 'Nisha Singh', department: 'F&B', designation: 'Food Manager', joiningDate: '2024-02-18', status: 'On Leave' }
+  { employeeId: 'st8', name: 'Nisha Singh', department: 'F&B', designation: 'Food Manager', joiningDate: '2024-02-18', status: 'On Leave' },
+  { employeeId: 'st_ah1', name: 'Vikram Shinde', department: 'Management', designation: 'Franchise Partner & GM', joiningDate: '2025-06-01', status: 'Active' },
+  { employeeId: 'st_ah2', name: 'Ramesh Kadam', department: 'Operations', designation: 'Ahilyanagar Operations Lead', joiningDate: '2025-06-15', status: 'Active' },
+  { employeeId: 'st_ah3', name: 'Snehal Deshmukh', department: 'F&B', designation: 'Food Manager', joiningDate: '2025-07-01', status: 'Active' }
 ];
 
 const INITIAL_EQUIPMENT: Equipment[] = [
@@ -621,7 +624,13 @@ const INITIAL_EQUIPMENT: Equipment[] = [
   { equipmentId: 'eq7', type: 'HVAC', screenId: 's3', vendor: 'Voltas Blue Star', status: 'Warning', health: 78, lastMaintenance: '2026-07-10', details: 'Compressor belt vibration. SLA maintenance queued.' },
   { equipmentId: 'eq8', type: 'Sound', screenId: 's1', vendor: 'Dolby Atmos Service', status: 'Healthy', health: 99, lastMaintenance: '2026-08-01', details: '32-channel Atmos decoder setup' },
   { equipmentId: 'eq9', type: 'Power', screenId: 's1', vendor: 'Schneider Electric', status: 'Healthy', health: 97, lastMaintenance: '2026-06-20', details: '150kVA online dual-bypass UPS system' },
-  { equipmentId: 'eq10', type: 'Fire Safety', screenId: 's1', vendor: 'Minimax Systems', status: 'Healthy', health: 100, lastMaintenance: '2026-08-05', details: 'Carbon smoke telemetry, sprinkler system active' }
+  { equipmentId: 'eq10', type: 'Fire Safety', screenId: 's1', vendor: 'Minimax Systems', status: 'Healthy', health: 100, lastMaintenance: '2026-08-05', details: 'Carbon smoke telemetry, sprinkler system active' },
+  { equipmentId: 'eq_ah1', type: 'Projector', screenId: 's20', vendor: 'Barco Laser Projection India', status: 'Healthy', health: 99, lastMaintenance: '2026-08-10', temperature: 39, lampHours: 140, details: 'Barco Series 4 4K Laser Projector for Couple Recliner' },
+  { equipmentId: 'eq_ah2', type: 'Sound', screenId: 's20', vendor: 'Dolby Atmos Service', status: 'Healthy', health: 98, lastMaintenance: '2026-08-12', details: 'Dolby Atmos 7.1.4 Surround Sound Recliner Setup' },
+  { equipmentId: 'eq_ah3', type: 'HVAC', screenId: 's20', vendor: 'Daikin VRV Systems', status: 'Healthy', health: 96, lastMaintenance: '2026-08-15', details: 'Dual Inverter 10TR Climate Control, Set 21.5C' },
+  { equipmentId: 'eq_ah4', type: 'Projector', screenId: 's21', vendor: 'Christie Digital Systems', status: 'Healthy', health: 97, lastMaintenance: '2026-08-08', temperature: 41, lampHours: 210, details: 'Christie Digital CineLife+ Gold Class Laser Projector' },
+  { equipmentId: 'eq_ah5', type: 'Sound', screenId: 's21', vendor: 'Dolby Atmos Service', status: 'Healthy', health: 99, lastMaintenance: '2026-08-12', details: '32-channel Dolby Atmos Gold Class Array' },
+  { equipmentId: 'eq_ah6', type: 'Power', screenId: 's20', vendor: 'Schneider Electric', status: 'Healthy', health: 100, lastMaintenance: '2026-08-01', details: '80kVA Online True-Online UPS with Smart Telemetry' }
 ];
 
 const INITIAL_MAINTENANCE: MaintenanceTicket[] = [
@@ -632,7 +641,9 @@ const INITIAL_MAINTENANCE: MaintenanceTicket[] = [
 const INITIAL_CAMPAIGNS: MarketingCampaign[] = [
   { campaignId: 'c_mp1', name: 'Monsoon Box Office Combo Blast', movieId: 'm1', cinemaId: 'c1', audience: 'All Cinegoers', budget: 12000, startDate: '2026-08-01', endDate: '2026-08-15', status: 'Active', reach: '48.2K', ctr: '4.1%', conversions: 890, roi: '18.4%' },
   { campaignId: 'c_mp2', name: 'Weekend Family Combo Bundle', movieId: 'm3', cinemaId: 'c1', audience: 'Family Segment', budget: 8500, startDate: '2026-08-05', endDate: '2026-08-20', status: 'Active', reach: '21.6K', ctr: '3.2%', conversions: 420, roi: '12.8%' },
-  { campaignId: 'c_mp3', name: 'Independence Day Ticket Flash Bundle', movieId: 'm4', cinemaId: 'c1', audience: 'VIP Members', budget: 25000, startDate: '2026-08-12', endDate: '2026-08-18', status: 'Scheduled', reach: '---', ctr: '---', conversions: 0, roi: '---' }
+  { campaignId: 'c_mp3', name: 'Independence Day Ticket Flash Bundle', movieId: 'm4', cinemaId: 'c1', audience: 'VIP Members', budget: 25000, startDate: '2026-08-12', endDate: '2026-08-18', status: 'Scheduled', reach: '---', ctr: '---', conversions: 0, roi: '---' },
+  { campaignId: 'c_mp_ah1', name: 'Ahilyanagar Grand Recliner Launch Special', movieId: 'm1', cinemaId: 'c5', audience: 'Ahilyanagar & Ahmednagar Cinephiles', budget: 15000, startDate: '2026-08-01', endDate: '2026-08-31', status: 'Active', reach: '34.8K', ctr: '4.8%', conversions: 720, roi: '22.5%' },
+  { campaignId: 'c_mp_ah2', name: 'Couple Recliner VIP Weekend Combo', movieId: 'm3', cinemaId: 'c5', audience: 'Couples & Premium Cinegoers', budget: 9000, startDate: '2026-08-10', endDate: '2026-08-25', status: 'Active', reach: '18.2K', ctr: '5.2%', conversions: 340, roi: '19.4%' }
 ];
 
 const INITIAL_DOCS: Document[] = [
@@ -645,7 +656,8 @@ const INITIAL_DOCS: Document[] = [
 const INITIAL_NOTIFS: Notification[] = [
   { notificationId: 'nt1', type: 'Critical', severity: 'High', message: 'Screen 4 Projector offline: Laser diode failure. Request technician.', recipient: 'All', timestamp: '12 mins ago', read: false, action: '/conncloud/operations/equipment' },
   { notificationId: 'nt2', type: 'Warning', severity: 'Medium', message: 'Veg Cheese Samosa stock has dropped below the threshold (45 left).', recipient: 'F&B Manager', timestamp: '1h ago', read: false, action: '/conncloud/fnb/inventory' },
-  { notificationId: 'nt3', type: 'Success', severity: 'Low', message: 'Record weekend revenue threshold surpassed: ₹12.5L collected in 48h.', recipient: 'Owner', timestamp: '1d ago', read: true, action: '/conncloud/finance/revenue' }
+  { notificationId: 'nt3', type: 'Success', severity: 'Low', message: 'Record weekend revenue threshold surpassed: ₹12.5L collected in 48h.', recipient: 'Owner', timestamp: '1d ago', read: true, action: '/conncloud/finance/revenue' },
+  { notificationId: 'nt_ah1', type: 'Success', severity: 'Low', message: 'Connplex Ahilyanagar daily ticket & F&B sync completed successfully with Vista API.', recipient: 'All', timestamp: '5 mins ago', read: false, action: '/conncloud/dashboard' }
 ];
 
 const INITIAL_AUDITS: AuditEvent[] = [
@@ -672,7 +684,8 @@ const INITIAL_MERCHANDISE_ORDERS: MerchandiseOrder[] = [
   { orderId: 'MO-8839', date: '2026-08-30 15:30', customerName: 'Rohan Deshmukh', cinemaId: 'c1', items: [{ productId: 'mp6', name: 'FOUNDER CARD (NFC)', quantity: 1, price: 999 }, { productId: 'mp5', name: 'SCRIPT PLANNER', quantity: 1, price: 499 }], totalAmount: 1498, channel: 'Online', paymentMethod: 'UPI', status: 'Fulfilled' },
   { orderId: 'MO-8838', date: '2026-08-29 20:10', customerName: 'Vikram Joshi', cinemaId: 'c3', items: [{ productId: 'mp4', name: 'MINI DIRECTOR SPOTLIGHT', quantity: 1, price: 1899 }], totalAmount: 1899, channel: 'Counter', paymentMethod: 'Card', status: 'Fulfilled' },
   { orderId: 'MO-8837', date: '2026-08-29 17:05', customerName: 'Pooja Agarwal', cinemaId: 'c4', items: [{ productId: 'mp5', name: 'SCRIPT PLANNER', quantity: 2, price: 499 }, { productId: 'mp7', name: 'PREMIUM METAL PEN', quantity: 2, price: 399 }], totalAmount: 1796, channel: 'Online', paymentMethod: 'UPI', status: 'Preparing' },
-  { orderId: 'MO-8836', date: '2026-08-28 14:20', customerName: 'Devang Solanki', cinemaId: 'c2', items: [{ productId: 'mp10', name: 'METAL TICKET BOX', quantity: 1, price: 849 }], totalAmount: 849, channel: 'Store Kiosk', paymentMethod: 'Cash', status: 'Fulfilled' }
+  { orderId: 'MO-8836', date: '2026-08-28 14:20', customerName: 'Devang Solanki', cinemaId: 'c2', items: [{ productId: 'mp10', name: 'METAL TICKET BOX', quantity: 1, price: 849 }], totalAmount: 849, channel: 'Store Kiosk', paymentMethod: 'Cash', status: 'Fulfilled' },
+  { orderId: 'MO-8842', date: '2026-08-30 20:15', customerName: 'Sachin Thorat', cinemaId: 'c5', items: [{ productId: 'mp1', name: 'PREMIUM TUMBLER', quantity: 2, price: 899 }, { productId: 'mp6', name: 'FOUNDER CARD (NFC)', quantity: 1, price: 999 }], totalAmount: 2797, channel: 'Counter', paymentMethod: 'UPI', status: 'Fulfilled' }
 ];
 
 const INITIAL_GROUP_PACKAGES: GroupPackage[] = [
@@ -688,7 +701,8 @@ const INITIAL_GROUP_BOOKINGS: GroupBooking[] = [
   { bookingId: 'GB-1026', clientName: 'Tarun Mathur', organization: 'Tata Consultancy Services', contactNumber: '9910874512', email: 'tarun.m@tcs.com', cinemaId: 'c3', screenId: 's11', eventType: 'Corporate Screening', date: '2026-09-22', timeSlot: '02:00 PM - 05:30 PM', guestCount: 175, movieTitle: 'Ishq Junction', fnbPackage: 'Silver Combo', totalQuoted: 82000, advancePaid: 0, paymentStatus: 'Pending Advance', status: 'Quote Sent', specialRequests: 'Awaiting corporate purchase order sign-off from procurement.' },
   { bookingId: 'GB-1027', clientName: 'Ananya Singhania', organization: 'Singhania Jewels Family', contactNumber: '9829011223', email: 'ananya@singhaniajewels.com', cinemaId: 'c1', screenId: 's4', eventType: 'Birthday / Celebration', date: '2026-09-18', timeSlot: '06:00 PM - 09:30 PM', guestCount: 75, movieTitle: 'Dil Ki Baazi', fnbPackage: 'Platinum Gourmet', totalQuoted: 52000, advancePaid: 52000, paymentStatus: 'Fully Paid', status: 'Confirmed', specialRequests: 'Champagne style mocktails and custom happy birthday slide with spotlight.' },
   { bookingId: 'GB-1028', clientName: 'Harsh Vardhan Goel', organization: 'Reliance Retail Dealer Network', contactNumber: '9876543201', email: 'h.goel@relianceretail.com', cinemaId: 'c2', screenId: 's9', eventType: 'Bulk Premiere', date: '2026-09-25', timeSlot: '07:30 PM - 11:00 PM', guestCount: 95, movieTitle: 'Shadow Protocol (4DX VIP)', fnbPackage: 'Gold VIP Combo', totalQuoted: 65000, advancePaid: 30000, paymentStatus: 'Advance Paid', status: 'Confirmed', specialRequests: 'Red carpet photo booth setup in foyer.' },
-  { bookingId: 'GB-1029', clientName: 'Dr. Vivek Saxena', organization: 'Rotary Club of Mewar', contactNumber: '9414088921', email: 'rotary.mewar@gmail.com', cinemaId: 'c4', screenId: 's17', eventType: 'Private Theatre Rental', date: '2026-10-02', timeSlot: '11:00 AM - 02:00 PM', guestCount: 130, movieTitle: 'The Last Circuit', fnbPackage: 'Silver Combo', totalQuoted: 48000, advancePaid: 0, paymentStatus: 'Pending Advance', status: 'Inquiry', specialRequests: 'Charity fundraiser premiere with banners in lobby.' }
+  { bookingId: 'GB-1029', clientName: 'Dr. Vivek Saxena', organization: 'Rotary Club of Mewar', contactNumber: '9414088921', email: 'rotary.mewar@gmail.com', cinemaId: 'c4', screenId: 's17', eventType: 'Private Theatre Rental', date: '2026-10-02', timeSlot: '11:00 AM - 02:00 PM', guestCount: 130, movieTitle: 'The Last Circuit', fnbPackage: 'Silver Combo', totalQuoted: 48000, advancePaid: 0, paymentStatus: 'Pending Advance', status: 'Inquiry', specialRequests: 'Charity fundraiser premiere with banners in lobby.' },
+  { bookingId: 'GB-1030', clientName: 'Suresh Patil', organization: 'Kalyani Steels & Engineering Ahilyanagar', contactNumber: '9822451290', email: 'suresh.patil@kalyanisteels.com', cinemaId: 'c5', screenId: 's21', eventType: 'Corporate Screening', date: '2026-09-16', timeSlot: '06:00 PM - 09:30 PM', guestCount: 60, movieTitle: 'Raftaar (Gold Class Special)', fnbPackage: 'Gold VIP Combo', totalQuoted: 36000, advancePaid: 20000, paymentStatus: 'Advance Paid', status: 'Confirmed', specialRequests: 'Executive seating for plant management team.' }
 ];
 
 const INITIAL_LICENSES: CinemaLicense[] = [
@@ -704,7 +718,13 @@ const INITIAL_LICENSES: CinemaLicense[] = [
   // Jaipur branch licenses
   { licenseId: 'lic9', cinemaId: 'c2', licenseName: 'Cinematograph Screen Operations License', category: 'Cinematograph', licenseNumber: 'DM/JPR/CINE-2026/09', issuingAuthority: 'District Magistrate Office, Jaipur', issueDate: '2026-02-01', expiryDate: '2027-01-31', renewalReminderDays: 45, status: 'Valid', documentUrl: '/docs/cinematograph_jaipur.pdf', officerInCharge: 'Rakesh Patel', feePaid: 65000 },
   { licenseId: 'lic10', cinemaId: 'c2', licenseName: 'Fire Safety NOC (Screen 1-6 & Foyer)', category: 'Fire Safety', licenseNumber: 'FS-RAJ-JPR-7714', issuingAuthority: 'Jaipur Fire Municipal Department', issueDate: '2025-09-01', expiryDate: '2026-08-31', renewalReminderDays: 15, status: 'In Renewal', documentUrl: '/docs/fire_noc_jaipur.pdf', officerInCharge: 'K. S. Rathore', feePaid: 35000 },
-  { licenseId: 'lic11', cinemaId: 'c2', licenseName: 'FSSAI Central Food Safety License', category: 'Food & Health (FSSAI)', licenseNumber: 'FSSAI-12224019000881', issuingAuthority: 'Food Safety and Standards Authority of India (FSSAI)', issueDate: '2026-01-10', expiryDate: '2027-01-09', renewalReminderDays: 30, status: 'Valid', documentUrl: '/docs/fssai_jaipur.pdf', officerInCharge: 'Priya Nair', feePaid: 18000 }
+  { licenseId: 'lic11', cinemaId: 'c2', licenseName: 'FSSAI Central Food Safety License', category: 'Food & Health (FSSAI)', licenseNumber: 'FSSAI-12224019000881', issuingAuthority: 'Food Safety and Standards Authority of India (FSSAI)', issueDate: '2026-01-10', expiryDate: '2027-01-09', renewalReminderDays: 30, status: 'Valid', documentUrl: '/docs/fssai_jaipur.pdf', officerInCharge: 'Priya Nair', feePaid: 18000 },
+
+  // Ahilyanagar branch licenses
+  { licenseId: 'lic_ah1', cinemaId: 'c5', licenseName: 'Cinematograph Screen Operations License (Ahilyanagar)', category: 'Cinematograph', licenseNumber: 'DM/AHIL/CINE-2026/01', issuingAuthority: 'District Magistrate & Licensing Authority, Ahilyanagar (Ahmednagar)', issueDate: '2026-01-15', expiryDate: '2027-01-14', renewalReminderDays: 60, status: 'Valid', documentUrl: '/docs/cinematograph_ahilyanagar.pdf', officerInCharge: 'Vikram Shinde', feePaid: 40000 },
+  { licenseId: 'lic_ah2', cinemaId: 'c5', licenseName: 'Maharashtra Fire Safety NOC & Hydrant Compliance', category: 'Fire Safety', licenseNumber: 'FS-MAH-AHIL-2026-88', issuingAuthority: 'Maharashtra Fire Services Department', issueDate: '2025-12-01', expiryDate: '2026-11-30', renewalReminderDays: 45, status: 'Valid', documentUrl: '/docs/fire_noc_ahilyanagar.pdf', officerInCharge: 'Ramesh Kadam', feePaid: 25000 },
+  { licenseId: 'lic_ah3', cinemaId: 'c5', licenseName: 'FSSAI Food Hygiene & Concession License', category: 'Food & Health (FSSAI)', licenseNumber: 'FSSAI-11524021000492', issuingAuthority: 'Food Safety and Standards Authority of India (FSSAI)', issueDate: '2026-02-10', expiryDate: '2027-02-09', renewalReminderDays: 30, status: 'Valid', documentUrl: '/docs/fssai_ahilyanagar.pdf', officerInCharge: 'Snehal Deshmukh', feePaid: 15000 },
+  { licenseId: 'lic_ah4', cinemaId: 'c5', licenseName: 'PPL / IPRS Public Performance Music License', category: 'Copyright & Performance', licenseNumber: 'PPL-MAH-AHIL-401', issuingAuthority: 'Phonographic Performance Limited (PPL India)', issueDate: '2026-04-01', expiryDate: '2027-03-31', renewalReminderDays: 60, status: 'Valid', documentUrl: '/docs/ppl_license_ahilyanagar.pdf', officerInCharge: 'Vikram Shinde', feePaid: 35000 }
 ];
 
 const INITIAL_OFFERS: CinemaOffer[] = [
@@ -713,7 +733,8 @@ const INITIAL_OFFERS: CinemaOffer[] = [
   { offerId: 'off3', code: 'FAMILYFEAST', title: 'Free Popcorn Combo on 4+ Tickets', description: 'Book 4 or more tickets for any evening family show and receive complimentary Large Tub + 2 Pepsi.', discountType: 'Free F&B Combo', discountValue: 320, minTicketsRequired: 4, maxDiscountAmount: 320, cinemaId: 'all', applicableDays: 'All Days', validFrom: '2026-08-05', validUntil: '2026-09-25', usageLimit: 500, timesRedeemed: 245, totalSavingsGranted: 78400, status: 'Active', bannerColor: 'from-amber-600 to-orange-700' },
   { offerId: 'off4', code: 'HDFCFRIDAY', title: 'HDFC BOGO Weekend Special', description: 'Buy 1 Ticket and Get 1 Free on all HDFC Bank Diners Club, Regalia and Infinia Credit Cards.', discountType: 'BOGO', discountValue: 100, minTicketsRequired: 2, maxDiscountAmount: 250, cinemaId: 'all', applicableDays: 'Weekends Only', validFrom: '2026-07-01', validUntil: '2026-12-31', usageLimit: 800, timesRedeemed: 310, totalSavingsGranted: 77500, status: 'Active', bannerColor: 'from-purple-600 to-pink-700' },
   { offerId: 'off5', code: 'CORPORATE20', title: '20% Corporate Privilege Discount', description: 'Special corporate tie-up discount on presentation of registered corporate email / company badge.', discountType: 'Percentage', discountValue: 20, minTicketsRequired: 2, maxDiscountAmount: 200, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-08-01', validUntil: '2026-11-30', usageLimit: 600, timesRedeemed: 180, totalSavingsGranted: 21600, status: 'Active', bannerColor: 'from-cyan-600 to-blue-700' },
-  { offerId: 'off6', code: 'MONSOONMAGIC', title: 'Flat 25% Off on Morning Shows', description: 'Super Saver morning shows before 1:00 PM get an instant 25% reduction on standard ticket prices.', discountType: 'Percentage', discountValue: 25, minTicketsRequired: 1, maxDiscountAmount: 75, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-07-15', validUntil: '2026-08-31', usageLimit: 1200, timesRedeemed: 520, totalSavingsGranted: 46800, status: 'Expired', bannerColor: 'from-gray-600 to-gray-700' }
+  { offerId: 'off6', code: 'MONSOONMAGIC', title: 'Flat 25% Off on Morning Shows', description: 'Super Saver morning shows before 1:00 PM get an instant 25% reduction on standard ticket prices.', discountType: 'Percentage', discountValue: 25, minTicketsRequired: 1, maxDiscountAmount: 75, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-07-15', validUntil: '2026-08-31', usageLimit: 1200, timesRedeemed: 520, totalSavingsGranted: 46800, status: 'Expired', bannerColor: 'from-gray-600 to-gray-700' },
+  { offerId: 'off_ah1', code: 'AHILYA20', title: 'Ahilyanagar Couple Recliner Special', description: 'Exclusive 20% privilege savings on couple recliner auditorium bookings in Ahilyanagar.', discountType: 'Percentage', discountValue: 20, minTicketsRequired: 2, maxDiscountAmount: 200, cinemaId: 'c5', applicableDays: 'All Days', validFrom: '2026-08-01', validUntil: '2026-12-31', usageLimit: 500, timesRedeemed: 142, totalSavingsGranted: 28400, status: 'Active', bannerColor: 'from-amber-600 to-yellow-600' }
 ];
 
 const INITIAL_MIS_SUMMARIES: MISCinemaSummary[] = [
@@ -804,6 +825,28 @@ const INITIAL_MIS_SUMMARIES: MISCinemaSummary[] = [
     occupancyPercent: 62.5,
     budgetTarget: 13000000,
     variancePercent: 3.0
+  },
+  {
+    cinemaId: 'c5',
+    cinemaName: 'Connplex Ahilyanagar',
+    city: 'Ahilyanagar, Maharashtra',
+    screens: 2,
+    totalFootfall: 18400,
+    boxOfficeGross: 4850000,
+    fnbGross: 1980000,
+    merchandiseGross: 240000,
+    groupBookingsGross: 620000,
+    screenAdsGross: 350000,
+    totalRevenue: 8040000,
+    distributorShare: 2425000,
+    operationalExpenses: 2840000,
+    netEbitda: 2775000,
+    ebitdaMargin: 34.5,
+    atp: 263,
+    sph: 107,
+    occupancyPercent: 74.8,
+    budgetTarget: 7500000,
+    variancePercent: 7.2
   }
 ];
 
@@ -902,6 +945,31 @@ export class ConnCloudStore {
     this.staffOrientations = cacheOrSeed('staffOrientations', INITIAL_STAFF_ORIENTATIONS);
     this.certifications = cacheOrSeed('certifications', INITIAL_TRAINING_CERTIFICATIONS);
 
+    // Reconcile and merge any newly added items (e.g. Ahilyanagar c5, s20, s21, staff, licenses)
+    // into previously stored localStorage cache
+    const reconcileCollection = <T>(key: string, current: T[], initial: T[], idKey: keyof T): T[] => {
+      const existingIds = new Set(current.map(item => item[idKey]));
+      const missing = initial.filter(item => !existingIds.has(item[idKey]));
+      if (missing.length > 0) {
+        current.push(...missing);
+        localStorage.setItem(`cc_${key}`, JSON.stringify(current));
+      }
+      return current;
+    };
+
+    this.cinemas = reconcileCollection('cinemas', this.cinemas, INITIAL_CINEMAS, 'cinemaId');
+    this.screens = reconcileCollection('screens', this.screens, INITIAL_SCREENS, 'screenId');
+    this.staff = reconcileCollection('staff', this.staff, INITIAL_STAFF, 'employeeId');
+    this.equipment = reconcileCollection('equipment', this.equipment, INITIAL_EQUIPMENT, 'equipmentId');
+    this.campaigns = reconcileCollection('campaigns', this.campaigns, INITIAL_CAMPAIGNS, 'campaignId');
+    this.documents = reconcileCollection('documents', this.documents, INITIAL_DOCS, 'documentId');
+    this.notifications = reconcileCollection('notifications', this.notifications, INITIAL_NOTIFS, 'notificationId');
+    this.merchandiseOrders = reconcileCollection('merchandiseOrders', this.merchandiseOrders, INITIAL_MERCHANDISE_ORDERS, 'orderId');
+    this.groupBookings = reconcileCollection('groupBookings', this.groupBookings, INITIAL_GROUP_BOOKINGS, 'bookingId');
+    this.licenses = reconcileCollection('licenses', this.licenses, INITIAL_LICENSES, 'licenseId');
+    this.offers = reconcileCollection('offers', this.offers, INITIAL_OFFERS, 'offerId');
+    this.misSummaries = reconcileCollection('misSummaries', this.misSummaries, INITIAL_MIS_SUMMARIES, 'cinemaId');
+
     // Relational relational collections (large)
     const storedBase = localStorage.getItem('cc_relational_base');
     if (storedBase) {
@@ -916,6 +984,137 @@ export class ConnCloudStore {
       }
     } else {
       this.seedRelational();
+    }
+
+    // Ensure Ahilyanagar shows and finance records are seeded if missing from relational store
+    const hasAhilyaShows = this.shows && this.shows.some(s => s.screenId === 's20' || s.screenId === 's21');
+    const hasAhilyaFin = this.financeTransactions && this.financeTransactions.some(f => f.cinemaId === 'c5');
+
+    if (!hasAhilyaShows || !hasAhilyaFin) {
+      const dates = getDatesInRange(30);
+      const ahilyaScreens = INITIAL_SCREENS.filter(s => s.cinemaId === 'c5');
+      const showTimes = ['11:00', '14:15', '17:30', '20:45'];
+      let showIdCounter = (this.shows?.length || 0) + 1000;
+      let fnbIdCounter = (this.fnbTransactions?.length || 0) + 1000;
+      let finIdCounter = (this.financeTransactions?.length || 0) + 1000;
+
+      const newShows: Show[] = [];
+      const newFnb: FnBTransaction[] = [];
+      const newFinance: FinanceTransaction[] = [];
+
+      dates.forEach((dateString, dateIdx) => {
+        ahilyaScreens.forEach(screen => {
+          const movie1 = INITIAL_MOVIES[0]; // Raftaar
+          const movie2 = INITIAL_MOVIES[2]; // Ishq Junction
+          showTimes.forEach((time, timeIdx) => {
+            const movie = timeIdx < 2 ? movie1 : movie2;
+            const cap = screen.capacity;
+            const dateObj = new Date(dateString);
+            const dayOfWeek = dateObj.getDay();
+            const isWeekend = dayOfWeek === 0 || dayOfWeek === 6 || dayOfWeek === 5;
+            let occupancyRate = (isWeekend ? 85 : 70) + (timeIdx >= 2 ? 10 : 0);
+            const ticketsSold = Math.min(cap, Math.max(8, Math.floor((cap * occupancyRate) / 100)));
+            const showId = `sh_ah_${showIdCounter++}`;
+            const isCompleted = new Date(`${dateString}T${time}`) < new Date();
+
+            newShows.push({
+              showId,
+              movieId: movie.movieId,
+              screenId: screen.screenId,
+              date: dateString,
+              time,
+              capacity: cap,
+              ticketsSold,
+              status: isCompleted ? 'Completed' : 'Scheduled'
+            });
+
+            // Ticket revenue
+            const price = 260;
+            const rev = ticketsSold * price;
+            newFinance.push({
+              transactionId: `tx_ah_${finIdCounter++}`,
+              type: 'Income',
+              category: 'Tickets',
+              amount: rev,
+              tax: Math.round(rev * 0.18),
+              date: dateString,
+              cinemaId: 'c5',
+              status: 'Approved',
+              description: `Box office collections - Screen ${screen.screenId === 's20' ? '1' : '2'} (${time})`,
+              approver: 'Vikram Shinde'
+            });
+
+            // F&B
+            const fnbAmt = Math.round(ticketsSold * 110);
+            newFinance.push({
+              transactionId: `tx_ah_${finIdCounter++}`,
+              type: 'Income',
+              category: 'Food & Beverage',
+              amount: fnbAmt,
+              tax: Math.round(fnbAmt * 0.05),
+              date: dateString,
+              cinemaId: 'c5',
+              status: 'Approved',
+              description: `Concessions & Gourmet Snack sales (${time})`,
+              approver: 'Vikram Shinde'
+            });
+
+            newFnb.push({
+              orderId: `fb_ah_${fnbIdCounter++}`,
+              cinemaId: 'c5',
+              date: dateString,
+              time,
+              items: [{ productId: 'fb3', quantity: Math.floor(ticketsSold * 0.35) || 1, price: 320 }],
+              totalAmount: fnbAmt,
+              paymentMethod: 'UPI'
+            });
+          });
+        });
+
+        // Add periodic expenses for Ahilyanagar
+        if (dateIdx % 7 === 0) {
+          newFinance.push({
+            transactionId: `tx_ah_exp_${finIdCounter++}`,
+            type: 'Expense',
+            category: 'Electricity',
+            amount: 28000,
+            tax: 5040,
+            date: dateString,
+            cinemaId: 'c5',
+            status: 'Paid',
+            vendor: 'MSEDCL (Maharashtra State Electricity)',
+            approver: 'Vikram Shinde'
+          });
+        }
+        if (dateIdx % 10 === 0) {
+          newFinance.push({
+            transactionId: `tx_ah_exp_${finIdCounter++}`,
+            type: 'Expense',
+            category: 'Housekeeping Supplies',
+            amount: 8500,
+            tax: 1530,
+            date: dateString,
+            cinemaId: 'c5',
+            status: 'Paid',
+            vendor: 'Clean Corp Ltd (Ahilyanagar)',
+            approver: 'Vikram Shinde'
+          });
+        }
+      });
+
+      if (!this.shows) this.shows = [];
+      if (!this.fnbTransactions) this.fnbTransactions = [];
+      if (!this.financeTransactions) this.financeTransactions = [];
+
+      if (!hasAhilyaShows) {
+        this.shows.push(...newShows);
+        this.fnbTransactions.push(...newFnb);
+      }
+      if (!hasAhilyaFin) {
+        this.financeTransactions.push(...newFinance);
+      }
+
+      this.saveRelational();
     }
 
     this.isInitialized = true;

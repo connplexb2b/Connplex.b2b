@@ -31,11 +31,13 @@ import TrainingView from '../../../components/conncloud/views/TrainingView';
 
 // Central Relational Store import
 import { ConnCloudStore } from '../../../lib/conncloudData';
-
-// Shared valid credentials matching Franchisee portal
-const VALID_EMAIL = 'guptajahnvi47@gmail.com';
-const VALID_CONTACT = '9511310113';
-const VALID_PASSWORD = 'Jahnvi@04';
+import {
+  verifyFranchiseeCredentials,
+  storeFranchiseeSession,
+  getStoredFranchiseeUser,
+  clearFranchiseeSession,
+  FranchiseeUser
+} from '../../../lib/franchiseeAuth';
 
 export default function ConnCloudPage() {
   const router = useRouter();
@@ -43,6 +45,7 @@ export default function ConnCloudPage() {
 
   // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<FranchiseeUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [loginInput, setLoginInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
@@ -68,10 +71,20 @@ export default function ConnCloudPage() {
   // Initialize store and check session
   useEffect(() => {
     ConnCloudStore.init();
-    const session = localStorage.getItem('franchisee_session');
-    if (session === 'authenticated') {
+    const storedUser = getStoredFranchiseeUser();
+    if (storedUser) {
+      setCurrentUser(storedUser);
       setIsAuthenticated(true);
+      if (storedUser.cinemaId && storedUser.cinemaId !== 'all') {
+        setSelectedCinema(storedUser.cinemaId);
+      }
+    } else {
+      const session = localStorage.getItem('franchisee_session');
+      if (session === 'authenticated') {
+        setIsAuthenticated(true);
+      }
     }
+
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const cinemaParam = urlParams.get('cinema') || urlParams.get('location');
@@ -113,16 +126,17 @@ export default function ConnCloudPage() {
     setLoginError('');
 
     setTimeout(() => {
-      const sanitized = loginInput.trim().toLowerCase();
-      const matchEmail = sanitized === VALID_EMAIL.toLowerCase();
-      const matchContact = sanitized === VALID_CONTACT;
-
-      if ((matchEmail || matchContact) && passwordInput === VALID_PASSWORD) {
+      const authRes = verifyFranchiseeCredentials(loginInput, passwordInput);
+      if (authRes.success && authRes.user) {
         setIsAuthenticated(true);
-        localStorage.setItem('franchisee_session', 'authenticated');
-        triggerNotification('Sign-in verified. Welcome to ConnCloud.');
+        setCurrentUser(authRes.user);
+        storeFranchiseeSession(authRes.user);
+        if (authRes.user.cinemaId && authRes.user.cinemaId !== 'all') {
+          setSelectedCinema(authRes.user.cinemaId);
+        }
+        triggerNotification(`Sign-in verified. Welcome, ${authRes.user.name}!`);
       } else {
-        setLoginError('Invalid login email/contact or password credentials.');
+        setLoginError(authRes.error || 'Invalid login email/contact or password credentials.');
       }
       setIsSubmitting(false);
     }, 600);
@@ -131,7 +145,8 @@ export default function ConnCloudPage() {
   // Sign-out
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('franchisee_session');
+    setCurrentUser(null);
+    clearFranchiseeSession();
     setProfileOpen(false);
     triggerNotification('Signed out from ConnCloud session.');
   };
@@ -343,6 +358,32 @@ export default function ConnCloudPage() {
             </button>
           </form>
 
+          <div className="mt-4 pt-3 border-t border-white/10 flex flex-col items-center gap-1.5 text-xs">
+            <span className="text-[10px] uppercase font-bold text-gray-400">Quick Credentials</span>
+            <div className="flex flex-wrap gap-2 justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInput('ahilyanagar');
+                  setPasswordInput('ahilyanagar');
+                }}
+                className="px-2.5 py-1 rounded bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                📍 Ahilyanagar Partner
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInput('guptajahnvi47@gmail.com');
+                  setPasswordInput('Jahnvi@04');
+                }}
+                className="px-2.5 py-1 rounded bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                🏢 Corporate Admin
+              </button>
+            </div>
+          </div>
+
           <p className="text-[10px] text-gray-500 text-center mt-6">
             Authorized franchisee logins only. Connections are tracked.
           </p>
@@ -533,10 +574,18 @@ export default function ConnCloudPage() {
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-2 hover:bg-white/5 p-1 rounded-lg transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white text-xs">RP</div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-xs ${
+                  (currentUser?.cinemaId === 'c5' || selectedCinema === 'c5') ? 'bg-gradient-to-tr from-amber-600 to-amber-500 shadow-md shadow-amber-500/20' : 'bg-blue-600'
+                }`}>
+                  {currentUser?.initials || (selectedCinema === 'c5' ? 'VS' : 'RP')}
+                </div>
                 <div className="hidden lg:flex flex-col text-left">
-                  <span className="text-xs font-bold text-white leading-tight">Rakesh Patel</span>
-                  <span className="text-[9px] text-gray-400">Franchise Partner</span>
+                  <span className="text-xs font-bold text-white leading-tight">
+                    {currentUser?.name || (selectedCinema === 'c5' ? 'Vikram Shinde' : 'Rakesh Patel')}
+                  </span>
+                  <span className="text-[9px] text-gray-400">
+                    {currentUser?.role || (selectedCinema === 'c5' ? 'Ahilyanagar Franchise Partner' : 'Franchise Partner')}
+                  </span>
                 </div>
                 <i className="fa-solid fa-chevron-down text-[10px] text-gray-500 hidden lg:block"></i>
               </button>

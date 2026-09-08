@@ -6,11 +6,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import './franchisee.css';
 import AhilyanagarApiIntegration from '../../components/conncloud/AhilyanagarApiIntegration';
-
-// Credentials defined by the user
-const VALID_EMAIL = 'guptajahnvi47@gmail.com';
-const VALID_CONTACT = '9511310113';
-const VALID_PASSWORD = 'Jahnvi@04';
+import {
+  verifyFranchiseeCredentials,
+  storeFranchiseeSession,
+  getStoredFranchiseeUser,
+  clearFranchiseeSession,
+  FranchiseeUser
+} from '../../lib/franchiseeAuth';
 
 // TypeScript Interfaces
 interface Metric {
@@ -158,10 +160,11 @@ export default function FranchiseePortal() {
   const router = useRouter();
   // Session State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<FranchiseeUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Form State
-  const [loginInput, setLoginInput] = useState<string>(''); // Email or contact
+  const [loginInput, setLoginInput] = useState<string>(''); // Email or contact or username
   const [password, setPassword] = useState<string>('');
   const [loginError, setLoginError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -179,15 +182,29 @@ export default function FranchiseePortal() {
 
   // Check login state and url parameters on mount
   useEffect(() => {
-    const session = localStorage.getItem('franchisee_session');
-    if (session === 'authenticated') {
+    const storedUser = getStoredFranchiseeUser();
+    if (storedUser) {
+      setCurrentUser(storedUser);
       setIsAuthenticated(true);
+      if (storedUser.locationKey && LOCATIONS[storedUser.locationKey]) {
+        setSelectedLocationKey(storedUser.locationKey);
+      }
+    } else {
+      const session = localStorage.getItem('franchisee_session');
+      if (session === 'authenticated') {
+        setIsAuthenticated(true);
+      }
     }
+
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const loc = params.get('location') || params.get('cinema');
-      if (loc && LOCATIONS[loc.toLowerCase()]) {
-        setSelectedLocationKey(loc.toLowerCase());
+      if (loc) {
+        if (loc.toLowerCase().includes('ahilya') || loc.toLowerCase() === 'c5') {
+          setSelectedLocationKey('ahilyanagar');
+        } else if (LOCATIONS[loc.toLowerCase()]) {
+          setSelectedLocationKey(loc.toLowerCase());
+        }
       }
     }
     setIsLoading(false);
@@ -214,25 +231,27 @@ export default function FranchiseePortal() {
     setLoginError('');
 
     setTimeout(() => {
-      const sanitizedInput = loginInput.trim().toLowerCase();
-      const isEmailValid = sanitizedInput === VALID_EMAIL.toLowerCase();
-      const isContactValid = sanitizedInput === VALID_CONTACT;
-
-      if ((isEmailValid || isContactValid) && password === VALID_PASSWORD) {
+      const authRes = verifyFranchiseeCredentials(loginInput, password);
+      if (authRes.success && authRes.user) {
         setIsAuthenticated(true);
-        localStorage.setItem('franchisee_session', 'authenticated');
-        showToast('Successfully signed in! Welcome to Franchise Portal.');
+        setCurrentUser(authRes.user);
+        storeFranchiseeSession(authRes.user);
+        if (authRes.user.locationKey && LOCATIONS[authRes.user.locationKey]) {
+          setSelectedLocationKey(authRes.user.locationKey);
+        }
+        showToast(`Successfully signed in! Welcome ${authRes.user.name} (${authRes.user.role}).`);
       } else {
-        setLoginError('Invalid credentials. Check your email/contact number and password.');
+        setLoginError(authRes.error || 'Invalid credentials. Check your email/contact number and password.');
       }
       setIsSubmitting(false);
-    }, 800);
+    }, 600);
   };
 
   // Handle Logout
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('franchisee_session');
+    setCurrentUser(null);
+    clearFranchiseeSession();
     setLoginInput('');
     setPassword('');
     setProfileDropdownOpen(false);
@@ -443,6 +462,52 @@ export default function FranchiseePortal() {
             </button>
           </form>
 
+          <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
+              Quick Credentials
+            </span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInput('ahilyanagar');
+                  setPassword('ahilyanagar');
+                }}
+                style={{
+                  fontSize: '11px',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  color: '#fbbf24',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+              >
+                📍 Ahilyanagar Partner
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginInput('guptajahnvi47@gmail.com');
+                  setPassword('Jahnvi@04');
+                }}
+                style={{
+                  fontSize: '11px',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  color: '#93c5fd',
+                  border: '1px solid rgba(59, 130, 246, 0.35)',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+              >
+                🏢 Corporate Admin
+              </button>
+            </div>
+          </div>
+
           <p className="fra-signin-hint">
             Authorized franchise personnel only. Connection is encrypted.
           </p>
@@ -627,10 +692,16 @@ export default function FranchiseePortal() {
                 className="fra-profile-trigger"
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
               >
-                <div className="fra-avatar">RP</div>
+                <div className="fra-avatar" style={{ background: (currentUser?.cinemaId === 'c5' || selectedLocationKey === 'ahilyanagar') ? 'linear-gradient(135deg, #f59e0b, #d97706)' : undefined }}>
+                  {currentUser?.initials || (selectedLocationKey === 'ahilyanagar' ? 'VS' : 'RP')}
+                </div>
                 <div className="fra-profile-info">
-                  <span className="fra-profile-name">Rakesh Patel</span>
-                  <span className="fra-profile-role">Franchise Partner</span>
+                  <span className="fra-profile-name">
+                    {currentUser?.name || (selectedLocationKey === 'ahilyanagar' ? 'Vikram Shinde' : 'Rakesh Patel')}
+                  </span>
+                  <span className="fra-profile-role">
+                    {currentUser?.role || (selectedLocationKey === 'ahilyanagar' ? 'Ahilyanagar Franchise Partner' : 'Franchise Partner')}
+                  </span>
                 </div>
                 <i className={`fa-solid ${profileDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
               </button>
