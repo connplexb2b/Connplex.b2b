@@ -175,6 +175,128 @@ export interface AuditEvent {
   result: string;
 }
 
+// Merchandise / Store interfaces
+export interface MerchandiseProduct {
+  productId: string;
+  name: string;
+  sku: string;
+  category: 'Drinkware' | 'Stationery' | 'Apparel' | 'Collectibles' | 'Tech';
+  price: number;
+  costPrice: number;
+  stock: number;
+  minStock: number;
+  image: string;
+  salesCount: number;
+  status: 'In Stock' | 'Low Stock' | 'Out of Stock';
+  description: string;
+}
+
+export interface MerchandiseOrder {
+  orderId: string;
+  date: string;
+  customerName: string;
+  cinemaId: string;
+  items: { productId: string; name: string; quantity: number; price: number }[];
+  totalAmount: number;
+  channel: 'Counter' | 'Online' | 'Store Kiosk';
+  paymentMethod: 'UPI' | 'Card' | 'Cash';
+  status: 'Fulfilled' | 'Preparing' | 'Pending';
+}
+
+// Group Booking interfaces
+export interface GroupBooking {
+  bookingId: string;
+  clientName: string;
+  organization: string;
+  contactNumber: string;
+  email: string;
+  cinemaId: string;
+  screenId: string;
+  eventType: 'Corporate Screening' | 'Private Theatre Rental' | 'School Edu-Trip' | 'Birthday / Celebration' | 'Bulk Premiere';
+  date: string;
+  timeSlot: string;
+  guestCount: number;
+  movieTitle: string;
+  fnbPackage: 'Silver Combo' | 'Gold VIP Combo' | 'Platinum Gourmet' | 'Custom Catering' | 'None';
+  totalQuoted: number;
+  advancePaid: number;
+  paymentStatus: 'Pending Advance' | 'Advance Paid' | 'Fully Paid';
+  status: 'Inquiry' | 'Quote Sent' | 'Confirmed' | 'Completed' | 'Cancelled';
+  specialRequests?: string;
+}
+
+export interface GroupPackage {
+  packageId: string;
+  title: string;
+  minGuests: number;
+  basePrice: number;
+  pricePerGuest: number;
+  description: string;
+  includes: string[];
+}
+
+// License & Compliance interfaces
+export interface CinemaLicense {
+  licenseId: string;
+  cinemaId: string;
+  licenseName: string;
+  category: 'Cinematograph' | 'Fire Safety' | 'Food & Health (FSSAI)' | 'Structural' | 'Electrical' | 'Copyright & Performance' | 'Environmental / Pollution' | 'Municipal / Commercial';
+  licenseNumber: string;
+  issuingAuthority: string;
+  issueDate: string;
+  expiryDate: string;
+  renewalReminderDays: number;
+  status: 'Valid' | 'Expiring Soon' | 'In Renewal' | 'Expired';
+  documentUrl: string;
+  officerInCharge: string;
+  feePaid: number;
+}
+
+// Offers & Promotions interfaces
+export interface CinemaOffer {
+  offerId: string;
+  code: string;
+  title: string;
+  description: string;
+  discountType: 'Percentage' | 'Flat Amount' | 'BOGO' | 'Free F&B Combo';
+  discountValue: number;
+  minTicketsRequired: number;
+  maxDiscountAmount?: number;
+  cinemaId: string; // 'all' or specific cinemaId
+  applicableDays: 'All Days' | 'Weekdays Only' | 'Weekends Only';
+  validFrom: string;
+  validUntil: string;
+  usageLimit: number;
+  timesRedeemed: number;
+  totalSavingsGranted: number;
+  status: 'Active' | 'Paused' | 'Expired' | 'Draft';
+  bannerColor?: string;
+}
+
+// MIS interfaces
+export interface MISCinemaSummary {
+  cinemaId: string;
+  cinemaName: string;
+  city: string;
+  screens: number;
+  totalFootfall: number;
+  boxOfficeGross: number;
+  fnbGross: number;
+  merchandiseGross: number;
+  groupBookingsGross: number;
+  screenAdsGross: number;
+  totalRevenue: number;
+  distributorShare: number;
+  operationalExpenses: number;
+  netEbitda: number;
+  ebitdaMargin: number;
+  atp: number;
+  sph: number;
+  occupancyPercent: number;
+  budgetTarget: number;
+  variancePercent: number;
+}
+
 // Initial seed databases
 const INITIAL_CINEMAS: Cinema[] = [
   { cinemaId: 'c1', name: 'Connplex Jodhpur', location: 'Jodhpur, Rajasthan', screens: 4, status: 'Active', operatingHours: '09:00 AM - 12:00 AM' },
@@ -483,6 +605,160 @@ const INITIAL_AUDITS: AuditEvent[] = [
   { auditId: 'aud2', timestamp: '2026-08-30 16:05:40', user: 'Rakesh Patel', role: 'Franchise Partner', action: 'Updated Movie Allocation', object: 'Raftaar Screen 1 scheduling', previousValue: '2 shows', newValue: '4 shows', ip: '103.88.22.4', device: 'Chrome on Windows 11', result: 'Success' }
 ];
 
+const INITIAL_MERCHANDISE: MerchandiseProduct[] = [
+  { productId: 'mp1', name: 'PREMIUM TUMBLER', sku: 'CX-DRK-01', category: 'Drinkware', price: 899, costPrice: 320, stock: 48, minStock: 15, image: '/merchandise/icon_1.png', salesCount: 142, status: 'In Stock', description: 'Stainless steel with matte black finish and gold detailing.' },
+  { productId: 'mp2', name: "FOUNDER'S SCRIPT", sku: 'CX-STN-02', category: 'Stationery', price: 649, costPrice: 210, stock: 35, minStock: 10, image: '/merchandise/icon_2.png', salesCount: 88, status: 'In Stock', description: 'A story worth watching. Plan. Build. Inspire.' },
+  { productId: 'mp3', name: 'ACRYLIC CLAPPERBOARD', sku: 'CX-COL-03', category: 'Collectibles', price: 1299, costPrice: 450, stock: 18, minStock: 10, image: '/merchandise/icon_3.png', salesCount: 95, status: 'In Stock', description: 'Mark every milestone. Your story in motion.' },
+  { productId: 'mp4', name: 'MINI DIRECTOR SPOTLIGHT', sku: 'CX-TCH-04', category: 'Tech', price: 1899, costPrice: 680, stock: 6, minStock: 10, image: '/merchandise/icon_4.png', salesCount: 52, status: 'Low Stock', description: 'Lights that inspire. Perfect for any executive desk.' },
+  { productId: 'mp5', name: 'SCRIPT PLANNER', sku: 'CX-STN-05', category: 'Stationery', price: 499, costPrice: 140, stock: 62, minStock: 20, image: '/merchandise/icon_5.png', salesCount: 210, status: 'In Stock', description: 'Every vision starts with a script. Leatherette hardbound.' },
+  { productId: 'mp6', name: 'FOUNDER CARD (NFC)', sku: 'CX-TCH-06', category: 'Tech', price: 999, costPrice: 280, stock: 24, minStock: 15, image: '/merchandise/icon_6.png', salesCount: 116, status: 'In Stock', description: 'Smart contactless metal VIP club card with NFC chip.' },
+  { productId: 'mp7', name: 'PREMIUM METAL PEN', sku: 'CX-STN-07', category: 'Stationery', price: 399, costPrice: 90, stock: 110, minStock: 30, image: '/merchandise/icon_7.png', salesCount: 340, status: 'In Stock', description: 'Crafted for leaders. Weighted tungsten core, built to last.' },
+  { productId: 'mp8', name: 'FILM REEL CHOCOLATE BOX', sku: 'CX-COL-08', category: 'Collectibles', price: 599, costPrice: 180, stock: 0, minStock: 15, image: '/merchandise/icon_8.png', salesCount: 195, status: 'Out of Stock', description: 'Artisanal dark chocolate rounds packed in authentic tin reel.' },
+  { productId: 'mp9', name: 'ACRYLIC FILM STRIP NAMEPLATE', sku: 'CX-COL-09', category: 'Collectibles', price: 799, costPrice: 240, stock: 14, minStock: 10, image: '/merchandise/icon_9.png', salesCount: 73, status: 'In Stock', description: 'A desk title worth displaying. 35mm optical cut style.' },
+  { productId: 'mp10', name: 'METAL TICKET BOX', sku: 'CX-COL-10', category: 'Collectibles', price: 849, costPrice: 290, stock: 32, minStock: 12, image: '/merchandise/icon_10.png', salesCount: 84, status: 'In Stock', description: 'Embossed vintage tin container for keeping ticket stubs.' }
+];
+
+const INITIAL_MERCHANDISE_ORDERS: MerchandiseOrder[] = [
+  { orderId: 'MO-8841', date: '2026-08-30 19:42', customerName: 'Arjun Singhal', cinemaId: 'c1', items: [{ productId: 'mp1', name: 'PREMIUM TUMBLER', quantity: 2, price: 899 }, { productId: 'mp7', name: 'PREMIUM METAL PEN', quantity: 1, price: 399 }], totalAmount: 2197, channel: 'Counter', paymentMethod: 'UPI', status: 'Fulfilled' },
+  { orderId: 'MO-8840', date: '2026-08-30 18:15', customerName: 'Megha Dave', cinemaId: 'c2', items: [{ productId: 'mp3', name: 'ACRYLIC CLAPPERBOARD', quantity: 1, price: 1299 }], totalAmount: 1299, channel: 'Store Kiosk', paymentMethod: 'Card', status: 'Fulfilled' },
+  { orderId: 'MO-8839', date: '2026-08-30 15:30', customerName: 'Rohan Deshmukh', cinemaId: 'c1', items: [{ productId: 'mp6', name: 'FOUNDER CARD (NFC)', quantity: 1, price: 999 }, { productId: 'mp5', name: 'SCRIPT PLANNER', quantity: 1, price: 499 }], totalAmount: 1498, channel: 'Online', paymentMethod: 'UPI', status: 'Fulfilled' },
+  { orderId: 'MO-8838', date: '2026-08-29 20:10', customerName: 'Vikram Joshi', cinemaId: 'c3', items: [{ productId: 'mp4', name: 'MINI DIRECTOR SPOTLIGHT', quantity: 1, price: 1899 }], totalAmount: 1899, channel: 'Counter', paymentMethod: 'Card', status: 'Fulfilled' },
+  { orderId: 'MO-8837', date: '2026-08-29 17:05', customerName: 'Pooja Agarwal', cinemaId: 'c4', items: [{ productId: 'mp5', name: 'SCRIPT PLANNER', quantity: 2, price: 499 }, { productId: 'mp7', name: 'PREMIUM METAL PEN', quantity: 2, price: 399 }], totalAmount: 1796, channel: 'Online', paymentMethod: 'UPI', status: 'Preparing' },
+  { orderId: 'MO-8836', date: '2026-08-28 14:20', customerName: 'Devang Solanki', cinemaId: 'c2', items: [{ productId: 'mp10', name: 'METAL TICKET BOX', quantity: 1, price: 849 }], totalAmount: 849, channel: 'Store Kiosk', paymentMethod: 'Cash', status: 'Fulfilled' }
+];
+
+const INITIAL_GROUP_PACKAGES: GroupPackage[] = [
+  { packageId: 'pkg1', title: 'Executive Corporate Screening', minGuests: 50, basePrice: 25000, pricePerGuest: 350, description: 'Auditorium private rental, high-res presentation hookup, cordless wireless mic & podium, executive popcorn & drink combo.', includes: ['Full Audi Exclusive Rental (3h)', 'AV & HDMI Presentation Sync', 'Wireless Mics & Sound Control', 'Gourmet Popcorn + Cold Beverage', 'Reserved Priority Parking'] },
+  { packageId: 'pkg2', title: 'Birthday Cinema Bash', minGuests: 30, basePrice: 15000, pricePerGuest: 299, description: 'Private auditorium celebration, custom on-screen photo slideshow, dedicated cake cutting corner, and snack boxes.', includes: ['Private Auditorium for 2.5h', 'Custom Screen Birthday Video Reel', 'Cake Table Setup & Lighting', 'Medium Popcorn & Soda Combo', 'Connplex Kids Merchandise Gift'] },
+  { packageId: 'pkg3', title: 'Student Edu-Tour Screening', minGuests: 80, basePrice: 20000, pricePerGuest: 199, description: 'Educational or blockbuster screening, behind-the-scenes projection room tech walkthrough, and junior snack pack.', includes: ['Exclusive School Morning Show', 'Projection Room Guided Tour', 'Q&A with Cinema Chief Engineer', 'Mini Salted Popcorn + Juice Box', 'Teacher / Chaperone Free Access'] },
+  { packageId: 'pkg4', title: 'Private Gold Class Soiree', minGuests: 25, basePrice: 30000, pricePerGuest: 599, description: 'Luxury VIP recliner screen takeover, butler service, 3-course warm finger food, mocktails, and personalized welcome.', includes: ['VIP Gold Class Auditorium', 'Plush Pushback Recliner Seating', 'Dedicated In-Audi Butler Service', '3-Course Hot Finger Food Menu', 'Artisanal Mocktail Welcome'] }
+];
+
+const INITIAL_GROUP_BOOKINGS: GroupBooking[] = [
+  { bookingId: 'GB-1024', clientName: 'Sanjay Rawat', organization: 'Infosys BPM Technologies', contactNumber: '9820144911', email: 'sanjay.r@infosys.com', cinemaId: 'c1', screenId: 's1', eventType: 'Corporate Screening', date: '2026-09-12', timeSlot: '10:00 AM - 01:30 PM', guestCount: 110, movieTitle: 'Raftaar + Quarterly All-Hands Presentation', fnbPackage: 'Gold VIP Combo', totalQuoted: 68500, advancePaid: 35000, paymentStatus: 'Advance Paid', status: 'Confirmed', specialRequests: 'Need HDMI connection to IMAX projector for 45 min presentation before film starts.' },
+  { bookingId: 'GB-1025', clientName: 'Sister Mary Therese', organization: 'Delhi Public School, Jaipur', contactNumber: '9840321098', email: 'principal@dpsjaipur.edu.in', cinemaId: 'c2', screenId: 's5', eventType: 'School Edu-Trip', date: '2026-09-15', timeSlot: '09:00 AM - 12:00 PM', guestCount: 220, movieTitle: 'Cosmic Drift (Science Edu-Screening)', fnbPackage: 'Silver Combo', totalQuoted: 95000, advancePaid: 50000, paymentStatus: 'Advance Paid', status: 'Confirmed', specialRequests: 'Include 15 min projection room walkthrough for class 10 students.' },
+  { bookingId: 'GB-1026', clientName: 'Tarun Mathur', organization: 'Tata Consultancy Services', contactNumber: '9910874512', email: 'tarun.m@tcs.com', cinemaId: 'c3', screenId: 's11', eventType: 'Corporate Screening', date: '2026-09-22', timeSlot: '02:00 PM - 05:30 PM', guestCount: 175, movieTitle: 'Ishq Junction', fnbPackage: 'Silver Combo', totalQuoted: 82000, advancePaid: 0, paymentStatus: 'Pending Advance', status: 'Quote Sent', specialRequests: 'Awaiting corporate purchase order sign-off from procurement.' },
+  { bookingId: 'GB-1027', clientName: 'Ananya Singhania', organization: 'Singhania Jewels Family', contactNumber: '9829011223', email: 'ananya@singhaniajewels.com', cinemaId: 'c1', screenId: 's4', eventType: 'Birthday / Celebration', date: '2026-09-18', timeSlot: '06:00 PM - 09:30 PM', guestCount: 75, movieTitle: 'Dil Ki Baazi', fnbPackage: 'Platinum Gourmet', totalQuoted: 52000, advancePaid: 52000, paymentStatus: 'Fully Paid', status: 'Confirmed', specialRequests: 'Champagne style mocktails and custom happy birthday slide with spotlight.' },
+  { bookingId: 'GB-1028', clientName: 'Harsh Vardhan Goel', organization: 'Reliance Retail Dealer Network', contactNumber: '9876543201', email: 'h.goel@relianceretail.com', cinemaId: 'c2', screenId: 's9', eventType: 'Bulk Premiere', date: '2026-09-25', timeSlot: '07:30 PM - 11:00 PM', guestCount: 95, movieTitle: 'Shadow Protocol (4DX VIP)', fnbPackage: 'Gold VIP Combo', totalQuoted: 65000, advancePaid: 30000, paymentStatus: 'Advance Paid', status: 'Confirmed', specialRequests: 'Red carpet photo booth setup in foyer.' },
+  { bookingId: 'GB-1029', clientName: 'Dr. Vivek Saxena', organization: 'Rotary Club of Mewar', contactNumber: '9414088921', email: 'rotary.mewar@gmail.com', cinemaId: 'c4', screenId: 's17', eventType: 'Private Theatre Rental', date: '2026-10-02', timeSlot: '11:00 AM - 02:00 PM', guestCount: 130, movieTitle: 'The Last Circuit', fnbPackage: 'Silver Combo', totalQuoted: 48000, advancePaid: 0, paymentStatus: 'Pending Advance', status: 'Inquiry', specialRequests: 'Charity fundraiser premiere with banners in lobby.' }
+];
+
+const INITIAL_LICENSES: CinemaLicense[] = [
+  { licenseId: 'lic1', cinemaId: 'c1', licenseName: 'Cinematograph Screen Operations License', category: 'Cinematograph', licenseNumber: 'DM/JODH/CINE-2026/04', issuingAuthority: 'District Magistrate & Cinema Licensing Officer, Jodhpur', issueDate: '2026-01-01', expiryDate: '2026-12-31', renewalReminderDays: 45, status: 'Valid', documentUrl: '/docs/cinematograph_jodhpur.pdf', officerInCharge: 'Rakesh Patel', feePaid: 45000 },
+  { licenseId: 'lic2', cinemaId: 'c1', licenseName: 'Fire Safety NOC & Hydrant Compliance', category: 'Fire Safety', licenseNumber: 'FS-RAJ-JDH-8921', issuingAuthority: 'Rajasthan State Fire & Emergency Services', issueDate: '2025-11-15', expiryDate: '2026-11-14', renewalReminderDays: 30, status: 'Valid', documentUrl: '/docs/fire_noc_jodhpur.pdf', officerInCharge: 'Aarav Sharma', feePaid: 28000 },
+  { licenseId: 'lic3', cinemaId: 'c1', licenseName: 'FSSAI Central Food Safety License (F&B)', category: 'Food & Health (FSSAI)', licenseNumber: 'FSSAI-12224019000312', issuingAuthority: 'Food Safety and Standards Authority of India (FSSAI)', issueDate: '2025-10-22', expiryDate: '2026-10-21', renewalReminderDays: 20, status: 'Expiring Soon', documentUrl: '/docs/fssai_jodhpur.pdf', officerInCharge: 'Nisha Singh', feePaid: 15000 },
+  { licenseId: 'lic4', cinemaId: 'c1', licenseName: 'PPL Public Performance Music License', category: 'Copyright & Performance', licenseNumber: 'PPL-W-CIN-9921', issuingAuthority: 'Phonographic Performance Limited (PPL India)', issueDate: '2026-04-01', expiryDate: '2027-03-31', renewalReminderDays: 60, status: 'Valid', documentUrl: '/docs/ppl_license.pdf', officerInCharge: 'Jahnvi Gupta', feePaid: 65000 },
+  { licenseId: 'lic5', cinemaId: 'c1', licenseName: 'IPRS Society Music Public Performance License', category: 'Copyright & Performance', licenseNumber: 'IPRS-RJ-2026-44', issuingAuthority: 'Indian Performing Right Society Ltd (IPRS)', issueDate: '2026-04-01', expiryDate: '2027-03-31', renewalReminderDays: 60, status: 'Valid', documentUrl: '/docs/iprs_license.pdf', officerInCharge: 'Jahnvi Gupta', feePaid: 58000 },
+  { licenseId: 'lic6', cinemaId: 'c1', licenseName: 'Electrical Substation & DG Set Safety Approval', category: 'Electrical', licenseNumber: 'CEA-RAJ-INSP-5502', issuingAuthority: 'Chief Electrical Inspectorate, Govt of Rajasthan', issueDate: '2025-08-10', expiryDate: '2028-08-09', renewalReminderDays: 90, status: 'Valid', documentUrl: '/docs/electrical_clearance.pdf', officerInCharge: 'Rohit Mehta', feePaid: 32000 },
+  { licenseId: 'lic7', cinemaId: 'c1', licenseName: 'Building Structural Stability & Load Certificate', category: 'Structural', licenseNumber: 'JDA-STR-BLDG-1102', issuingAuthority: 'Jodhpur Development Authority (JDA)', issueDate: '2024-03-15', expiryDate: '2029-03-14', renewalReminderDays: 120, status: 'Valid', documentUrl: '/docs/structural_safety.pdf', officerInCharge: 'Sanjay Jain', feePaid: 50000 },
+  { licenseId: 'lic8', cinemaId: 'c1', licenseName: 'RSPCB Consent to Operate (CTO) & DG Emission NOC', category: 'Environmental / Pollution', licenseNumber: 'RSPCB-AIR-NOC-4482', issuingAuthority: 'Rajasthan State Pollution Control Board', issueDate: '2025-01-15', expiryDate: '2027-01-14', renewalReminderDays: 45, status: 'Valid', documentUrl: '/docs/pollution_noc.pdf', officerInCharge: 'Aarav Sharma', feePaid: 22000 },
+
+  // Jaipur branch licenses
+  { licenseId: 'lic9', cinemaId: 'c2', licenseName: 'Cinematograph Screen Operations License', category: 'Cinematograph', licenseNumber: 'DM/JPR/CINE-2026/09', issuingAuthority: 'District Magistrate Office, Jaipur', issueDate: '2026-02-01', expiryDate: '2027-01-31', renewalReminderDays: 45, status: 'Valid', documentUrl: '/docs/cinematograph_jaipur.pdf', officerInCharge: 'Rakesh Patel', feePaid: 65000 },
+  { licenseId: 'lic10', cinemaId: 'c2', licenseName: 'Fire Safety NOC (Screen 1-6 & Foyer)', category: 'Fire Safety', licenseNumber: 'FS-RAJ-JPR-7714', issuingAuthority: 'Jaipur Fire Municipal Department', issueDate: '2025-09-01', expiryDate: '2026-08-31', renewalReminderDays: 15, status: 'In Renewal', documentUrl: '/docs/fire_noc_jaipur.pdf', officerInCharge: 'K. S. Rathore', feePaid: 35000 },
+  { licenseId: 'lic11', cinemaId: 'c2', licenseName: 'FSSAI Central Food Safety License', category: 'Food & Health (FSSAI)', licenseNumber: 'FSSAI-12224019000881', issuingAuthority: 'Food Safety and Standards Authority of India (FSSAI)', issueDate: '2026-01-10', expiryDate: '2027-01-09', renewalReminderDays: 30, status: 'Valid', documentUrl: '/docs/fssai_jaipur.pdf', officerInCharge: 'Priya Nair', feePaid: 18000 }
+];
+
+const INITIAL_OFFERS: CinemaOffer[] = [
+  { offerId: 'off1', code: 'CONNPLEX50', title: '50% Off on Second Ticket', description: 'Book any 2 tickets for current running blockbusters and receive flat 50% discount on the second ticket.', discountType: 'Percentage', discountValue: 50, minTicketsRequired: 2, maxDiscountAmount: 180, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-08-01', validUntil: '2026-09-30', usageLimit: 1000, timesRedeemed: 412, totalSavingsGranted: 61800, status: 'Active', bannerColor: 'from-blue-600 to-indigo-700' },
+  { offerId: 'off2', code: 'STUDENTPASS', title: 'Flat ₹150 Student Tickets', description: 'Exclusive student pricing on presenting valid college ID card at counter or during online verification.', discountType: 'Flat Amount', discountValue: 80, minTicketsRequired: 1, maxDiscountAmount: 80, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-08-10', validUntil: '2026-10-31', usageLimit: 1500, timesRedeemed: 680, totalSavingsGranted: 54400, status: 'Active', bannerColor: 'from-emerald-600 to-teal-700' },
+  { offerId: 'off3', code: 'FAMILYFEAST', title: 'Free Popcorn Combo on 4+ Tickets', description: 'Book 4 or more tickets for any evening family show and receive complimentary Large Tub + 2 Pepsi.', discountType: 'Free F&B Combo', discountValue: 320, minTicketsRequired: 4, maxDiscountAmount: 320, cinemaId: 'all', applicableDays: 'All Days', validFrom: '2026-08-05', validUntil: '2026-09-25', usageLimit: 500, timesRedeemed: 245, totalSavingsGranted: 78400, status: 'Active', bannerColor: 'from-amber-600 to-orange-700' },
+  { offerId: 'off4', code: 'HDFCFRIDAY', title: 'HDFC BOGO Weekend Special', description: 'Buy 1 Ticket and Get 1 Free on all HDFC Bank Diners Club, Regalia and Infinia Credit Cards.', discountType: 'BOGO', discountValue: 100, minTicketsRequired: 2, maxDiscountAmount: 250, cinemaId: 'all', applicableDays: 'Weekends Only', validFrom: '2026-07-01', validUntil: '2026-12-31', usageLimit: 800, timesRedeemed: 310, totalSavingsGranted: 77500, status: 'Active', bannerColor: 'from-purple-600 to-pink-700' },
+  { offerId: 'off5', code: 'CORPORATE20', title: '20% Corporate Privilege Discount', description: 'Special corporate tie-up discount on presentation of registered corporate email / company badge.', discountType: 'Percentage', discountValue: 20, minTicketsRequired: 2, maxDiscountAmount: 200, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-08-01', validUntil: '2026-11-30', usageLimit: 600, timesRedeemed: 180, totalSavingsGranted: 21600, status: 'Active', bannerColor: 'from-cyan-600 to-blue-700' },
+  { offerId: 'off6', code: 'MONSOONMAGIC', title: 'Flat 25% Off on Morning Shows', description: 'Super Saver morning shows before 1:00 PM get an instant 25% reduction on standard ticket prices.', discountType: 'Percentage', discountValue: 25, minTicketsRequired: 1, maxDiscountAmount: 75, cinemaId: 'all', applicableDays: 'Weekdays Only', validFrom: '2026-07-15', validUntil: '2026-08-31', usageLimit: 1200, timesRedeemed: 520, totalSavingsGranted: 46800, status: 'Expired', bannerColor: 'from-gray-600 to-gray-700' }
+];
+
+const INITIAL_MIS_SUMMARIES: MISCinemaSummary[] = [
+  {
+    cinemaId: 'c1',
+    cinemaName: 'Connplex Jodhpur',
+    city: 'Jodhpur, Rajasthan',
+    screens: 4,
+    totalFootfall: 48200,
+    boxOfficeGross: 10845000,
+    fnbGross: 4420000,
+    merchandiseGross: 640000,
+    groupBookingsGross: 1450000,
+    screenAdsGross: 780000,
+    totalRevenue: 18135000,
+    distributorShare: 5422500,
+    operationalExpenses: 6520000,
+    netEbitda: 6192500,
+    ebitdaMargin: 34.1,
+    atp: 225,
+    sph: 92,
+    occupancyPercent: 68.4,
+    budgetTarget: 17000000,
+    variancePercent: 6.7
+  },
+  {
+    cinemaId: 'c2',
+    cinemaName: 'Connplex Jaipur',
+    city: 'Jaipur, Rajasthan',
+    screens: 6,
+    totalFootfall: 72500,
+    boxOfficeGross: 18560000,
+    fnbGross: 7830000,
+    merchandiseGross: 980000,
+    groupBookingsGross: 2210000,
+    screenAdsGross: 1240000,
+    totalRevenue: 30820000,
+    distributorShare: 9280000,
+    operationalExpenses: 10640000,
+    netEbitda: 10900000,
+    ebitdaMargin: 35.4,
+    atp: 256,
+    sph: 108,
+    occupancyPercent: 71.2,
+    budgetTarget: 29000000,
+    variancePercent: 6.3
+  },
+  {
+    cinemaId: 'c3',
+    cinemaName: 'Connplex Ahmedabad',
+    city: 'Ahmedabad, Gujarat',
+    screens: 5,
+    totalFootfall: 58100,
+    boxOfficeGross: 13944000,
+    fnbGross: 5810000,
+    merchandiseGross: 720000,
+    groupBookingsGross: 1680000,
+    screenAdsGross: 960000,
+    totalRevenue: 23114000,
+    distributorShare: 6972000,
+    operationalExpenses: 8150000,
+    netEbitda: 7992000,
+    ebitdaMargin: 34.6,
+    atp: 240,
+    sph: 100,
+    occupancyPercent: 67.8,
+    budgetTarget: 22500000,
+    variancePercent: 2.7
+  },
+  {
+    cinemaId: 'c4',
+    cinemaName: 'Connplex Udaipur',
+    city: 'Udaipur, Rajasthan',
+    screens: 4,
+    totalFootfall: 36400,
+    boxOfficeGross: 8008000,
+    fnbGross: 3276000,
+    merchandiseGross: 450000,
+    groupBookingsGross: 1120000,
+    screenAdsGross: 540000,
+    totalRevenue: 13394000,
+    distributorShare: 4004000,
+    operationalExpenses: 4980000,
+    netEbitda: 4410000,
+    ebitdaMargin: 32.9,
+    atp: 220,
+    sph: 90,
+    occupancyPercent: 62.5,
+    budgetTarget: 13000000,
+    variancePercent: 3.0
+  }
+];
+
 // Master data loader & manager (In-memory cache with LocalStorage synchronization)
 export class ConnCloudStore {
   private static isInitialized = false;
@@ -502,6 +778,13 @@ export class ConnCloudStore {
   private static documents: Document[] = [];
   private static notifications: Notification[] = [];
   private static auditLogs: AuditEvent[] = [];
+  private static merchandiseProducts: MerchandiseProduct[] = [];
+  private static merchandiseOrders: MerchandiseOrder[] = [];
+  private static groupBookings: GroupBooking[] = [];
+  private static groupPackages: GroupPackage[] = [];
+  private static licenses: CinemaLicense[] = [];
+  private static offers: CinemaOffer[] = [];
+  private static misSummaries: MISCinemaSummary[] = [];
 
   public static init() {
     if (typeof window === 'undefined') return;
@@ -532,6 +815,13 @@ export class ConnCloudStore {
     this.documents = cacheOrSeed('documents', INITIAL_DOCS);
     this.notifications = cacheOrSeed('notifications', INITIAL_NOTIFS);
     this.auditLogs = cacheOrSeed('auditLogs', INITIAL_AUDITS);
+    this.merchandiseProducts = cacheOrSeed('merchandiseProducts', INITIAL_MERCHANDISE);
+    this.merchandiseOrders = cacheOrSeed('merchandiseOrders', INITIAL_MERCHANDISE_ORDERS);
+    this.groupBookings = cacheOrSeed('groupBookings', INITIAL_GROUP_BOOKINGS);
+    this.groupPackages = cacheOrSeed('groupPackages', INITIAL_GROUP_PACKAGES);
+    this.licenses = cacheOrSeed('licenses', INITIAL_LICENSES);
+    this.offers = cacheOrSeed('offers', INITIAL_OFFERS);
+    this.misSummaries = cacheOrSeed('misSummaries', INITIAL_MIS_SUMMARIES);
 
     // Relational relational collections (large)
     const storedBase = localStorage.getItem('cc_relational_base');
@@ -690,6 +980,13 @@ export class ConnCloudStore {
   public static getDocuments() { this.init(); return this.documents; }
   public static getNotifications() { this.init(); return this.notifications; }
   public static getAuditLogs() { this.init(); return this.auditLogs; }
+  public static getMerchandiseProducts() { this.init(); return this.merchandiseProducts; }
+  public static getMerchandiseOrders() { this.init(); return this.merchandiseOrders; }
+  public static getGroupBookings() { this.init(); return this.groupBookings; }
+  public static getGroupPackages() { this.init(); return this.groupPackages; }
+  public static getLicenses() { this.init(); return this.licenses; }
+  public static getOffers() { this.init(); return this.offers; }
+  public static getMISData() { this.init(); return this.misSummaries; }
 
   // Mutation commands
   public static addExpense(tx: Omit<FinanceTransaction, 'transactionId' | 'status'> & { vendor: string }) {
@@ -856,5 +1153,125 @@ export class ConnCloudStore {
     this.auditLogs.unshift(newEvent);
     this.save('auditLogs', this.auditLogs);
     return newEvent;
+  }
+
+  // Merchandise mutations
+  public static addMerchandiseProduct(prod: Omit<MerchandiseProduct, 'productId' | 'salesCount'>) {
+    this.init();
+    const newProd: MerchandiseProduct = {
+      ...prod,
+      productId: `mp_${Date.now()}`,
+      salesCount: 0
+    };
+    this.merchandiseProducts.unshift(newProd);
+    this.save('merchandiseProducts', this.merchandiseProducts);
+    return newProd;
+  }
+
+  public static updateMerchandiseStock(productId: string, newStock: number) {
+    this.init();
+    const p = this.merchandiseProducts.find(item => item.productId === productId);
+    if (p) {
+      p.stock = newStock;
+      p.status = newStock === 0 ? 'Out of Stock' : (newStock <= p.minStock ? 'Low Stock' : 'In Stock');
+      this.save('merchandiseProducts', this.merchandiseProducts);
+      return true;
+    }
+    return false;
+  }
+
+  public static createMerchandiseOrder(order: Omit<MerchandiseOrder, 'orderId'>) {
+    this.init();
+    const newOrder: MerchandiseOrder = {
+      ...order,
+      orderId: `MO-${Math.floor(1000 + Math.random() * 9000)}`
+    };
+    this.merchandiseOrders.unshift(newOrder);
+    this.save('merchandiseOrders', this.merchandiseOrders);
+    return newOrder;
+  }
+
+  // Group Booking mutations
+  public static addGroupBooking(booking: Omit<GroupBooking, 'bookingId'>) {
+    this.init();
+    const newBooking: GroupBooking = {
+      ...booking,
+      bookingId: `GB-${Math.floor(1000 + Math.random() * 9000)}`
+    };
+    this.groupBookings.unshift(newBooking);
+    this.save('groupBookings', this.groupBookings);
+    return newBooking;
+  }
+
+  public static updateGroupBookingStatus(bookingId: string, status: GroupBooking['status'], paymentStatus?: GroupBooking['paymentStatus']) {
+    this.init();
+    const b = this.groupBookings.find(item => item.bookingId === bookingId);
+    if (b) {
+      b.status = status;
+      if (paymentStatus) b.paymentStatus = paymentStatus;
+      this.save('groupBookings', this.groupBookings);
+      return true;
+    }
+    return false;
+  }
+
+  // License mutations
+  public static addLicense(license: Omit<CinemaLicense, 'licenseId'>) {
+    this.init();
+    const newLicense: CinemaLicense = {
+      ...license,
+      licenseId: `lic_${Date.now()}`
+    };
+    this.licenses.unshift(newLicense);
+    this.save('licenses', this.licenses);
+    return newLicense;
+  }
+
+  public static renewLicense(licenseId: string, newExpiryDate: string) {
+    this.init();
+    const lic = this.licenses.find(l => l.licenseId === licenseId);
+    if (lic) {
+      lic.expiryDate = newExpiryDate;
+      lic.status = 'Valid';
+      this.save('licenses', this.licenses);
+      return true;
+    }
+    return false;
+  }
+
+  public static updateLicenseStatus(licenseId: string, status: CinemaLicense['status']) {
+    this.init();
+    const lic = this.licenses.find(l => l.licenseId === licenseId);
+    if (lic) {
+      lic.status = status;
+      this.save('licenses', this.licenses);
+      return true;
+    }
+    return false;
+  }
+
+  // Offer mutations
+  public static addOffer(offer: Omit<CinemaOffer, 'offerId' | 'timesRedeemed' | 'totalSavingsGranted'>) {
+    this.init();
+    const newOffer: CinemaOffer = {
+      ...offer,
+      offerId: `off_${Date.now()}`,
+      timesRedeemed: 0,
+      totalSavingsGranted: 0
+    };
+    this.offers.unshift(newOffer);
+    this.save('offers', this.offers);
+    return newOffer;
+  }
+
+  public static toggleOfferStatus(offerId: string) {
+    this.init();
+    const off = this.offers.find(o => o.offerId === offerId);
+    if (off) {
+      off.status = off.status === 'Active' ? 'Paused' : 'Active';
+      this.save('offers', this.offers);
+      return off.status;
+    }
+    return null;
   }
 }

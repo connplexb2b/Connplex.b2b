@@ -22,6 +22,11 @@ import SupportView from '../../../components/conncloud/views/SupportView';
 import CalendarView from '../../../components/conncloud/views/CalendarView';
 import SettingsView from '../../../components/conncloud/views/SettingsView';
 import NotificationsView from '../../../components/conncloud/views/NotificationsView';
+import MerchandiseView from '../../../components/conncloud/views/MerchandiseView';
+import GroupBookingView from '../../../components/conncloud/views/GroupBookingView';
+import MISView from '../../../components/conncloud/views/MISView';
+import LicenseView from '../../../components/conncloud/views/LicenseView';
+import OffersView from '../../../components/conncloud/views/OffersView';
 
 // Central Relational Store import
 import { ConnCloudStore } from '../../../lib/conncloudData';
@@ -132,12 +137,17 @@ export default function ConnCloudPage() {
     { name: 'Finance', icon: 'fa-indian-rupee-sign', route: '/conncloud/finance' },
     { name: 'Movies', icon: 'fa-film', route: '/conncloud/movies' },
     { name: 'Ticket Sales', icon: 'fa-ticket', route: '/conncloud/ticket-sales' },
+    { name: 'Group Booking', icon: 'fa-users', route: '/conncloud/group-booking', badge: 'New' },
     { name: 'Food & Beverage', icon: 'fa-burger', route: '/conncloud/fnb', badge: 'Alert' },
+    { name: 'Merchandise / Store', icon: 'fa-store', route: '/conncloud/merchandise' },
     { name: 'Staff', icon: 'fa-user-tie', route: '/conncloud/staff' },
     { name: 'Operations', icon: 'fa-gears', route: '/conncloud/operations', badge: '3' },
     { name: 'Marketing', icon: 'fa-bullhorn', route: '/conncloud/marketing' },
+    { name: 'My Offers', icon: 'fa-tags', route: '/conncloud/offers' },
     { name: 'Reports', icon: 'fa-file-invoice-dollar', route: '/conncloud/reports' },
+    { name: 'MIS', icon: 'fa-chart-pie', route: '/conncloud/mis' },
     { name: 'Documents', icon: 'fa-folder-open', route: '/conncloud/documents' },
+    { name: 'License', icon: 'fa-certificate', route: '/conncloud/license' },
     { name: 'Support', icon: 'fa-circle-question', route: '/conncloud/support' },
     { name: 'Notifications', icon: 'fa-bell', route: '/conncloud/notifications' },
     { name: 'Calendar', icon: 'fa-calendar-days', route: '/conncloud/calendar' },
@@ -163,8 +173,14 @@ export default function ConnCloudPage() {
     if (pathname.startsWith('/conncloud/ticket-sales')) {
       return <TicketSalesView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
+    if (pathname.startsWith('/conncloud/group-booking')) {
+      return <GroupBookingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
+    }
     if (pathname.startsWith('/conncloud/fnb')) {
       return <FnBView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
+    }
+    if (pathname.startsWith('/conncloud/merchandise')) {
+      return <MerchandiseView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/staff')) {
       return <StaffView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
@@ -175,11 +191,20 @@ export default function ConnCloudPage() {
     if (pathname.startsWith('/conncloud/marketing')) {
       return <MarketingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
+    if (pathname.startsWith('/conncloud/offers')) {
+      return <OffersView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
+    }
     if (pathname === '/conncloud/reports') {
       return <ReportsView triggerNotification={triggerNotification} />;
     }
+    if (pathname.startsWith('/conncloud/mis')) {
+      return <MISView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
+    }
     if (pathname === '/conncloud/documents') {
       return <DocumentsView triggerNotification={triggerNotification} />;
+    }
+    if (pathname.startsWith('/conncloud/license')) {
+      return <LicenseView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/support')) {
       return <SupportView triggerNotification={triggerNotification} />;
@@ -202,7 +227,16 @@ export default function ConnCloudPage() {
   const getBreadcrumbs = () => {
     if (!pathname) return ['ConnCloud'];
     const parts = pathname.split('/').filter(Boolean);
-    return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
+    return parts.map(p => {
+      if (p === 'conncloud') return 'ConnCloud';
+      if (p === 'group-booking') return 'Group Booking';
+      if (p === 'mis') return 'MIS';
+      if (p === 'fnb') return 'Food & Beverage';
+      if (p === 'merchandise') return 'Merchandise & Store';
+      if (p === 'offers') return 'My Offers';
+      if (p === 'license') return 'License';
+      return p.charAt(0).toUpperCase() + p.slice(1);
+    });
   };
 
   if (authLoading) {
