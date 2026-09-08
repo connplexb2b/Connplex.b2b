@@ -1005,10 +1005,13 @@ export class ConnCloudStore {
 
       dates.forEach((dateString, dateIdx) => {
         ahilyaScreens.forEach(screen => {
-          const movie1 = INITIAL_MOVIES[0]; // Raftaar
-          const movie2 = INITIAL_MOVIES[2]; // Ishq Junction
           showTimes.forEach((time, timeIdx) => {
-            const movie = timeIdx < 2 ? movie1 : movie2;
+            let movie = INITIAL_MOVIES[0];
+            if (screen.screenId === 's20') {
+              movie = timeIdx < 2 ? INITIAL_MOVIES[0] : INITIAL_MOVIES[2]; // Raftaar & Ishq Junction
+            } else {
+              movie = timeIdx === 0 ? INITIAL_MOVIES[1] : (timeIdx === 1 ? INITIAL_MOVIES[0] : (timeIdx === 2 ? INITIAL_MOVIES[1] : INITIAL_MOVIES[3])); // Cosmic Drift, Raftaar, Shadow Protocol
+            }
             const cap = screen.capacity;
             const dateObj = new Date(dateString);
             const dayOfWeek = dateObj.getDay();
