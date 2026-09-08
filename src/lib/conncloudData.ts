@@ -297,6 +297,49 @@ export interface MISCinemaSummary {
   variancePercent: number;
 }
 
+// Training & Orientation interfaces
+export interface TrainingModule {
+  moduleId: string;
+  title: string;
+  category: 'Onboarding' | 'Safety & Compliance' | 'Hospitality & Service' | 'Technical & Projection' | 'F&B Hygiene' | 'POS & Ticketing';
+  durationHours: number;
+  totalLessons: number;
+  mandatoryFor: string[];
+  passingScore: number;
+  enrolledCount: number;
+  completedCount: number;
+  status: 'Active' | 'Draft' | 'Archived';
+  description: string;
+  thumbnailIcon: string;
+}
+
+export interface StaffOrientation {
+  orientationId: string;
+  employeeId: string;
+  employeeName: string;
+  department: string;
+  role: string;
+  joinDate: string;
+  orientationBatch: string;
+  mentor: string;
+  progressPercent: number;
+  modulesCompleted: number;
+  totalModules: number;
+  status: 'Completed' | 'In Progress' | 'Overdue' | 'Scheduled';
+  certifiedDate?: string;
+}
+
+export interface TrainingCertification {
+  certId: string;
+  staffName: string;
+  employeeId: string;
+  moduleTitle: string;
+  score: number;
+  issuedDate: string;
+  validUntil: string;
+  certificateNumber: string;
+}
+
 // Initial seed databases
 const INITIAL_CINEMAS: Cinema[] = [
   { cinemaId: 'c1', name: 'Connplex Jodhpur', location: 'Jodhpur, Rajasthan', screens: 4, status: 'Active', operatingHours: '09:00 AM - 12:00 AM' },
@@ -759,6 +802,31 @@ const INITIAL_MIS_SUMMARIES: MISCinemaSummary[] = [
   }
 ];
 
+const INITIAL_TRAINING_MODULES: TrainingModule[] = [
+  { moduleId: 'tm1', title: 'Connplex Gold Class Hospitality & VIP Etiquette', category: 'Hospitality & Service', durationHours: 4, totalLessons: 6, mandatoryFor: ['Guest Relations', 'Duty Managers', 'Box Office'], passingScore: 85, enrolledCount: 42, completedCount: 38, status: 'Active', description: 'Comprehensive training on patron greeting standards, VIP recliner service protocols, dispute de-escalation, and wheelchair accessibility assistance.', thumbnailIcon: 'fa-bell-concierge' },
+  { moduleId: 'tm2', title: 'Barco 4K Laser Projector Operation & Emergency Lamp Protocol', category: 'Technical & Projection', durationHours: 8, totalLessons: 10, mandatoryFor: ['Projectionists', 'Duty Managers'], passingScore: 90, enrolledCount: 14, completedCount: 12, status: 'Active', description: 'Operating digital cinema packages (DCP), KDM licensing key loading, lens focus alignment, Christie/Barco cooling system maintenance, and laser safety shutoff.', thumbnailIcon: 'fa-video' },
+  { moduleId: 'tm3', title: 'FSSAI Food Hygiene, Popcorn Dispensing & Temperature Log', category: 'F&B Hygiene', durationHours: 3, totalLessons: 5, mandatoryFor: ['F&B Associates', 'Food Managers'], passingScore: 80, enrolledCount: 36, completedCount: 34, status: 'Active', description: 'Food safety protocols complying with FSSAI regulations, heated display cabinet temperatures, kettle cleaning SOP, syrup bib replacement, and allergen warnings.', thumbnailIcon: 'fa-utensils' },
+  { moduleId: 'tm4', title: 'Emergency Fire Evacuation & Crowd Panic Mitigation Drill', category: 'Safety & Compliance', durationHours: 5, totalLessons: 7, mandatoryFor: ['All Departments'], passingScore: 100, enrolledCount: 65, completedCount: 59, status: 'Active', description: 'Auditorium fire alarm procedure, panic bar door operations, fire hydrant usage, safe muster point coordination, and emergency power backup protocol.', thumbnailIcon: 'fa-fire-extinguisher' },
+  { moduleId: 'tm5', title: 'Box Office POS, Web Voucher Redemptions & Kiosk Management', category: 'POS & Ticketing', durationHours: 4, totalLessons: 6, mandatoryFor: ['Ticketing Associates', 'Duty Managers'], passingScore: 85, enrolledCount: 28, completedCount: 26, status: 'Active', description: 'ConnCloud POS terminal workflows, handling offline ticketing mode, promo voucher code applications, Razorpay UPI reconciliation, and paper roll replacements.', thumbnailIcon: 'fa-cash-register' },
+  { moduleId: 'tm6', title: 'Cinema Employee Code of Conduct & ConnCloud Security Protocol', category: 'Onboarding', durationHours: 2, totalLessons: 4, mandatoryFor: ['All Departments'], passingScore: 80, enrolledCount: 55, completedCount: 52, status: 'Active', description: 'Franchise corporate policies, uniform standards, punctuality guidelines, biometric attendance procedures, and customer data confidentiality.', thumbnailIcon: 'fa-user-shield' }
+];
+
+const INITIAL_STAFF_ORIENTATIONS: StaffOrientation[] = [
+  { orientationId: 'so1', employeeId: 'st3', employeeName: 'Kabir Verma', department: 'Ticketing', role: 'Guest Relations Executive', joinDate: '2025-01-10', orientationBatch: 'Cohort 2025-Q1', mentor: 'Jahnvi Gupta', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2025-01-24' },
+  { orientationId: 'so2', employeeId: 'st4', employeeName: 'Priya Nair', department: 'F&B', role: 'Counter Associate', joinDate: '2024-08-20', orientationBatch: 'Cohort 2024-Q3', mentor: 'Nisha Singh', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2024-09-04' },
+  { orientationId: 'so3', employeeId: 'st5', employeeName: 'Rohit Mehta', department: 'Operations', role: 'Projectionist', joinDate: '2022-04-12', orientationBatch: 'Cohort 2022-Q2', mentor: 'Aarav Sharma', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2022-04-28' },
+  { orientationId: 'so4', employeeId: 'st9', employeeName: 'Tarun Joshi', department: 'F&B', role: 'F&B Associate Trainee', joinDate: '2026-08-15', orientationBatch: 'Cohort 2026-Aug', mentor: 'Nisha Singh', progressPercent: 65, modulesCompleted: 4, totalModules: 6, status: 'In Progress' },
+  { orientationId: 'so5', employeeId: 'st10', employeeName: 'Manisha Chauhan', department: 'Ticketing', role: 'Box Office Trainee', joinDate: '2026-08-20', orientationBatch: 'Cohort 2026-Aug', mentor: 'Kabir Verma', progressPercent: 50, modulesCompleted: 3, totalModules: 6, status: 'In Progress' },
+  { orientationId: 'so6', employeeId: 'st11', employeeName: 'Vicky Bhati', department: 'Housekeeping', role: 'Janitorial Associate', joinDate: '2026-08-01', orientationBatch: 'Cohort 2026-Aug', mentor: 'Deepak Patel', progressPercent: 30, modulesCompleted: 2, totalModules: 6, status: 'Overdue' }
+];
+
+const INITIAL_TRAINING_CERTIFICATIONS: TrainingCertification[] = [
+  { certId: 'tc1', staffName: 'Kabir Verma', employeeId: 'st3', moduleTitle: 'Connplex Gold Class Hospitality & VIP Etiquette', score: 94, issuedDate: '2025-01-24', validUntil: '2027-01-24', certificateNumber: 'CX-CERT-9021' },
+  { certId: 'tc2', staffName: 'Priya Nair', employeeId: 'st4', moduleTitle: 'FSSAI Food Hygiene, Popcorn Dispensing & Temperature Log', score: 92, issuedDate: '2024-09-04', validUntil: '2026-09-04', certificateNumber: 'CX-CERT-8842' },
+  { certId: 'tc3', staffName: 'Rohit Mehta', employeeId: 'st5', moduleTitle: 'Barco 4K Laser Projector Operation & Emergency Lamp Protocol', score: 98, issuedDate: '2022-04-28', validUntil: '2026-12-31', certificateNumber: 'CX-CERT-7719' },
+  { certId: 'tc4', staffName: 'Aarav Sharma', employeeId: 'st1', moduleTitle: 'Emergency Fire Evacuation & Crowd Panic Mitigation Drill', score: 100, issuedDate: '2024-05-30', validUntil: '2026-05-30', certificateNumber: 'CX-CERT-8104' }
+];
+
 // Master data loader & manager (In-memory cache with LocalStorage synchronization)
 export class ConnCloudStore {
   private static isInitialized = false;
@@ -785,6 +853,9 @@ export class ConnCloudStore {
   private static licenses: CinemaLicense[] = [];
   private static offers: CinemaOffer[] = [];
   private static misSummaries: MISCinemaSummary[] = [];
+  private static trainingModules: TrainingModule[] = [];
+  private static staffOrientations: StaffOrientation[] = [];
+  private static certifications: TrainingCertification[] = [];
 
   public static init() {
     if (typeof window === 'undefined') return;
@@ -822,6 +893,9 @@ export class ConnCloudStore {
     this.licenses = cacheOrSeed('licenses', INITIAL_LICENSES);
     this.offers = cacheOrSeed('offers', INITIAL_OFFERS);
     this.misSummaries = cacheOrSeed('misSummaries', INITIAL_MIS_SUMMARIES);
+    this.trainingModules = cacheOrSeed('trainingModules', INITIAL_TRAINING_MODULES);
+    this.staffOrientations = cacheOrSeed('staffOrientations', INITIAL_STAFF_ORIENTATIONS);
+    this.certifications = cacheOrSeed('certifications', INITIAL_TRAINING_CERTIFICATIONS);
 
     // Relational relational collections (large)
     const storedBase = localStorage.getItem('cc_relational_base');
@@ -987,6 +1061,9 @@ export class ConnCloudStore {
   public static getLicenses() { this.init(); return this.licenses; }
   public static getOffers() { this.init(); return this.offers; }
   public static getMISData() { this.init(); return this.misSummaries; }
+  public static getTrainingModules() { this.init(); return this.trainingModules; }
+  public static getStaffOrientations() { this.init(); return this.staffOrientations; }
+  public static getCertifications() { this.init(); return this.certifications; }
 
   // Mutation commands
   public static addExpense(tx: Omit<FinanceTransaction, 'transactionId' | 'status'> & { vendor: string }) {
@@ -1273,5 +1350,60 @@ export class ConnCloudStore {
       return off.status;
     }
     return null;
+  }
+
+  // Training mutations
+  public static addTrainingModule(mod: Omit<TrainingModule, 'moduleId' | 'enrolledCount' | 'completedCount'>) {
+    this.init();
+    const newMod: TrainingModule = {
+      ...mod,
+      moduleId: `tm_${Date.now()}`,
+      enrolledCount: 0,
+      completedCount: 0
+    };
+    this.trainingModules.unshift(newMod);
+    this.save('trainingModules', this.trainingModules);
+    return newMod;
+  }
+
+  public static enrollStaffInOrientation(orient: Omit<StaffOrientation, 'orientationId' | 'progressPercent' | 'modulesCompleted' | 'status'>) {
+    this.init();
+    const newOrient: StaffOrientation = {
+      ...orient,
+      orientationId: `so_${Date.now()}`,
+      progressPercent: 0,
+      modulesCompleted: 0,
+      status: 'In Progress'
+    };
+    this.staffOrientations.unshift(newOrient);
+    this.save('staffOrientations', this.staffOrientations);
+    return newOrient;
+  }
+
+  public static updateOrientationProgress(orientationId: string, completedIncrement: number) {
+    this.init();
+    const o = this.staffOrientations.find(item => item.orientationId === orientationId);
+    if (o) {
+      o.modulesCompleted = Math.min(o.totalModules, o.modulesCompleted + completedIncrement);
+      o.progressPercent = Math.round((o.modulesCompleted / o.totalModules) * 100);
+      if (o.progressPercent >= 100) {
+        o.status = 'Completed';
+        o.certifiedDate = new Date().toISOString().split('T')[0];
+      }
+      this.save('staffOrientations', this.staffOrientations);
+      return true;
+    }
+    return false;
+  }
+
+  public static issueCertification(cert: Omit<TrainingCertification, 'certId'>) {
+    this.init();
+    const newCert: TrainingCertification = {
+      ...cert,
+      certId: `tc_${Date.now()}`
+    };
+    this.certifications.unshift(newCert);
+    this.save('certifications', this.certifications);
+    return newCert;
   }
 }

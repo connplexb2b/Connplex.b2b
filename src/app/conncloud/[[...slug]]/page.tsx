@@ -27,6 +27,7 @@ import GroupBookingView from '../../../components/conncloud/views/GroupBookingVi
 import MISView from '../../../components/conncloud/views/MISView';
 import LicenseView from '../../../components/conncloud/views/LicenseView';
 import OffersView from '../../../components/conncloud/views/OffersView';
+import TrainingView from '../../../components/conncloud/views/TrainingView';
 
 // Central Relational Store import
 import { ConnCloudStore } from '../../../lib/conncloudData';
@@ -141,6 +142,7 @@ export default function ConnCloudPage() {
     { name: 'Food & Beverage', icon: 'fa-burger', route: '/conncloud/fnb', badge: 'Alert' },
     { name: 'Merchandise / Store', icon: 'fa-store', route: '/conncloud/merchandise' },
     { name: 'Staff', icon: 'fa-user-tie', route: '/conncloud/staff' },
+    { name: 'Training & Orientation', icon: 'fa-graduation-cap', route: '/conncloud/training' },
     { name: 'Operations', icon: 'fa-gears', route: '/conncloud/operations', badge: '3' },
     { name: 'Marketing', icon: 'fa-bullhorn', route: '/conncloud/marketing' },
     { name: 'My Offers', icon: 'fa-tags', route: '/conncloud/offers' },
@@ -184,6 +186,9 @@ export default function ConnCloudPage() {
     }
     if (pathname.startsWith('/conncloud/staff')) {
       return <StaffView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
+    }
+    if (pathname.startsWith('/conncloud/training')) {
+      return <TrainingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/operations')) {
       return <OperationsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
@@ -233,6 +238,7 @@ export default function ConnCloudPage() {
       if (p === 'mis') return 'MIS';
       if (p === 'fnb') return 'Food & Beverage';
       if (p === 'merchandise') return 'Merchandise & Store';
+      if (p === 'training') return 'Training & Orientation';
       if (p === 'offers') return 'My Offers';
       if (p === 'license') return 'License';
       return p.charAt(0).toUpperCase() + p.slice(1);
