@@ -446,7 +446,7 @@
 
 .hero-desc {
     font-size: 0.92rem;
-    color: var(--text-muted);
+    color: #dcdad6;
     font-weight: 300;
     line-height: 1.7;
     max-width: 420px;
@@ -703,7 +703,7 @@
 
 .news-card-desc {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: #e2e0dc;
     font-weight: 400;
     line-height: 1.6;
     margin-bottom: 1.5rem;
@@ -1108,27 +1108,82 @@
     text-transform: uppercase;
 }
 
+/* All news body typography strictly white on dark background */
+.modal-body-text,
+.modal-body-text * {
+    color: #ffffff !important;
+    background-color: transparent !important;
+}
+
 .modal-body-text {
-    font-size: 0.92rem;
-    color: var(--text-silver);
-    line-height: 1.75;
+    font-size: 0.95rem;
+    color: #ffffff !important;
+    line-height: 1.8;
     margin-bottom: 2.5rem;
 }
 
 .modal-body-text p {
-    margin-bottom: 1.2rem;
+    color: #ffffff !important;
+    margin-bottom: 1.3rem;
+    line-height: 1.8;
 }
 
-.modal-body-text strong {
-    color: var(--text-white);
+.modal-body-text span,
+.modal-body-text div {
+    color: #ffffff !important;
 }
 
-.modal-body-text ul {
-    list-style: none;
+.modal-body-text strong,
+.modal-body-text b {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.modal-body-text em,
+.modal-body-text i {
+    color: #ffffff !important;
+}
+
+.modal-body-text h1,
+.modal-body-text h2,
+.modal-body-text h3,
+.modal-body-text h4,
+.modal-body-text h5,
+.modal-body-text h6 {
+    color: #ffffff !important;
+    font-weight: 700;
+    margin-top: 1.8rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.35;
+    letter-spacing: 0.5px;
+}
+
+.modal-body-text h1 { font-size: 1.8rem; }
+.modal-body-text h2 { font-size: 1.5rem; }
+.modal-body-text h3 { font-size: 1.25rem; }
+.modal-body-text h4 { font-size: 1.1rem; }
+
+.modal-body-text ul,
+.modal-body-text ol {
     margin: 1.5rem 0 2rem;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+}
+
+.modal-body-text ul {
+    list-style: none;
+}
+
+.modal-body-text ol {
+    list-style: decimal;
+    padding-left: 1.8rem;
+}
+
+.modal-body-text ul li,
+.modal-body-text ol li {
+    color: #ffffff !important;
+    line-height: 1.7;
 }
 
 .modal-body-text ul li {
@@ -1141,8 +1196,35 @@
     position: absolute;
     left: 0;
     top: 0;
-    color: var(--gold-primary);
+    color: var(--gold-primary, #c19b62) !important;
     font-weight: bold;
+}
+
+/* Links inside modal body text styled with Connplex luxury gold accent */
+.modal-body-text a,
+.modal-body-text a * {
+    color: var(--gold-light, #dfb973) !important;
+    text-decoration: underline !important;
+    text-underline-offset: 4px !important;
+    transition: var(--transition-fast) !important;
+}
+
+.modal-body-text a:hover,
+.modal-body-text a:hover * {
+    color: #ffffff !important;
+}
+
+.modal-body-text blockquote {
+    border-left: 3px solid var(--gold-primary, #c19b62);
+    padding: 0.8rem 1.2rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #ffffff !important;
+}
+
+.modal-body-text ::selection {
+    background: var(--gold-primary, #c19b62);
+    color: #000000 !important;
 }
 
 .modal-action-row {
@@ -1153,7 +1235,7 @@
 /* Enquiry Form Overlay */
 .connect-subtitle {
     font-size: 0.88rem;
-    color: var(--text-muted);
+    color: #dcdad6;
     line-height: 1.6;
     margin-bottom: 2rem;
 }
@@ -1493,7 +1575,25 @@
 
 #news-modal .modal-body-text {
     font-size: 1.1rem;
-    line-height: 1.8;
+    line-height: 1.85;
+    color: #ffffff !important;
+}
+
+#news-modal .modal-body-text,
+#news-modal .modal-body-text * {
+    color: #ffffff !important;
+}
+
+#news-modal .modal-body-text a,
+#news-modal .modal-body-text a * {
+    color: var(--gold-light, #dfb973) !important;
+    text-decoration: underline !important;
+    text-underline-offset: 4px !important;
+}
+
+#news-modal .modal-body-text a:hover,
+#news-modal .modal-body-text a:hover * {
+    color: #ffffff !important;
 }
 
 #news-modal #modal-image {

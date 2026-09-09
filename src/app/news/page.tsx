@@ -110,6 +110,17 @@ const DEFAULT_NEWS: Article[] = [
   }
 ];
 
+const cleanNewsBody = (html: string): string => {
+    if (!html) return '';
+    return html
+        // Replace black or dark inline font colors (e.g. #000, #000000, rgb(0,0,0), rgba(0,0,0,...), black) with #ffffff
+        .replace(/color\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|black)[^;"']*/gi, 'color: #ffffff')
+        // Strip inline white/black backgrounds that clash with dark theme
+        .replace(/background(-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|white|black)[^;"']*/gi, 'background-color: transparent')
+        // Clean legacy HTML font color attributes
+        .replace(/<font([^>]*?)color=["']?[^"'\s>]+["']?([^>]*?)>/gi, '<font$1color="#ffffff"$2>');
+};
+
 const NewsPage = () => {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
@@ -356,7 +367,7 @@ const NewsPage = () => {
                                 <div className="modal-details-content">
                                     <span className="modal-date" id="modal-date">{selectedArticle.date}</span>
                                     <h2 className="modal-title" id="modal-title">{selectedArticle.title}</h2>
-                                    <div className="modal-body-text" id="modal-body-text" dangerouslySetInnerHTML={{ __html: selectedArticle.body }}></div>
+                                    <div className="modal-body-text" id="modal-body-text" dangerouslySetInnerHTML={{ __html: cleanNewsBody(selectedArticle.body) }}></div>
                                     <div className="modal-action-row" id="modal-action-row">
                                         <button 
                                             className="btn-solid" 

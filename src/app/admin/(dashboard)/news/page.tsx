@@ -56,7 +56,16 @@ export default function NewsAdminPage() {
     const isEdit = !!modal._id;
     const url = isEdit ? `/api/admin/news/${modal._id}` : '/api/admin/news';
     const method = isEdit ? 'PUT' : 'POST';
-    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(modal) });
+
+    const cleanedBody = modal.body
+      ? modal.body
+          .replace(/color\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|black)[^;"']*/gi, '')
+          .replace(/background(-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|white|black)[^;"']*/gi, '')
+          .replace(/<font[^>]*color=["']?[^"'\s>]+["']?[^>]*>/gi, (match) => match.replace(/color=["']?[^"'\s>]+["']?/i, ''))
+      : '';
+
+    const payload = { ...modal, body: cleanedBody || modal.body };
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     setSaving(false);
     if (res.ok) { closeModal(); load(); } else { const d = await res.json(); setError(d.error || 'Failed to save'); }
   };

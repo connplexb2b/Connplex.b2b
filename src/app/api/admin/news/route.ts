@@ -88,6 +88,14 @@ const DEFAULT_NEWS = [
   }
 ];
 
+function cleanArticleBody(html?: string): string {
+  if (!html) return '';
+  return html
+    .replace(/color\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|black)[^;"']*/gi, 'color: #ffffff')
+    .replace(/background(-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgb\([^)]+\)|rgba\([^)]+\)|white|black)[^;"']*/gi, 'background-color: transparent')
+    .replace(/<font([^>]*?)color=["']?[^"'\s>]+["']?([^>]*?)>/gi, '<font$1color="#ffffff"$2>');
+}
+
 export async function GET(request: Request) {
   try {
     await connectToDatabase();
@@ -103,7 +111,11 @@ export async function GET(request: Request) {
 
     const filter = getAll ? {} : { isActive: true };
     const articles = await NewsArticle.find(filter).sort({ order: 1, createdAt: -1 }).lean();
-    return NextResponse.json(articles);
+    const sanitizedArticles = articles.map((article: any) => ({
+      ...article,
+      body: cleanArticleBody(article.body),
+    }));
+    return NextResponse.json(sanitizedArticles);
   } catch (err: any) {
     console.error("News GET api error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
@@ -114,6 +126,9 @@ export async function POST(request: Request) {
   if (!(await isAdminAuthenticated())) return unauthorizedResponse();
   try {
     const body = await request.json().catch(() => ({}));
+    if (body.body) {
+      body.body = cleanArticleBody(body.body);
+    }
     await connectToDatabase();
     const article = await NewsArticle.create(body);
     return NextResponse.json(article, { status: 201 });

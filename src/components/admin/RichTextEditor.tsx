@@ -49,6 +49,35 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const html = e.clipboardData.getData('text/html');
+    const text = e.clipboardData.getData('text/plain');
+
+    if (html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      
+      // Clean inline colors and backgrounds from all elements so dark theme works seamlessly
+      const allElements = doc.body.querySelectorAll('*');
+      allElements.forEach((el) => {
+        if (el instanceof HTMLElement) {
+          el.style.color = '';
+          el.style.backgroundColor = '';
+          el.removeAttribute('color');
+          if (!el.getAttribute('style') || el.getAttribute('style')?.trim() === '') {
+            el.removeAttribute('style');
+          }
+        }
+      });
+      
+      document.execCommand('insertHTML', false, doc.body.innerHTML);
+    } else if (text) {
+      document.execCommand('insertText', false, text);
+    }
+    handleInput();
+  };
+
   return (
     <div style={{ border: '1px solid #d1d1d6', borderRadius: '8px', overflow: 'hidden', background: '#fff' }}>
       {/* Rich Text Editor Toolbar */}
@@ -93,6 +122,7 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
         contentEditable
         onInput={handleInput}
         onBlur={handleInput}
+        onPaste={handlePaste}
         style={{ minHeight: '240px', padding: '1rem', outline: 'none', fontSize: '0.9rem', lineHeight: 1.6, overflowY: 'auto' }}
         {...{ placeholder }}
       />
