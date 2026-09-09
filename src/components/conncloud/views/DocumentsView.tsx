@@ -108,6 +108,7 @@ export default function DocumentsView({
           </div>
         ))}
       </div>
+      </div>
 
       {isUploadOpen && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 animate-fadeIn">

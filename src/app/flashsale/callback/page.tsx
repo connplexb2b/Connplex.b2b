@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 function CallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const orderId = searchParams.get("order_id") || searchParams.get("orderId");
-  const trackingId = searchParams.get("tracking_id") || searchParams.get("trackingId");
-  const statusParam = searchParams.get("status");
-  const messageParam = searchParams.get("message");
+  const orderId = searchParams?.get("order_id") || searchParams?.get("orderId");
+  const trackingId = searchParams?.get("tracking_id") || searchParams?.get("trackingId");
+  const statusParam = searchParams?.get("status");
+  const messageParam = searchParams?.get("message");
 
   const [status, setStatus] = useState<"verifying" | "success" | "failure">(() => {
     if (statusParam === "success") return "success";
