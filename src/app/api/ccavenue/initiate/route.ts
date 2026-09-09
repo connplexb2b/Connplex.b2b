@@ -20,7 +20,11 @@ export async function POST(req: NextRequest) {
 
     // 2. Generate unique Order ID
     const orderId = `order_fs_${Date.now()}`;
-    const amount = process.env.CCAVENUE_FRANCHISE_FEE_AMOUNT || "1180000.00";
+    const envAmount = process.env.CCAVENUE_FRANCHISE_FEE_AMOUNT;
+    const amount =
+      envAmount && envAmount !== "1000000" && envAmount !== "1000000.00"
+        ? envAmount
+        : "1180000.00";
     const timelineLabel = timeframe === "immediate" ? "Immediate" : timeframe === "week" ? "Within a week" : "Within a month";
 
     // 3. Create a pending lead entry in MongoDB
@@ -82,8 +86,9 @@ export async function POST(req: NextRequest) {
       billing_country: "India",
       billing_tel: phone,
       billing_email: "marketing@theconnplex.com",
-      merchant_param1: timeframe || "immediate",
-      merchant_param2: "Flash Sale Franchise Fee - 11.8 Lakh (inclusive of 18% GST)",
+      merchant_param1: "Franchise Fee: Rs. 10 Lakh + 18% GST (Rs. 1.8 Lakh) = Rs. 11,80,000",
+      merchant_param2: timeframe || "immediate",
+      merchant_param3: "Flash Sale Franchise Fee - Rs. 11,80,000 (incl. 18% GST)",
     });
 
     // 6. Encrypt Payload
