@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import mongoose from "mongoose";
 import { ccavenueDecrypt, parseCcavenueResponse } from "@/lib/ccavenue";
+import { sendPaymentConfirmationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -74,8 +75,27 @@ export async function POST(req: NextRequest) {
           }
         );
 
-        // 3. Fire Bitamin Webhook if Success
+        // 3. Send Confirmation Email & Fire Bitamin Webhook if Success
         if (isSuccess) {
+          // A. Send Confirmation Email to Customer
+          if (lead.email) {
+            try {
+              await sendPaymentConfirmationEmail({
+                to: lead.email,
+                fullName: lead.fullName,
+                orderId,
+                trackingId,
+                bankRefNo,
+                amountPaid: lead.amountPaid || 1180000,
+                paymentMode: `${paymentMode}${cardName ? ` (${cardName})` : ""}`,
+                city: lead.city,
+              });
+            } catch (emailError) {
+              console.error("Error sending payment confirmation email in CCAvenue callback:", emailError);
+            }
+          }
+
+          // B. Trigger Bitamin Webhook
           try {
             const cleanedPhone = lead.phone ? lead.phone.toString().replace(/\D/g, "") : "";
             const formattedPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;

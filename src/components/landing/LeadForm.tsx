@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 
 export function LeadForm() {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [city, setCity] = useState("");
   const [agreed, setAgreed] = useState(false);
@@ -15,8 +16,14 @@ export function LeadForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !/^\d{10}$/.test(phone.replace(/\D/g, "").slice(-10)) || !city.trim()) {
-      toast.error("Please enter your name, a valid 10-digit number and your city.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (
+      !name.trim() ||
+      !emailRegex.test(email.trim()) ||
+      !/^\d{10}$/.test(phone.replace(/\D/g, "").slice(-10)) ||
+      !city.trim()
+    ) {
+      toast.error("Please enter your name, a valid email address, 10-digit mobile number, and preferred city.");
       return;
     }
 
@@ -34,6 +41,7 @@ export function LeadForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fullName: name.trim(),
+          email: email.trim().toLowerCase(),
           phone: phone.trim(),
           city: city.trim(),
           timeframe: "immediate",
@@ -113,6 +121,21 @@ export function LeadForm() {
               placeholder="Your name"
               disabled={submitting}
               className="h-12 bg-background/60"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              inputMode="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              disabled={submitting}
+              className="h-12 bg-background/60"
+              required
             />
           </div>
           <div className="space-y-2">

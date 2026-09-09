@@ -5,9 +5,9 @@ import { ccavenueEncrypt, buildCcavenuePayload } from "@/lib/ccavenue";
 
 export async function POST(req: NextRequest) {
   try {
-    const { fullName, phone, city, timeframe } = await req.json();
+    const { fullName, email, phone, city, timeframe } = await req.json();
 
-    if (!fullName || !phone || !city) {
+    if (!fullName || !email || !phone || !city) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     // 3. Create a pending lead entry in MongoDB
     await db.collection("contactmessages").insertOne({
       fullName,
-      email: "marketing@theconnplex.com",
+      email: email.trim().toLowerCase(),
       phone,
       state: "N/A",
       city,
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       billing_zip: "400001",
       billing_country: "India",
       billing_tel: phone,
-      billing_email: "marketing@theconnplex.com",
+      billing_email: email.trim().toLowerCase(),
       merchant_param1: "Franchise Fee: Rs. 10 Lakh + 18% GST (Rs. 1.8 Lakh) = Rs. 11,80,000",
       merchant_param2: timeframe || "immediate",
       merchant_param3: "Flash Sale Franchise Fee - Rs. 11,80,000 (incl. 18% GST)",
