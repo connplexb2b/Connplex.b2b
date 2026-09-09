@@ -29,23 +29,40 @@ export default function GroupBookingView({
   const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
   const [activeQuoteBooking, setActiveQuoteBooking] = useState<GroupBooking | null>(null);
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const defaultCinemaId = selectedCinemaId === 'all' ? 'c1' : selectedCinemaId;
+  const defaultScreenId = selectedCinemaId === 'c5' ? 's21' : (screens.find(s => s.cinemaId === defaultCinemaId)?.screenId || 's1');
+
   // New booking form state
   const [bookingForm, setBookingForm] = useState({
     clientName: '',
     organization: '',
     contactNumber: '',
     email: '',
-    cinemaId: selectedCinemaId === 'all' ? 'c1' : selectedCinemaId,
-    screenId: 's1',
+    cinemaId: defaultCinemaId,
+    screenId: defaultScreenId,
     eventType: 'Corporate Screening' as GroupBooking['eventType'],
     date: '',
     timeSlot: '10:00 AM - 01:30 PM',
-    guestCount: '100',
+    guestCount: isAhilyanagar ? '60' : '100',
     movieTitle: 'Raftaar',
     fnbPackage: 'Gold VIP Combo' as GroupBooking['fnbPackage'],
-    advancePaid: '30000',
+    advancePaid: '20000',
     specialRequests: ''
   });
+
+  React.useEffect(() => {
+    setBookingForm(prev => {
+      const cId = selectedCinemaId === 'all' ? 'c1' : selectedCinemaId;
+      const scr = selectedCinemaId === 'c5' ? 's21' : (screens.find(s => s.cinemaId === cId)?.screenId || 's1');
+      return {
+        ...prev,
+        cinemaId: cId,
+        screenId: scr,
+        guestCount: selectedCinemaId === 'c5' ? '60' : '100'
+      };
+    });
+  }, [selectedCinemaId, screens]);
 
   const formatCurrency = (val: number) => {
     return `₹${val.toLocaleString('en-IN')}`;
@@ -64,25 +81,17 @@ export default function GroupBookingView({
   });
 
   // KPI Metrics
-  const totalBookingsCount = bookings.length;
-  const confirmedBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Completed');
+  const cinemaBookings = bookings.filter(b => selectedCinemaId === 'all' || b.cinemaId === selectedCinemaId);
+  const totalBookingsCount = cinemaBookings.length;
+  const confirmedBookings = cinemaBookings.filter(b => b.status === 'Confirmed' || b.status === 'Completed');
   const totalRevenue = confirmedBookings.reduce((acc, b) => acc + b.totalQuoted, 0);
   const totalGuests = confirmedBookings.reduce((acc, b) => acc + b.guestCount, 0);
-  const pendingInquiries = bookings.filter(b => b.status === 'Inquiry' || b.status === 'Quote Sent').length;
+  const pendingInquiries = cinemaBookings.filter(b => b.status === 'Inquiry' || b.status === 'Quote Sent').length;
 
   // Handle Create Booking
   const handleCreateBooking = (e: React.FormEvent) => {
     e.preventDefault();
     if (!bookingForm.clientName || !bookingForm.organization || !bookingForm.date) return;
-
-    const guestCount = parseInt(bookingForm.guestCount, 10) || 50;
-    
-    // Auto-calculate estimate: Base ₹25,000 + (guests * 250) + (FnB * guests)
-    const fnbPerGuest = bookingForm.fnbPackage === 'Platinum Gourmet' ? 250 : 
-                        bookingForm.fnbPackage === 'Gold VIP Combo' ? 180 : 
-                        bookingForm.fnbPackage === 'Silver Combo' ? 120 : 0;
-    const totalQuoted = 25000 + (guestCount * 220) + (guestCount * fnbPerGuest);
-    const advancePaid = parseFloat(bookingForm.advancePaid) || 0;
 
     const newBooking = ConnCloudStore.addGroupBooking({
       clientName: bookingForm.clientName,
@@ -93,14 +102,14 @@ export default function GroupBookingView({
       screenId: bookingForm.screenId,
       eventType: bookingForm.eventType,
       date: bookingForm.date,
-      timeSlot: bookingForm.timeSlot,
-      guestCount,
-      movieTitle: bookingForm.movieTitle,
+      timeSlot: bookingForm.timeSlot || '10:00 AM - 01:30 PM',
+      guestCount: parseInt(bookingForm.guestCount, 10) || 50,
+      movieTitle: bookingForm.movieTitle || 'Special Feature',
       fnbPackage: bookingForm.fnbPackage,
-      totalQuoted,
-      advancePaid,
-      paymentStatus: advancePaid >= totalQuoted ? 'Fully Paid' : (advancePaid > 0 ? 'Advance Paid' : 'Pending Advance'),
-      status: advancePaid > 0 ? 'Confirmed' : 'Quote Sent',
+      totalQuoted: (parseInt(bookingForm.guestCount, 10) || 50) * 550,
+      advancePaid: parseFloat(bookingForm.advancePaid) || 0,
+      paymentStatus: (parseFloat(bookingForm.advancePaid) || 0) > 0 ? 'Advance Paid' : 'Pending',
+      status: 'Confirmed',
       specialRequests: bookingForm.specialRequests
     });
 
@@ -111,19 +120,18 @@ export default function GroupBookingView({
       organization: '',
       contactNumber: '',
       email: '',
-      cinemaId: selectedCinemaId === 'all' ? 'c1' : selectedCinemaId,
-      screenId: 's1',
+      cinemaId: defaultCinemaId,
+      screenId: defaultScreenId,
       eventType: 'Corporate Screening',
       date: '',
       timeSlot: '10:00 AM - 01:30 PM',
-      guestCount: '100',
+      guestCount: isAhilyanagar ? '60' : '100',
       movieTitle: 'Raftaar',
       fnbPackage: 'Gold VIP Combo',
-      advancePaid: '30000',
+      advancePaid: '20000',
       specialRequests: ''
     });
-
-    triggerNotification(`Created group booking ${newBooking.bookingId} for ${newBooking.organization}.`);
+    triggerNotification(`Created confirmed group booking for ${newBooking.organization} (${newBooking.guestCount} guests).`);
   };
 
   // Status transition handler
@@ -135,6 +143,29 @@ export default function GroupBookingView({
 
   return (
     <div className="space-y-6">
+      {/* Ahilyanagar Group Booking Banner */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-purple-900/30 via-indigo-900/15 to-transparent border border-purple-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-purple-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Private Auditorium Charter & Group Bookings
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Screen 1 (20 Couple Recliner VIP Lounge) & Screen 2 (60 Gold Class Audi) available for corporate townhalls and VIP premieres • Kalyani Steels Screening Confirmed
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-purple-300 bg-purple-950/60 px-2.5 py-1 rounded border border-purple-500/30">
+            <span>BOUTIQUE CAPACITY: 80 SEATS</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>

@@ -57,10 +57,20 @@ export default function OffersView({
     return cinemaMatch && typeMatch && statusMatch && searchMatch;
   });
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+
+  React.useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      cinemaId: selectedCinemaId === 'all' ? 'all' : selectedCinemaId
+    }));
+  }, [selectedCinemaId]);
+
   // KPI Calculations
-  const activeOffers = offers.filter(o => o.status === 'Active');
-  const totalRedemptions = offers.reduce((acc, o) => acc + o.timesRedeemed, 0);
-  const totalSavings = offers.reduce((acc, o) => acc + o.totalSavingsGranted, 0);
+  const relevantOffers = offers.filter(o => selectedCinemaId === 'all' || o.cinemaId === 'all' || o.cinemaId === selectedCinemaId);
+  const activeOffers = relevantOffers.filter(o => o.status === 'Active');
+  const totalRedemptions = relevantOffers.reduce((acc, o) => acc + o.timesRedeemed, 0);
+  const totalSavings = relevantOffers.reduce((acc, o) => acc + o.totalSavingsGranted, 0);
   const incrementalRevenue = Math.round(totalSavings * 4.2); // Typical box office uplift multiplier
 
   // Copy Promo Code
@@ -124,6 +134,29 @@ export default function OffersView({
 
   return (
     <div className="space-y-6">
+      {/* Ahilyanagar Promo Banner */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-900/30 via-rose-900/15 to-transparent border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-amber-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Privilege Offers & Vouchers Active
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Auditorium Privilege: AHILYA20 (20% Off Couple Recliner Screen 1) • 142 redemptions recorded with ₹28,400 patron savings
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded border border-amber-500/30">
+            <span>COUPON: AHILYA20</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>

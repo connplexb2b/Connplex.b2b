@@ -636,7 +636,9 @@ const INITIAL_EQUIPMENT: Equipment[] = [
 
 const INITIAL_MAINTENANCE: MaintenanceTicket[] = [
   { ticketId: 'mt1', equipmentId: 'eq3', issue: 'Projector lens replacement & focus recalibration', priority: 'Medium', technician: 'Subhash Chandra (Barco)', SLA: '24 Hours', status: 'Assigned', date: '2026-08-28' },
-  { ticketId: 'mt2', equipmentId: 'eq7', issue: 'HVAC Compressor belt tension adjust & clean', priority: 'Medium', technician: 'Manoj Kumar (Blue Star)', SLA: '12 Hours', status: 'In Progress', date: '2026-08-29' }
+  { ticketId: 'mt2', equipmentId: 'eq7', issue: 'HVAC Compressor belt tension adjust & clean', priority: 'Medium', technician: 'Manoj Kumar (Blue Star)', SLA: '12 Hours', status: 'In Progress', date: '2026-08-29' },
+  { ticketId: 'mt_ah1', equipmentId: 'eq_ah1', issue: 'Scheduled laser optical sensor calibration', priority: 'Low', technician: 'Barco Laser Services India', SLA: '48 Hours', status: 'Resolved', date: '2026-08-20' },
+  { ticketId: 'mt_ah2', equipmentId: 'eq_ah3', issue: 'HVAC Air Filter Cleaning & Temperature Sensor Check', priority: 'Low', technician: 'Daikin VRV Care (Ahilyanagar)', SLA: '24 Hours', status: 'Resolved', date: '2026-08-25' }
 ];
 
 const INITIAL_CAMPAIGNS: MarketingCampaign[] = [
@@ -866,14 +868,20 @@ const INITIAL_STAFF_ORIENTATIONS: StaffOrientation[] = [
   { orientationId: 'so3', employeeId: 'st5', employeeName: 'Rohit Mehta', department: 'Operations', role: 'Projectionist', joinDate: '2022-04-12', orientationBatch: 'Cohort 2022-Q2', mentor: 'Aarav Sharma', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2022-04-28' },
   { orientationId: 'so4', employeeId: 'st9', employeeName: 'Tarun Joshi', department: 'F&B', role: 'F&B Associate Trainee', joinDate: '2026-08-15', orientationBatch: 'Cohort 2026-Aug', mentor: 'Nisha Singh', progressPercent: 65, modulesCompleted: 4, totalModules: 6, status: 'In Progress' },
   { orientationId: 'so5', employeeId: 'st10', employeeName: 'Manisha Chauhan', department: 'Ticketing', role: 'Box Office Trainee', joinDate: '2026-08-20', orientationBatch: 'Cohort 2026-Aug', mentor: 'Kabir Verma', progressPercent: 50, modulesCompleted: 3, totalModules: 6, status: 'In Progress' },
-  { orientationId: 'so6', employeeId: 'st11', employeeName: 'Vicky Bhati', department: 'Housekeeping', role: 'Janitorial Associate', joinDate: '2026-08-01', orientationBatch: 'Cohort 2026-Aug', mentor: 'Deepak Patel', progressPercent: 30, modulesCompleted: 2, totalModules: 6, status: 'Overdue' }
+  { orientationId: 'so6', employeeId: 'st11', employeeName: 'Vicky Bhati', department: 'Housekeeping', role: 'Janitorial Associate', joinDate: '2026-08-01', orientationBatch: 'Cohort 2026-Aug', mentor: 'Deepak Patel', progressPercent: 30, modulesCompleted: 2, totalModules: 6, status: 'Overdue' },
+  { orientationId: 'so_ah1', employeeId: 'st_ah1', employeeName: 'Vikram Shinde', department: 'Management', role: 'General Manager', joinDate: '2026-07-01', orientationBatch: 'Executive Leadership 2026', mentor: 'Rakesh Patel', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2026-07-15' },
+  { orientationId: 'so_ah2', employeeId: 'st_ah2', employeeName: 'Ramesh Kadam', department: 'Operations', role: 'Operations & Projection Lead', joinDate: '2026-07-10', orientationBatch: 'Technical Operations 2026', mentor: 'Aarav Sharma', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2026-07-25' },
+  { orientationId: 'so_ah3', employeeId: 'st_ah3', employeeName: 'Snehal Deshmukh', department: 'F&B', role: 'Food & Beverage Supervisor', joinDate: '2026-07-12', orientationBatch: 'F&B Concessions 2026', mentor: 'Nisha Singh', progressPercent: 100, modulesCompleted: 6, totalModules: 6, status: 'Completed', certifiedDate: '2026-07-28' }
 ];
 
 const INITIAL_TRAINING_CERTIFICATIONS: TrainingCertification[] = [
   { certId: 'tc1', staffName: 'Kabir Verma', employeeId: 'st3', moduleTitle: 'Connplex Gold Class Hospitality & VIP Etiquette', score: 94, issuedDate: '2025-01-24', validUntil: '2027-01-24', certificateNumber: 'CX-CERT-9021' },
   { certId: 'tc2', staffName: 'Priya Nair', employeeId: 'st4', moduleTitle: 'FSSAI Food Hygiene, Popcorn Dispensing & Temperature Log', score: 92, issuedDate: '2024-09-04', validUntil: '2026-09-04', certificateNumber: 'CX-CERT-8842' },
   { certId: 'tc3', staffName: 'Rohit Mehta', employeeId: 'st5', moduleTitle: 'Barco 4K Laser Projector Operation & Emergency Lamp Protocol', score: 98, issuedDate: '2022-04-28', validUntil: '2026-12-31', certificateNumber: 'CX-CERT-7719' },
-  { certId: 'tc4', staffName: 'Aarav Sharma', employeeId: 'st1', moduleTitle: 'Emergency Fire Evacuation & Crowd Panic Mitigation Drill', score: 100, issuedDate: '2024-05-30', validUntil: '2026-05-30', certificateNumber: 'CX-CERT-8104' }
+  { certId: 'tc4', staffName: 'Aarav Sharma', employeeId: 'st1', moduleTitle: 'Emergency Fire Evacuation & Crowd Panic Mitigation Drill', score: 100, issuedDate: '2024-05-30', validUntil: '2026-05-30', certificateNumber: 'CX-CERT-8104' },
+  { certId: 'tc_ah1', staffName: 'Vikram Shinde', employeeId: 'st_ah1', moduleTitle: 'Connplex Gold Class Hospitality & VIP Etiquette', score: 98, issuedDate: '2026-07-15', validUntil: '2028-07-15', certificateNumber: 'CX-AHIL-901' },
+  { certId: 'tc_ah2', staffName: 'Ramesh Kadam', employeeId: 'st_ah2', moduleTitle: 'Barco 4K Laser Projector Operation & Emergency Lamp Protocol', score: 96, issuedDate: '2026-07-25', validUntil: '2028-07-25', certificateNumber: 'CX-AHIL-902' },
+  { certId: 'tc_ah3', staffName: 'Snehal Deshmukh', employeeId: 'st_ah3', moduleTitle: 'FSSAI Food Hygiene, Popcorn Dispensing & Temperature Log', score: 95, issuedDate: '2026-07-28', validUntil: '2028-07-28', certificateNumber: 'CX-AHIL-903' }
 ];
 
 // Master data loader & manager (In-memory cache with LocalStorage synchronization)
@@ -970,8 +978,11 @@ export class ConnCloudStore {
     this.licenses = reconcileCollection('licenses', this.licenses, INITIAL_LICENSES, 'licenseId');
     this.offers = reconcileCollection('offers', this.offers, INITIAL_OFFERS, 'offerId');
     this.misSummaries = reconcileCollection('misSummaries', this.misSummaries, INITIAL_MIS_SUMMARIES, 'cinemaId');
+    this.maintenance = reconcileCollection('maintenance', this.maintenance, INITIAL_MAINTENANCE, 'ticketId');
+    this.staffOrientations = reconcileCollection('staffOrientations', this.staffOrientations, INITIAL_STAFF_ORIENTATIONS, 'orientationId');
+    this.certifications = reconcileCollection('certifications', this.certifications, INITIAL_TRAINING_CERTIFICATIONS, 'certId');
 
-    // Relational relational collections (large)
+    // Relational collections (large)
     const storedBase = localStorage.getItem('cc_relational_base');
     if (storedBase) {
       try {
@@ -1117,7 +1128,43 @@ export class ConnCloudStore {
       if (!hasAhilyaFin) {
         this.financeTransactions.push(...newFinance);
       }
+    }
 
+    // Ensure Ahilyanagar tickets are generated
+    if (!this.tickets) this.tickets = [];
+    const hasAhilyaTickets = this.tickets.some(t => t.screenId === 's20' || t.screenId === 's21');
+    if (!hasAhilyaTickets) {
+      const ahilyaShows = (this.shows || []).filter(s => s.screenId === 's20' || s.screenId === 's21');
+      let ticketIdCounter = (this.tickets.length || 0) + 5000;
+      const channels: ('Online' | 'Counter' | 'Kiosk')[] = ['Online', 'Online', 'Counter', 'Online', 'Kiosk'];
+      const payments: ('UPI' | 'Card' | 'Cash' | 'Wallet')[] = ['UPI', 'UPI', 'Card', 'Cash', 'UPI'];
+
+      ahilyaShows.forEach((sh, shIdx) => {
+        const bookingsCount = sh.screenId === 's20' ? 4 : 6;
+        for (let b = 0; b < bookingsCount; b++) {
+          const ch = channels[(b + shIdx) % channels.length];
+          const pay = payments[(b + shIdx) % payments.length];
+          const rowChar = String.fromCharCode(65 + (b % 4));
+          const seatNum = (b * 2 + 1);
+          const seatStr = sh.screenId === 's20' ? `${rowChar}${seatNum}-${rowChar}${seatNum + 1}` : `${rowChar}${seatNum}`;
+          const price = sh.screenId === 's20' ? 280 : 240;
+
+          this.tickets.push({
+            bookingId: `bk_ah_${ticketIdCounter++}`,
+            movieId: sh.movieId,
+            showId: sh.showId,
+            screenId: sh.screenId,
+            seat: seatStr,
+            price,
+            channel: ch,
+            payment: pay,
+            status: 'Confirmed',
+            date: sh.date
+          });
+        }
+      });
+      this.saveRelational();
+    } else {
       this.saveRelational();
     }
 

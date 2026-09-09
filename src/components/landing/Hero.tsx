@@ -44,7 +44,9 @@ export function Hero() {
           </div>
           <div>
             <p className="text-[10px] uppercase tracking-[0.3em] text-gold">Your Exclusive Fee</p>
-            <p className="mt-1 font-display text-4xl text-gradient-gold">₹10,00,000 + GST</p>
+            <p className="mt-1 font-display text-3xl sm:text-4xl text-gradient-gold">
+              ₹11,80,000 <span className="text-base sm:text-lg font-sans font-normal text-gold/90">(incl. 18% GST)</span>
+            </p>
           </div>
         </div>
 

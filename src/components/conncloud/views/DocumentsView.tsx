@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { ConnCloudStore } from '../../../lib/conncloudData';
 
 interface DocumentsViewProps {
+  selectedCinemaId?: string;
   triggerNotification: (msg: string) => void;
 }
 
-export default function DocumentsView({ triggerNotification }: DocumentsViewProps) {
+export default function DocumentsView({ 
+  selectedCinemaId = 'all', 
+  triggerNotification 
+}: DocumentsViewProps) {
+  const isAhilyanagar = selectedCinemaId === 'c5';
   const [docs, setDocs] = useState(ConnCloudStore.getDocuments());
   const [search, setSearch] = useState('');
   const [uploadForm, setUploadForm] = useState({ name: '', category: 'SOP' as any });
@@ -15,11 +20,13 @@ export default function DocumentsView({ triggerNotification }: DocumentsViewProp
     e.preventDefault();
     if (!uploadForm.name) return;
 
+    const uploader = isAhilyanagar ? 'Vikram Shinde (GM / Partner, Ahilyanagar)' : 'Rakesh Patel';
+
     const newDoc = ConnCloudStore.addDocument({
       name: uploadForm.name.endsWith('.pdf') ? uploadForm.name : `${uploadForm.name}.pdf`,
       category: uploadForm.category,
       version: 'V1.0',
-      uploadedBy: 'Rakesh Patel',
+      uploadedBy: uploader,
       expiryDate: '2028-12-31',
       permissions: ['All Managers']
     });
@@ -32,26 +39,51 @@ export default function DocumentsView({ triggerNotification }: DocumentsViewProp
 
   const filteredDocs = docs.filter(d => 
     d.name.toLowerCase().includes(search.toLowerCase()) || 
-    d.category.toLowerCase().includes(search.toLowerCase())
+    d.category.toLowerCase().includes(search.toLowerCase()) ||
+    d.uploadedBy.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="cc-card">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="relative w-full sm:w-60">
-          <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
-          <input 
-            type="text" 
-            className="cc-input pl-9 w-full text-xs" 
-            placeholder="Search documents..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+    <div className="space-y-6">
+      {/* Ahilyanagar Documents Header */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-blue-900/30 via-indigo-900/15 to-transparent border border-blue-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-blue-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Document & Statutory Vault
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Authorized Document Repository for Connplex Ahilyanagar • Sync Guides, Municipal Licenses, Fire NOCs, and Franchise Documents
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-blue-400 bg-blue-950/60 px-2.5 py-1 rounded border border-blue-500/30">
+            <span>AUDIT VERIFIED</span>
+          </div>
         </div>
-        <button onClick={() => setIsUploadOpen(true)} className="cc-btn cc-btn-accent text-xs">
-          <i className="fa-solid fa-cloud-arrow-up"></i> Upload Document
-        </button>
-      </div>
+      )}
+
+      <div className="cc-card">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div className="relative w-full sm:w-60">
+            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input 
+              type="text" 
+              className="cc-input pl-9 w-full text-xs" 
+              placeholder="Search documents..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <button onClick={() => setIsUploadOpen(true)} className="cc-btn cc-btn-accent text-xs">
+            <i className="fa-solid fa-cloud-arrow-up"></i> Upload Document
+          </button>
+        </div>
 
       <div className="space-y-4">
         {filteredDocs.map((doc) => (

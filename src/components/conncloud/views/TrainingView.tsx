@@ -21,6 +21,13 @@ export default function TrainingView({
   const [orientations, setOrientations] = useState<StaffOrientation[]>(() => ConnCloudStore.getStaffOrientations());
   const [certifications, setCertifications] = useState<TrainingCertification[]>(() => ConnCloudStore.getCertifications());
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const staff = ConnCloudStore.getStaff().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
+  const staffIds = new Set(staff.map(s => s.employeeId));
+
+  const filteredOrientations = orientations.filter(o => selectedCinemaId === 'all' || staffIds.has(o.employeeId));
+  const filteredCertifications = certifications.filter(c => selectedCinemaId === 'all' || staffIds.has(c.employeeId));
+
   // Modals state
   const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
   const [isEnrollOpen, setIsEnrollOpen] = useState(false);
@@ -41,7 +48,7 @@ export default function TrainingView({
     employeeName: '',
     department: 'Ticketing',
     role: 'Box Office Trainee',
-    mentor: 'Jahnvi Gupta',
+    mentor: isAhilyanagar ? 'Vikram Shinde' : 'Jahnvi Gupta',
     orientationBatch: 'Cohort 2026-Sep'
   });
 
@@ -58,10 +65,10 @@ export default function TrainingView({
 
   // KPI Calculations
   const totalCourses = modules.length;
-  const activeOrientees = orientations.filter(o => o.status === 'In Progress').length;
-  const completedOrientations = orientations.filter(o => o.status === 'Completed').length;
-  const certificationComplianceRate = orientations.length > 0 
-    ? Math.round((completedOrientations / orientations.length) * 100) 
+  const activeOrientees = filteredOrientations.filter(o => o.status === 'In Progress').length;
+  const completedOrientations = filteredOrientations.filter(o => o.status === 'Completed').length;
+  const certificationComplianceRate = filteredOrientations.length > 0 
+    ? Math.round((completedOrientations / filteredOrientations.length) * 100) 
     : 100;
 
   // Handle Create Module
@@ -132,6 +139,29 @@ export default function TrainingView({
 
   return (
     <div className="space-y-6">
+      {/* Ahilyanagar Training Banner */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-900/30 via-teal-900/15 to-transparent border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-emerald-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Staff Academy & Compliance Roster • 100% Certified
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Active Certifications: Gold Class Hospitality & VIP Etiquette (Vikram Shinde) • Barco 4K Laser Projection (Ramesh Kadam) • FSSAI Food Hygiene & Dispensing (Snehal Deshmukh)
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-emerald-300 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-500/30">
+            <span>AUDIT SCORE: 96.3%</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>
@@ -381,7 +411,7 @@ export default function TrainingView({
           </div>
 
           <div className="space-y-3">
-            {orientations.map((item) => (
+            {filteredOrientations.map((item) => (
               <div 
                 key={item.orientationId}
                 className="p-4 rounded-xl bg-black/30 border border-white/5 hover:border-white/10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 transition-colors"
@@ -486,7 +516,7 @@ export default function TrainingView({
                 </tr>
               </thead>
               <tbody>
-                {certifications.map((c) => (
+                {filteredCertifications.map((c) => (
                   <tr key={c.certId} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                     <td className="py-3 font-mono font-bold text-blue-400">{c.certificateNumber}</td>
                     <td className="py-3 font-bold text-white">{c.staffName}</td>

@@ -64,6 +64,8 @@ export default function FinanceView({
     return `₹${val.toLocaleString('en-IN')}`;
   };
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+
   // Submit Expense Workflow
   const handleExpenseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +87,7 @@ export default function FinanceView({
       date: new Date().toISOString().split('T')[0],
       cinemaId: selectedCinemaId === 'all' ? 'c1' : selectedCinemaId,
       vendor: expenseForm.vendor,
-      approver: 'Rakesh Patel',
+      approver: isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel',
       attachment: expenseForm.file || 'invoice_receipt.pdf'
     });
 
@@ -97,7 +99,7 @@ export default function FinanceView({
 
   // Approve expense action
   const handleApprove = (txId: string) => {
-    const success = ConnCloudStore.approveTransaction(txId, 'Rakesh Patel');
+    const success = ConnCloudStore.approveTransaction(txId, isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel');
     if (success) {
       triggerNotification(`Transaction ${txId} approved and recorded in the Ledger.`);
     }
@@ -112,6 +114,42 @@ export default function FinanceView({
 
   return (
     <div className="space-y-6">
+      {/* Vista API Integration Telemetry Header (Ahilyanagar) */}
+      {isAhilyanagar && (
+        <div className="bg-gradient-to-r from-amber-500/15 via-black/40 to-transparent border border-amber-500/30 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-base shrink-0">
+              <i className="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-sm">Vista Financial Ledger Sync: Ahilyanagar</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  CONNECTED
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  CinemaID: Ahilyanagar
+                </span>
+              </div>
+              <p className="text-gray-400 text-xs mt-0.5">
+                Daily box office collections, concession settlements, and GST pools synchronized with Vista WebService (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] text-gray-400">Ledger: <strong className="text-white">Live Synced</strong></span>
+            <button 
+              onClick={() => triggerNotification('Re-syncing financial ledger entries from Vista API...')}
+              className="cc-btn cc-btn-outline text-xs px-3 py-1 flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-arrows-rotate text-amber-400"></i>
+              <span>Re-sync Ledger</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Sub tabs */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
         {[
@@ -188,11 +226,15 @@ export default function FinanceView({
             <div className="cc-card">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Vendor payout summaries</h3>
               <div className="space-y-3.5">
-                {[
+                {(isAhilyanagar ? [
+                  { name: 'MSEDCL (Maharashtra State Electricity)', amount: 112000, category: 'Electricity' },
+                  { name: 'Clean Corp Ltd (Ahilyanagar)', amount: 25500, category: 'Housekeeping' },
+                  { name: 'Dolby Atmos Services India', amount: 35000, category: 'Equipment maintenance' }
+                ] : [
                   { name: 'State Power Corporation Ltd', amount: 320000, category: 'Electricity' },
                   { name: 'Clean Corp Ltd', amount: 120000, category: 'Housekeeping' },
                   { name: 'Dolby Services India', amount: 85000, category: 'Equipment maintenance' }
-                ].map((vend, idx) => (
+                ]).map((vend, idx) => (
                   <div key={idx} className="flex justify-between items-center text-xs p-2.5 rounded bg-black/20 border border-white/5">
                     <div>
                       <span className="font-bold text-white block">{vend.name}</span>
@@ -459,11 +501,15 @@ export default function FinanceView({
           <p className="text-xs text-gray-500 mb-6">Compare bank deposit logs directly against ConnCloud ticket ledger entries.</p>
           
           <div className="space-y-3">
-            {[
+            {(isAhilyanagar ? [
+              { id: 'rec_ah1', date: '2026-08-30', externalDesc: 'Razorpay UPI settlement ID_AH9021', systemDesc: 'Ahilyanagar Vista ticket sales Aug 29', amount: 68400, mismatch: false },
+              { id: 'rec_ah2', date: '2026-08-29', externalDesc: 'Razorpay UPI settlement ID_AH9018', systemDesc: 'Ahilyanagar Vista ticket sales Aug 28', amount: 74200, mismatch: false },
+              { id: 'rec_ah3', date: '2026-08-27', externalDesc: 'Direct cash deposit - Ahilyanagar box office counter', systemDesc: 'Counter ticket & snack collection cycle #08', amount: 32000, mismatch: true }
+            ] : [
               { id: 'rec_1', date: '2026-08-30', externalDesc: 'Razorpay payout settlement ID_82103', systemDesc: 'ConnCloud ticket sales for Aug 29', amount: 185000, mismatch: false },
               { id: 'rec_2', date: '2026-08-29', externalDesc: 'Razorpay payout settlement ID_82098', systemDesc: 'ConnCloud ticket sales for Aug 28', amount: 220000, mismatch: false },
               { id: 'rec_3', date: '2026-08-27', externalDesc: 'Direct cash deposit - Gandhinagar cashbox', systemDesc: 'Counter sales collection cycle #14', amount: 45000, mismatch: true }
-            ].map((item) => {
+            ]).map((item) => {
               const isReconciled = reconciledItems.includes(item.id);
               return (
                 <div key={item.id} className="p-4 rounded bg-black/20 border border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

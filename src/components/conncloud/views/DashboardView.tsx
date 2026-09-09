@@ -83,8 +83,12 @@ export default function DashboardView({
     );
   };
 
-  // Filter shows to display dynamic list of active playing items
-  const activeShows = shows.slice(0, 5).map(s => {
+  // Filter shows to display dynamic list of active playing items (latest first)
+  const sortedShows = [...shows].sort((a, b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    return a.time.localeCompare(b.time);
+  });
+  const activeShows = sortedShows.slice(0, 5).map(s => {
     const movie = ConnCloudStore.getMovies().find(m => m.movieId === s.movieId);
     const scr = ConnCloudStore.getScreens().find(sc => sc.screenId === s.screenId);
     return {
@@ -303,23 +307,46 @@ export default function DashboardView({
                 </tr>
               </thead>
               <tbody>
-                {ConnCloudStore.getMovies().slice(0, 4).map((movie, index) => {
-                  const gross = (index === 0 ? 4850000 : index === 1 ? 3200000 : index === 2 ? 1800000 : 950000);
-                  const adm = (index === 0 ? 22000 : index === 1 ? 14500 : index === 2 ? 8200 : 4300);
-                  return (
+                {(() => {
+                  const movieLeaderboard = ConnCloudStore.getMovies().map(movie => {
+                    const mShows = shows.filter(s => s.movieId === movie.movieId);
+                    const adm = mShows.reduce((acc, s) => acc + s.ticketsSold, 0);
+                    const gross = mShows.reduce((acc, s) => {
+                      const scr = screens.find(sc => sc.screenId === s.screenId);
+                      const price = scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 280 : 240);
+                      return acc + (s.ticketsSold * price);
+                    }, 0);
+                    return {
+                      movie,
+                      adm,
+                      gross,
+                      atp: adm > 0 ? Math.round(gross / adm) : (selectedCinemaId === 'c5' ? 260 : 250)
+                    };
+                  }).filter(m => m.adm > 0).sort((a, b) => b.gross - a.gross);
+
+                  const displayMovies = movieLeaderboard.length > 0 
+                    ? movieLeaderboard.slice(0, 4) 
+                    : ConnCloudStore.getMovies().slice(0, 4).map((movie, index) => ({
+                        movie,
+                        adm: [2200, 1450, 820, 430][index],
+                        gross: [550000, 360000, 205000, 107000][index],
+                        atp: 250
+                      }));
+
+                  return displayMovies.map((item, index) => (
                     <tr 
-                      key={movie.movieId} 
+                      key={item.movie.movieId} 
                       onClick={() => onNavigate(`/conncloud/movies`)}
                       className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
                     >
                       <td className="py-3 font-bold text-gray-400">#{index + 1}</td>
-                      <td className="py-3 font-semibold text-white">{movie.title}</td>
-                      <td className="py-3 text-right text-gray-300">{adm.toLocaleString('en-IN')}</td>
-                      <td className="py-3 text-right text-emerald-400 font-medium">{formatCurrency(gross)}</td>
-                      <td className="py-3 text-right text-gray-300">₹{Math.round(gross / adm)}</td>
+                      <td className="py-3 font-semibold text-white">{item.movie.title}</td>
+                      <td className="py-3 text-right text-gray-300">{item.adm.toLocaleString('en-IN')}</td>
+                      <td className="py-3 text-right text-emerald-400 font-medium">{formatCurrency(item.gross)}</td>
+                      <td className="py-3 text-right text-gray-300">₹{item.atp}</td>
                     </tr>
-                  );
-                })}
+                  ));
+                })()}
               </tbody>
             </table>
           </div>

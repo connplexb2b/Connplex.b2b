@@ -118,7 +118,9 @@ export function OfferBanner() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="uppercase tracking-widest text-foreground">Your fee today</span>
-                <span className="font-display text-3xl text-gradient-gold">₹10,00,000 + GST</span>
+                <span className="font-display text-2xl sm:text-3xl text-gradient-gold">
+                  ₹11,80,000 <span className="text-xs sm:text-sm font-sans font-normal text-gold/90">(incl. 18% GST)</span>
+                </span>
               </div>
             </div>
           </div>

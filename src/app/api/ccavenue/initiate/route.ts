@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Generate unique Order ID
     const orderId = `order_fs_${Date.now()}`;
-    const amount = process.env.CCAVENUE_FRANCHISE_FEE_AMOUNT || "1000000.00";
+    const amount = process.env.CCAVENUE_FRANCHISE_FEE_AMOUNT || "1180000.00";
     const timelineLabel = timeframe === "immediate" ? "Immediate" : timeframe === "week" ? "Within a week" : "Within a month";
 
     // 3. Create a pending lead entry in MongoDB
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       businessType: "N/A",
       hasProperty: "No",
       timeframe: timelineLabel,
-      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: ₹5,00,000 Franchise Fee Discount\nPayment Status: Pending\nOrder ID: ${orderId}`,
+      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: ₹5,00,000 Franchise Fee Discount\nFinal Amount: ₹11,80,000 (inclusive of 18% GST)\nPayment Status: Pending\nOrder ID: ${orderId}`,
       order_id: orderId,
       ccavenue_order_id: orderId,
       hdfc_order_id: orderId,
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       billing_tel: phone,
       billing_email: "marketing@theconnplex.com",
       merchant_param1: timeframe || "immediate",
-      merchant_param2: "Flash Sale Franchise Lead",
+      merchant_param2: "Flash Sale Franchise Fee - 11.8 Lakh (inclusive of 18% GST)",
     });
 
     // 6. Encrypt Payload

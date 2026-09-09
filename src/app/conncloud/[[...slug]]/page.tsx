@@ -229,25 +229,25 @@ export default function ConnCloudPage() {
       return <OffersView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname === '/conncloud/reports') {
-      return <ReportsView triggerNotification={triggerNotification} />;
+      return <ReportsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/mis')) {
       return <MISView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname === '/conncloud/documents') {
-      return <DocumentsView triggerNotification={triggerNotification} />;
+      return <DocumentsView selectedCinemaId={selectedCinema} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/license')) {
       return <LicenseView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
     if (pathname.startsWith('/conncloud/support')) {
-      return <SupportView triggerNotification={triggerNotification} />;
+      return <SupportView selectedCinemaId={selectedCinema} triggerNotification={triggerNotification} />;
     }
     if (pathname === '/conncloud/calendar') {
-      return <CalendarView />;
+      return <CalendarView selectedCinemaId={selectedCinema} />;
     }
     if (pathname.startsWith('/conncloud/settings')) {
-      return <SettingsView />;
+      return <SettingsView selectedCinemaId={selectedCinema} />;
     }
     if (pathname === '/conncloud/notifications') {
       return <NotificationsView onNavigate={(r) => router.push(r)} triggerNotification={triggerNotification} />;

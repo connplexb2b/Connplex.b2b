@@ -18,12 +18,19 @@ export default function MerchandiseView({
   const [searchQuery, setSearchQuery] = useState('');
   
   // Data from store
+  const isAhilyanagar = selectedCinemaId === 'c5';
   const [products, setProducts] = useState<MerchandiseProduct[]>(ConnCloudStore.getMerchandiseProducts());
   const [orders, setOrders] = useState<MerchandiseOrder[]>(() => {
     return ConnCloudStore.getMerchandiseOrders().filter(o => 
       selectedCinemaId === 'all' || o.cinemaId === selectedCinemaId
     );
   });
+
+  React.useEffect(() => {
+    setOrders(ConnCloudStore.getMerchandiseOrders().filter(o => 
+      selectedCinemaId === 'all' || o.cinemaId === selectedCinemaId
+    ));
+  }, [selectedCinemaId]);
 
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -154,6 +161,29 @@ export default function MerchandiseView({
 
   return (
     <div className="space-y-6">
+      {/* Ahilyanagar Merchandise Banner */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-900/30 via-orange-900/15 to-transparent border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-amber-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Concession & Retail Store Active
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Auditorium Foyer Retail: Premium Tumblers, NFC Metal VIP Founder Cards & Collectibles • Orders linked to Ahilyanagar Counter POS
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded border border-amber-500/30">
+            <span>AHILYA STORE ONLINE</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner & KPI Section */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>

@@ -14,11 +14,21 @@ export default function StaffView({
 }: StaffViewProps) {
   const [subSection, setSubSection] = useState<'roster' | 'attendance' | 'shifts' | 'leaves'>('roster');
 
-  // Pull staff list
-  const staff = ConnCloudStore.getStaff();
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);
+  const cinemaName = selectedCinemaId === 'all' ? 'All Cinemas' : (currentCinema?.name || 'Selected Cinema');
+
+  // Pull staff list filtered by cinema
+  const allStaff = ConnCloudStore.getStaff();
+  const staff = isAhilyanagar
+    ? allStaff.filter(s => s.employeeId.includes('ah') || s.name.includes('Shinde') || s.name.includes('Kadam') || s.name.includes('Deshmukh'))
+    : (selectedCinemaId === 'all' ? allStaff : allStaff.filter(s => !s.employeeId.includes('ah')));
 
   // Leaves management local state
-  const [leaves, setLeaves] = useState([
+  const [leaves, setLeaves] = useState(() => isAhilyanagar ? [
+    { id: 'lv_ah1', employee: 'Ramesh Kadam', type: 'Privilege Leave', duration: '2026-09-12 to 2026-09-14', reason: 'Annual family festival visit', status: 'Approved' },
+    { id: 'lv_ah2', employee: 'Snehal Deshmukh', type: 'Sick Leave', duration: '2026-08-28 to 2026-08-29', reason: 'Viral fever rest', status: 'Approved' }
+  ] : [
     { id: 'lv_1', employee: 'Nisha Singh', type: 'Sick Leave', duration: '2026-08-30 to 2026-09-02', reason: 'High fever recovery', status: 'Pending' },
     { id: 'lv_2', employee: 'Deepak Patel', type: 'Privilege Leave', duration: '2026-08-25 to 2026-08-27', reason: 'Family wedding regional visit', status: 'Approved' }
   ]);

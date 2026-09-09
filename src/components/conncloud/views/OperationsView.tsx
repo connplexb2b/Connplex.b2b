@@ -26,13 +26,27 @@ export default function OperationsView({
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const defaultEquipmentId = isAhilyanagar ? (equipment[0]?.equipmentId || 'eq_ah1') : (equipment[0]?.equipmentId || 'eq3');
+  const defaultTechnician = isAhilyanagar ? 'Barco Laser Services India' : 'Barco Services India';
+
   const [ticketForm, setTicketForm] = useState({
-    equipmentId: 'eq3',
+    equipmentId: defaultEquipmentId,
     issue: '',
     priority: 'Medium' as MaintenanceTicket['priority'],
-    technician: 'Barco Services India',
+    technician: defaultTechnician,
     SLA: '24 Hours'
   });
+
+  React.useEffect(() => {
+    if (equipment.length > 0 && !equipment.some(e => e.equipmentId === ticketForm.equipmentId)) {
+      setTicketForm(prev => ({
+        ...prev,
+        equipmentId: equipment[0].equipmentId,
+        technician: isAhilyanagar ? 'Barco Laser Services India' : 'Barco Services India'
+      }));
+    }
+  }, [selectedCinemaId, equipment, isAhilyanagar]);
 
   // Ticket creation handler
   const handleTicketSubmit = (e: React.FormEvent) => {
@@ -49,7 +63,7 @@ export default function OperationsView({
     });
 
     triggerNotification(`Maintenance Service Ticket registered for ${ticketForm.equipmentId}.`);
-    setTicketForm({ equipmentId: 'eq3', issue: '', priority: 'Medium', technician: 'Barco Services India', SLA: '24 Hours' });
+    setTicketForm({ equipmentId: defaultEquipmentId, issue: '', priority: 'Medium', technician: defaultTechnician, SLA: '24 Hours' });
     setSubSection('maintenance');
   };
 
@@ -65,6 +79,31 @@ export default function OperationsView({
 
   return (
     <div className="space-y-6">
+      {/* Vista / IoT Hardware Telemetry Banner for Ahilyanagar */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-900/30 via-emerald-800/10 to-transparent border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-emerald-300 uppercase tracking-wider text-[11px] block">
+                TMS & IoT Telemetry Live • Connplex Ahilyanagar
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Screen 1 (Luxuriance Couple Recliner) & Screen 2 (Gold Class) connected to Barco Laser & Christie Digital NOC • Daikin VRV HVAC: 21.5°C Optimal • 80kVA Online UPS Active
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-500/30">
+            <span>PING 14ms</span>
+            <span>•</span>
+            <span>100% HEALTH</span>
+          </div>
+        </div>
+      )}
+
       {/* Sub nav tabs */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
         {[

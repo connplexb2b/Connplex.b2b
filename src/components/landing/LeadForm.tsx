@@ -181,8 +181,15 @@ export function LeadForm() {
               I agree the Terms and conditions
             </Label>
           </div>
+          <div className="flex items-center justify-between rounded-lg border border-gold/30 bg-gold/5 px-4 py-3.5 text-sm">
+            <span className="text-muted-foreground">Final Amount:</span>
+            <span className="font-display text-lg text-gradient-gold">
+              ₹11,80,000 <span className="text-xs font-sans font-normal text-gold/90">(incl. 18% GST)</span>
+            </span>
+          </div>
+
           <Button type="submit" variant="gold" size="xl" disabled={submitting} className="w-full">
-            {submitting ? "Redirecting..." : "Pay Now"}
+            {submitting ? "Redirecting to Gateway..." : "Pay ₹11,80,000 (incl. 18% GST)"}
           </Button>
           <p className="text-center text-xs text-muted-foreground">
             Your details stay confidential and are used only for franchise discussions.

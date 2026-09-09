@@ -49,6 +49,31 @@ export default function MISView({
 
   return (
     <div className="space-y-6">
+      {/* Vista Live BI Telemetry Banner for Ahilyanagar */}
+      {selectedCinemaId === 'c5' && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-amber-900/15 to-transparent border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-amber-300 uppercase tracking-wider text-[11px] block">
+                Vista Financial ERP & MIS Ingest Live • Connplex Ahilyanagar
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                Audited MTD Gross Turnover: ₹80.40L (Box Office ₹48.50L • Concessions ₹19.80L • Ancillary ₹12.10L) • 2 Screens, 80 Seats Capacity • Operating EBITDA: 34.5%
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded border border-amber-500/30">
+            <span>VISTA BI SYNCED</span>
+            <span>•</span>
+            <span>+7.2% VS BUDGET</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>
@@ -394,21 +419,30 @@ export default function MISView({
             <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
               Format Productivity & Yield Comparison
             </h3>
-            <span className="text-xs text-gray-400">IMAX 3D leads across all revenue and ATP indices.</span>
+            <span className="text-xs text-gray-400">
+              {selectedCinemaId === 'c5' 
+                ? 'Luxuriance Couple Recliner leads with ₹280 ATP, Gold Class 2D drives volume gross.'
+                : 'IMAX 3D leads across all revenue and ATP indices.'}
+            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {[
+            {(selectedCinemaId === 'c5' ? [
+              { format: 'Luxuriance Couple Recliner', screens: 'Screen 1 (20 Seats)', avgAtp: '₹280', occupancy: '78.4%', monthlyGross: '₹3.00 L', icon: 'fa-couch text-amber-400' },
+              { format: 'Gold Class 2D', screens: 'Screen 2 (60 Seats)', avgAtp: '₹240', occupancy: '78.4%', monthlyGross: '₹8.97 L', icon: 'fa-film text-blue-400' },
+              { format: 'Private Screenings / Charter', screens: 'Screen 1 & 2', avgAtp: 'Special Charter', occupancy: '100% Reserved', monthlyGross: '₹62,000 / event', icon: 'fa-crown text-purple-400' },
+              { format: 'On-Screen Local Advertising', screens: 'Both Screens', avgAtp: '10s Spot', occupancy: '85% Fill Rate', monthlyGross: '₹35,000 / mo', icon: 'fa-rectangle-ad text-emerald-400' }
+            ] : [
               { format: 'IMAX 3D', screens: '2 Screens', avgAtp: '₹350', occupancy: '76.4%', monthlyGross: '₹1.15 Cr', icon: 'fa-film text-blue-400' },
               { format: '4DX Dynamic', screens: '1 Screen', avgAtp: '₹320', occupancy: '81.2%', monthlyGross: '₹62.5 L', icon: 'fa-wand-magic-sparkles text-purple-400' },
               { format: 'RealD 3D', screens: '6 Screens', avgAtp: '₹260', occupancy: '69.0%', monthlyGross: '₹2.84 Cr', icon: 'fa-glasses text-emerald-400' },
               { format: 'Digital 2D', screens: '10 Screens', avgAtp: '₹210', occupancy: '64.5%', monthlyGross: '₹3.93 Cr', icon: 'fa-display text-[#f5b041]' }
-            ].map((fmt, idx) => (
+            ]).map((fmt, idx) => (
               <div key={idx} className="p-4 rounded-xl bg-black/30 border border-white/5 space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <i className={`fa-solid ${fmt.icon}`}></i>
-                    <span className="font-bold text-white">{fmt.format}</span>
+                    <span className="font-bold text-white text-xs">{fmt.format}</span>
                   </div>
                   <span className="text-[10px] text-gray-400">{fmt.screens}</span>
                 </div>

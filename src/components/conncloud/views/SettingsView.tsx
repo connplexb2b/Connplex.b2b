@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { ConnCloudStore } from '../../../lib/conncloudData';
 import AhilyanagarApiIntegration from '../AhilyanagarApiIntegration';
 
-export default function SettingsView() {
+interface SettingsViewProps {
+  selectedCinemaId?: string;
+}
+
+export default function SettingsView({ selectedCinemaId = 'all' }: SettingsViewProps) {
+  const isAhilyanagar = selectedCinemaId === 'c5';
   const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations'>('profile');
 
   // Pull audits
@@ -48,26 +53,59 @@ export default function SettingsView() {
           <div className="cc-card space-y-4 text-xs">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 font-display">Franchise Partner Profile</h3>
             <div className="flex items-center gap-4 py-2 border-b border-white/5">
-              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold text-white text-base">RP</div>
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-base ${
+                isAhilyanagar ? 'bg-gradient-to-tr from-amber-600 to-amber-500 shadow-lg shadow-amber-500/20' : 'bg-blue-600'
+              }`}>
+                {isAhilyanagar ? 'VS' : 'RP'}
+              </div>
               <div>
-                <span className="font-bold text-white text-sm block">Rakesh Patel</span>
-                <span className="text-[10px] text-gray-400">Franchise Owner Account</span>
+                <span className="font-bold text-white text-sm block">
+                  {isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel'}
+                </span>
+                <span className="text-[10px] text-gray-400">
+                  {isAhilyanagar ? 'General Manager & Cinema Partner' : 'Franchise Owner Account'}
+                </span>
               </div>
             </div>
             <div className="space-y-2">
-              <div className="flex justify-between"><span className="text-gray-400">Email Address:</span><span className="text-white">guptajahnvi47@gmail.com</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Contact Number:</span><span className="text-white">+91 9511310113</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Permissions tier:</span><span className="text-[#f5b041] font-bold">Franchise Owner</span></div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Email Address:</span>
+                <span className="text-white">{isAhilyanagar ? 'ahilyanagar.gm@theconnplex.com' : 'guptajahnvi47@gmail.com'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Contact Number:</span>
+                <span className="text-white">{isAhilyanagar ? '+91 9822451290' : '+91 9511310113'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Permissions tier:</span>
+                <span className="text-[#f5b041] font-bold">{isAhilyanagar ? 'Partner & General Manager' : 'Franchise Owner'}</span>
+              </div>
             </div>
           </div>
 
           <div className="cc-card space-y-4 text-xs">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 font-display">Cinema Details</h3>
             <div className="space-y-2.5">
-              <div className="flex justify-between"><span className="text-gray-400">Main Location:</span><span className="text-white">Connplex Gandhinagar, Gujarat</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Screens Configured:</span><span className="text-white">6 Screens (1 IMAX, 1 4DX)</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Operating Status:</span><span className="text-emerald-400 font-semibold">Active & Healthy</span></div>
-              <div className="flex justify-between"><span className="text-gray-400">Last Telemetry Sweep:</span><span className="text-gray-300">Today, 07:15 PM</span></div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Main Location:</span>
+                <span className="text-white">{isAhilyanagar ? 'Connplex Smart Cinema, Ahilyanagar, Maharashtra' : 'Connplex Gandhinagar, Gujarat'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Screens Configured:</span>
+                <span className="text-white">{isAhilyanagar ? '2 Screens (Screen 1 Couple Recliner, Screen 2 Gold Class)' : '6 Screens (1 IMAX, 1 4DX)'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Total Seating Capacity:</span>
+                <span className="text-white font-mono">{isAhilyanagar ? '80 Seats (20 Couple Recliners + 60 Gold Class)' : '840 Seats'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Operating Status:</span>
+                <span className="text-emerald-400 font-semibold">{isAhilyanagar ? 'Active & Live Vista Sync' : 'Active & Healthy'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Last Telemetry Sweep:</span>
+                <span className="text-gray-300">Just now (Live)</span>
+              </div>
             </div>
           </div>
         </div>

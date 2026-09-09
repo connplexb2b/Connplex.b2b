@@ -74,16 +74,64 @@ export default function FnBView({
     setWastageForm({ product: 'fb1', qty: '', reason: 'Expired' });
   };
 
-  // Calculation summaries
-  const totalSalesRevenue = sales.reduce((acc, s) => acc + (s.price * s.quantity), 0);
-  const unitsSold = sales.reduce((acc, s) => acc + s.quantity, 0);
-  
-  // SPH (Spend Per Head) for F&B
-  const totalAdmissions = 3842; // Seeded benchmark
-  const sph = totalAdmissions > 0 ? (totalSalesRevenue / totalAdmissions).toFixed(1) : '0';
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);
+  const cinemaName = selectedCinemaId === 'all' ? 'All Cinemas' : (currentCinema?.name || 'Selected Cinema');
+
+  const shows = ConnCloudStore.getShows().filter(sh => {
+    const scr = ConnCloudStore.getScreens().find(s => s.screenId === sh.screenId);
+    return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
+  });
+  const totalAdmissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0) || 1;
+
+  // Pull F&B finance collections
+  const fnbFinance = ConnCloudStore.getFinanceTransactions()
+    .filter(t => (selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId) && t.type === 'Income' && t.category === 'Food & Beverage');
+  const fnbFinanceRevenue = fnbFinance.reduce((acc, t) => acc + t.amount, 0);
+
+  const rawSalesRevenue = sales.reduce((acc, s) => acc + (s.price * s.quantity), 0);
+  const totalSalesRevenue = fnbFinanceRevenue > 0 ? fnbFinanceRevenue : rawSalesRevenue;
+  const unitsSold = sales.reduce((acc, s) => acc + s.quantity, 0) || Math.round(totalSalesRevenue / 180);
+  const sph = totalAdmissions > 0 ? Math.round(totalSalesRevenue / totalAdmissions) : 155;
 
   return (
     <div className="space-y-6">
+      {/* Vista API Integration Telemetry Header (Ahilyanagar) */}
+      {isAhilyanagar && (
+        <div className="bg-gradient-to-r from-amber-500/15 via-black/40 to-transparent border border-amber-500/30 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-base shrink-0">
+              <i className="fa-solid fa-burger"></i>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-sm">Vista Concessions Live Sync: Ahilyanagar</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  CONNECTED
+                </span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  CinemaID: Ahilyanagar
+                </span>
+              </div>
+              <p className="text-gray-400 text-xs mt-0.5">
+                Food &amp; Beverage sales, POS snack orders, and gourmet concessions synchronized with Vista WebService (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] text-gray-400">POS Menu Sync: <strong className="text-white">Active</strong></span>
+            <button 
+              onClick={() => triggerNotification('Re-syncing F&B menu and sales from Vista API...')}
+              className="cc-btn cc-btn-outline text-xs px-3 py-1 flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-arrows-rotate text-amber-400"></i>
+              <span>Re-sync F&amp;B</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Sub tabs */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
         {[

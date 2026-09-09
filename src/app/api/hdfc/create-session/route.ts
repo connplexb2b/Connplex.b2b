@@ -34,9 +34,9 @@ export async function POST(req: NextRequest) {
       businessType: "N/A",
       hasProperty: "No",
       timeframe: timelineLabel,
-      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: ₹5,00,000 Franchise Fee Discount\nPayment Status: Pending\nOrder ID: ${orderId}`,
+      message: `[Flash Sale Franchise Lead]\nPreferred City: ${city}\nTimeline: ${timeframe}\nCoupon Code: ₹5,00,000 Franchise Fee Discount\nFinal Amount: ₹11,80,000 (inclusive of 18% GST)\nPayment Status: Pending\nOrder ID: ${orderId}`,
       hdfc_order_id: orderId,
-      amountPaid: 1000000,
+      amountPaid: 1180000,
       paymentStatus: "Pending",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     const payload = {
       order_id: orderId,
-      amount: "1000000.00",
+      amount: "1180000.00",
       customer_id: phone,
       customer_phone: phone,
       customer_email: "marketing@theconnplex.com",

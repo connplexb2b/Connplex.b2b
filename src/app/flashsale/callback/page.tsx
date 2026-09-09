@@ -88,6 +88,10 @@ function CallbackContent() {
           </p>
           {(orderId || trackingId) && (
             <div className="bg-background/80 rounded border border-border p-4 text-left text-xs space-y-1.5 font-mono">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Final Amount:</span>
+                <span className="text-foreground font-semibold">₹11,80,000 (incl. 18% GST)</span>
+              </div>
               {orderId && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Order ID:</span>

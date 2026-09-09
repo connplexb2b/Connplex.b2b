@@ -28,6 +28,9 @@ export default function LicenseView({
   const [renewTarget, setRenewTarget] = useState<CinemaLicense | null>(null);
   const [newExpiryInput, setNewExpiryInput] = useState('');
 
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const defaultOfficer = isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel';
+
   // Add License Form State
   const [form, setForm] = useState({
     cinemaId: selectedCinemaId === 'all' ? 'c1' : selectedCinemaId,
@@ -37,9 +40,17 @@ export default function LicenseView({
     issuingAuthority: '',
     issueDate: '',
     expiryDate: '',
-    officerInCharge: 'Rakesh Patel',
+    officerInCharge: defaultOfficer,
     feePaid: '25000'
   });
+
+  React.useEffect(() => {
+    setForm(prev => ({
+      ...prev,
+      cinemaId: selectedCinemaId === 'all' ? 'c1' : selectedCinemaId,
+      officerInCharge: selectedCinemaId === 'c5' ? 'Vikram Shinde' : 'Rakesh Patel'
+    }));
+  }, [selectedCinemaId]);
 
   const formatCurrency = (val: number) => {
     return `₹${val.toLocaleString('en-IN')}`;
@@ -65,10 +76,11 @@ export default function LicenseView({
   });
 
   // KPI Calculations
-  const totalLicensesCount = licenses.length;
-  const validLicensesCount = licenses.filter(l => l.status === 'Valid').length;
-  const expiringSoonCount = licenses.filter(l => l.status === 'Expiring Soon').length;
-  const inRenewalCount = licenses.filter(l => l.status === 'In Renewal').length;
+  const cinemaLicenses = licenses.filter(lic => selectedCinemaId === 'all' || lic.cinemaId === selectedCinemaId);
+  const totalLicensesCount = cinemaLicenses.length;
+  const validLicensesCount = cinemaLicenses.filter(l => l.status === 'Valid').length;
+  const expiringSoonCount = cinemaLicenses.filter(l => l.status === 'Expiring Soon').length;
+  const inRenewalCount = cinemaLicenses.filter(l => l.status === 'In Renewal').length;
   const complianceScore = totalLicensesCount > 0 
     ? Math.round(((validLicensesCount + inRenewalCount) / totalLicensesCount) * 100) 
     : 100;
@@ -103,7 +115,7 @@ export default function LicenseView({
       issuingAuthority: '',
       issueDate: '',
       expiryDate: '',
-      officerInCharge: 'Rakesh Patel',
+      officerInCharge: isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel',
       feePaid: '25000'
     });
     triggerNotification(`Registered statutory license: ${newLic.licenseName}`);
@@ -123,6 +135,29 @@ export default function LicenseView({
 
   return (
     <div className="space-y-6">
+      {/* Ahilyanagar Compliance Banner */}
+      {isAhilyanagar && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-900/30 via-emerald-800/10 to-transparent border border-emerald-500/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div className="flex items-start md:items-center gap-3">
+            <span className="relative flex h-3 w-3 mt-0.5 md:mt-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <div>
+              <span className="font-bold text-emerald-300 uppercase tracking-wider text-[11px] block">
+                Ahilyanagar Statutory Compliance Portfolio • 100% Validated
+              </span>
+              <span className="text-gray-300 text-[11px]">
+                4 of 4 Active Licenses: District Magistrate Cinematograph License • Maharashtra Fire NOC • FSSAI Food Hygiene • PPL India Music License • Officer: Vikram Shinde
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded border border-emerald-500/30">
+            <span>GOVERNMENT COMPLIANT</span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#111827] border border-white/5 p-6 rounded-xl">
         <div>

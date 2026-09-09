@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 
 interface SupportViewProps {
+  selectedCinemaId?: string;
   triggerNotification: (msg: string) => void;
 }
 
-export default function SupportView({ triggerNotification }: SupportViewProps) {
+export default function SupportView({ selectedCinemaId = 'all', triggerNotification }: SupportViewProps) {
+  const isAhilyanagar = selectedCinemaId === 'c5';
+  const partnerName = isAhilyanagar ? 'Vikram' : 'Rakesh';
   const [subTab, setSubTab] = useState<'tickets' | 'chat' | 'knowledge' | 'training' | 'emergency'>('tickets');
   
   // Tickets log state
-  const [tickets, setTickets] = useState([
+  const [tickets, setTickets] = useState(() => isAhilyanagar ? [
+    { id: 'tkt_ah1', subject: 'Vista API automated daily sync telemetry check', category: 'Operations', priority: 'Low', date: '2026-08-30', status: 'Resolved' },
+    { id: 'tkt_ah2', subject: 'Screen 1 couple recliner motor sensor check', category: 'Operations', priority: 'Medium', date: '2026-08-25', status: 'Resolved' }
+  ] : [
     { id: 'tkt_102', subject: 'Inward F&B GST reconciliation mismatch', category: 'Finance', priority: 'High', date: '2026-08-29', status: 'In Progress' },
     { id: 'tkt_089', subject: 'HVAC screen 3 compressor belt noise dispatch', category: 'Operations', priority: 'Medium', date: '2026-08-22', status: 'Resolved' }
   ]);
@@ -22,8 +28,14 @@ export default function SupportView({ triggerNotification }: SupportViewProps) {
 
   // Chat message simulator state
   const [chatMessages, setChatMessages] = useState([
-    { sender: 'agent', text: 'Welcome to ConnCloud Corporate Live Support. Rakesh, how can I assist you today?' }
+    { sender: 'agent', text: `Welcome to ConnCloud Corporate Live Support. ${partnerName}, how can I assist ${isAhilyanagar ? 'your Ahilyanagar cinema team' : 'you'} today?` }
   ]);
+
+  React.useEffect(() => {
+    setChatMessages([
+      { sender: 'agent', text: `Welcome to ConnCloud Corporate Live Support. ${isAhilyanagar ? 'Vikram' : 'Rakesh'}, how can I assist ${isAhilyanagar ? 'your Ahilyanagar cinema team' : 'you'} today?` }
+    ]);
+  }, [selectedCinemaId, isAhilyanagar]);
   const [chatInput, setChatInput] = useState('');
 
   const handleTicketSubmit = (e: React.FormEvent) => {
