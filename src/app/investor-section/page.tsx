@@ -68,10 +68,32 @@ export default function InvestorRelationsPage() {
         const categoriesRes = await fetch(`${BASE_API_URL}/user/get-all-investors-by-user`);
         const categoriesJSON = await categoriesRes.json();
         if (categoriesJSON && categoriesJSON.status === 200) {
-          setCategories(categoriesJSON.data);
+          let list: InvestorCategory[] = categoriesJSON.data || [];
+
+          // Ensure "Preferential Issue" tab is positioned above "Investor Grievances"
+          const hasPreferential = list.some(
+            (c: any) => (c.title || c.parent || '').toLowerCase().trim() === 'preferential issue'
+          );
+          if (!hasPreferential) {
+            const grievanceIndex = list.findIndex(
+              (c: any) => (c.title || c.parent || '').toLowerCase().trim() === 'investor grievances'
+            );
+            const preferentialTab: InvestorCategory = {
+              parent: '',
+              title: 'Preferential Issue',
+              children: []
+            };
+            if (grievanceIndex !== -1) {
+              list.splice(grievanceIndex, 0, preferentialTab);
+            } else {
+              list.push(preferentialTab);
+            }
+          }
+
+          setCategories(list);
           
           // Auto-select first item
-          const firstCat = categoriesJSON.data[0];
+          const firstCat = list[0];
           if (firstCat) {
             if (firstCat.parent && firstCat.children && firstCat.children.length > 0) {
               setOpenParent(firstCat.parent);
@@ -319,6 +341,22 @@ export default function InvestorRelationsPage() {
               data.investorsPdfs.push(bp);
             }
           });
+        }
+
+        const isPreferentialIssue = activeCategory.toLowerCase() === 'preferential issue';
+        if (isPreferentialIssue) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b5677025898',
+              title: 'Preferential Issue',
+              type: 'Files',
+              parent: '',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
         }
 
         const isGrievance = activeCategory.toLowerCase() === 'investor grievances';
