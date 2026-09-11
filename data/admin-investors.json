@@ -1,5 +1,41 @@
 [
   {
+    "id": "6805e8297f482b5677025882",
+    "title": "Board Meeting",
+    "type": "Files",
+    "parent": "Announcements",
+    "files": [
+      {
+        "id": "b1408202-6000-4000-8000-000000000001",
+        "originalName": "Prior intimation of Board Meeting_14.08.2026.pdf",
+        "storedName": "b1408202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b1408202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 627370,
+        "title": "Prior intimation of Board Meeting_14.08.2026"
+      },
+      {
+        "id": "b1908202-6000-4000-8000-000000000002",
+        "originalName": "Outcome of Board Meeting_19.08.2026.pdf",
+        "storedName": "b1908202-6000-4000-8000-000000000002.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b1908202-6000-4000-8000-000000000002.pdf",
+        "mimeType": "application/pdf",
+        "size": 857605,
+        "title": "Outcome of Board Meeting_19.08.2026"
+      },
+      {
+        "id": "b0709202-6000-4000-8000-000000000003",
+        "originalName": "Prior Intimation of Board Meeting_07.09.2026.pdf",
+        "storedName": "b0709202-6000-4000-8000-000000000003.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b0709202-6000-4000-8000-000000000003.pdf",
+        "mimeType": "application/pdf",
+        "size": 624415,
+        "title": "Prior Intimation of Board Meeting_07.09.2026"
+      }
+    ],
+    "updatedAt": "2026-09-11T12:31:15.239Z"
+  },
+  {
     "id": "4887120f-272d-4780-852b-9620e1f4e1ef",
     "title": "other Annoucment",
     "type": "pdf",

@@ -12,6 +12,7 @@ interface InvestorPDF {
   _id: string;
   mimeType?: string;
   size?: number;
+  title?: string;
 }
 
 interface InvestorCategoryChild {
@@ -264,6 +265,62 @@ export default function InvestorsPage() {
           }
         }
 
+        const isBoardMeeting = activeCategory.toLowerCase() === 'board meeting';
+        if (isBoardMeeting) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b5677025882',
+              title: activeCategory,
+              type: 'Files',
+              parent: 'Announcements',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+
+          const boardPdfs = [
+            {
+              _id: 'b1408202-6000-4000-8000-000000000001',
+              title: 'Prior intimation of Board Meeting_14.08.2026',
+              originalname: 'Prior intimation of Board Meeting_14.08.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b1408202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 627370
+            },
+            {
+              _id: 'b1908202-6000-4000-8000-000000000002',
+              title: 'Outcome of Board Meeting_19.08.2026',
+              originalname: 'Outcome of Board Meeting_19.08.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b1908202-6000-4000-8000-000000000002.pdf',
+              mimeType: 'application/pdf',
+              size: 857605
+            },
+            {
+              _id: 'b0709202-6000-4000-8000-000000000003',
+              title: 'Prior Intimation of Board Meeting_07.09.2026',
+              originalname: 'Prior Intimation of Board Meeting_07.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b0709202-6000-4000-8000-000000000003.pdf',
+              mimeType: 'application/pdf',
+              size: 624415
+            }
+          ];
+
+          boardPdfs.forEach((bp) => {
+            const exists = data.investorsPdfs.some(
+              (f: any) =>
+                f._id === bp._id ||
+                f.originalname === bp.originalname ||
+                f.fileName === bp.fileName ||
+                (f.title && f.title === bp.title)
+            );
+            if (!exists) {
+              data.investorsPdfs.push(bp);
+            }
+          });
+        }
+
         const isGrievance = activeCategory.toLowerCase() === 'investor grievances';
         if (isGrievance) {
           if (!data) {
@@ -358,6 +415,37 @@ export default function InvestorsPage() {
             }
             return (a.originalname || '').localeCompare(b.originalname || '');
           });
+
+          if (activeCategory.toLowerCase() === 'board meeting') {
+            // Sequence requested:
+            // 1. Prior intimation of Board Meeting_14.08.2026 (14/08/2026)
+            // 2. Outcome of Board Meeting_19.08.2026 (19/08/2026)
+            // 3. Prior Intimation of Board Meeting_07.09.2026 (07/09/2026)
+            const seqOrder = [
+              '14.08.2026',
+              '19.08.2026',
+              '07.09.2026'
+            ];
+            const targetPdfs: any[] = [];
+            const otherPdfs: any[] = [];
+
+            seqOrder.forEach((dateKey) => {
+              const found = data.investorsPdfs.find((f: any) =>
+                (f.originalname || '').includes(dateKey) || (f.title || '').includes(dateKey)
+              );
+              if (found) {
+                targetPdfs.push(found);
+              }
+            });
+
+            data.investorsPdfs.forEach((f: any) => {
+              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+                otherPdfs.push(f);
+              }
+            });
+
+            data.investorsPdfs = [...targetPdfs, ...otherPdfs];
+          }
         }
 
         setActiveDetails(data);
@@ -564,7 +652,7 @@ export default function InvestorsPage() {
                         <div className="investor-card-main-flex flex flex-col gap-4">
                           {activeDetails.investorsPdfs.map((file, idx) => {
                             const isAudio = file.fileName.endsWith('.mp3') || file.fileName.endsWith('.wav');
-                            const displayName = file.originalname.replace(/\.pdf$/i, '').replace(/\.mp3$/i, '');
+                            const displayName = (file.title || file.originalname).replace(/\.pdf$/i, '').replace(/\.mp3$/i, '');
                             return (
                               <a
                                 key={idx}
