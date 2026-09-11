@@ -31,9 +31,18 @@
         "mimeType": "application/pdf",
         "size": 624415,
         "title": "Prior Intimation of Board Meeting_07.09.2026"
+      },
+      {
+        "id": "b1109202-6000-4000-8000-000000000004",
+        "originalName": "Outcome of Board Meeting_11.09.2026.pdf",
+        "storedName": "b1109202-6000-4000-8000-000000000004.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b1109202-6000-4000-8000-000000000004.pdf",
+        "mimeType": "application/pdf",
+        "size": 742035,
+        "title": "Outcome of Board Meeting_11.09.2026"
       }
     ],
-    "updatedAt": "2026-09-11T12:31:15.239Z"
+    "updatedAt": "2026-09-11T16:56:53.509Z"
   },
   {
     "id": "4887120f-272d-4780-852b-9620e1f4e1ef",
@@ -41,6 +50,15 @@
     "type": "pdf",
     "parent": "Announcements",
     "files": [
+      {
+        "id": "d1109202-6000-4000-8000-000000000001",
+        "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 11.09.2026.pdf",
+        "storedName": "d1109202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d1109202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 742035,
+        "title": "Intimation under Regulation 30 of SEBI(LODR) - 11.09.2026"
+      },
       {
         "id": "c7f9d8a1-b6e2-4f3d-9c8b-5a1e2f3d4e5f",
         "originalName": "Intimation under Regulation 30 of SEBI(LODR) - 19.08.2026.pdf",
@@ -143,7 +161,7 @@
         "size": 33
       }
     ],
-    "updatedAt": "2026-08-20T08:34:32.091Z"
+    "updatedAt": "2026-09-11T16:56:53.521Z"
   },
   {
     "id": "6805e8297f482b5677025884",
@@ -177,8 +195,36 @@
     "title": "Preferential Issue",
     "type": "Files",
     "parent": "",
-    "files": [],
-    "updatedAt": "2026-09-11T12:51:38.349Z"
+    "files": [
+      {
+        "id": "p1109202-6000-4000-8000-000000000001",
+        "originalName": "Issuance of securities_11.09.2026.pdf",
+        "storedName": "p1109202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 742035,
+        "title": "Issuance of securities_11.09.2026"
+      },
+      {
+        "id": "p1109202-6000-4000-8000-000000000002",
+        "originalName": "Pricing Certificate.pdf",
+        "storedName": "p1109202-6000-4000-8000-000000000002.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000002.pdf",
+        "mimeType": "application/pdf",
+        "size": 1401313,
+        "title": "Pricing Certificate"
+      },
+      {
+        "id": "p1109202-6000-4000-8000-000000000003",
+        "originalName": "PCS Certificate- Compliance of SEBI ICDR.pdf",
+        "storedName": "p1109202-6000-4000-8000-000000000003.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000003.pdf",
+        "mimeType": "application/pdf",
+        "size": 949190,
+        "title": "PCS Certificate- Compliance of SEBI ICDR"
+      }
+    ],
+    "updatedAt": "2026-09-11T16:56:53.521Z"
   },
   {
     "id": "6805e8297f482b5677025897",

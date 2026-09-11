@@ -50,6 +50,7 @@ export interface InvestorFile {
   url: string;
   mimeType: string;
   size: number;
+  title?: string;
 }
 
 export interface Investor {

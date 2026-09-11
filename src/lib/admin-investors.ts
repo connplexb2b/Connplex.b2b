@@ -62,7 +62,8 @@ export async function readInvestors(): Promise<Investor[]> {
                 storedName: f.storedName,
                 url: f.url,
                 mimeType: f.mimeType,
-                size: f.size
+                size: f.size,
+                title: f.title
               }))
             }))
           );
@@ -84,7 +85,8 @@ export async function readInvestors(): Promise<Investor[]> {
         storedName: f.storedName,
         url: f.url,
         mimeType: f.mimeType,
-        size: f.size
+        size: f.size,
+        title: f.title
       })),
       updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
     })) as Investor[];
@@ -106,14 +108,14 @@ export async function writeInvestors(investors: Investor[]): Promise<void> {
   } catch (e) {}
   try {
     await fs.writeFile(DATA_PATH, JSON.stringify(investors, null, 2), 'utf-8');
-  } catch (e) {
-    console.warn('Silent warning: Failed to write database backup to local filesystem:', e.message);
+  } catch (e: any) {
+    console.warn('Silent warning: Failed to write database backup to local filesystem:', e?.message);
   }
 }
 
 export async function getInvestor(id: string): Promise<Investor | null> {
   await connectToDatabase();
-  const doc = await InvestorModel.findOne({ id }).lean();
+  const doc: any = await InvestorModel.findOne({ id }).lean();
   if (!doc) return null;
   return {
     id: doc.id,
@@ -126,7 +128,8 @@ export async function getInvestor(id: string): Promise<Investor | null> {
       storedName: f.storedName,
       url: f.url,
       mimeType: f.mimeType,
-      size: f.size
+      size: f.size,
+      title: f.title
     })),
     updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
   };
@@ -171,7 +174,7 @@ export async function updateInvestor(
   if (data.type !== undefined) updateData.type = data.type;
   if (data.parent !== undefined) updateData.parent = data.parent.trim();
 
-  const doc = await InvestorModel.findOneAndUpdate({ id }, { $set: updateData }, { new: true }).lean();
+  const doc: any = await InvestorModel.findOneAndUpdate({ id }, { $set: updateData }, { new: true }).lean();
   if (!doc) return null;
 
   // Try to write to local JSON for fallback asynchronously
@@ -188,7 +191,8 @@ export async function updateInvestor(
       storedName: f.storedName,
       url: f.url,
       mimeType: f.mimeType,
-      size: f.size
+      size: f.size,
+      title: f.title
     })),
     updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
   };
@@ -301,7 +305,8 @@ export async function addFileToInvestor(
       storedName: f.storedName,
       url: f.url,
       mimeType: f.mimeType,
-      size: f.size
+      size: f.size,
+      title: f.title
     })),
     updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
   };
@@ -330,7 +335,8 @@ export async function removeFileFromInvestor(
         storedName: f.storedName,
         url: f.url,
         mimeType: f.mimeType,
-        size: f.size
+        size: f.size,
+        title: f.title
       })),
       updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
     };
@@ -369,7 +375,8 @@ export async function removeFileFromInvestor(
       storedName: f.storedName,
       url: f.url,
       mimeType: f.mimeType,
-      size: f.size
+      size: f.size,
+      title: f.title
     })),
     updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
   };

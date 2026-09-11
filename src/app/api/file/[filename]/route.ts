@@ -52,7 +52,7 @@ export async function GET(
   if (!fileBuffer) {
     try {
       await connectToDatabase();
-      const doc = await InvestorFileContent.findOne({ filename }).lean();
+      const doc: any = await InvestorFileContent.findOne({ filename }).lean();
       if (doc && doc.data) {
         fileBuffer = doc.data as Buffer;
         customMimeType = doc.mimeType;

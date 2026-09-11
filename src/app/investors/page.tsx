@@ -257,6 +257,23 @@ export default function InvestorsPage() {
               size: 857605
             });
           }
+
+          // Check if 11.09.2026 already exists (unshift to place newest at the very top)
+          const exists11Sep = data.investorsPdfs.some(
+            (f: any) =>
+              (f.originalname || '').includes('11.09.2026') ||
+              (f.title || '').includes('11.09.2026')
+          );
+          if (!exists11Sep) {
+            data.investorsPdfs.unshift({
+              _id: 'd1109202-6000-4000-8000-000000000001',
+              title: 'Intimation under Regulation 30 of SEBI(LODR) - 11.09.2026',
+              originalname: 'Intimation under Regulation 30 of SEBI(LODR) - 11.09.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d1109202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 742035
+            });
+          }
         }
 
         const isGeneralMeeting = activeCategory.toLowerCase() === 'general meeting';
@@ -326,6 +343,14 @@ export default function InvestorsPage() {
               fileName: '/uploads/investors/6805e8297f482b5677025882/b0709202-6000-4000-8000-000000000003.pdf',
               mimeType: 'application/pdf',
               size: 624415
+            },
+            {
+              _id: 'b1109202-6000-4000-8000-000000000004',
+              title: 'Outcome of Board Meeting_11.09.2026',
+              originalname: 'Outcome of Board Meeting_11.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b1109202-6000-4000-8000-000000000004.pdf',
+              mimeType: 'application/pdf',
+              size: 742035
             }
           ];
 
@@ -357,6 +382,46 @@ export default function InvestorsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+
+          const prefPdfs = [
+            {
+              _id: 'p1109202-6000-4000-8000-000000000001',
+              title: 'Issuance of securities_11.09.2026',
+              originalname: 'Issuance of securities_11.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 742035
+            },
+            {
+              _id: 'p1109202-6000-4000-8000-000000000002',
+              title: 'Pricing Certificate',
+              originalname: 'Pricing Certificate.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000002.pdf',
+              mimeType: 'application/pdf',
+              size: 1401313
+            },
+            {
+              _id: 'p1109202-6000-4000-8000-000000000003',
+              title: 'PCS Certificate- Compliance of SEBI ICDR',
+              originalname: 'PCS Certificate- Compliance of SEBI ICDR.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025898/p1109202-6000-4000-8000-000000000003.pdf',
+              mimeType: 'application/pdf',
+              size: 949190
+            }
+          ];
+
+          prefPdfs.forEach((pp) => {
+            const exists = data.investorsPdfs.some(
+              (f: any) =>
+                f._id === pp._id ||
+                f.originalname === pp.originalname ||
+                f.fileName === pp.fileName ||
+                (f.title && f.title === pp.title)
+            );
+            if (!exists) {
+              data.investorsPdfs.push(pp);
+            }
+          });
         }
 
         const isGrievance = activeCategory.toLowerCase() === 'investor grievances';
@@ -417,7 +482,8 @@ export default function InvestorsPage() {
                       originalname: f.originalName,
                       fileName: f.url,
                       mimeType: f.mimeType,
-                      size: f.size
+                      size: f.size,
+                      title: f.title
                     });
                   }
                 });
@@ -459,10 +525,12 @@ export default function InvestorsPage() {
             // 1. Prior intimation of Board Meeting_14.08.2026 (14/08/2026)
             // 2. Outcome of Board Meeting_19.08.2026 (19/08/2026)
             // 3. Prior Intimation of Board Meeting_07.09.2026 (07/09/2026)
+            // 4. Outcome of Board Meeting_11.09.2026 (11/09/2026)
             const seqOrder = [
               '14.08.2026',
               '19.08.2026',
-              '07.09.2026'
+              '07.09.2026',
+              '11.09.2026'
             ];
             const targetPdfs: any[] = [];
             const otherPdfs: any[] = [];
@@ -470,6 +538,34 @@ export default function InvestorsPage() {
             seqOrder.forEach((dateKey) => {
               const found = data.investorsPdfs.find((f: any) =>
                 (f.originalname || '').includes(dateKey) || (f.title || '').includes(dateKey)
+              );
+              if (found) {
+                targetPdfs.push(found);
+              }
+            });
+
+            data.investorsPdfs.forEach((f: any) => {
+              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+                otherPdfs.push(f);
+              }
+            });
+
+            data.investorsPdfs = [...targetPdfs, ...otherPdfs];
+          }
+
+          if (activeCategory.toLowerCase() === 'preferential issue') {
+            const seqOrder = [
+              'Issuance of securities_11.09.2026',
+              'Pricing Certificate',
+              'PCS Certificate- Compliance of SEBI ICDR'
+            ];
+            const targetPdfs: any[] = [];
+            const otherPdfs: any[] = [];
+
+            seqOrder.forEach((titleKey) => {
+              const found = data.investorsPdfs.find((f: any) =>
+                (f.title || '').trim().toLowerCase() === titleKey.trim().toLowerCase() ||
+                (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === titleKey.trim().toLowerCase()
               );
               if (found) {
                 targetPdfs.push(found);
