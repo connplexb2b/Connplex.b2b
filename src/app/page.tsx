@@ -357,10 +357,10 @@ export default function Home() {
         {/* Mobile View Suite Peeking Footer (Visible only on mobile, stays fixed during scroll) */}
         <div className="block md:hidden w-full h-[25dvh] bg-black/45 backdrop-blur-md border-t border-white/5 px-[6%] py-6 flex flex-col justify-between relative z-10 select-none">
           <div className="flex flex-col text-left">
-            <p className="text-[0.65rem] font-semibold tracking-[3px] text-primary-gold mb-2 uppercase">THE CONNPLEX SUITE</p>
-            <h2 className="text-xl font-bold text-white leading-tight">
+            <p className="text-[0.65rem] font-semibold tracking-[3px] text-primary-gold uppercase">THE CONNPLEX SUITE</p>
+            {/* <h2 className="text-xl font-bold text-white leading-tight">
               One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
-            </h2>
+            </h2> */}
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-[10px] text-text-secondary font-medium tracking-wider uppercase flex items-center gap-1.5 animate-pulse">
@@ -375,14 +375,14 @@ export default function Home() {
 
       {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
       <section className="bg-bg-dark pt-8 pb-12 md:py-20 px-[4%] sm:px-[6%] border-t-0 md:border-t border-white/5">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div className="flex flex-col text-left">
-            <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold mb-3 uppercase">THE CONNPLEX SUITE</p>
-            <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white leading-tight">
+            <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold uppercase">THE CONNPLEX SUITE</p>
+            {/* <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white leading-tight">
               One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
-            </h2>
+            </h2> */}
           </div>
-          <Link href="/ecosystem" className="text-sm text-text-secondary font-medium tracking-wider hover:text-white transition-colors duration-300 whitespace-nowrap mb-1 inline-block text-left">
+          <Link href="/ecosystem" className="text-sm text-text-secondary font-medium tracking-wider hover:text-white transition-colors duration-300 whitespace-nowrap inline-block text-left">
             Scroll →
           </Link>
         </div>
