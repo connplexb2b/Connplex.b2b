@@ -493,6 +493,7 @@ export default function Home() {
           className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 w-full"
           ref={productsGridRef}
         >
+          {/* Hidden: Connflix
           <div className="relative flex flex-col items-center pt-8 w-full">
             <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">Connflix</p>
             <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Stream cinema-grade originals.</p>
@@ -505,7 +506,9 @@ export default function Home() {
               <Image src="/connflix_hero_mockup.png" alt="Connflix" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
+          */}
 
+          {/* Hidden: Conntube
           <div className="relative flex flex-col items-center pt-8 w-full">
             <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">Conntube</p>
             <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Your channel. Your audience.</p>
@@ -518,6 +521,7 @@ export default function Home() {
               <Image src="/conntube_hero_mockup.png" alt="Conntube" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: "cover", objectPosition: "top" }} />
             </div>
           </div>
+          */}
 
           <div className="relative flex flex-col items-center pt-8 w-full">
             <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">SpectraX</p>
