@@ -682,6 +682,46 @@
   box-shadow: 0 4px 12px var(--fra-blue-glow);
 }
 
+/* Location Specs Strip */
+.fra-location-specs-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(19, 25, 36, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.fra-spec-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.fra-spec-chip i {
+  color: var(--fra-gold);
+  font-size: 0.8rem;
+}
+
+.fra-spec-chip.highlight {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.fra-spec-chip.highlight i {
+  color: #f59e0b;
+}
+
 /* Metrics Grid (12 Items) */
 .fra-metrics-grid {
   display: grid;
