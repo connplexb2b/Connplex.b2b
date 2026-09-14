@@ -1015,7 +1015,7 @@ export default function FranchiseePortal() {
             gap: '0.5rem',
             overflowX: 'auto',
             padding: '0.5rem 0',
-            marginBottom: '0.75rem'
+            marginBottom: '1rem'
           }}>
             <span style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
               Cinema Property:
@@ -1059,19 +1059,8 @@ export default function FranchiseePortal() {
             ))}
           </div>
 
-          {/* Ahilyanagar Vista API Integration Section - Highlighted for Ahilyanagar location */}
-          {selectedLocationKey === 'ahilyanagar' && (
-            <div style={{ marginBottom: '1.75rem' }}>
-              <AhilyanagarApiIntegration 
-                key={`api-${apiDocsExpanded}`}
-                onNotification={showToast} 
-                defaultExpanded={apiDocsExpanded} 
-              />
-            </div>
-          )}
-
           {/* Metrics Grid */}
-          <section className="fra-metrics-grid">
+          <section className="fra-metrics-grid" style={{ marginBottom: '1.75rem' }}>
             {metrics.map((m, idx) => (
               <div key={idx} className="fra-metric-card">
                 <div className="fra-metric-header">
@@ -1089,6 +1078,17 @@ export default function FranchiseePortal() {
               </div>
             ))}
           </section>
+
+          {/* Ahilyanagar Vista API Integration Section - Highlighted for Ahilyanagar location */}
+          {selectedLocationKey === 'ahilyanagar' && (
+            <div style={{ marginBottom: '1.75rem' }}>
+              <AhilyanagarApiIntegration 
+                key={`api-${apiDocsExpanded}`}
+                onNotification={showToast} 
+                defaultExpanded={apiDocsExpanded} 
+              />
+            </div>
+          )}
 
           {/* Middle Layout - snapshot & actions */}
           <div className="fra-mid-grid">
