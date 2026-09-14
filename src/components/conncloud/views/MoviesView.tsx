@@ -80,7 +80,9 @@ export default function MoviesView({
     // Revenue calculated by screen pricing
     const boxOffice = movieShows.reduce((acc, s) => {
       const scr = screens.find(sc => sc.screenId === s.screenId);
-      const price = scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 280 : 240);
+      const price = scr?.cinemaId === 'c5'
+        ? (scr.screenId === 's20' ? 350 : 280)
+        : (scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 350 : (scr?.name.toLowerCase().includes('gold') ? 280 : 240)));
       return acc + (s.ticketsSold * price);
     }, 0);
 
@@ -107,7 +109,9 @@ export default function MoviesView({
   const totalCinemaAdmissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0);
   const totalCinemaBoxOffice = shows.reduce((acc, s) => {
     const scr = screens.find(sc => sc.screenId === s.screenId);
-    const price = scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 280 : 240);
+    const price = scr?.cinemaId === 'c5'
+      ? (scr.screenId === 's20' ? 350 : 280)
+      : (scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 350 : (scr?.name.toLowerCase().includes('gold') ? 280 : 240)));
     return acc + (s.ticketsSold * price);
   }, 0);
   const totalCinemaCapacity = shows.reduce((acc, s) => acc + s.capacity, 0);

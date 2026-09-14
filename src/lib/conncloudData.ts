@@ -437,7 +437,18 @@ const generateBaseData = () => {
         // Add minor randomness
         const randomFactor = Math.floor(Math.sin(parseInt(screen.screenId.replace(/\D/g, '')) * dayOfWeek) * 10);
         const finalPercent = Math.min(95, Math.max(10, baseOccupancyPercent + randomFactor));
-        const ticketsSold = Math.floor((cap * finalPercent) / 100);
+        let ticketsSold = Math.floor((cap * finalPercent) / 100);
+
+        const isAhilya = screen.cinemaId === 'c5';
+        if (isAhilya) {
+          // Precise physical calibration for Ahilyanagar luxury boutique setup (80 total seats):
+          // Screen 1 (20 seats couple recliner): 17 tickets (85% occupancy)
+          // Screen 2 (60 seats gold class): 50 tickets (83.3% occupancy)
+          // Exactly 67 tickets/slot * 4 show slots = 268 tickets/day (83.8% occupancy of 320 seats)
+          ticketsSold = screen.screenId === 's20'
+            ? (isWeekend ? 18 : 17)
+            : (isWeekend ? 52 : 50);
+        }
 
         const showId = `sh_${showCounter++}`;
         const isCompleted = new Date(`${dateString}T${time}`) < new Date();
@@ -461,24 +472,35 @@ const generateBaseData = () => {
 
         for (let t = 0; t < ticketsSold; t++) {
           const channelRandom = Math.random();
-          const channel = channelRandom < 0.65 ? 'Online' : (channelRandom < 0.90 ? 'Counter' : 'Kiosk');
+          // Ahilyanagar has 71.6% online booking share and 28.4% walk-in/POS
+          const onlineThreshold = isAhilya ? 0.716 : 0.65;
+          const counterThreshold = isAhilya ? 0.94 : 0.90;
+          const channel = channelRandom < onlineThreshold ? 'Online' : (channelRandom < counterThreshold ? 'Counter' : 'Kiosk');
+          
           const paymentRandom = Math.random();
-          const payment = paymentRandom < 0.6 ? 'UPI' : (paymentRandom < 0.8 ? 'Card' : (paymentRandom < 0.95 ? 'Cash' : 'Wallet'));
-          const price = screen.format.includes('IMAX') ? 350 : 220;
+          const payment = paymentRandom < 0.65 ? 'UPI' : (paymentRandom < 0.85 ? 'Card' : (paymentRandom < 0.96 ? 'Cash' : 'Wallet'));
+          
+          // Screen pricing: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
+          const price = isAhilya
+            ? (screen.screenId === 's20' ? 350 : 280)
+            : (screen.format.includes('IMAX') ? 350 : 220);
           ticketRevenue += price;
 
           if (channel === 'Online') onlineCount++;
           else if (channel === 'Counter') counterCount++;
           else kioskCount++;
 
-          // Create ticket entity for deep views (only a subset to prevent memory bloating)
-          if (t % 15 === 0) {
+          // Create ticket entity for deep views (every 4th for Ahilya, every 15th for others)
+          const ticketPushStep = isAhilya ? 4 : 15;
+          if (t % ticketPushStep === 0) {
             tickets.push({
               bookingId: `bk_${ticketCounter++}`,
               movieId: movie.movieId,
               showId,
               screenId: screen.screenId,
-              seat: `${String.fromCharCode(65 + Math.floor(t / 15))}${t % 15 + 1}`,
+              seat: isAhilya && screen.screenId === 's20'
+                ? `${String.fromCharCode(65 + Math.floor(t / 2))}${((t % 2) * 2 + 1)}-${((t % 2) * 2 + 2)}`
+                : `${String.fromCharCode(65 + Math.floor(t / 10))}${(t % 10) + 1}`,
               price,
               channel,
               payment,
@@ -502,39 +524,63 @@ const generateBaseData = () => {
           });
         }
 
-        // Generate F&B transactions relative to admissions (e.g. SPH of ~140)
-        const fnbRate = 0.6; // 60% of ticket buyers buy F&B
-        const buyers = Math.floor(ticketsSold * fnbRate);
-        const popcornPrice = 180;
-        const sodaPrice = 120;
+        // Generate F&B transactions relative to admissions (Ahilyanagar SPH is ₹110)
         let totalFnb = 0;
-
-        if (buyers > 0) {
-          const popcornQty = Math.floor(buyers * 0.5);
-          const sodaQty = Math.floor(buyers * 0.6);
-          const comboQty = Math.floor(buyers * 0.25);
-
-          const items = [
-            { productId: 'fb1', qty: popcornQty, price: popcornPrice, category: 'Popcorn' },
-            { productId: 'fb2', qty: sodaQty, price: sodaPrice, category: 'Beverages' },
-            { productId: 'fb3', qty: comboQty, price: 320, category: 'Combos' }
-          ];
-
-          items.forEach((item) => {
-            if (item.qty > 0) {
-              const itemTotal = item.qty * item.price;
-              totalFnb += itemTotal;
-              fnbTransactions.push({
-                transactionId: `fbtx_${fnbTxCounter++}`,
-                productId: item.productId,
-                quantity: item.qty,
-                price: item.price,
-                category: item.category,
-                cinemaId: screen.cinemaId,
-                date: dateString
-              });
-            }
+        if (isAhilya) {
+          totalFnb = ticketsSold * 110;
+          const popcornQty = Math.floor(ticketsSold * 0.45) || 1;
+          const sodaQty = Math.floor(ticketsSold * 0.40) || 1;
+          fnbTransactions.push({
+            transactionId: `fbtx_${fnbTxCounter++}`,
+            productId: 'fb1',
+            quantity: popcornQty,
+            price: 180,
+            category: 'Popcorn',
+            cinemaId: screen.cinemaId,
+            date: dateString
           });
+          fnbTransactions.push({
+            transactionId: `fbtx_${fnbTxCounter++}`,
+            productId: 'fb2',
+            quantity: sodaQty,
+            price: 120,
+            category: 'Beverages',
+            cinemaId: screen.cinemaId,
+            date: dateString
+          });
+        } else {
+          const fnbRate = 0.6; // 60% of ticket buyers buy F&B
+          const buyers = Math.floor(ticketsSold * fnbRate);
+          const popcornPrice = 180;
+          const sodaPrice = 120;
+
+          if (buyers > 0) {
+            const popcornQty = Math.floor(buyers * 0.5);
+            const sodaQty = Math.floor(buyers * 0.6);
+            const comboQty = Math.floor(buyers * 0.25);
+
+            const items = [
+              { productId: 'fb1', qty: popcornQty, price: popcornPrice, category: 'Popcorn' },
+              { productId: 'fb2', qty: sodaQty, price: sodaPrice, category: 'Beverages' },
+              { productId: 'fb3', qty: comboQty, price: 320, category: 'Combos' }
+            ];
+
+            items.forEach((item) => {
+              if (item.qty > 0) {
+                const itemTotal = item.qty * item.price;
+                totalFnb += itemTotal;
+                fnbTransactions.push({
+                  transactionId: `fbtx_${fnbTxCounter++}`,
+                  productId: item.productId,
+                  quantity: item.qty,
+                  price: item.price,
+                  category: item.category,
+                  cinemaId: screen.cinemaId,
+                  date: dateString
+                });
+              }
+            });
+          }
         }
 
         if (totalFnb > 0) {
@@ -834,22 +880,22 @@ const INITIAL_MIS_SUMMARIES: MISCinemaSummary[] = [
     cinemaName: 'Connplex Ahilyanagar',
     city: 'Ahilyanagar, Maharashtra',
     screens: 2,
-    totalFootfall: 18400,
-    boxOfficeGross: 4850000,
-    fnbGross: 1980000,
-    merchandiseGross: 240000,
-    groupBookingsGross: 620000,
-    screenAdsGross: 350000,
-    totalRevenue: 8040000,
-    distributorShare: 2425000,
-    operationalExpenses: 2840000,
-    netEbitda: 2775000,
-    ebitdaMargin: 34.5,
-    atp: 263,
-    sph: 107,
-    occupancyPercent: 74.8,
-    budgetTarget: 7500000,
-    variancePercent: 7.2
+    totalFootfall: 8040,
+    boxOfficeGross: 2394000,
+    fnbGross: 884000,
+    merchandiseGross: 85000,
+    groupBookingsGross: 145000,
+    screenAdsGross: 110000,
+    totalRevenue: 3618000,
+    distributorShare: 1077300,
+    operationalExpenses: 1280000,
+    netEbitda: 1260700,
+    ebitdaMargin: 34.8,
+    atp: 298,
+    sph: 110,
+    occupancyPercent: 83.8,
+    budgetTarget: 3400000,
+    variancePercent: 6.4
   }
 ];
 
@@ -917,6 +963,15 @@ export class ConnCloudStore {
   public static init() {
     if (typeof window === 'undefined') return;
     if (this.isInitialized) return;
+
+    // Invalidate outdated browser cache if version changed
+    const STORE_VERSION = 'v2_ahilyanagar_calibrated_80seats';
+    const currentVer = localStorage.getItem('cc_store_version');
+    if (currentVer !== STORE_VERSION) {
+      localStorage.removeItem('cc_relational_base');
+      localStorage.removeItem('cc_misSummaries');
+      localStorage.setItem('cc_store_version', STORE_VERSION);
+    }
 
     // Load from localStorage or seed
     const cacheOrSeed = <T>(key: string, initial: T[]): T[] => {
@@ -1043,8 +1098,8 @@ export class ConnCloudStore {
               status: isCompleted ? 'Completed' : 'Scheduled'
             });
 
-            // Ticket revenue
-            const price = 260;
+            // Ticket revenue: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
+            const price = screen.screenId === 's20' ? 350 : 280;
             const rev = ticketsSold * price;
             newFinance.push({
               transactionId: `tx_ah_${finIdCounter++}`,
@@ -1136,7 +1191,7 @@ export class ConnCloudStore {
     if (!hasAhilyaTickets) {
       const ahilyaShows = (this.shows || []).filter(s => s.screenId === 's20' || s.screenId === 's21');
       let ticketIdCounter = (this.tickets.length || 0) + 5000;
-      const channels: ('Online' | 'Counter' | 'Kiosk')[] = ['Online', 'Online', 'Counter', 'Online', 'Kiosk'];
+      const channels: ('Online' | 'Counter' | 'Kiosk')[] = ['Online', 'Online', 'Online', 'Counter', 'Online', 'Counter', 'Online'];
       const payments: ('UPI' | 'Card' | 'Cash' | 'Wallet')[] = ['UPI', 'UPI', 'Card', 'Cash', 'UPI'];
 
       ahilyaShows.forEach((sh, shIdx) => {
@@ -1147,7 +1202,7 @@ export class ConnCloudStore {
           const rowChar = String.fromCharCode(65 + (b % 4));
           const seatNum = (b * 2 + 1);
           const seatStr = sh.screenId === 's20' ? `${rowChar}${seatNum}-${rowChar}${seatNum + 1}` : `${rowChar}${seatNum}`;
-          const price = sh.screenId === 's20' ? 280 : 240;
+          const price = sh.screenId === 's20' ? 350 : 280;
 
           this.tickets.push({
             bookingId: `bk_ah_${ticketIdCounter++}`,
@@ -1319,6 +1374,65 @@ export class ConnCloudStore {
   public static getTrainingModules() { this.init(); return this.trainingModules; }
   public static getStaffOrientations() { this.init(); return this.staffOrientations; }
   public static getCertifications() { this.init(); return this.certifications; }
+
+  // Date Range Filtering Utility
+  public static filterByDateRange<T extends { date?: string }>(items: T[], dateRange: string): T[] {
+    if (!items || items.length === 0 || !dateRange) return items || [];
+
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+
+    const datesWithItems = items.map(i => i.date).filter(Boolean) as string[];
+    const maxDateStr = datesWithItems.length > 0
+      ? [...datesWithItems].sort((a, b) => b.localeCompare(a))[0]
+      : todayStr;
+
+    // Anchor to today if present, or latest available date in dataset
+    const anchorDateStr = datesWithItems.includes(todayStr) ? todayStr : maxDateStr;
+    const anchorDate = new Date(anchorDateStr);
+
+    switch (dateRange) {
+      case 'Today': {
+        return items.filter(item => item.date && item.date.startsWith(anchorDateStr));
+      }
+      case 'Yesterday': {
+        const yDate = new Date(anchorDate);
+        yDate.setDate(anchorDate.getDate() - 1);
+        const yStr = yDate.toISOString().split('T')[0];
+        return items.filter(item => item.date && item.date.startsWith(yStr));
+      }
+      case 'Last 7 Days': {
+        const cutoff = new Date(anchorDate);
+        cutoff.setDate(anchorDate.getDate() - 6);
+        const cutoffStr = cutoff.toISOString().split('T')[0];
+        return items.filter(item => {
+          if (!item.date) return false;
+          const d = item.date.split('T')[0];
+          return d >= cutoffStr && d <= anchorDateStr;
+        });
+      }
+      case 'This Month': {
+        const yearMonth = anchorDateStr.slice(0, 7);
+        return items.filter(item => item.date && item.date.startsWith(yearMonth));
+      }
+      case 'Last 30 Days': {
+        const cutoff = new Date(anchorDate);
+        cutoff.setDate(anchorDate.getDate() - 29);
+        const cutoffStr = cutoff.toISOString().split('T')[0];
+        return items.filter(item => {
+          if (!item.date) return false;
+          const d = item.date.split('T')[0];
+          return d >= cutoffStr && d <= anchorDateStr;
+        });
+      }
+      case 'This Year': {
+        const year = anchorDateStr.slice(0, 4);
+        return items.filter(item => item.date && item.date.startsWith(year));
+      }
+      default:
+        return items;
+    }
+  }
 
   // Mutation commands
   public static addExpense(tx: Omit<FinanceTransaction, 'transactionId' | 'status'> & { vendor: string }) {

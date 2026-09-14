@@ -30,7 +30,7 @@ export default function FinanceView({
   });
 
   // Pull transactions
-  const transactions = ConnCloudStore.getFinanceTransactions().filter(t => {
+  const rawTransactions = ConnCloudStore.getFinanceTransactions().filter(t => {
     const cinemaMatch = selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId;
     const statusMatch = statusFilter === 'all' || t.status === statusFilter;
     const searchMatch = searchQuery === '' || 
@@ -40,6 +40,8 @@ export default function FinanceView({
     
     return cinemaMatch && statusMatch && searchMatch;
   });
+
+  const transactions = ConnCloudStore.filterByDateRange(rawTransactions, selectedDateRange);
 
   // Calculations
   const incomeTx = transactions.filter(t => t.type === 'Income');

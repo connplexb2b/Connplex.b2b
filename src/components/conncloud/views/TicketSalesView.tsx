@@ -23,12 +23,14 @@ export default function TicketSalesView({
   const [selectedScreenId, setSelectedScreenId] = useState<string>(screens[0]?.screenId || 's20');
 
   // Pull tickets filtered by cinema and channel, sorted latest first
-  const tickets = ConnCloudStore.getTickets().filter(t => {
+  const rawTickets = ConnCloudStore.getTickets().filter(t => {
     const channelMatch = channelFilter === 'all' || t.channel === channelFilter;
     const scr = ConnCloudStore.getScreens().find(sc => sc.screenId === t.screenId);
     const cinemaMatch = selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
     return channelMatch && cinemaMatch;
-  }).sort((a, b) => b.date.localeCompare(a.date));
+  });
+  const tickets = ConnCloudStore.filterByDateRange(rawTickets, selectedDateRange)
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   const formatCurrency = (val: number) => {
     return `₹${val.toLocaleString('en-IN')}`;

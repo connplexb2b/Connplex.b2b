@@ -62,7 +62,7 @@ export default function MISView({
                 Vista Financial ERP & MIS Ingest Live • Connplex Ahilyanagar
               </span>
               <span className="text-gray-300 text-[11px]">
-                Audited MTD Gross Turnover: ₹80.40L (Box Office ₹48.50L • Concessions ₹19.80L • Ancillary ₹12.10L) • 2 Screens, 80 Seats Capacity • Operating EBITDA: 34.5%
+                Audited MTD Gross Turnover: ₹33.50L (Box Office ₹23.95L • Concessions ₹8.85L • Ancillary ₹0.70L) • 2 Screens, 80 Seats Capacity • Operating EBITDA: 34.8%
               </span>
             </div>
           </div>
@@ -421,15 +421,15 @@ export default function MISView({
             </h3>
             <span className="text-xs text-gray-400">
               {selectedCinemaId === 'c5' 
-                ? 'Luxuriance Couple Recliner leads with ₹280 ATP, Gold Class 2D drives volume gross.'
+                ? 'Luxuriance Couple Recliner leads with ₹350 ATP, Gold Class 2D drives volume gross at ₹280 ATP.'
                 : 'IMAX 3D leads across all revenue and ATP indices.'}
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {(selectedCinemaId === 'c5' ? [
-              { format: 'Luxuriance Couple Recliner', screens: 'Screen 1 (20 Seats)', avgAtp: '₹280', occupancy: '78.4%', monthlyGross: '₹3.00 L', icon: 'fa-couch text-amber-400' },
-              { format: 'Gold Class 2D', screens: 'Screen 2 (60 Seats)', avgAtp: '₹240', occupancy: '78.4%', monthlyGross: '₹8.97 L', icon: 'fa-film text-blue-400' },
+              { format: 'Luxuriance Couple Recliner', screens: 'Screen 1 (20 Seats)', avgAtp: '₹350', occupancy: '85.0%', monthlyGross: '₹7.14 L', icon: 'fa-couch text-amber-400' },
+              { format: 'Gold Class 2D', screens: 'Screen 2 (60 Seats)', avgAtp: '₹280', occupancy: '83.3%', monthlyGross: '₹16.83 L', icon: 'fa-film text-blue-400' },
               { format: 'Private Screenings / Charter', screens: 'Screen 1 & 2', avgAtp: 'Special Charter', occupancy: '100% Reserved', monthlyGross: '₹62,000 / event', icon: 'fa-crown text-purple-400' },
               { format: 'On-Screen Local Advertising', screens: 'Both Screens', avgAtp: '10s Spot', occupancy: '85% Fill Rate', monthlyGross: '₹35,000 / mo', icon: 'fa-rectangle-ad text-emerald-400' }
             ] : [

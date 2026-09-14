@@ -19,11 +19,21 @@ export default function AnalyticsView({
   const isAhilyanagar = selectedCinemaId === 'c5';
   const cinemaName = selectedCinemaId === 'all' ? 'All Cinemas' : (currentCinema?.name || 'Selected Cinema');
 
-  const finance = ConnCloudStore.getFinanceTransactions().filter(t => selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId);
-  const shows = ConnCloudStore.getShows().filter(sh => {
+  // Pull raw collections filtered by cinema
+  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId);
+  const rawShows = ConnCloudStore.getShows().filter(sh => {
     const scr = ConnCloudStore.getScreens().find(s => s.screenId === sh.screenId);
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
+  const rawTickets = ConnCloudStore.getTickets().filter(t => {
+    const scr = ConnCloudStore.getScreens().find(s => s.screenId === t.screenId);
+    return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
+  });
+
+  // Filter dynamically by the selected date range (Today, Last 7 Days, Last 30 Days, etc.)
+  const finance = ConnCloudStore.filterByDateRange(rawFinance, selectedDateRange);
+  const shows = ConnCloudStore.filterByDateRange(rawShows, selectedDateRange);
+  const tickets = ConnCloudStore.filterByDateRange(rawTickets, selectedDateRange);
 
   const ticketRev = finance.filter(t => t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + t.amount, 0);
   const fnbRev = finance.filter(t => t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + t.amount, 0);
@@ -31,8 +41,17 @@ export default function AnalyticsView({
   const admissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0);
   const cap = shows.reduce((acc, s) => acc + s.capacity, 0);
   const occupancyPercent = cap > 0 ? ((admissions / cap) * 100).toFixed(1) : '0';
-  const atp = admissions > 0 ? Math.round(ticketRev / admissions) : 0;
-  const sph = admissions > 0 ? Math.round(fnbRev / admissions) : 0;
+  const atp = admissions > 0 ? Math.round(ticketRev / admissions) : (isAhilyanagar ? 298 : 250);
+  const sph = admissions > 0 ? Math.round(fnbRev / admissions) : (isAhilyanagar ? 110 : 140);
+
+  // Compute actual online vs counter booking shares
+  const onlineCount = tickets.filter(t => t.channel === 'Online').length;
+  const counterCount = tickets.filter(t => t.channel === 'Counter' || t.channel === 'Kiosk').length;
+  const totalTixCount = onlineCount + counterCount;
+  const onlineShare = totalTixCount > 0
+    ? ((onlineCount / totalTixCount) * 100).toFixed(1)
+    : (isAhilyanagar ? '71.6' : '68.2');
+  const counterShare = (100 - parseFloat(onlineShare)).toFixed(1);
 
   // Filter screens belonging to this cinema
   const currentScreens = ConnCloudStore.getScreens().filter(s => 
@@ -46,10 +65,12 @@ export default function AnalyticsView({
     const screenCap = screenShows.reduce((acc, s) => acc + s.capacity, 0);
     const screenOccupancy = screenCap > 0 ? Math.round((screenTickets / screenCap) * 100) : 0;
     
-    // Weight revenue based on screen price tier
-    const ticketPrice = screen.format.includes('IMAX') 
-      ? 350 
-      : (screen.name.toLowerCase().includes('couple') ? 280 : 240);
+    // Weight revenue based on screen price tier: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
+    const ticketPrice = screen.cinemaId === 'c5'
+      ? (screen.screenId === 's20' ? 350 : 280)
+      : (screen.format.includes('IMAX') 
+          ? 350 
+          : (screen.name.toLowerCase().includes('couple') ? 350 : (screen.name.toLowerCase().includes('gold') ? 280 : 240)));
     const rawRevenue = screenShows.reduce((acc, s) => acc + (s.ticketsSold * ticketPrice), 0);
 
     return {
@@ -91,20 +112,22 @@ export default function AnalyticsView({
   };
 
   const handleExport = (format: string) => {
-    triggerNotification(`Analytics report for ${cinemaName} exported as ${format.toUpperCase()}`);
+    triggerNotification(`Analytics report for ${cinemaName} (${selectedDateRange}) exported as ${format.toUpperCase()}`);
   };
 
   // Day of week / Hour occupancy heatmap matrices
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const timeslots = ['11:00 AM', '02:00 PM', '05:00 PM', '08:00 PM', '11:00 PM'];
+  const timeslots = isAhilyanagar
+    ? ['11:00 AM', '02:15 PM', '05:30 PM', '08:45 PM']
+    : ['11:00 AM', '02:00 PM', '05:00 PM', '08:00 PM', '11:00 PM'];
   const heatmapData = isAhilyanagar ? [
-    [40, 55, 62, 78, 60], // Mon
-    [42, 50, 60, 80, 58], // Tue
-    [45, 52, 65, 82, 62], // Wed
-    [48, 56, 70, 85, 68], // Thu
-    [65, 78, 90, 96, 85], // Fri (Couple Recliners peak)
-    [75, 88, 96, 98, 92], // Sat
-    [80, 92, 98, 98, 94]  // Sun
+    [45, 60, 78, 82], // Mon
+    [48, 62, 80, 84], // Tue
+    [50, 65, 82, 86], // Wed
+    [52, 68, 85, 88], // Thu
+    [70, 82, 96, 92], // Fri (Couple Recliners peak)
+    [80, 90, 98, 96], // Sat
+    [82, 94, 98, 95]  // Sun
   ] : [
     [32, 45, 52, 68, 48], // Mon
     [35, 42, 50, 72, 44], // Tue
@@ -259,12 +282,12 @@ export default function AnalyticsView({
             </div>
             <div className="cc-card">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Online Share</span>
-              <div className="text-2xl font-extrabold text-emerald-400">68.2%</div>
+              <div className="text-2xl font-extrabold text-emerald-400">{onlineShare}%</div>
               <div className="text-xs text-gray-400 mt-2">App and website online tickets bookings</div>
             </div>
             <div className="cc-card">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">POS / Counter Share</span>
-              <div className="text-2xl font-extrabold text-gray-300">31.8%</div>
+              <div className="text-2xl font-extrabold text-gray-300">{counterShare}%</div>
               <div className="text-xs text-gray-400 mt-2">Box office and terminal ticket kiosk orders</div>
             </div>
           </div>
@@ -309,12 +332,19 @@ export default function AnalyticsView({
 
           <div className="overflow-x-auto">
             <div className="min-w-[600px] space-y-2">
-              <div className="grid grid-cols-6 gap-2 text-center text-[10px] font-bold text-gray-400">
+              <div 
+                className="grid gap-2 text-center text-[10px] font-bold text-gray-400"
+                style={{ gridTemplateColumns: `90px repeat(${timeslots.length}, 1fr)` }}
+              >
                 <div></div>
                 {timeslots.map((t) => <div key={t}>{t}</div>)}
               </div>
               {daysOfWeek.map((day, dIdx) => (
-                <div key={day} className="grid grid-cols-6 gap-2 items-center">
+                <div 
+                  key={day} 
+                  className="grid gap-2 items-center"
+                  style={{ gridTemplateColumns: `90px repeat(${timeslots.length}, 1fr)` }}
+                >
                   <div className="text-left text-xs font-semibold text-gray-300">{day}</div>
                   {heatmapData[dIdx].map((val, tIdx) => {
                     let bg = 'bg-blue-950 text-blue-300';
@@ -349,7 +379,7 @@ export default function AnalyticsView({
               </div>
               <p className="text-xs text-gray-500 mb-6">
                 {isAhilyanagar 
-                  ? 'Benchmark price targets: Couple Recliner: ₹280, Gold Class: ₹240' 
+                  ? 'Benchmark price targets: Screen 1 Couple Recliner: ₹350, Screen 2 Gold Class: ₹280' 
                   : 'Benchmark price targets: Class A: ₹350, Class B: ₹220'}
               </p>
               
@@ -357,7 +387,9 @@ export default function AnalyticsView({
               <div className="space-y-3.5">
                 {screenItems.map(item => {
                   const screenTicketShare = admissions > 0 ? Math.round((item.tickets / admissions) * 100) : item.share;
-                  const estimatedScreenAtp = item.tickets > 0 ? Math.round(item.revenue / item.tickets) : (item.screen.name.includes('Couple') ? 280 : 240);
+                  const estimatedScreenAtp = item.tickets > 0 
+                    ? Math.round(item.revenue / item.tickets) 
+                    : (item.screen.name.includes('Couple') ? 350 : 280);
                   return (
                     <div key={item.screen.screenId}>
                       <div className="flex justify-between text-xs mb-1">
@@ -379,22 +411,22 @@ export default function AnalyticsView({
                 <span className="text-3xl font-black text-[#f5b041]">₹{sph}</span>
                 <span className="text-xs text-emerald-400 font-semibold"><i className="fa-solid fa-arrow-trend-up"></i> +4.0% vs last month</span>
               </div>
-              <p className="text-xs text-gray-500 mb-6">Benchmark target: ₹150 SPH across screens</p>
+              <p className="text-xs text-gray-500 mb-6">Benchmark target: ₹110 - ₹150 SPH across screens</p>
               
               <div className="space-y-3.5">
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-300">Popcorn & Beverages</span>
-                  <span className="font-semibold text-white">₹110 (65% share)</span>
+                  <span className="text-gray-300">Popcorn &amp; Beverages</span>
+                  <span className="font-semibold text-white">₹{Math.round(sph * 0.68)} (68% share)</span>
                 </div>
                 <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-[#f5b041] h-full" style={{ width: '65%' }}></div>
+                  <div className="bg-[#f5b041] h-full" style={{ width: '68%' }}></div>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="text-gray-300">Combos & Snacks</span>
-                  <span className="font-semibold text-white">₹32 (35% share)</span>
+                  <span className="text-gray-300">Combos &amp; Gourmet Snacks</span>
+                  <span className="font-semibold text-white">₹{sph - Math.round(sph * 0.68)} (32% share)</span>
                 </div>
                 <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                  <div className="bg-[#f5b041] h-full" style={{ width: '35%' }}></div>
+                  <div className="bg-[#f5b041] h-full" style={{ width: '32%' }}></div>
                 </div>
               </div>
             </div>
@@ -428,10 +460,10 @@ export default function AnalyticsView({
             </svg>
             <div className="absolute top-4 left-4 flex gap-4 text-xs">
               <span className="flex items-center gap-1.5 text-blue-400">
-                <span className="w-3 h-0.5 bg-[#1e40af] inline-block"></span> Actual Sales (Aug 1 - Aug 20)
+                <span className="w-3 h-0.5 bg-[#1e40af] inline-block"></span> MTD Actual Sales (Days 1 - 20)
               </span>
               <span className="flex items-center gap-1.5 text-[#f5b041]">
-                <span className="w-3 h-0.5 bg-[#f5b041] stroke-dasharray-[3] inline-block"></span> Projected Forecast (Aug 21 - Aug 30)
+                <span className="w-3 h-0.5 bg-[#f5b041] stroke-dasharray-[3] inline-block"></span> Projected Forecast (Days 21 - 30)
               </span>
             </div>
           </div>
@@ -440,24 +472,24 @@ export default function AnalyticsView({
             <div className="bg-black/20 p-3.5 rounded border border-white/5 text-center">
               <span className="text-[10px] text-gray-400 block uppercase font-bold">Monthly Target</span>
               <span className="text-lg font-black text-white mt-1 block">
-                {selectedCinemaId === 'all' ? '₹1.35Cr' : formatCurrency(Math.round(totalRev * 0.95))}
+                {selectedCinemaId === 'all' ? '₹1.35Cr' : (isAhilyanagar ? '₹32.00L' : formatCurrency(Math.round(totalRev * 0.95)))}
               </span>
             </div>
             <div className="bg-black/20 p-3.5 rounded border border-white/5 text-center">
               <span className="text-[10px] text-gray-400 block uppercase font-bold">Projected Achieved</span>
               <span className="text-lg font-black text-[#f5b041] mt-1 block">
-                {selectedCinemaId === 'all' ? '₹1.48Cr' : formatCurrency(Math.round(totalRev * 1.06))}
+                {selectedCinemaId === 'all' ? '₹1.48Cr' : (isAhilyanagar ? '₹33.50L' : formatCurrency(Math.round(totalRev * 1.06)))}
               </span>
             </div>
             <div className="bg-black/20 p-3.5 rounded border border-white/5 text-center">
               <span className="text-[10px] text-gray-400 block uppercase font-bold">Admissions Forecast</span>
               <span className="text-lg font-black text-white mt-1 block">
-                {selectedCinemaId === 'all' ? '42,000' : Math.round(admissions * 1.05).toLocaleString('en-IN')}
+                {selectedCinemaId === 'all' ? '42,000' : (isAhilyanagar ? '8,200' : Math.round(admissions * 1.05).toLocaleString('en-IN'))}
               </span>
             </div>
             <div className="bg-black/20 p-3.5 rounded border border-white/5 text-center">
               <span className="text-[10px] text-gray-400 block uppercase font-bold">Expected Occupancy</span>
-              <span className="text-lg font-black text-white mt-1 block">{occupancyPercent}%</span>
+              <span className="text-lg font-black text-white mt-1 block">{isAhilyanagar ? '84.0%' : `${occupancyPercent}%`}</span>
             </div>
           </div>
         </div>

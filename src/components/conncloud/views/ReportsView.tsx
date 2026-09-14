@@ -31,18 +31,18 @@ export default function ReportsView({
         Timestamp: new Date().toISOString(),
         Endpoint: '/api.asmx/GetDailyTicketAndFnbData?CinemaID=Ahilyanagar',
         BoxOffice: {
-          GrossTicketRevenue: 1197440,
-          TotalTicketsSold: 4678,
-          AverageTicketPrice: 255.97,
+          GrossTicketRevenue: 72800,
+          TotalTicketsSold: 268,
+          AverageTicketPrice: 275.00,
           Auditoriums: [
-            { ScreenId: 's20', Name: 'Screen 1 (Luxuriance Couple Recliner)', Seats: 20, ATP: 280, Occupancy: '78.4%' },
-            { ScreenId: 's21', Name: 'Screen 2 (Gold Class)', Seats: 60, ATP: 240, Occupancy: '78.4%' }
+            { ScreenId: 's20', Name: 'Screen 1 (Luxuriance Couple Recliner)', Seats: 20, ATP: 350, Occupancy: '85.0%', TicketsToday: 68 },
+            { ScreenId: 's21', Name: 'Screen 2 (Gold Class)', Seats: 60, ATP: 280, Occupancy: '83.3%', TicketsToday: 200 }
           ]
         },
         Concessions: {
-          GrossFnbRevenue: 716280,
-          Transactions: 2840,
-          SpendPerHead: 153.11,
+          GrossFnbRevenue: 29500,
+          Transactions: 192,
+          SpendPerHead: 110.00,
           TopCategory: 'Caramel & Cheese Popcorn Combos'
         }
       };
