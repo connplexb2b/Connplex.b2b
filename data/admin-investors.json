@@ -170,6 +170,15 @@
     "parent": "Announcements",
     "files": [
       {
+        "id": "g1409202-6000-4000-8000-000000000001",
+        "originalName": "Pre-dispatch Notice_Newspaper Advt._14.09.2026.pdf",
+        "storedName": "g1409202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025884/g1409202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 4185068,
+        "title": "Pre-dispatch Notice_Newspaper Advt._14.09.2026"
+      },
+      {
         "id": "c704bfe7-8bde-4af0-b6bd-e6d2f9bff1b7",
         "originalName": "NOTICE OF 11TH ANNUAL GENERAL MEETING.pdf",
         "storedName": "c704bfe7-8bde-4af0-b6bd-e6d2f9bff1b7.pdf",
@@ -188,7 +197,7 @@
         "title": "Pre-dispatch Notice_Newspaper Advt..20082026"
       }
     ],
-    "updatedAt": "2026-08-21T06:33:01.461Z"
+    "updatedAt": "2026-09-14T15:33:55.064Z"
   },
   {
     "id": "6805e8297f482b5677025898",

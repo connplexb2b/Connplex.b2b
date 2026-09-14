@@ -290,6 +290,22 @@ export default function InvestorsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+          const exists14Sep = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Pre-dispatch Notice_Newspaper Advt._14.09.2026.pdf' ||
+              (f.title && f.title.includes('14.09.2026')) ||
+              (f.fileName && f.fileName.includes('g1409202-6000-4000-8000-000000000001'))
+          );
+          if (!exists14Sep) {
+            data.investorsPdfs.unshift({
+              _id: 'g1409202-6000-4000-8000-000000000001',
+              title: 'Pre-dispatch Notice_Newspaper Advt._14.09.2026',
+              originalname: 'Pre-dispatch Notice_Newspaper Advt._14.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g1409202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 4185068
+            });
+          }
           const existsPreDispatch = data.investorsPdfs.some(
             (f: any) => f.originalname === 'Pre-dispatch Notice_Newspaper Advt..20082026.pdf'
           );
@@ -566,6 +582,35 @@ export default function InvestorsPage() {
               const found = data.investorsPdfs.find((f: any) =>
                 (f.title || '').trim().toLowerCase() === titleKey.trim().toLowerCase() ||
                 (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === titleKey.trim().toLowerCase()
+              );
+              if (found) {
+                targetPdfs.push(found);
+              }
+            });
+
+            data.investorsPdfs.forEach((f: any) => {
+              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+                otherPdfs.push(f);
+              }
+            });
+
+            data.investorsPdfs = [...targetPdfs, ...otherPdfs];
+          }
+
+          if (activeCategory.toLowerCase() === 'general meeting') {
+            const seqOrder = [
+              'Pre-dispatch Notice_Newspaper Advt._14.09.2026',
+              'NOTICE OF 11TH ANNUAL GENERAL MEETING',
+              'Pre-dispatch Notice_Newspaper Advt..20082026'
+            ];
+            const targetPdfs: any[] = [];
+            const otherPdfs: any[] = [];
+
+            seqOrder.forEach((key) => {
+              const found = data.investorsPdfs.find((f: any) =>
+                (f.title || '').trim().toLowerCase() === key.trim().toLowerCase() ||
+                (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === key.trim().toLowerCase() ||
+                (f.originalname || '').includes(key)
               );
               if (found) {
                 targetPdfs.push(found);
