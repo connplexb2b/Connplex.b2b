@@ -170,6 +170,15 @@
     "parent": "Announcements",
     "files": [
       {
+        "id": "g1609202-6000-4000-8000-000000000001",
+        "originalName": "EGM Notice._16.09.2026.pdf",
+        "storedName": "g1609202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025884/g1609202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 1998827,
+        "title": "EGM Notice._16.09.2026"
+      },
+      {
         "id": "g1409202-6000-4000-8000-000000000001",
         "originalName": "Pre-dispatch Notice_Newspaper Advt._14.09.2026.pdf",
         "storedName": "g1409202-6000-4000-8000-000000000001.pdf",
@@ -197,7 +206,7 @@
         "title": "Pre-dispatch Notice_Newspaper Advt..20082026"
       }
     ],
-    "updatedAt": "2026-09-14T15:33:55.064Z"
+    "updatedAt": "2026-09-17T08:30:51.954Z"
   },
   {
     "id": "6805e8297f482b5677025898",
