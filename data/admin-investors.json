@@ -215,6 +215,15 @@
     "parent": "",
     "files": [
       {
+        "id": "p1609202-6000-4000-8000-000000000001",
+        "originalName": "EGM Notice._16.09.2026.pdf",
+        "storedName": "p1609202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025898/p1609202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 1998827,
+        "title": "EGM Notice._16.09.2026"
+      },
+      {
         "id": "p1109202-6000-4000-8000-000000000001",
         "originalName": "Issuance of securities_11.09.2026.pdf",
         "storedName": "p1109202-6000-4000-8000-000000000001.pdf",
@@ -242,7 +251,7 @@
         "title": "PCS Certificate- Compliance of SEBI ICDR"
       }
     ],
-    "updatedAt": "2026-09-11T16:56:53.521Z"
+    "updatedAt": "2026-09-17T08:46:05.596Z"
   },
   {
     "id": "6805e8297f482b5677025897",

@@ -418,6 +418,14 @@ export default function InvestorRelationsPage() {
 
           const prefPdfs = [
             {
+              _id: 'p1609202-6000-4000-8000-000000000001',
+              title: 'EGM Notice._16.09.2026',
+              originalname: 'EGM Notice._16.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025898/p1609202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 1998827
+            },
+            {
               _id: 'p1109202-6000-4000-8000-000000000001',
               title: 'Issuance of securities_11.09.2026',
               originalname: 'Issuance of securities_11.09.2026.pdf',
@@ -588,6 +596,7 @@ export default function InvestorRelationsPage() {
 
           if (activeCategory.toLowerCase() === 'preferential issue') {
             const seqOrder = [
+              'EGM Notice._16.09.2026',
               'Issuance of securities_11.09.2026',
               'Pricing Certificate',
               'PCS Certificate- Compliance of SEBI ICDR'
