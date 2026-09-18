@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ConnCloudStore } from '../../../lib/conncloudData';
 import AhilyanagarApiIntegration from '../AhilyanagarApiIntegration';
+import DataExtractionMatrix from '../DataExtractionMatrix';
 
 interface SettingsViewProps {
   selectedCinemaId?: string;
@@ -8,7 +9,7 @@ interface SettingsViewProps {
 
 export default function SettingsView({ selectedCinemaId = 'all' }: SettingsViewProps) {
   const isAhilyanagar = selectedCinemaId === 'c5';
-  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations'>('profile');
+  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations' | 'matrix'>('matrix');
 
   // Pull audits
   const audits = ConnCloudStore.getAuditLogs();
@@ -28,6 +29,7 @@ export default function SettingsView({ selectedCinemaId = 'all' }: SettingsViewP
       {/* Sub tabs */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
         {[
+          { id: 'matrix', label: 'Data Extraction Matrix (21 Categories)' },
           { id: 'profile', label: 'Cinema Profile' },
           { id: 'permissions', label: 'Role Permissions Matrix' },
           { id: 'audit', label: 'System Audit Logs' },
@@ -158,6 +160,13 @@ export default function SettingsView({ selectedCinemaId = 'all' }: SettingsViewP
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 0. DATA EXTRACTION MASTER MATRIX */}
+      {subTab === 'matrix' && (
+        <div className="space-y-4">
+          <DataExtractionMatrix selectedCinemaId={selectedCinemaId} />
         </div>
       )}
 

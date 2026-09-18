@@ -29,6 +29,7 @@ import LicenseView from '../../../components/conncloud/views/LicenseView';
 import OffersView from '../../../components/conncloud/views/OffersView';
 import TrainingView from '../../../components/conncloud/views/TrainingView';
 import AhilyanagarFranchiseDashboard from '../../../components/conncloud/AhilyanagarFranchiseDashboard';
+import DataExtractionMatrix from '../../../components/conncloud/DataExtractionMatrix';
 
 // Central Relational Store import
 import { ConnCloudStore } from '../../../lib/conncloudData';
@@ -89,10 +90,10 @@ export default function ConnCloudPage() {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const cinemaParam = urlParams.get('cinema') || urlParams.get('location');
-      const isAhilyaPath = pathname ? pathname.includes('ahilyanagar') : false;
+      const isAhilyaPath = pathname ? (pathname.includes('ahilyanagar') || pathname.includes('data-extract')) : false;
       if (cinemaParam || urlParams.get('demo') || urlParams.get('preview') || isAhilyaPath) {
         setIsAuthenticated(true);
-        if (isAhilyaPath || (cinemaParam && (cinemaParam.toLowerCase().includes('ahilyanagar') || cinemaParam === 'c5'))) {
+        if (pathname?.includes('ahilyanagar') || (cinemaParam && (cinemaParam.toLowerCase().includes('ahilyanagar') || cinemaParam === 'c5'))) {
           setSelectedCinema('c5');
         } else if (cinemaParam) {
           const match = ConnCloudStore.getCinemas().find(c => 
@@ -167,6 +168,7 @@ export default function ConnCloudPage() {
   const navigationItems = [
     { name: 'Dashboard', icon: 'fa-table-columns', route: '/conncloud/dashboard' },
     { name: 'Ahilyanagar Franchise', icon: 'fa-building-columns', route: '/conncloud/ahilyanagar', badge: 'Live API' },
+    { name: 'Data Extraction Matrix', icon: 'fa-database', route: '/conncloud/data-extract', badge: '21 Matrix' },
     { name: 'Analytics', icon: 'fa-chart-line', route: '/conncloud/analytics', badge: 'New' },
     { name: 'Finance', icon: 'fa-indian-rupee-sign', route: '/conncloud/finance' },
     { name: 'Movies', icon: 'fa-film', route: '/conncloud/movies' },
@@ -200,6 +202,13 @@ export default function ConnCloudPage() {
       return (
         <div className="space-y-6">
           <AhilyanagarFranchiseDashboard onNotification={triggerNotification} defaultExpanded={true} />
+        </div>
+      );
+    }
+    if (pathname.startsWith('/conncloud/data-extract') || pathname.startsWith('/conncloud/extraction-matrix')) {
+      return (
+        <div className="space-y-6">
+          <DataExtractionMatrix selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNotification={triggerNotification} />
         </div>
       );
     }
@@ -281,6 +290,7 @@ export default function ConnCloudPage() {
       if (p === 'training') return 'Training & Orientation';
       if (p === 'offers') return 'My Offers';
       if (p === 'license') return 'License';
+      if (p === 'data-extract') return 'Data Extraction Matrix';
       return p.charAt(0).toUpperCase() + p.slice(1);
     });
   };
