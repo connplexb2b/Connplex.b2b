@@ -290,6 +290,23 @@ export default function InvestorsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+          const exists17Sep = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.pdf' ||
+              f.originalname === 'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.PDF' ||
+              (f.title && f.title.includes('Post-Dispatch EGM Notice') && f.title.includes('17.09.2026')) ||
+              (f.fileName && f.fileName.includes('g1709202-6000-4000-8000-000000000001'))
+          );
+          if (!exists17Sep) {
+            data.investorsPdfs.unshift({
+              _id: 'g1709202-6000-4000-8000-000000000001',
+              title: 'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',
+              originalname: 'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g1709202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 3157335
+            });
+          }
           const exists16Sep = data.investorsPdfs.some(
             (f: any) =>
               f.originalname === 'EGM Notice._16.09.2026.pdf' ||
@@ -625,6 +642,8 @@ export default function InvestorsPage() {
 
           if (activeCategory.toLowerCase() === 'general meeting') {
             const seqOrder = [
+              'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',
+              'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026',
               'EGM Notice._16.09.2026',
               'Pre-dispatch Notice_Newspaper Advt._14.09.2026',
               'NOTICE OF 11TH ANNUAL GENERAL MEETING',
