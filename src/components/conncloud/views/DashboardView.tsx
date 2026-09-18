@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ConnCloudStore, Cinema } from '../../../lib/conncloudData';
 import AhilyanagarApiIntegration from '../AhilyanagarApiIntegration';
+import AhilyanagarFranchiseDashboard from '../AhilyanagarFranchiseDashboard';
 
 interface DashboardViewProps {
   selectedCinemaId: string;
@@ -148,22 +149,39 @@ export default function DashboardView({
         </div>
       </section>
 
-      {/* Ahilyanagar Vista API Integration Section - Highlighted when Ahilyanagar is selected or user toggles */}
+      {/* Ahilyanagar Live Franchise Dashboard & Vista Integration */}
       {selectedCinemaId === 'c5' ? (
-        <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={true} />
+        <div className="space-y-4">
+          <AhilyanagarFranchiseDashboard onNotification={triggerNotification} defaultExpanded={true} />
+          
+          <div className="pt-1">
+            <button
+              onClick={() => setShowAhilyanagarSync(!showAhilyanagarSync)}
+              className="text-xs text-[#f5b041] hover:underline flex items-center gap-1.5 font-semibold"
+            >
+              <i className="fa-solid fa-code"></i>
+              <span>{showAhilyanagarSync ? 'Hide Vista Raw API Integration Specs' : 'View Vista Raw API Integration & Code Snippets'}</span>
+            </button>
+            {showAhilyanagarSync && (
+              <div className="mt-3">
+                <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={true} />
+              </div>
+            )}
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-black/40 to-transparent border border-amber-500/20 text-xs">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-sm shrink-0">
-              <i className="fa-solid fa-server"></i>
+              <i className="fa-solid fa-chart-line"></i>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white">Ahilyanagar Location: Vista API &amp; Daily Sync Service</span>
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300">Ready</span>
+                <span className="font-bold text-white">Ahilyanagar Location: Live Franchise Revenue Dashboard</span>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300">Live API Ready</span>
               </div>
               <p className="text-gray-400 text-[11px] mt-0.5">
-                Complete day-wise Ticket and F&amp;B synchronization documentation, scheduled Node.js/Python code &amp; AI Prompt for Ahilyanagar.
+                Auditable day-to-day transaction breakdown, SP sp_GetFranchiseDashboard, ATP/SPH tracking &amp; CSV export.
               </p>
             </div>
           </div>
@@ -171,14 +189,17 @@ export default function DashboardView({
             onClick={() => setShowAhilyanagarSync(!showAhilyanagarSync)}
             className="cc-btn cc-btn-outline text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1.5"
           >
-            <i className="fa-solid fa-code text-amber-400"></i>
-            <span>{showAhilyanagarSync ? 'Hide API Guide' : 'View Ahilyanagar API Guide'}</span>
+            <i className="fa-solid fa-server text-amber-400"></i>
+            <span>{showAhilyanagarSync ? 'Hide Ahilyanagar Dashboard' : 'Open Ahilyanagar Dashboard'}</span>
           </button>
         </div>
       )}
 
       {selectedCinemaId !== 'c5' && showAhilyanagarSync && (
-        <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={true} />
+        <div className="space-y-4">
+          <AhilyanagarFranchiseDashboard onNotification={triggerNotification} defaultExpanded={true} />
+          <AhilyanagarApiIntegration onNotification={triggerNotification} defaultExpanded={false} />
+        </div>
       )}
 
       {/* KPI Cards Grid */}

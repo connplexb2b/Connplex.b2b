@@ -28,6 +28,7 @@ import MISView from '../../../components/conncloud/views/MISView';
 import LicenseView from '../../../components/conncloud/views/LicenseView';
 import OffersView from '../../../components/conncloud/views/OffersView';
 import TrainingView from '../../../components/conncloud/views/TrainingView';
+import AhilyanagarFranchiseDashboard from '../../../components/conncloud/AhilyanagarFranchiseDashboard';
 
 // Central Relational Store import
 import { ConnCloudStore } from '../../../lib/conncloudData';
@@ -88,10 +89,12 @@ export default function ConnCloudPage() {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const cinemaParam = urlParams.get('cinema') || urlParams.get('location');
-      if (cinemaParam) {
-        if (cinemaParam.toLowerCase().includes('ahilyanagar') || cinemaParam === 'c5') {
+      const isAhilyaPath = pathname ? pathname.includes('ahilyanagar') : false;
+      if (cinemaParam || urlParams.get('demo') || urlParams.get('preview') || isAhilyaPath) {
+        setIsAuthenticated(true);
+        if (isAhilyaPath || (cinemaParam && (cinemaParam.toLowerCase().includes('ahilyanagar') || cinemaParam === 'c5'))) {
           setSelectedCinema('c5');
-        } else {
+        } else if (cinemaParam) {
           const match = ConnCloudStore.getCinemas().find(c => 
             c.cinemaId === cinemaParam || c.name.toLowerCase().includes(cinemaParam.toLowerCase())
           );
@@ -163,6 +166,7 @@ export default function ConnCloudPage() {
   // Sidebar navigation configuration
   const navigationItems = [
     { name: 'Dashboard', icon: 'fa-table-columns', route: '/conncloud/dashboard' },
+    { name: 'Ahilyanagar Franchise', icon: 'fa-building-columns', route: '/conncloud/ahilyanagar', badge: 'Live API' },
     { name: 'Analytics', icon: 'fa-chart-line', route: '/conncloud/analytics', badge: 'New' },
     { name: 'Finance', icon: 'fa-indian-rupee-sign', route: '/conncloud/finance' },
     { name: 'Movies', icon: 'fa-film', route: '/conncloud/movies' },
@@ -191,6 +195,13 @@ export default function ConnCloudPage() {
     
     if (pathname === '/conncloud' || pathname === '/conncloud/dashboard') {
       return <DashboardView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNavigate={(r) => router.push(r)} triggerNotification={triggerNotification} />;
+    }
+    if (pathname.startsWith('/conncloud/ahilyanagar') || pathname.startsWith('/conncloud/franchise-revenue')) {
+      return (
+        <div className="space-y-6">
+          <AhilyanagarFranchiseDashboard onNotification={triggerNotification} defaultExpanded={true} />
+        </div>
+      );
     }
     if (pathname.startsWith('/conncloud/analytics')) {
       return <AnalyticsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;

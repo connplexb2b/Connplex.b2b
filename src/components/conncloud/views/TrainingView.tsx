@@ -22,7 +22,7 @@ export default function TrainingView({
   const [certifications, setCertifications] = useState<TrainingCertification[]>(() => ConnCloudStore.getCertifications());
 
   const isAhilyanagar = selectedCinemaId === 'c5';
-  const staff = ConnCloudStore.getStaff().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
+  const staff = ConnCloudStore.getStaff().filter(s => selectedCinemaId === 'all' || (s as unknown as { cinemaId?: string }).cinemaId === selectedCinemaId);
   const staffIds = new Set(staff.map(s => s.employeeId));
 
   const filteredOrientations = orientations.filter(o => selectedCinemaId === 'all' || staffIds.has(o.employeeId));

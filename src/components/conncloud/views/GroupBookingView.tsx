@@ -108,7 +108,7 @@ export default function GroupBookingView({
       fnbPackage: bookingForm.fnbPackage,
       totalQuoted: (parseInt(bookingForm.guestCount, 10) || 50) * 550,
       advancePaid: parseFloat(bookingForm.advancePaid) || 0,
-      paymentStatus: (parseFloat(bookingForm.advancePaid) || 0) > 0 ? 'Advance Paid' : 'Pending',
+      paymentStatus: (parseFloat(bookingForm.advancePaid) || 0) > 0 ? 'Advance Paid' : 'Pending Advance',
       status: 'Confirmed',
       specialRequests: bookingForm.specialRequests
     });
