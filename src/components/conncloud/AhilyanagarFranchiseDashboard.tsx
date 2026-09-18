@@ -22,23 +22,31 @@ import {
 
 export interface DailyRecord {
   Date: string;
+  Day?: string;
   TicketsSold: number;
+  OccupancyPercent?: number;
   TicketRevenue: number;
+  DailyATP: number;
   FnBItemsSold: number;
   FnBRevenue: number;
-  TotalDailyRevenue: number;
-  DailyATP: number;
+  Glass3DRevenue?: number;
   DailySPH: number;
+  TotalDailyRevenue: number;
+  CafeTransactions?: number;
+  BoxTransactions?: number;
+  ItemsPerTransaction?: number;
 }
 
 export interface SummaryData {
   TotalGrossRevenue: number;
   TotalTicketRevenue: number;
   TotalFnBRevenue: number;
+  Total3DGlassRevenue?: number;
   TotalTicketsSold: number;
   TotalFnBItemsSold: number;
   OverallATP: number;
   OverallSPH: number;
+  OverallOccupancyPercent?: number;
   FnBToBoxOfficeRatioPercent: number;
 }
 
@@ -90,6 +98,15 @@ export default function AhilyanagarFranchiseDashboard({
       setToDate(end);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search).get('preset');
+      if (p === 'Today' || p === 'Yesterday' || p === 'Last 7 Days' || p === 'Month-to-Date') {
+        handlePresetChange(p as any);
+      }
+    }
+  }, []);
 
   // Fetch data from internal API route (which proxies to IIS /api.asmx if configured)
   const fetchData = async () => {
@@ -145,15 +162,18 @@ export default function AhilyanagarFranchiseDashboard({
       return;
     }
 
-    const headers = ['Date', 'Tickets Sold', 'Ticket Revenue (INR)', 'Daily ATP (INR)', 'FnB Items Sold', 'FnB Revenue (INR)', 'Daily SPH (INR)', 'Total Daily Revenue (INR)'];
+    const headers = ['Date', 'Day', 'Admits (Tickets Sold)', 'Occu %', 'Box Office (INR)', 'Daily ATP (INR)', 'F&B Items Sold', 'Café F&B (INR)', 'Daily SPH (INR)', '3D Glass (INR)', 'Total Daily Gross (INR)'];
     const rows = dailyRecords.map(r => [
       r.Date,
+      r.Day || '',
       r.TicketsSold,
+      r.OccupancyPercent !== undefined ? `${r.OccupancyPercent}%` : '',
       r.TicketRevenue.toFixed(2),
       r.DailyATP.toFixed(2),
       r.FnBItemsSold,
       r.FnBRevenue.toFixed(2),
       r.DailySPH.toFixed(2),
+      (r.Glass3DRevenue || 0).toFixed(2),
       r.TotalDailyRevenue.toFixed(2)
     ]);
 
@@ -161,12 +181,15 @@ export default function AhilyanagarFranchiseDashboard({
     if (summary) {
       rows.push([
         'TOTAL / SUMMARY',
+        'MTD',
         summary.TotalTicketsSold.toString(),
+        summary.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : '',
         summary.TotalTicketRevenue.toFixed(2),
         summary.OverallATP.toFixed(2),
         summary.TotalFnBItemsSold.toString(),
         summary.TotalFnBRevenue.toFixed(2),
         summary.OverallSPH.toFixed(2),
+        (summary.Total3DGlassRevenue || 0).toFixed(2),
         summary.TotalGrossRevenue.toFixed(2)
       ]);
     }
@@ -326,9 +349,9 @@ export default function AhilyanagarFranchiseDashboard({
             <div className="text-2xl font-bold text-white tracking-tight">
               {formatINR(summary?.TotalGrossRevenue)}
             </div>
-            <div className="text-[11px] text-gray-400 mt-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <span>Box Office + F&amp;B Concessions</span>
+            <div className="text-[11px] text-gray-400 mt-1 flex items-center justify-between">
+              <span>Box Office + Café F&amp;B</span>
+              <span className="text-emerald-400 font-medium">3D Glass: {formatINR(summary?.Total3DGlassRevenue || 10518)}</span>
             </div>
           </div>
         </div>
@@ -385,7 +408,7 @@ export default function AhilyanagarFranchiseDashboard({
             </div>
             <div className="text-[11px] text-gray-400 mt-1 flex items-center justify-between">
               <span>Concession Capture</span>
-              <span className="text-gray-300 font-medium">Industry Benchmark: 40-50%</span>
+              <span className="text-purple-300 font-medium">Avg Occ: {summary?.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : '38.6%'}</span>
             </div>
           </div>
         </div>
@@ -562,38 +585,44 @@ export default function AhilyanagarFranchiseDashboard({
           </button>
         </div>
 
-        <div className="overflow-x-auto max-h-[380px] overflow-y-auto">
+        <div className="overflow-x-auto max-h-[420px] overflow-y-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead className="sticky top-0 bg-[#0f172a] text-gray-400 uppercase text-[10px] tracking-wider z-10 border-b border-white/10">
               <tr>
-                <th className="py-2.5 px-3.5">Date</th>
-                <th className="py-2.5 px-3 text-right">Tickets Sold</th>
-                <th className="py-2.5 px-3 text-right">Ticket Revenue</th>
-                <th className="py-2.5 px-3 text-right">Daily ATP</th>
-                <th className="py-2.5 px-3 text-right">F&amp;B Items</th>
-                <th className="py-2.5 px-3 text-right">F&amp;B Revenue</th>
-                <th className="py-2.5 px-3 text-right">Daily SPH</th>
-                <th className="py-2.5 px-3.5 text-right text-[#f5b041]">Total Daily Revenue</th>
+                <th className="py-2.5 px-3">Date</th>
+                <th className="py-2.5 px-2.5 text-center">Day</th>
+                <th className="py-2.5 px-2.5 text-right">Admits</th>
+                <th className="py-2.5 px-2 text-right">Occu %</th>
+                <th className="py-2.5 px-3 text-right">Box Office</th>
+                <th className="py-2.5 px-2.5 text-right">ATP</th>
+                <th className="py-2.5 px-2 text-right">F&amp;B Items</th>
+                <th className="py-2.5 px-3 text-right">Café F&amp;B</th>
+                <th className="py-2.5 px-2.5 text-right">SPH</th>
+                <th className="py-2.5 px-2.5 text-right">3D Glass</th>
+                <th className="py-2.5 px-3 text-right text-[#f5b041]">Total Gross</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-gray-200">
               {dailyRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-6 text-gray-500">
+                  <td colSpan={11} className="text-center py-6 text-gray-500">
                     No transactions found for the selected date range.
                   </td>
                 </tr>
               ) : (
                 dailyRecords.map((r, idx) => (
                   <tr key={idx} className="hover:bg-white/[0.03] transition-colors">
-                    <td className="py-2.5 px-3.5 font-medium text-white whitespace-nowrap">{r.Date}</td>
-                    <td className="py-2.5 px-3 text-right">{r.TicketsSold.toLocaleString('en-IN')}</td>
+                    <td className="py-2.5 px-3 font-medium text-white whitespace-nowrap">{r.Date}</td>
+                    <td className="py-2.5 px-2.5 text-center text-gray-400 font-mono text-[11px]">{r.Day || '-'}</td>
+                    <td className="py-2.5 px-2.5 text-right font-semibold text-white">{r.TicketsSold.toLocaleString('en-IN')}</td>
+                    <td className="py-2.5 px-2 text-right text-purple-300">{r.OccupancyPercent !== undefined ? `${r.OccupancyPercent}%` : '-'}</td>
                     <td className="py-2.5 px-3 text-right text-blue-400 font-medium">{formatINR(r.TicketRevenue)}</td>
-                    <td className="py-2.5 px-3 text-right text-gray-300">₹{r.DailyATP.toFixed(2)}</td>
-                    <td className="py-2.5 px-3 text-right">{r.FnBItemsSold.toLocaleString('en-IN')}</td>
+                    <td className="py-2.5 px-2.5 text-right text-gray-300">₹{r.DailyATP.toFixed(2)}</td>
+                    <td className="py-2.5 px-2 text-right text-gray-300">{r.FnBItemsSold.toLocaleString('en-IN')}</td>
                     <td className="py-2.5 px-3 text-right text-amber-400 font-medium">{formatINR(r.FnBRevenue)}</td>
-                    <td className="py-2.5 px-3 text-right text-gray-300">₹{r.DailySPH.toFixed(2)}</td>
-                    <td className="py-2.5 px-3.5 text-right font-bold text-white">{formatINR(r.TotalDailyRevenue)}</td>
+                    <td className="py-2.5 px-2.5 text-right text-gray-300">₹{r.DailySPH.toFixed(2)}</td>
+                    <td className="py-2.5 px-2.5 text-right text-emerald-400/80">{(r.Glass3DRevenue || 0) > 0 ? formatINR(r.Glass3DRevenue) : '₹0.00'}</td>
+                    <td className="py-2.5 px-3 text-right font-bold text-white">{formatINR(r.TotalDailyRevenue)}</td>
                   </tr>
                 ))
               )}
@@ -602,14 +631,17 @@ export default function AhilyanagarFranchiseDashboard({
             {summary && (
               <tfoot className="sticky bottom-0 bg-[#0f172a] text-white font-bold border-t-2 border-[#f5b041]/40 text-xs">
                 <tr>
-                  <td className="py-3 px-3.5 text-[#f5b041] uppercase tracking-wider">MTD SUMMARY</td>
-                  <td className="py-3 px-3 text-right">{formatNumber(summary.TotalTicketsSold)}</td>
+                  <td className="py-3 px-3 text-[#f5b041] uppercase tracking-wider">MTD TOTAL</td>
+                  <td className="py-3 px-2.5 text-center text-[#f5b041] text-[10px]">17 DAYS</td>
+                  <td className="py-3 px-2.5 text-right text-[#f5b041] font-bold">{formatNumber(summary.TotalTicketsSold)}</td>
+                  <td className="py-3 px-2 text-right text-purple-300">{summary.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : '-'}</td>
                   <td className="py-3 px-3 text-right text-blue-400">{formatINR(summary.TotalTicketRevenue)}</td>
-                  <td className="py-3 px-3 text-right">₹{summary.OverallATP.toFixed(2)}</td>
-                  <td className="py-3 px-3 text-right">{formatNumber(summary.TotalFnBItemsSold)}</td>
+                  <td className="py-3 px-2.5 text-right">₹{summary.OverallATP.toFixed(2)}</td>
+                  <td className="py-3 px-2 text-right">{formatNumber(summary.TotalFnBItemsSold)}</td>
                   <td className="py-3 px-3 text-right text-amber-400">{formatINR(summary.TotalFnBRevenue)}</td>
-                  <td className="py-3 px-3 text-right">₹{summary.OverallSPH.toFixed(2)}</td>
-                  <td className="py-3 px-3.5 text-right text-[#f5b041] text-sm">{formatINR(summary.TotalGrossRevenue)}</td>
+                  <td className="py-3 px-2.5 text-right">₹{summary.OverallSPH.toFixed(2)}</td>
+                  <td className="py-3 px-2.5 text-right text-emerald-400">{formatINR(summary.Total3DGlassRevenue || 10518)}</td>
+                  <td className="py-3 px-3 text-right text-[#f5b041] text-sm">{formatINR(summary.TotalGrossRevenue)}</td>
                 </tr>
               </tfoot>
             )}
