@@ -61,17 +61,17 @@ export const EXTRACTION_CATEGORIES_SPEC: ExtractionCategorySpec[] = [
       const ticketRev = finance.filter(t => t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + t.amount, 0);
       const fnbRev = finance.filter(t => t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + t.amount, 0);
       const todayFinance = ConnCloudStore.filterByDateRange(rawFinance, 'Today');
-      const todayGross = todayFinance.filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 132303 : 480000);
-      const weekGross = ConnCloudStore.filterByDateRange(rawFinance, 'Last 7 Days').filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 1118128 : 3200000);
-      const monthGross = ConnCloudStore.filterByDateRange(rawFinance, 'Last 30 Days').filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 3986814 : 12800000);
+      const todayGross = todayFinance.filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 313054 : 480000);
+      const weekGross = ConnCloudStore.filterByDateRange(rawFinance, 'Last 7 Days').filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 1428383 : 3200000);
+      const monthGross = ConnCloudStore.filterByDateRange(rawFinance, 'Last 30 Days').filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 4793272 : 12800000);
 
-      const admissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0) || (isAhilyanagar ? (dateRange === 'Today' ? 347 : 9730) : 0);
+      const admissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0) || (isAhilyanagar ? (dateRange === 'Today' ? 758 : 11668) : 0);
       const capacity = shows.reduce((acc, s) => acc + s.capacity, 0);
-      const avgOccupancy = capacity > 0 ? parseFloat(((admissions / capacity) * 100).toFixed(1)) : (isAhilyanagar ? (dateRange === 'Today' ? 22.9 : 38.6) : 68.5);
-      const atp = admissions > 0 ? Math.round(ticketRev / admissions) : (isAhilyanagar ? (dateRange === 'Today' ? 263 : 298) : 250);
-      const sph = admissions > 0 ? Math.round(fnbRev / admissions) : (isAhilyanagar ? (dateRange === 'Today' ? 118 : 112) : 140);
+      const avgOccupancy = capacity > 0 ? parseFloat(((admissions / capacity) * 100).toFixed(1)) : (isAhilyanagar ? (dateRange === 'Today' ? 50.0 : 38.6) : 68.5);
+      const atp = admissions > 0 ? Math.round(ticketRev / admissions) : (isAhilyanagar ? (dateRange === 'Today' ? 298 : 299) : 250);
+      const sph = admissions > 0 ? Math.round(fnbRev / admissions) : (isAhilyanagar ? (dateRange === 'Today' ? 115 : 112) : 140);
       const onlineBookingPercent = isAhilyanagar ? 71.6 : 68.2;
-      const counterRevenue = isAhilyanagar ? Math.round((ticketRev || 91400) * 0.284) : Math.round(ticketRev * 0.318);
+      const counterRevenue = isAhilyanagar ? Math.round((ticketRev || 225884) * 0.284) : Math.round(ticketRev * 0.318);
       const customerRating = isAhilyanagar ? 4.8 : 4.6;
       const roiStatus = isAhilyanagar ? 19.4 : 18.2;
 
@@ -120,16 +120,16 @@ export const EXTRACTION_CATEGORIES_SPEC: ExtractionCategorySpec[] = [
       const screens = ConnCloudStore.getScreens().filter(s => cinemaId === 'all' || s.cinemaId === cinemaId);
       const isAhilyanagar = cinemaId === 'c5';
       return {
-        grossRevenue: isAhilyanagar ? 3986814 : 12800000,
-        ticketRevenue: isAhilyanagar ? 2900822 : 8800000,
-        fnbRevenue: isAhilyanagar ? 1085992 : 4000000,
+        grossRevenue: isAhilyanagar ? 4793272 : 12800000,
+        ticketRevenue: isAhilyanagar ? 3483598 : 8800000,
+        fnbRevenue: isAhilyanagar ? 1309674 : 4000000,
         screensContribution: screens.map(s => ({
           screenName: s.name,
           seats: s.capacity,
           format: s.format,
           occupancy: isAhilyanagar ? (s.screenId === 's20' ? '41.2%' : '36.0%') : '74.5%'
         })),
-        totalFootfalls: isAhilyanagar ? 9730 : 44800,
+        totalFootfalls: isAhilyanagar ? 11668 : 44800,
         onlineShare: isAhilyanagar ? '71.6%' : '68.2%',
         posShare: isAhilyanagar ? '28.4%' : '31.8%',
         forecastYield: isAhilyanagar ? '+14.2% anticipated weekend surge' : '+9.8% month-over-month'
@@ -286,9 +286,9 @@ export const EXTRACTION_CATEGORIES_SPEC: ExtractionCategorySpec[] = [
     extractData: (cinemaId) => {
       const isAhilyanagar = cinemaId === 'c5';
       return {
-        fnbTotalRevenue: isAhilyanagar ? 1085992 : 4000000,
-        averageSph: isAhilyanagar ? '₹111.61' : '₹140.00',
-        unitsSold: isAhilyanagar ? 8988 : 21800,
+        fnbTotalRevenue: isAhilyanagar ? 1309674 : 4000000,
+        averageSph: isAhilyanagar ? '₹112.25' : '₹140.00',
+        unitsSold: isAhilyanagar ? 10783 : 21800,
         grossMargin: '72.4%',
         activeCombos: 8
       };

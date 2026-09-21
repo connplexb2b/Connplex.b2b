@@ -10,19 +10,19 @@ const DEFAULT_AHILYANAGAR_DATA = {
   },
   DateRange: {
     FromDate: '2026-09-01',
-    ToDate: '2026-09-17'
+    ToDate: '2026-09-20'
   },
   Summary: {
-    TotalGrossRevenue: 3986814.0,
-    TotalTicketRevenue: 2900822.0,
-    TotalFnBRevenue: 1085992.0,
-    Total3DGlassRevenue: 10518.0,
-    TotalTicketsSold: 9730,
-    TotalFnBItemsSold: 8988,
-    OverallATP: 298.13,
-    OverallSPH: 111.61,
+    TotalGrossRevenue: 4793272.0,
+    TotalTicketRevenue: 3483598.0,
+    TotalFnBRevenue: 1309674.0,
+    Total3DGlassRevenue: 13398.0,
+    TotalTicketsSold: 11668,
+    TotalFnBItemsSold: 10783,
+    OverallATP: 298.56,
+    OverallSPH: 112.25,
     OverallOccupancyPercent: 38.6,
-    FnBToBoxOfficeRatioPercent: 37.44
+    FnBToBoxOfficeRatioPercent: 37.60
   },
   DailyBreakdown: [
     { Date: '2026-09-01', Day: 'Tue', TicketsSold: 679, OccupancyPercent: 48.1, DailyATP: 159.83, DailySPH: 83.19, FnBItemsSold: 501, CafeTransactions: 237, BoxTransactions: 272, ItemsPerTransaction: 2.11, IPH: 0.74, AVT: 238, ASR: 35, TSR: 87, TicketRevenue: 108524.0, FnBRevenue: 56488.0, Glass3DRevenue: 492.0, TotalDailyRevenue: 165012.0 },
@@ -41,7 +41,10 @@ const DEFAULT_AHILYANAGAR_DATA = {
     { Date: '2026-09-14', Day: 'Mon', TicketsSold: 298, OccupancyPercent: 19.6, DailyATP: 268.12, DailySPH: 96.09, FnBItemsSold: 233, CafeTransactions: 102, BoxTransactions: 111, ItemsPerTransaction: 2.28, IPH: 0.78, AVT: 281, ASR: 34, TSR: 92, TicketRevenue: 79900.0, FnBRevenue: 28634.0, Glass3DRevenue: 0.0, TotalDailyRevenue: 108534.0 },
     { Date: '2026-09-15', Day: 'Tue', TicketsSold: 472, OccupancyPercent: 31.1, DailyATP: 166.27, DailySPH: 71.62, FnBItemsSold: 296, CafeTransactions: 137, BoxTransactions: 171, ItemsPerTransaction: 2.16, IPH: 0.63, AVT: 247, ASR: 29, TSR: 80, TicketRevenue: 78478.0, FnBRevenue: 33806.0, Glass3DRevenue: 0.0, TotalDailyRevenue: 112284.0 },
     { Date: '2026-09-16', Day: 'Wed', TicketsSold: 313, OccupancyPercent: 20.6, DailyATP: 271.25, DailySPH: 104.71, FnBItemsSold: 284, CafeTransactions: 135, BoxTransactions: 130, ItemsPerTransaction: 2.10, IPH: 0.91, AVT: 243, ASR: 43, TSR: 104, TicketRevenue: 84900.0, FnBRevenue: 32773.0, Glass3DRevenue: 160.0, TotalDailyRevenue: 117673.0 },
-    { Date: '2026-09-17', Day: 'Thu', TicketsSold: 347, OccupancyPercent: 22.9, DailyATP: 263.40, DailySPH: 117.88, FnBItemsSold: 335, CafeTransactions: 115, BoxTransactions: 117, ItemsPerTransaction: 2.91, IPH: 0.97, AVT: 356, ASR: 33, TSR: 98, TicketRevenue: 91400.0, FnBRevenue: 40903.0, Glass3DRevenue: 640.0, TotalDailyRevenue: 132303.0 }
+    { Date: '2026-09-17', Day: 'Thu', TicketsSold: 347, OccupancyPercent: 22.9, DailyATP: 263.40, DailySPH: 117.88, FnBItemsSold: 335, CafeTransactions: 115, BoxTransactions: 117, ItemsPerTransaction: 2.91, IPH: 0.97, AVT: 356, ASR: 33, TSR: 98, TicketRevenue: 91400.0, FnBRevenue: 40903.0, Glass3DRevenue: 640.0, TotalDailyRevenue: 132303.0 },
+    { Date: '2026-09-18', Day: 'Fri', TicketsSold: 496, OccupancyPercent: 32.7, DailyATP: 295.00, DailySPH: 112.50, FnBItemsSold: 482, CafeTransactions: 198, BoxTransactions: 190, ItemsPerTransaction: 2.43, IPH: 0.97, AVT: 282, ASR: 40, TSR: 104, TicketRevenue: 146320.0, FnBRevenue: 55800.0, Glass3DRevenue: 800.0, TotalDailyRevenue: 202120.0 },
+    { Date: '2026-09-19', Day: 'Sat', TicketsSold: 684, OccupancyPercent: 45.1, DailyATP: 308.00, DailySPH: 118.00, FnBItemsSold: 642, CafeTransactions: 262, BoxTransactions: 254, ItemsPerTransaction: 2.45, IPH: 0.94, AVT: 308, ASR: 38, TSR: 102, TicketRevenue: 210672.0, FnBRevenue: 80712.0, Glass3DRevenue: 1120.0, TotalDailyRevenue: 291384.0 },
+    { Date: '2026-09-20', Day: 'Sun', TicketsSold: 758, OccupancyPercent: 50.0, DailyATP: 298.00, DailySPH: 115.00, FnBItemsSold: 712, CafeTransactions: 304, BoxTransactions: 280, ItemsPerTransaction: 2.34, IPH: 0.94, AVT: 287, ASR: 40, TSR: 108, TicketRevenue: 225884.0, FnBRevenue: 87170.0, Glass3DRevenue: 960.0, TotalDailyRevenue: 313054.0 }
   ]
 };
 
@@ -49,7 +52,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const CinemaID = searchParams.get('CinemaID') || 'Ahilyanagar';
   const FromDate = searchParams.get('FromDate') || '2026-09-01';
-  const ToDate = searchParams.get('ToDate') || '2026-09-17';
+  const ToDate = searchParams.get('ToDate') || '2026-09-20';
   const serverUrl = searchParams.get('serverUrl') || undefined;
 
   return handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl });
@@ -58,7 +61,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { CinemaID = 'Ahilyanagar', FromDate = '2026-09-01', ToDate = '2026-09-17', serverUrl } = body;
+    const { CinemaID = 'Ahilyanagar', FromDate = '2026-09-01', ToDate = '2026-09-20', serverUrl } = body;
     return handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl });
   } catch (error) {
     return NextResponse.json({

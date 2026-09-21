@@ -62,7 +62,7 @@ export default function AhilyanagarFranchiseDashboard({
   // Filter States
   const [datePreset, setDatePreset] = useState<'Today' | 'Yesterday' | 'Last 7 Days' | 'Month-to-Date' | 'Custom'>('Month-to-Date');
   const [fromDate, setFromDate] = useState<string>('2026-09-01');
-  const [toDate, setToDate] = useState<string>('2026-09-17');
+  const [toDate, setToDate] = useState<string>('2026-09-20');
   
   // Data States
   const [summary, setSummary] = useState<SummaryData | null>(null);
@@ -83,15 +83,15 @@ export default function AhilyanagarFranchiseDashboard({
   // Helper date preset updater
   const handlePresetChange = (preset: 'Today' | 'Yesterday' | 'Last 7 Days' | 'Month-to-Date' | 'Custom') => {
     setDatePreset(preset);
-    const end = '2026-09-17'; // Anchor date of verified sample period
+    const end = '2026-09-20'; // Anchor date of verified collection period
     if (preset === 'Today') {
       setFromDate(end);
       setToDate(end);
     } else if (preset === 'Yesterday') {
-      setFromDate('2026-09-16');
-      setToDate('2026-09-16');
+      setFromDate('2026-09-19');
+      setToDate('2026-09-19');
     } else if (preset === 'Last 7 Days') {
-      setFromDate('2026-09-11');
+      setFromDate('2026-09-14');
       setToDate(end);
     } else if (preset === 'Month-to-Date') {
       setFromDate('2026-09-01');
@@ -351,7 +351,7 @@ export default function AhilyanagarFranchiseDashboard({
             </div>
             <div className="text-[11px] text-gray-400 mt-1 flex items-center justify-between">
               <span>Box Office + Café F&amp;B</span>
-              <span className="text-emerald-400 font-medium">3D Glass: {formatINR(summary?.Total3DGlassRevenue || 10518)}</span>
+              <span className="text-emerald-400 font-medium">3D Glass: {formatINR(summary?.Total3DGlassRevenue || 0)}</span>
             </div>
           </div>
         </div>
@@ -632,7 +632,7 @@ export default function AhilyanagarFranchiseDashboard({
               <tfoot className="sticky bottom-0 bg-[#0f172a] text-white font-bold border-t-2 border-[#f5b041]/40 text-xs">
                 <tr>
                   <td className="py-3 px-3 text-[#f5b041] uppercase tracking-wider">MTD TOTAL</td>
-                  <td className="py-3 px-2.5 text-center text-[#f5b041] text-[10px]">17 DAYS</td>
+                  <td className="py-3 px-2.5 text-center text-[#f5b041] text-[10px]">{dailyRecords.length} {dailyRecords.length === 1 ? 'DAY' : 'DAYS'}</td>
                   <td className="py-3 px-2.5 text-right text-[#f5b041] font-bold">{formatNumber(summary.TotalTicketsSold)}</td>
                   <td className="py-3 px-2 text-right text-purple-300">{summary.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : '-'}</td>
                   <td className="py-3 px-3 text-right text-blue-400">{formatINR(summary.TotalTicketRevenue)}</td>
@@ -640,7 +640,7 @@ export default function AhilyanagarFranchiseDashboard({
                   <td className="py-3 px-2 text-right">{formatNumber(summary.TotalFnBItemsSold)}</td>
                   <td className="py-3 px-3 text-right text-amber-400">{formatINR(summary.TotalFnBRevenue)}</td>
                   <td className="py-3 px-2.5 text-right">₹{summary.OverallSPH.toFixed(2)}</td>
-                  <td className="py-3 px-2.5 text-right text-emerald-400">{formatINR(summary.Total3DGlassRevenue || 10518)}</td>
+                  <td className="py-3 px-2.5 text-right text-emerald-400">{formatINR(summary.Total3DGlassRevenue || 0)}</td>
                   <td className="py-3 px-3 text-right text-[#f5b041] text-sm">{formatINR(summary.TotalGrossRevenue)}</td>
                 </tr>
               </tfoot>
