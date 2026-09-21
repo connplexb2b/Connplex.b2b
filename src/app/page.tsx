@@ -288,7 +288,7 @@ export default function Home() {
     <>
       <Header />
       <CinematicHero>
-        <div className="flex flex-col justify-center items-center text-center w-full h-[75dvh] md:h-full px-4 pt-24 pb-4 md:pt-24 md:pb-12">
+        <div className="flex flex-col justify-center items-center text-center w-full h-full px-4 pt-24 pb-6 md:pb-12">
           <h1 className="text-[clamp(2.0rem,6vw,4.5rem)] md:text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.15] mb-3 md:mb-4 tracking-tight relative z-10 animate-fade-in-up [animation-delay:0.2s] font-outfit uppercase">
             Unbox your Own Smart<br />
             <span className="text-primary-gold">Cinema.</span>
@@ -354,13 +354,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile View Suite Peeking Footer (Visible only on mobile, stays fixed during scroll) */}
+        {/* Hidden: Mobile View Suite Peeking Footer
         <div className="block md:hidden w-full h-[25dvh] bg-black/45 backdrop-blur-md border-t border-white/5 px-[6%] py-6 flex flex-col justify-between relative z-10 select-none">
           <div className="flex flex-col text-left">
             <p className="text-[0.65rem] font-semibold tracking-[3px] text-primary-gold uppercase">THE CONNPLEX SUITE</p>
-            {/* <h2 className="text-xl font-bold text-white leading-tight">
-              One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
-            </h2> */}
           </div>
           <div className="flex justify-between items-center mt-2">
             <span className="text-[10px] text-text-secondary font-medium tracking-wider uppercase flex items-center gap-1.5 animate-pulse">
@@ -371,16 +368,15 @@ export default function Home() {
             </Link>
           </div>
         </div>
+        */}
       </CinematicHero>
 
-      {/* ── SECTION 1: THE CONNPLEX SUITE ── */}
+      {/* ── SECTION 1: THE CONNPLEX SUITE (HIDDEN) ── */}
+      {/* 
       <section className="bg-bg-dark pt-8 pb-12 md:py-20 px-[4%] sm:px-[6%] border-t-0 md:border-t border-white/5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div className="flex flex-col text-left">
             <p className="text-[0.7rem] font-semibold tracking-[3px] text-primary-gold uppercase">THE CONNPLEX SUITE</p>
-            {/* <h2 className="text-[clamp(1.8rem,4vw,3rem)] font-bold text-white leading-tight">
-              One Ecosystem. <span className="text-text-secondary">Infinite Experiences.</span>
-            </h2> */}
           </div>
           <Link href="/ecosystem" className="text-sm text-text-secondary font-medium tracking-wider hover:text-white transition-colors duration-300 whitespace-nowrap inline-block text-left">
             Scroll →
@@ -410,6 +406,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      */}
 
       {/* ── SECTION 2: PREMIUM LOUNGERS SLIDESHOW ── */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end px-[4%] sm:px-[6%] py-12 md:py-20 overflow-hidden bg-bg-dark">
