@@ -48,6 +48,16 @@ const DEFAULT_AHILYANAGAR_DATA = {
   ]
 };
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const CinemaID = searchParams.get('CinemaID') || 'Ahilyanagar';
@@ -68,7 +78,7 @@ export async function POST(req: NextRequest) {
       Status: '0',
       msg: 'Internal error processing request',
       error: error instanceof Error ? error.message : String(error)
-    }, { status: 500 });
+    }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -96,7 +106,7 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
               msg: 'Live data retrieved from Vista WebService',
               isLive: true,
               data: liveData.data
-            });
+            }, { headers: corsHeaders });
           }
         }
       } catch (externalErr) {
@@ -149,12 +159,12 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
         },
         DailyBreakdown: filteredDays
       }
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     return NextResponse.json({
       Status: '0',
       msg: 'Internal error processing request',
       error: error instanceof Error ? error.message : String(error)
-    }, { status: 500 });
+    }, { status: 500, headers: corsHeaders });
   }
 }

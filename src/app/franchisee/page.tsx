@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import './franchisee.css';
 import AhilyanagarApiIntegration from '../../components/conncloud/AhilyanagarApiIntegration';
+import AhilyanagarFranchiseDashboard from '../../components/conncloud/AhilyanagarFranchiseDashboard';
 import {
   verifyFranchiseeCredentials,
   storeFranchiseeSession,
@@ -560,6 +561,15 @@ export default function FranchiseePortal() {
 
   // Quick action helper
   const handleActionClick = (actionName: string) => {
+    if (actionName === 'Ahilyanagar Revenue' || actionName === 'Daily Revenue Dashboard' || actionName === 'Ahilyanagar Daily Revenue') {
+      setSelectedLocationKey('ahilyanagar');
+      showToast('Viewing Ahilyanagar Franchise Daily Revenue Dashboard.');
+      setTimeout(() => {
+        const el = document.getElementById('ahilyanagar-revenue-dashboard');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
     if (actionName === 'Ahilyanagar API Sync' || actionName.includes('API Sync')) {
       setSelectedLocationKey('ahilyanagar');
       setApiDocsExpanded(true);
@@ -959,19 +969,30 @@ export default function FranchiseePortal() {
             
             <div className="fra-banner-actions">
               {selectedLocationKey === 'ahilyanagar' && (
-                <button 
-                  className="fra-btn"
-                  style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', fontWeight: 'bold' }}
-                  onClick={() => {
-                    setApiDocsExpanded(true);
-                    setTimeout(() => {
-                      const el = document.getElementById('ahilyanagar-api-integration');
+                <>
+                  <button 
+                    className="fra-btn"
+                    style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', fontWeight: 'bold' }}
+                    onClick={() => {
+                      const el = document.getElementById('ahilyanagar-revenue-dashboard');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                  }}
-                >
-                  <i className="fa-solid fa-server mr-1"></i> Vista API Sync Docs
-                </button>
+                    }}
+                  >
+                    <i className="fa-solid fa-chart-line mr-1"></i> Daily Revenue Dashboard
+                  </button>
+                  <button 
+                    className="fra-btn fra-btn-outline"
+                    onClick={() => {
+                      setApiDocsExpanded(true);
+                      setTimeout(() => {
+                        const el = document.getElementById('ahilyanagar-api-integration');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }}
+                  >
+                    <i className="fa-solid fa-server mr-1"></i> Vista API Sync Docs
+                  </button>
+                </>
               )}
               <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('Export Revenue')}>
                 <i className="fa-solid fa-download"></i> Export Revenue
@@ -1079,14 +1100,86 @@ export default function FranchiseePortal() {
             ))}
           </section>
 
-          {/* Ahilyanagar Vista API Integration Section - Highlighted for Ahilyanagar location */}
+          {/* Ahilyanagar Franchise Daily Revenue Dashboard & Vista Integration */}
           {selectedLocationKey === 'ahilyanagar' && (
-            <div style={{ marginBottom: '1.75rem' }}>
-              <AhilyanagarApiIntegration 
-                key={`api-${apiDocsExpanded}`}
+            <div style={{ marginBottom: '1.75rem' }} className="space-y-4">
+              {/* Daily Revenue Dashboard (4 KPI cards, date presets, day-by-day table, CSV export, Schema specs) */}
+              <AhilyanagarFranchiseDashboard 
                 onNotification={showToast} 
-                defaultExpanded={apiDocsExpanded} 
+                defaultExpanded={true} 
               />
+
+              {/* Vista Raw POS ASMX API Integration & Sync Scripts Section */}
+              <div style={{
+                background: '#111827',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '1rem 1.25rem'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '8px',
+                      background: 'rgba(245, 158, 11, 0.15)',
+                      color: '#f59e0b',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '14px'
+                    }}>
+                      <i className="fa-solid fa-server"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
+                        Vista POS ASMX Raw WebService &amp; Sync Architecture
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#9ca3af' }}>
+                        Endpoint: <code>/api.asmx/GetDailyTicketAndFnbData</code> &bull; Cinema ID: CL16 (or CN01)
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setApiDocsExpanded(!apiDocsExpanded)}
+                    style={{
+                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.06)',
+                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
+                      color: apiDocsExpanded ? '#f59e0b' : '#e5e7eb',
+                      padding: '6px 14px',
+                      borderRadius: '8px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <i className={`fa-solid ${apiDocsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                    <span>{apiDocsExpanded ? 'Hide Raw Integration Docs' : 'View Raw Vista API Docs & Sync Scripts'}</span>
+                  </button>
+                </div>
+
+                {apiDocsExpanded && (
+                  <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
+                    <AhilyanagarApiIntegration 
+                      key={`api-${apiDocsExpanded}`}
+                      onNotification={showToast} 
+                      defaultExpanded={true} 
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

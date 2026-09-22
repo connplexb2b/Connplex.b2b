@@ -212,7 +212,7 @@ export default function AhilyanagarFranchiseDashboard({
   }, [dailyRecords]);
 
   return (
-    <div className="bg-[#111827] border border-[#f5b041]/30 rounded-2xl p-5 md:p-6 shadow-2xl relative space-y-6">
+    <div id="ahilyanagar-revenue-dashboard" className="bg-[#111827] border border-[#f5b041]/30 rounded-2xl p-5 md:p-6 shadow-2xl relative space-y-6">
       
       {/* Top Header Banner */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-white/10 pb-5">

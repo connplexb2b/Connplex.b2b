@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import formRoutes from "./routes/formRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import ahilyanagarRoutes from "./routes/ahilyanagarRevenueRoutes.js";
 
 dotenv.config();
 
@@ -61,6 +62,8 @@ app.get("/", (req, res) => {
 // Forms API routes
 app.use("/api/forms", formRoutes);
 app.use("/api", userRoutes);
+app.use(ahilyanagarRoutes);
+app.use("/api", ahilyanagarRoutes);
 
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
