@@ -213,7 +213,7 @@ if __name__ == "__main__":
       },
       "QueryDate": "YYYY-MM-DD",
       "Tickets": {
-        "Films": [ { "Film_strCode": "F001", "Film_strTitle": "Raftaar 2" } ],
+        "Films": [ { "Film_strCode": "CN01HO00001339", "Film_strTitle": "Resident Evil (Hindi)" } ],
         "Sessions": [ { "Session_lngID": "S101", "Film_strCode": "F001", "Session_dtmRealShow": "2026-09-08T18:30:00", "Screen_byteNum": 1 } ],
         "Prices": [ { "Price_strCode": "GLD", "Price_curAmount": 250.00 } ],
         "PricePackages": [ ]
@@ -249,16 +249,16 @@ Replace ${serverHost} with the actual server IP or domain where this Vista WebSe
     "Tickets": {
       "Films": [
         {
-          "Film_strCode": "F101",
-          "Film_strTitle": "Raftaar",
-          "Film_strDuration": "152 mins",
-          "Film_strRating": "UA"
+          "Film_strCode": "CN01HO00001339",
+          "Film_strTitle": "Resident Evil (Hindi)",
+          "Film_strDuration": "94 mins",
+          "Film_strRating": "A"
         },
         {
-          "Film_strCode": "F102",
-          "Film_strTitle": "Cosmic Drift",
-          "Film_strDuration": "145 mins",
-          "Film_strRating": "U"
+          "Film_strCode": "CN01HO00001335",
+          "Film_strTitle": "Vibe (Hindi)",
+          "Film_strDuration": "146 mins",
+          "Film_strRating": "A"
         }
       ],
       "Sessions": [

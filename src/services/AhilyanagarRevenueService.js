@@ -51,6 +51,34 @@ const parseVistaDate = (rawDateStr) => {
   return new Date(rawDateStr).toISOString().split("T")[0];
 };
 
+export const REAL_FILM_TITLES = {
+  "CN01HO00001339": "RESIDENT EVIL (HINDI)",
+  "CN01HO00001338": "RESIDENT EVIL (ENGLISH)",
+  "CN01HO00001335": "VIBE (HINDI)",
+  "CN01HO00001334": "DAAYRA (HINDI)",
+  "CN01HO00001305": "MIRZAPUR : THE MOVIE (HINDI)",
+  "CN01HO00001261": "HANUMAN ANSH (HINDI)",
+  "CN01HO00001342": "MANJAR (MARATHI)",
+  "CN01HO00001359": "THE PARADISE (HINDI)",
+  "CN01HO00001343": "CASE NO.99 (MARATHI)",
+  "CN01HO00001353": "AVENGERS ENDGAME : ENCORE (ENGLISH)",
+  "CN01HO00001357": "3D AVENGERS ENDGAME : ENCORE (HINDI)",
+  "CN01HO00001320": "HAIWAAN (HINDI)",
+  "CN01HO00001318": "JEEVAN YA BHEEMA CON? (HINDI)",
+  "CN01HO00001336": "BHARAT DESH HAI MERA (HINDI)",
+  "CN01HO00001314": "IM GAME (HINDI)",
+};
+
+export const getMovieTitleByCode = (code) => {
+  if (!code) return "Feature Film";
+  if (REAL_FILM_TITLES[code]) return REAL_FILM_TITLES[code];
+  const trimmed = String(code).replace(/^[A-Z0-9]{4}/, '');
+  for (const [k, v] of Object.entries(REAL_FILM_TITLES)) {
+    if (k.endsWith(trimmed) || k.includes(trimmed)) return v;
+  }
+  return `Feature Film (${code})`;
+};
+
 /**
  * Fetch raw day-wise show & F&B data directly from live Vista ASMX methods
  */
@@ -92,7 +120,7 @@ export const fetchDailyTicketAndFnbFromVista = async ({
 
     const films = Array.from(new Set(daySessions.map((s) => s.Film_strCode))).map((code) => ({
       Film_strCode: code,
-      Film_strTitle: `Feature Film (${code})`,
+      Film_strTitle: getMovieTitleByCode(code),
     }));
 
     const formattedSessions = daySessions.map((s) => {
@@ -100,6 +128,7 @@ export const fetchDailyTicketAndFnbFromVista = async ({
       return {
         Session_lngID: s.Session_lngSessionId,
         Film_strCode: s.Film_strCode,
+        Film_strTitle: getMovieTitleByCode(s.Film_strCode),
         Screen_strName: s.Screen_strName,
         Session_dtmRealShow: `${showIso}T${s.Session_dtmRealShow ? '14:15:00' : '00:00:00'}`,
         PGroup_strCode: s.PGroup_strCode,
@@ -151,12 +180,16 @@ export const fetchDailyTicketAndFnbFromVista = async ({
         QueryDate: targetDate,
         Tickets: {
           Films: [
-            { Film_strCode: "F001", Film_strTitle: "Raftaar" },
-            { Film_strCode: "F002", Film_strTitle: "Cosmic Drift" },
+            { Film_strCode: "CN01HO00001339", Film_strTitle: "RESIDENT EVIL (HINDI)" },
+            { Film_strCode: "CN01HO00001335", Film_strTitle: "VIBE (HINDI)" },
+            { Film_strCode: "CN01HO00001334", Film_strTitle: "DAAYRA (HINDI)" },
+            { Film_strCode: "CN01HO00001305", Film_strTitle: "MIRZAPUR : THE MOVIE (HINDI)" },
           ],
           Sessions: [
-            { Session_lngID: 1001, Film_strCode: "F001", Session_dtmRealShow: `${targetDate}T11:00:00` },
-            { Session_lngID: 1002, Film_strCode: "F002", Session_dtmRealShow: `${targetDate}T18:30:00` },
+            { Session_lngID: 1001, Film_strCode: "CN01HO00001339", Film_strTitle: "RESIDENT EVIL (HINDI)", Screen_strName: "Screen 1 - Couple Recliner", Session_dtmRealShow: `${targetDate}T11:00:00` },
+            { Session_lngID: 1002, Film_strCode: "CN01HO00001335", Film_strTitle: "VIBE (HINDI)", Screen_strName: "Screen 1 - Couple Recliner", Session_dtmRealShow: `${targetDate}T14:15:00` },
+            { Session_lngID: 1003, Film_strCode: "CN01HO00001334", Film_strTitle: "DAAYRA (HINDI)", Screen_strName: "Screen 2 - Gold Class", Session_dtmRealShow: `${targetDate}T18:00:00` },
+            { Session_lngID: 1004, Film_strCode: "CN01HO00001305", Film_strTitle: "MIRZAPUR : THE MOVIE (HINDI)", Screen_strName: "Screen 2 - Gold Class", Session_dtmRealShow: `${targetDate}T21:15:00` },
           ],
           Prices: [{ Price_strCode: "GLD", Price_curAmount: 250.0 }],
         },

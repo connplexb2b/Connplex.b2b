@@ -202,7 +202,7 @@ export const EXTRACTION_CATEGORIES_SPEC: ExtractionCategorySpec[] = [
         liveScreens: isAhilyanagar ? 2 : 6,
         cinemasBoxOffice: isAhilyanagar ? 962500 : 8800000,
         avgSeatOccupancy: isAhilyanagar ? '74.2%' : '68.5%',
-        topFilm: 'Raftaar (Hindi 2D) - 78% occupancy'
+        topFilm: 'Resident Evil (Hindi 2D) - 78% occupancy'
       };
     }
   },

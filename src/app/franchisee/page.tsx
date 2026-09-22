@@ -91,14 +91,14 @@ const LOCATIONS: Record<string, LocationConfig> = {
     partnerInitials: 'VS',
     hasApiIntegration: true,
     screens: [
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Raftaar', time: '11:00 AM - 01:30 PM', occupancy: 85, seatsBooked: 17, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Raftaar', time: '02:30 PM - 05:10 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Cosmic Drift', time: '06:00 PM - 08:45 PM', occupancy: 95, seatsBooked: 19, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Cosmic Drift', time: '09:15 PM - 11:45 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Cosmic Drift', time: '11:30 AM - 02:00 PM', occupancy: 78, seatsBooked: 47, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Ishq Junction', time: '03:00 PM - 05:35 PM', occupancy: 82, seatsBooked: 49, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Shadow Protocol', time: '06:30 PM - 09:10 PM', occupancy: 88, seatsBooked: 53, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Raftaar', time: '09:45 PM - 12:15 AM', occupancy: 75, seatsBooked: 45, totalSeats: 60 }
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Resident Evil (Hindi)', time: '11:00 AM - 01:30 PM', occupancy: 85, seatsBooked: 17, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Vibe (Hindi)', time: '02:30 PM - 05:10 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Mirzapur : The Movie (Hindi)', time: '06:00 PM - 08:45 PM', occupancy: 95, seatsBooked: 19, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: 'Resident Evil (Hindi)', time: '09:15 PM - 11:45 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Daayra (Hindi)', time: '11:30 AM - 02:00 PM', occupancy: 78, seatsBooked: 47, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Manjar (Marathi)', time: '03:00 PM - 05:35 PM', occupancy: 82, seatsBooked: 49, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'The Paradise (Hindi)', time: '06:30 PM - 09:10 PM', occupancy: 88, seatsBooked: 53, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Avengers Endgame : Encore', time: '09:45 PM - 12:15 AM', occupancy: 75, seatsBooked: 45, totalSeats: 60 }
     ],
     metrics: [
       { label: "Today's Revenue", value: "₹1.02L", trend: "+8.2%", isUp: true, sparkline: [65, 72, 68, 85, 92, 98, 102] },

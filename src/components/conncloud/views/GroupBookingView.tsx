@@ -45,7 +45,7 @@ export default function GroupBookingView({
     date: '',
     timeSlot: '10:00 AM - 01:30 PM',
     guestCount: isAhilyanagar ? '60' : '100',
-    movieTitle: 'Raftaar',
+    movieTitle: 'Resident Evil (Hindi)',
     fnbPackage: 'Gold VIP Combo' as GroupBooking['fnbPackage'],
     advancePaid: '20000',
     specialRequests: ''
@@ -126,7 +126,7 @@ export default function GroupBookingView({
       date: '',
       timeSlot: '10:00 AM - 01:30 PM',
       guestCount: isAhilyanagar ? '60' : '100',
-      movieTitle: 'Raftaar',
+      movieTitle: 'Resident Evil (Hindi)',
       fnbPackage: 'Gold VIP Combo',
       advancePaid: '20000',
       specialRequests: ''
@@ -675,7 +675,7 @@ export default function GroupBookingView({
                   <label className="text-[10px] uppercase font-bold text-gray-400">Movie / Presentation</label>
                   <input
                     type="text"
-                    placeholder="e.g. Raftaar or Corporate Slides"
+                    placeholder="e.g. Resident Evil or Corporate Slides"
                     value={bookingForm.movieTitle}
                     onChange={(e) => setBookingForm(prev => ({ ...prev, movieTitle: e.target.value }))}
                     className="cc-input"

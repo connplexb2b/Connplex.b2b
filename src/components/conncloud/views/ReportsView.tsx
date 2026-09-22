@@ -61,7 +61,7 @@ export default function ReportsView({
     { name: 'Ahilyanagar Daily Revenue Statement', type: 'Sales & Commercial', format: 'PDF / XLS', desc: 'Consolidated box office and concession intake for Screen 1 & Screen 2.' },
     { name: 'Ahilyanagar Daily Admissions Summary', type: 'Box Office Stats', format: 'PDF', desc: 'Screen 1 Couple Recliner & Screen 2 Gold Class seat occupancy trends.' },
     { name: 'Ahilyanagar F&B Gross Profit Margins', type: 'POS Inventory', format: 'XLS', desc: 'SPH performance, margin yield, and wastage summary by Snehal Deshmukh.' },
-    { name: 'Ahilyanagar Royalty Obligations Sheet', type: 'Finance & Compliance', format: 'PDF / CSV', desc: 'Distributor 50% net share calculations for Raftaar and running titles.' },
+    { name: 'Ahilyanagar Royalty Obligations Sheet', type: 'Finance & Compliance', format: 'PDF / CSV', desc: 'Distributor 50% net share calculations for Resident Evil and running titles.' },
     { name: 'Ahilyanagar Staff Attendance & Payroll', type: 'Human Resources', format: 'XLS', desc: 'Biometric timesheets for Vikram Shinde, Ramesh Kadam, and duty team.' },
     { name: 'Ahilyanagar Equipment SLA & Downtime', type: 'Operations Telemetry', format: 'PDF', desc: 'Barco 4K Laser Projector and Daikin VRV maintenance telemetry status.' },
     { name: 'Ahilyanagar Boutique Screen Yield Report', type: 'Yield & MIS', format: 'PDF / XLS', desc: 'Format productivity comparison between Luxuriance Recliners vs Gold Class.' }
