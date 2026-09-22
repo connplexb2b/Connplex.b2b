@@ -8,12 +8,25 @@ interface MoviesViewProps {
 }
 
 const VISTA_FILM_CODES: Record<string, string> = {
-  m1: 'F101',
-  m2: 'F102',
-  m3: 'F103',
-  m4: 'F104',
-  m5: 'F105',
-  m6: 'F106'
+  m1: 'CN01HO00001339',
+  m2: 'CN01HO00001338',
+  m3: 'CN01HO00001335',
+  m4: 'CN01HO00001334',
+  m5: 'CN01HO00001305',
+  m6: 'CN01HO00001342',
+  m7: 'CN01HO00001261',
+  m8: 'CN01HO00001359',
+  m9: 'CN01HO00001343',
+  m10: 'CN01HO00001357',
+  'm_CN01HO00001339': 'CN01HO00001339',
+  'm_CN01HO00001335': 'CN01HO00001335',
+  'm_CN01HO00001334': 'CN01HO00001334',
+  'm_CN01HO00001305': 'CN01HO00001305',
+  'm_CN01HO00001261': 'CN01HO00001261',
+  'm_CN01HO00001342': 'CN01HO00001342',
+  'm_CN01HO00001359': 'CN01HO00001359',
+  'm_CN01HO00001343': 'CN01HO00001343',
+  'm_CN01HO00001357': 'CN01HO00001357'
 };
 
 export default function MoviesView({
@@ -27,6 +40,17 @@ export default function MoviesView({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedScreenFilter, setSelectedScreenFilter] = useState<string>('all');
   const [selectedDateFilter, setSelectedDateFilter] = useState<'today' | 'all' | 'week'>('today');
+  const [, setRefreshKey] = useState(0);
+
+  React.useEffect(() => {
+    const unsub = ConnCloudStore.onVistaSync(() => {
+      setRefreshKey(k => k + 1);
+    });
+    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
+      ConnCloudStore.syncWithVista('CN01');
+    }
+    return () => unsub();
+  }, [selectedCinemaId]);
 
   // Show Request Form state
   const [requestForm, setRequestForm] = useState({

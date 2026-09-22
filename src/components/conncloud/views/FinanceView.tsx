@@ -13,6 +13,17 @@ export default function FinanceView({
   triggerNotification
 }: FinanceViewProps) {
   const [subSection, setSubSection] = useState<'overview' | 'ledger' | 'expenses' | 'gst-royalty' | 'pnl-budget' | 'reconciliation'>('overview');
+  const [, setRefreshKey] = useState(0);
+
+  React.useEffect(() => {
+    const unsub = ConnCloudStore.onVistaSync(() => {
+      setRefreshKey(k => k + 1);
+    });
+    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
+      ConnCloudStore.syncWithVista('CN01');
+    }
+    return () => unsub();
+  }, [selectedCinemaId]);
   
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');

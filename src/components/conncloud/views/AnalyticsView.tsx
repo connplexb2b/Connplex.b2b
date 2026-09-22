@@ -13,6 +13,17 @@ export default function AnalyticsView({
   triggerNotification
 }: AnalyticsViewProps) {
   const [subTab, setSubTab] = useState<'revenue' | 'admissions' | 'occupancy' | 'atp-sph' | 'forecast'>('revenue');
+  const [, setRefreshKey] = useState(0);
+
+  React.useEffect(() => {
+    const unsub = ConnCloudStore.onVistaSync(() => {
+      setRefreshKey(k => k + 1);
+    });
+    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
+      ConnCloudStore.syncWithVista('CN01');
+    }
+    return () => unsub();
+  }, [selectedCinemaId]);
 
   // Pull calculations from ConnCloudStore
   const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);

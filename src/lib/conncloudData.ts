@@ -644,13 +644,22 @@ const generateBaseData = () => {
 };
 
 const INITIAL_FNB: FnBProduct[] = [
-  { productId: 'fb1', name: 'Salted Popcorn (L)', category: 'Popcorn', price: 180, cost: 35, quantity: 240, stock: 1200, minStock: 200, status: 'Healthy' },
-  { productId: 'fb2', name: 'Pepsi Soda (XL)', category: 'Beverages', price: 120, cost: 18, quantity: 450, stock: 950, minStock: 150, status: 'Healthy' },
-  { productId: 'fb3', name: 'Blockbuster Combo (L Popcorn + 2 Drinks)', category: 'Combos', price: 320, cost: 70, quantity: 180, stock: 500, minStock: 80, status: 'Healthy' },
-  { productId: 'fb4', name: 'Veg Cheese Samosa (2 pcs)', category: 'Snacks', price: 90, cost: 25, quantity: 80, stock: 45, minStock: 50, status: 'Low Stock' },
-  { productId: 'fb5', name: 'Cheese Nachos with Salsa', category: 'Snacks', price: 150, cost: 40, quantity: 120, stock: 250, minStock: 60, status: 'Healthy' },
-  { productId: 'fb6', name: 'Chocolate Lava Cake', category: 'Desserts', price: 110, cost: 30, quantity: 40, stock: 8, minStock: 15, status: 'Critical' },
-  { productId: 'fb7', name: 'Paneer Burger', category: 'Meals', price: 140, cost: 45, quantity: 0, stock: 0, minStock: 20, status: 'Out of Stock' }
+  { productId: 'fb10', name: 'FAMILY SALTED COMBO (IP) WPOS', category: 'Combos', price: 447.62, cost: 155, quantity: 120, stock: 450, minStock: 50, status: 'Healthy' },
+  { productId: 'fb11', name: 'NACHOS WITH CHEESE AND SALSA SAUCE 90 GMS', category: 'Nachos', price: 152.38, cost: 50, quantity: 240, stock: 800, minStock: 80, status: 'Healthy' },
+  { productId: 'fb111', name: 'MAHARAJA COUPLE COMBO (IP)', category: 'Combos', price: 550, cost: 190, quantity: 85, stock: 320, minStock: 40, status: 'Healthy' },
+  { productId: 'fb200', name: 'MAHARAJA FLAVOURED COMBO (IP)', category: 'Combos', price: 746, cost: 260, quantity: 65, stock: 240, minStock: 30, status: 'Healthy' },
+  { productId: 'fb202', name: 'SINGLE COMBO (IP)', category: 'Combos', price: 349, cost: 120, quantity: 180, stock: 600, minStock: 60, status: 'Healthy' },
+  { productId: 'fb203', name: 'SANDWICH COMBO (IP)', category: 'Hot Snacks', price: 349, cost: 115, quantity: 95, stock: 280, minStock: 35, status: 'Healthy' },
+  { productId: 'fb347', name: 'NACHOS COMBO WITH 300 ML COKE (IP)', category: 'Combos', price: 210, cost: 72, quantity: 160, stock: 520, minStock: 50, status: 'Healthy' },
+  { productId: 'fb345', name: 'FAMILY CHEESE COMBO WITH JUMBO (IP)', category: 'Combos', price: 680, cost: 235, quantity: 70, stock: 290, minStock: 40, status: 'Healthy' },
+  { productId: 'fb288', name: 'COUPLE CHEESE COMBO (IP)', category: 'Combos', price: 599, cost: 205, quantity: 110, stock: 380, minStock: 45, status: 'Healthy' },
+  { productId: 'fb190', name: 'MAGGI COMBO', category: 'Hot Snacks', price: 200, cost: 65, quantity: 130, stock: 400, minStock: 50, status: 'Healthy' },
+  { productId: 'fb198', name: 'HOT N SPICY COMBO (IP)', category: 'Combos', price: 200, cost: 70, quantity: 90, stock: 310, minStock: 30, status: 'Healthy' },
+  { productId: 'fb341', name: 'ECHO COMBO (IP)', category: 'Combos', price: 220, cost: 75, quantity: 140, stock: 460, minStock: 50, status: 'Healthy' },
+  { productId: 'fb343', name: 'FRIENDS COMBO WITH MEDIUM', category: 'Combos', price: 280, cost: 95, quantity: 105, stock: 350, minStock: 40, status: 'Healthy' },
+  { productId: 'fb1', name: 'Salted Popcorn Tub (Large)', category: 'Popcorn', price: 180, cost: 35, quantity: 240, stock: 1200, minStock: 200, status: 'Healthy' },
+  { productId: 'fb2', name: 'Pepsi Fountain Soda (XL)', category: 'Beverages', price: 120, cost: 18, quantity: 450, stock: 950, minStock: 150, status: 'Healthy' },
+  { productId: 'fb6', name: 'Chocolate Lava Cake', category: 'Desserts', price: 110, cost: 30, quantity: 40, stock: 8, minStock: 15, status: 'Critical' }
 ];
 
 const INITIAL_STAFF: Staff[] = [
@@ -966,16 +975,24 @@ export class ConnCloudStore {
   private static staffOrientations: StaffOrientation[] = [];
   private static certifications: TrainingCertification[] = [];
 
+  private static lastVistaSync: string | null = null;
+  private static isVistaConnected: boolean = false;
+
   public static init() {
     if (typeof window === 'undefined') return;
     if (this.isInitialized) return;
 
     // Invalidate outdated browser cache if version changed
-    const STORE_VERSION = 'v2_ahilyanagar_calibrated_80seats';
+    const STORE_VERSION = 'v3_vista_live_connected_all_tabs';
     const currentVer = localStorage.getItem('cc_store_version');
     if (currentVer !== STORE_VERSION) {
       localStorage.removeItem('cc_relational_base');
       localStorage.removeItem('cc_misSummaries');
+      localStorage.removeItem('cc_movies');
+      localStorage.removeItem('cc_shows');
+      localStorage.removeItem('cc_fnbProducts');
+      localStorage.removeItem('cc_tickets');
+      localStorage.removeItem('cc_financeTransactions');
       localStorage.setItem('cc_store_version', STORE_VERSION);
     }
 
@@ -1231,6 +1248,80 @@ export class ConnCloudStore {
 
     this.isInitialized = true;
     this.checkAutomations();
+
+    // Automatically synchronize live Vista data for Ahilyanagar and active screens
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        ConnCloudStore.syncWithVista('CN01');
+      }, 50);
+    }
+  }
+
+  public static isVistaLive(): boolean {
+    return this.isVistaConnected;
+  }
+
+  public static getLastVistaSync(): string | null {
+    return this.lastVistaSync;
+  }
+
+  public static onVistaSync(callback: () => void): () => void {
+    if (typeof window === 'undefined') return () => {};
+    const handler = () => callback();
+    window.addEventListener('conncloud_vista_synced', handler);
+    return () => window.removeEventListener('conncloud_vista_synced', handler);
+  }
+
+  public static async syncWithVista(cinemaId = 'CN01') {
+    if (typeof window === 'undefined') return;
+    try {
+      const res = await fetch(`/api/conncloud/vista-sync?cinemaId=${cinemaId}`);
+      if (!res.ok) return;
+      const json = await res.json();
+      if (!json.success || !json.data) return;
+
+      const { movies, shows, fnbProducts, tickets, financeTransactions } = json.data;
+
+      // 1. Merge / Replace Movies
+      if (movies && movies.length > 0) {
+        const otherMovies = (this.movies || []).filter(m => !m.movieId.startsWith('m_CN01'));
+        this.movies = [...movies, ...otherMovies];
+        this.save('movies', this.movies);
+      }
+
+      // 2. Replace Ahilyanagar shows with live Vista shows
+      if (shows && shows.length > 0) {
+        const nonAhilyaShows = (this.shows || []).filter(s => s.screenId !== 's20' && s.screenId !== 's21');
+        this.shows = [...shows, ...nonAhilyaShows];
+      }
+
+      // 3. Replace / Augment F&B Products with Vista's items
+      if (fnbProducts && fnbProducts.length > 0) {
+        this.fnbProducts = fnbProducts;
+        this.save('fnbProducts', this.fnbProducts);
+      }
+
+      // 4. Replace Ahilyanagar tickets with live Vista tickets
+      if (tickets && tickets.length > 0) {
+        const nonAhilyaTickets = (this.tickets || []).filter(t => t.screenId !== 's20' && t.screenId !== 's21');
+        this.tickets = [...tickets, ...nonAhilyaTickets];
+      }
+
+      // 5. Replace Ahilyanagar finance transactions with live Vista financials
+      if (financeTransactions && financeTransactions.length > 0) {
+        const nonAhilyaFin = (this.financeTransactions || []).filter(f => f.cinemaId !== 'c5');
+        this.financeTransactions = [...financeTransactions, ...nonAhilyaFin];
+      }
+
+      this.saveRelational();
+      this.lastVistaSync = new Date().toLocaleTimeString();
+      this.isVistaConnected = json.isLiveConnected !== false;
+
+      // Dispatch event to re-render all listening components
+      window.dispatchEvent(new CustomEvent('conncloud_vista_synced', { detail: json }));
+    } catch (err) {
+      console.warn('Failed synchronizing ConnCloudStore with Vista:', err);
+    }
   }
 
   private static seedRelational() {
