@@ -13,17 +13,6 @@ export default function FnBView({
   triggerNotification
 }: FnBViewProps) {
   const [subSection, setSubSection] = useState<'overview' | 'catalog' | 'combos' | 'inventory' | 'wastage'>('overview');
-  const [, setRefreshKey] = useState(0);
-
-  React.useEffect(() => {
-    const unsub = ConnCloudStore.onVistaSync(() => {
-      setRefreshKey(k => k + 1);
-    });
-    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
-      ConnCloudStore.syncWithVista('CN01');
-    }
-    return () => unsub();
-  }, [selectedCinemaId]);
   
   // Roster of products
   const products = ConnCloudStore.getFnBProducts();

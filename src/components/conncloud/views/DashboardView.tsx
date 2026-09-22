@@ -17,26 +17,6 @@ export default function DashboardView({
   triggerNotification
 }: DashboardViewProps) {
   const [showAhilyanagarSync, setShowAhilyanagarSync] = useState(false);
-  const [isSyncingVista, setIsSyncingVista] = useState(false);
-  const [, setRefreshKey] = useState(0);
-
-  React.useEffect(() => {
-    const unsub = ConnCloudStore.onVistaSync(() => {
-      setRefreshKey(k => k + 1);
-    });
-    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
-      ConnCloudStore.syncWithVista('CN01');
-    }
-    return () => unsub();
-  }, [selectedCinemaId]);
-
-  const handleManualVistaSync = async () => {
-    setIsSyncingVista(true);
-    triggerNotification('Fetching live sessions, F&B menu, and collections from Vista (14.194.50.141)...');
-    await ConnCloudStore.syncWithVista('CN01');
-    setIsSyncingVista(false);
-    triggerNotification('Dashboard synced with Vista server.');
-  };
 
   // Pull data from central state store
   const isAhilyanagar = selectedCinemaId === 'c5';
@@ -150,16 +130,7 @@ export default function DashboardView({
             Real-time business visibility across your cinema franchise portals.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <button 
-            onClick={handleManualVistaSync}
-            disabled={isSyncingVista}
-            className="cc-btn cc-btn-outline border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
-            title="Fetch live shows, F&B concessions, and transactions from Vista WebService"
-          >
-            <i className={`fa-solid ${isSyncingVista ? 'fa-spinner fa-spin' : 'fa-arrows-rotate'}`}></i>
-            {isSyncingVista ? 'Syncing...' : 'Sync Vista (14.194.50.141)'}
-          </button>
+        <div className="flex gap-2.5">
           <button 
             onClick={() => {
               triggerNotification('Revenue records exported.');

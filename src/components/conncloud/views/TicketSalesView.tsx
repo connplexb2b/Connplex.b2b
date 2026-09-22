@@ -14,17 +14,6 @@ export default function TicketSalesView({
 }: TicketSalesViewProps) {
   const [subSection, setSubSection] = useState<'sales' | 'seat-map' | 'discounts' | 'refunds'>('sales');
   const [channelFilter, setChannelFilter] = useState<'all' | 'Online' | 'Counter' | 'Kiosk'>('all');
-  const [, setRefreshKey] = useState(0);
-
-  React.useEffect(() => {
-    const unsub = ConnCloudStore.onVistaSync(() => {
-      setRefreshKey(k => k + 1);
-    });
-    if (selectedCinemaId === 'c5' || selectedCinemaId === 'all') {
-      ConnCloudStore.syncWithVista('CN01');
-    }
-    return () => unsub();
-  }, [selectedCinemaId]);
 
   const isAhilyanagar = selectedCinemaId === 'c5';
   const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);
@@ -254,7 +243,7 @@ export default function TicketSalesView({
                     <tr key={t.bookingId} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="py-3 font-semibold text-gray-300 font-mono">{t.bookingId}</td>
                       <td className="py-3 text-gray-400">{t.date}</td>
-                      <td className="py-3 font-semibold text-white">{m?.title || (t as any).movieTitle || 'Live Feature Film'}</td>
+                      <td className="py-3 font-semibold text-white">{m?.title}</td>
                       <td className="py-3 text-amber-300 font-medium">{scr?.name || 'Screen'}</td>
                       <td className="py-3 font-mono font-bold text-gray-200">{t.seat}</td>
                       <td className="py-3 font-medium text-gray-300">{t.channel}</td>
