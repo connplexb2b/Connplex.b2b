@@ -114,12 +114,16 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
     // Attempt live fetch directly from Vista ASMX methods
     try {
       const asmxUrl = `${cleanBase}/api.asmx`;
-      const [sessRes, pricesRes] = await Promise.all([
+      const [sessRes, pricesRes, areasRes] = await Promise.all([
         fetch(`${asmxUrl}/GetCinemawiseSession?CinemaID=${encodeURIComponent(targetCinemaId)}`, {
           headers: { 'Accept': 'application/json' },
           signal: AbortSignal.timeout(6000)
         }),
         fetch(`${asmxUrl}/GetCinemawisePrice?CinemaID=${encodeURIComponent(targetCinemaId)}`, {
+          headers: { 'Accept': 'application/json' },
+          signal: AbortSignal.timeout(6000)
+        }),
+        fetch(`${asmxUrl}/Session_AreaCount`, {
           headers: { 'Accept': 'application/json' },
           signal: AbortSignal.timeout(6000)
         })
@@ -128,9 +132,11 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
       if (sessRes.ok) {
         const sessJson = await sessRes.json();
         const priceJson = pricesRes.ok ? await pricesRes.json() : {};
+        const areaJson = areasRes.ok ? await areasRes.json() : {};
 
         const liveSessions = sessJson?.data?.SessionList || [];
         const livePrices = priceJson?.data?.CinemawisePriceList || [];
+        const liveAreas = areaJson?.data?.ItemPrice || [];
 
         if (liveSessions.length > 0) {
           isLiveSuccess = true;
@@ -140,6 +146,18 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
             if (!priceMap[p.PGroup_strCode] || p.Price_curPrice > priceMap[p.PGroup_strCode]) {
               priceMap[p.PGroup_strCode] = p.Price_curPrice;
             }
+          }
+
+          // Map exact seats from Session_AreaCount
+          const cn01Areas = liveAreas.filter((x: any) => x.Cinema_strID === targetCinemaId);
+          const sessSeatMap: Record<string, { total: number; avail: number }> = {};
+          for (const a of cn01Areas) {
+            const sid = String(a.Session_lngSessionId);
+            if (!sessSeatMap[sid]) {
+              sessSeatMap[sid] = { total: 0, avail: 0 };
+            }
+            sessSeatMap[sid].total += (a.SessAC_intSeatsTotal || 0);
+            sessSeatMap[sid].avail += (a.SessAC_intSeatsAvail || 0);
           }
 
           const screenCapMap: Record<string, number> = {
@@ -162,22 +180,22 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
             let dayCap = 0;
 
             for (const s of sessions) {
-              const cap = screenCapMap[s.Screen_strName] || 60;
-              const avail = s.Session_intSeatsAvail !== undefined ? s.Session_intSeatsAvail : cap;
-              let booked = Math.max(0, cap - avail);
-              if (booked === 0) {
-                booked = Math.round(cap * 0.45);
-              }
+              const sid = String(s.Session_lngSessionId);
+              const seatInfo = sessSeatMap[sid] || {
+                total: screenCapMap[s.Screen_strName] || 60,
+                avail: s.Session_intSeatsAvail !== undefined ? s.Session_intSeatsAvail : (screenCapMap[s.Screen_strName] || 60)
+              };
+              const booked = Math.max(0, seatInfo.total - seatInfo.avail);
               const price = priceMap[s.PGroup_strCode] || 250;
               dayTickets += booked;
               dayTicketRev += booked * price;
-              dayCap += cap;
+              dayCap += seatInfo.total;
             }
 
             const dayOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const dayName = dayOfWeekNames[new Date(dStr).getDay()] || 'Mon';
-            const occuPercent = dayCap > 0 ? parseFloat(((dayTickets / dayCap) * 100).toFixed(1)) : 42.5;
-            const dailyATP = dayTickets > 0 ? parseFloat((dayTicketRev / dayTickets).toFixed(2)) : 280.0;
+            const occuPercent = dayCap > 0 ? parseFloat(((dayTickets / dayCap) * 100).toFixed(1)) : 0;
+            const dailyATP = dayTickets > 0 ? parseFloat((dayTicketRev / dayTickets).toFixed(2)) : 0;
             const dailySPH = 112.5;
             const fnbRev = Math.round(dayTickets * dailySPH);
             const fnbItems = Math.round(dayTickets * 0.92);
@@ -204,6 +222,7 @@ async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: {
               Glass3DRevenue: glass3D,
               TotalDailyRevenue: totalGross,
               isLiveSession: true,
+              isExactLiveVista: true,
             });
           }
         }

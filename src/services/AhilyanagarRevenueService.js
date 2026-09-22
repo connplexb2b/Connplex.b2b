@@ -215,7 +215,7 @@ export const getAhilyanagarDailyRevenue = async ({
     // Attempt live fetch from Vista ASMX methods
     try {
       const asmxUrl = `${cleanBase}/api.asmx`;
-      const [sessRes, pricesRes, itemsRes] = await Promise.all([
+      const [sessRes, pricesRes, itemsRes, areasRes] = await Promise.all([
         axios.get(`${asmxUrl}/GetCinemawiseSession`, {
           params: { CinemaID: targetCinemaId },
           timeout: 6000,
@@ -228,11 +228,15 @@ export const getAhilyanagarDailyRevenue = async ({
           params: { strCinemaId: targetCinemaId },
           timeout: 6000,
         }),
+        axios.get(`${asmxUrl}/Session_AreaCount`, {
+          timeout: 6000,
+        }),
       ]);
 
       const liveSessions = sessRes.data?.data?.SessionList || [];
       const livePrices = pricesRes.data?.data?.CinemawisePriceList || [];
       const liveItems = itemsRes.data?.data?.Itemlist || [];
+      const liveAreas = areasRes.data?.data?.ItemPrice || [];
 
       if (liveSessions.length > 0) {
         isLiveSuccess = true;
@@ -242,6 +246,17 @@ export const getAhilyanagarDailyRevenue = async ({
           if (!priceMap[p.PGroup_strCode] || p.Price_curPrice > priceMap[p.PGroup_strCode]) {
             priceMap[p.PGroup_strCode] = p.Price_curPrice;
           }
+        }
+
+        // Map exact seats from Session_AreaCount for Ahilyanagar (CN01)
+        const cn01Areas = liveAreas.filter((x) => x.Cinema_strID === targetCinemaId);
+        const sessSeatMap = {};
+        for (const a of cn01Areas) {
+          if (!sessSeatMap[a.Session_lngSessionId]) {
+            sessSeatMap[a.Session_lngSessionId] = { total: 0, avail: 0 };
+          }
+          sessSeatMap[a.Session_lngSessionId].total += (a.SessAC_intSeatsTotal || 0);
+          sessSeatMap[a.Session_lngSessionId].avail += (a.SessAC_intSeatsAvail || 0);
         }
 
         const screenCapMap = {
@@ -264,22 +279,21 @@ export const getAhilyanagarDailyRevenue = async ({
           let dayCap = 0;
 
           for (const s of sessions) {
-            const cap = screenCapMap[s.Screen_strName] || 60;
-            const avail = s.Session_intSeatsAvail !== undefined ? s.Session_intSeatsAvail : cap;
-            let booked = Math.max(0, cap - avail);
-            if (booked === 0) {
-              booked = Math.round(cap * 0.45);
-            }
+            const seatInfo = sessSeatMap[s.Session_lngSessionId] || {
+              total: screenCapMap[s.Screen_strName] || 60,
+              avail: s.Session_intSeatsAvail !== undefined ? s.Session_intSeatsAvail : (screenCapMap[s.Screen_strName] || 60),
+            };
+            const booked = Math.max(0, seatInfo.total - seatInfo.avail);
             const price = priceMap[s.PGroup_strCode] || 250;
             dayTickets += booked;
             dayTicketRev += booked * price;
-            dayCap += cap;
+            dayCap += seatInfo.total;
           }
 
           const dayOfWeekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
           const dayName = dayOfWeekNames[new Date(dStr).getDay()] || "Mon";
-          const occuPercent = dayCap > 0 ? parseFloat(((dayTickets / dayCap) * 100).toFixed(1)) : 42.5;
-          const dailyATP = dayTickets > 0 ? parseFloat((dayTicketRev / dayTickets).toFixed(2)) : 280.0;
+          const occuPercent = dayCap > 0 ? parseFloat(((dayTickets / dayCap) * 100).toFixed(1)) : 0;
+          const dailyATP = dayTickets > 0 ? parseFloat((dayTicketRev / dayTickets).toFixed(2)) : 0;
           const dailySPH = 112.5;
           const fnbRev = Math.round(dayTickets * dailySPH);
           const fnbItems = Math.round(dayTickets * 0.92);
@@ -306,6 +320,7 @@ export const getAhilyanagarDailyRevenue = async ({
             Glass3DRevenue: glass3D,
             TotalDailyRevenue: totalGross,
             isLiveSession: true,
+            isExactLiveVista: true,
           });
         }
       }

@@ -347,7 +347,7 @@ const INITIAL_CINEMAS: Cinema[] = [
   { cinemaId: 'c2', name: 'Connplex Jaipur', location: 'Jaipur, Rajasthan', screens: 6, status: 'Active', operatingHours: '08:30 AM - 01:00 AM' },
   { cinemaId: 'c3', name: 'Connplex Ahmedabad', location: 'Ahmedabad, Gujarat', screens: 5, status: 'Active', operatingHours: '09:00 AM - 11:30 PM' },
   { cinemaId: 'c4', name: 'Connplex Udaipur', location: 'Udaipur, Rajasthan', screens: 4, status: 'Active', operatingHours: '10:00 AM - 11:00 PM' },
-  { cinemaId: 'c5', name: 'Connplex Ahilyanagar', location: 'Ahilyanagar, Maharashtra', screens: 2, status: 'Active', operatingHours: '09:00 AM - 11:30 PM' }
+  { cinemaId: 'c5', name: 'Connplex Ahilyanagar', location: 'Ahilyanagar, Maharashtra', screens: 4, status: 'Active', operatingHours: '09:00 AM - 11:30 PM' }
 ];
 
 const INITIAL_SCREENS: Screen[] = [
@@ -374,8 +374,10 @@ const INITIAL_SCREENS: Screen[] = [
   { screenId: 's18', cinemaId: 'c4', name: 'Screen 3', capacity: 120, format: '2D', status: 'Healthy' },
   { screenId: 's19', cinemaId: 'c4', name: 'Screen 4', capacity: 100, format: '2D', status: 'Healthy' },
 
-  { screenId: 's20', cinemaId: 'c5', name: 'Screen 1 (Luxuriance Couple Recliner)', capacity: 20, format: '2D', status: 'Healthy' },
-  { screenId: 's21', cinemaId: 'c5', name: 'Screen 2 (Gold Class)', capacity: 60, format: '2D', status: 'Healthy' }
+  { screenId: 's20', cinemaId: 'c5', name: 'Screen 1 (Dolby 7.1)', capacity: 109, format: '2D / Dolby 7.1', status: 'Healthy' },
+  { screenId: 's21', cinemaId: 'c5', name: 'Screen 2 (Dolby Atmos)', capacity: 82, format: '2D / Dolby Atmos', status: 'Healthy' },
+  { screenId: 's22', cinemaId: 'c5', name: 'Screen 3 (VIP Recliner)', capacity: 48, format: '2D / Recliner', status: 'Healthy' },
+  { screenId: 's23', cinemaId: 'c5', name: 'Screen 4 (Spectra X)', capacity: 60, format: '3D / Spectra X', status: 'Healthy' }
 ];
 
 const INITIAL_MOVIES: Movie[] = [
