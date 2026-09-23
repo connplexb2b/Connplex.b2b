@@ -528,7 +528,7 @@ export default function ConnCloudPage() {
                 className="cc-btn cc-btn-outline py-1.5 text-xs flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-building text-blue-400"></i>
-                <span>{selectedCinema === 'all' ? 'All Cinemas' : ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinema)?.name}</span>
+                <span>{selectedCinema === 'all' ? 'All Cinemas' : (ConnCloudStore.getCinemas().find(c => c?.cinemaId === selectedCinema)?.name || 'Ahilyanagar')}</span>
                 {selectedCinema === 'c5' && (
                   <span className="px-1 py-0.2 rounded text-[8px] font-black bg-amber-500/20 text-amber-300">
                     API
@@ -544,7 +544,7 @@ export default function ConnCloudPage() {
                   >
                     All Cinemas
                   </button>
-                  {ConnCloudStore.getCinemas().map(c => (
+                  {ConnCloudStore.getCinemas().filter(c => Boolean(c?.cinemaId)).map(c => (
                     <button
                       key={c.cinemaId}
                       onClick={() => { setSelectedCinema(c.cinemaId); setCinemaSelectOpen(false); triggerNotification(`Selected ${c.name}`); }}

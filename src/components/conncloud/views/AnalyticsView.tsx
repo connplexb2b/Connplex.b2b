@@ -19,14 +19,16 @@ export default function AnalyticsView({
   const isAhilyanagar = selectedCinemaId === 'c5';
   const cinemaName = selectedCinemaId === 'all' ? 'All Cinemas' : (currentCinema?.name || 'Selected Cinema');
 
-  // Pull raw collections filtered by cinema
-  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId);
+  // Pull raw collections filtered by cinema with safe guards
+  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => t && (selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId));
   const rawShows = ConnCloudStore.getShows().filter(sh => {
-    const scr = ConnCloudStore.getScreens().find(s => s.screenId === sh.screenId);
+    if (!sh) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === sh.screenId);
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
   const rawTickets = ConnCloudStore.getTickets().filter(t => {
-    const scr = ConnCloudStore.getScreens().find(s => s.screenId === t.screenId);
+    if (!t) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === t.screenId);
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
 
@@ -35,18 +37,18 @@ export default function AnalyticsView({
   const shows = ConnCloudStore.filterByDateRange(rawShows, selectedDateRange);
   const tickets = ConnCloudStore.filterByDateRange(rawTickets, selectedDateRange);
 
-  const ticketRev = finance.filter(t => t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + t.amount, 0);
-  const fnbRev = finance.filter(t => t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + t.amount, 0);
+  const ticketRev = finance.filter(t => t && t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + (t.amount || 0), 0);
+  const fnbRev = finance.filter(t => t && t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + (t.amount || 0), 0);
   const totalRev = ticketRev + fnbRev;
-  const admissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0);
-  const cap = shows.reduce((acc, s) => acc + s.capacity, 0);
+  const admissions = shows.reduce((acc, s) => acc + (s?.ticketsSold || 0), 0);
+  const cap = shows.reduce((acc, s) => acc + (s?.capacity || 0), 0);
   const occupancyPercent = cap > 0 ? ((admissions / cap) * 100).toFixed(1) : '0';
   const atp = admissions > 0 ? Math.round(ticketRev / admissions) : (isAhilyanagar ? 298 : 250);
   const sph = admissions > 0 ? Math.round(fnbRev / admissions) : (isAhilyanagar ? 110 : 140);
 
   // Compute actual online vs counter booking shares
-  const onlineCount = tickets.filter(t => t.channel === 'Online').length;
-  const counterCount = tickets.filter(t => t.channel === 'Counter' || t.channel === 'Kiosk').length;
+  const onlineCount = tickets.filter(t => t && t.channel === 'Online').length;
+  const counterCount = tickets.filter(t => t && (t.channel === 'Counter' || t.channel === 'Kiosk')).length;
   const totalTixCount = onlineCount + counterCount;
   const onlineShare = totalTixCount > 0
     ? ((onlineCount / totalTixCount) * 100).toFixed(1)
@@ -55,14 +57,14 @@ export default function AnalyticsView({
 
   // Filter screens belonging to this cinema
   const currentScreens = ConnCloudStore.getScreens().filter(s => 
-    selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId
+    s && (selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId)
   );
 
   // Compute screen statistics dynamically from shows
   const screenStats = currentScreens.map((screen) => {
-    const screenShows = shows.filter(sh => sh.screenId === screen.screenId);
-    const screenTickets = screenShows.reduce((acc, s) => acc + s.ticketsSold, 0);
-    const screenCap = screenShows.reduce((acc, s) => acc + s.capacity, 0);
+    const screenShows = shows.filter(sh => sh && sh.screenId === screen.screenId);
+    const screenTickets = screenShows.reduce((acc, s) => acc + (s?.ticketsSold || 0), 0);
+    const screenCap = screenShows.reduce((acc, s) => acc + (s?.capacity || 0), 0);
     const screenOccupancy = screenCap > 0 ? Math.round((screenTickets / screenCap) * 100) : 0;
     
     // Weight revenue based on screen price tier: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
@@ -73,7 +75,7 @@ export default function AnalyticsView({
     const ticketPrice = screen?.cinemaId === 'c5'
       ? (screen?.screenId === 's20' ? 350 : 280)
       : (isImax ? 350 : (isCouple ? 350 : (isGold ? 280 : 240)));
-    const rawRevenue = screenShows.reduce((acc, s) => acc + (s.ticketsSold * ticketPrice), 0);
+    const rawRevenue = screenShows.reduce((acc, s) => acc + ((s?.ticketsSold || 0) * ticketPrice), 0);
 
     return {
       screen,
@@ -85,21 +87,21 @@ export default function AnalyticsView({
     };
   });
 
-  const rawTotalScreenRevenue = screenStats.reduce((acc, s) => acc + s.rawRevenue, 0) || 1;
+  const rawTotalScreenRevenue = screenStats.reduce((acc, s) => acc + (s.rawRevenue || 0), 0) || 1;
   const screenItems = screenStats.map(s => {
-    const share = Math.round((s.rawRevenue / rawTotalScreenRevenue) * 100);
-    const allocatedRevenue = ticketRev > 0 ? Math.round((ticketRev * s.rawRevenue) / rawTotalScreenRevenue) : s.rawRevenue;
+    const share = Math.round(((s.rawRevenue || 0) / rawTotalScreenRevenue) * 100);
+    const allocatedRevenue = ticketRev > 0 ? Math.round((ticketRev * (s.rawRevenue || 0)) / rawTotalScreenRevenue) : (s.rawRevenue || 0);
     return {
       ...s,
-      share,
-      revenue: allocatedRevenue
+      share: isNaN(share) ? 0 : share,
+      revenue: isNaN(allocatedRevenue) ? 0 : allocatedRevenue
     };
   });
 
   // Movie distribution filtered for current cinema's shows
   const movieStats = ConnCloudStore.getMovies().map(movie => {
-    const movieShows = shows.filter(sh => sh.movieId === movie.movieId);
-    const movieTickets = movieShows.reduce((acc, s) => acc + s.ticketsSold, 0);
+    const movieShows = shows.filter(sh => sh && sh.movieId === movie.movieId);
+    const movieTickets = movieShows.reduce((acc, s) => acc + (s?.ticketsSold || 0), 0);
     return {
       movie,
       tickets: movieTickets,
@@ -107,10 +109,11 @@ export default function AnalyticsView({
     };
   }).filter(m => m.showsCount > 0);
 
-  const formatCurrency = (val: number) => {
-    if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)}Cr`;
-    if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
-    return `₹${val.toLocaleString('en-IN')}`;
+  const formatCurrency = (val: number | undefined | null) => {
+    const num = (typeof val === 'number' && !isNaN(val)) ? val : 0;
+    if (num >= 10000000) return `₹${(num / 10000000).toFixed(2)}Cr`;
+    if (num >= 100000) return `₹${(num / 100000).toFixed(2)}L`;
+    return `₹${num.toLocaleString('en-IN')}`;
   };
 
   const handleExport = (format: string) => {
@@ -246,25 +249,29 @@ export default function AnalyticsView({
               )}
             </div>
             <div className={`grid grid-cols-1 sm:grid-cols-2 ${currentScreens.length > 2 ? 'md:grid-cols-4' : 'md:grid-cols-2'} gap-4`}>
-              {screenItems.map((item) => {
+              {screenItems.map((item, idx) => {
+                const screenId = item?.screen?.screenId || `scr_${idx}`;
+                const scrName = item?.screen?.name || `Screen ${idx + 1}`;
+                const scrFormat = item?.screen?.format || '2D';
+                const scrCap = item?.screen?.capacity || 0;
                 return (
-                  <div key={item.screen.screenId} className="bg-black/25 p-4 rounded-lg border border-white/5 hover:border-white/15 transition-colors">
+                  <div key={screenId} className="bg-black/25 p-4 rounded-lg border border-white/5 hover:border-white/15 transition-colors">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="text-xs font-bold text-white block">{item.screen.name}</span>
-                        <span className="text-[10px] text-gray-400 block mt-0.5">{item.screen.format}</span>
+                        <span className="text-xs font-bold text-white block">{scrName}</span>
+                        <span className="text-[10px] text-gray-400 block mt-0.5">{scrFormat}</span>
                       </div>
                       <span className="text-[10px] font-bold text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded border border-amber-500/30 whitespace-nowrap">
-                        {item.screen.capacity} Seats
+                        {scrCap} Seats
                       </span>
                     </div>
-                    <span className="text-xl font-black text-gray-200 block mt-3">{formatCurrency(item.revenue)}</span>
+                    <span className="text-xl font-black text-gray-200 block mt-3">{formatCurrency(item?.revenue)}</span>
                     <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden mt-3">
-                      <div className="bg-blue-600 h-full" style={{ width: `${item.share}%` }}></div>
+                      <div className="bg-blue-600 h-full" style={{ width: `${item?.share || 0}%` }}></div>
                     </div>
                     <div className="flex items-center justify-between text-[10px] text-gray-400 mt-2">
-                      <span className="font-semibold text-blue-400">{item.share}% of box office</span>
-                      <span>{item.occupancy}% avg occupancy</span>
+                      <span className="font-semibold text-blue-400">{item?.share || 0}% of box office</span>
+                      <span>{item?.occupancy || 0}% avg occupancy</span>
                     </div>
                   </div>
                 );

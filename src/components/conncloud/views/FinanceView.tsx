@@ -31,6 +31,7 @@ export default function FinanceView({
 
   // Pull transactions
   const rawTransactions = ConnCloudStore.getFinanceTransactions().filter(t => {
+    if (!t) return false;
     const cinemaMatch = selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId;
     const statusMatch = statusFilter === 'all' || t.status === statusFilter;
     const searchMatch = searchQuery === '' || 
@@ -44,19 +45,19 @@ export default function FinanceView({
   const transactions = ConnCloudStore.filterByDateRange(rawTransactions, selectedDateRange);
 
   // Calculations
-  const incomeTx = transactions.filter(t => t.type === 'Income');
-  const expenseTx = transactions.filter(t => t.type === 'Expense');
+  const incomeTx = transactions.filter(t => t && t.type === 'Income');
+  const expenseTx = transactions.filter(t => t && t.type === 'Expense');
 
-  const ticketRev = incomeTx.filter(t => t.category === 'Tickets').reduce((acc, t) => acc + t.amount, 0);
-  const fnbRev = incomeTx.filter(t => t.category === 'Food & Beverage').reduce((acc, t) => acc + t.amount, 0);
+  const ticketRev = incomeTx.filter(t => t && t.category === 'Tickets').reduce((acc, t) => acc + (t.amount || 0), 0);
+  const fnbRev = incomeTx.filter(t => t && t.category === 'Food & Beverage').reduce((acc, t) => acc + (t.amount || 0), 0);
   const totalRev = ticketRev + fnbRev;
 
-  const grossIncome = incomeTx.reduce((acc, t) => acc + t.amount, 0);
-  const totalTaxCollected = incomeTx.reduce((acc, t) => acc + t.tax, 0);
+  const grossIncome = incomeTx.reduce((acc, t) => acc + (t.amount || 0), 0);
+  const totalTaxCollected = incomeTx.reduce((acc, t) => acc + (t.tax || 0), 0);
   const netIncome = grossIncome - totalTaxCollected;
 
-  const totalExpense = expenseTx.reduce((acc, t) => acc + t.amount, 0);
-  const totalTaxPaid = expenseTx.reduce((acc, t) => acc + t.tax, 0);
+  const totalExpense = expenseTx.reduce((acc, t) => acc + (t.amount || 0), 0);
+  const totalTaxPaid = expenseTx.reduce((acc, t) => acc + (t.tax || 0), 0);
   
   const netProfit = netIncome - totalExpense;
 

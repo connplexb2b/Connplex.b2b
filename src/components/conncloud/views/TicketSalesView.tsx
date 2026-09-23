@@ -18,22 +18,24 @@ export default function TicketSalesView({
   const isAhilyanagar = selectedCinemaId === 'c5';
   const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);
   const cinemaName = selectedCinemaId === 'all' ? 'All Cinemas' : (currentCinema?.name || 'Selected Cinema');
-  const screens = ConnCloudStore.getScreens().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
+  const screens = ConnCloudStore.getScreens().filter(s => s && (selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId));
 
   const [selectedScreenId, setSelectedScreenId] = useState<string>(screens[0]?.screenId || 's20');
 
   // Pull tickets filtered by cinema and channel, sorted latest first
   const rawTickets = ConnCloudStore.getTickets().filter(t => {
+    if (!t) return false;
     const channelMatch = channelFilter === 'all' || t.channel === channelFilter;
-    const scr = ConnCloudStore.getScreens().find(sc => sc.screenId === t.screenId);
+    const scr = ConnCloudStore.getScreens().find(sc => sc && sc.screenId === t.screenId);
     const cinemaMatch = selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
     return channelMatch && cinemaMatch;
   });
   const tickets = ConnCloudStore.filterByDateRange(rawTickets, selectedDateRange)
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => (b?.date || '').localeCompare(a?.date || ''));
 
-  const formatCurrency = (val: number) => {
-    return `₹${val.toLocaleString('en-IN')}`;
+  const formatCurrency = (val: number | undefined | null) => {
+    const num = (typeof val === 'number' && !isNaN(val)) ? val : 0;
+    return `₹${num.toLocaleString('en-IN')}`;
   };
 
   // Seat Map Configuration based on Selected Screen

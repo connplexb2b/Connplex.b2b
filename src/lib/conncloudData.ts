@@ -971,7 +971,7 @@ export class ConnCloudStore {
     if (this.isInitialized) return;
 
     // Invalidate outdated browser cache if version changed
-    const STORE_VERSION = 'v4_ahilyanagar_stable_cleanslate';
+    const STORE_VERSION = 'v5_ahilyanagar_bulletproof_production';
     const currentVer = localStorage.getItem('cc_store_version');
     if (currentVer !== STORE_VERSION) {
       // Clear all cached cc_ collections to guarantee clean schema & synchronized datasets
@@ -990,14 +990,17 @@ export class ConnCloudStore {
       localStorage.setItem('cc_store_version', STORE_VERSION);
     }
 
-    // Load from localStorage or seed
+    // Load from localStorage or seed with strict item-level sanitization
     const cacheOrSeed = <T>(key: string, initial: T[]): T[] => {
       try {
         const stored = localStorage.getItem(`cc_${key}`);
         if (stored) {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            const valid = parsed.filter(item => item && typeof item === 'object');
+            if (valid.length > 0) {
+              return valid;
+            }
           }
         }
       } catch (e) {
@@ -1069,10 +1072,13 @@ export class ConnCloudStore {
     if (storedBase) {
       try {
         const parsed = JSON.parse(storedBase);
-        this.shows = parsed.shows;
-        this.tickets = parsed.tickets;
-        this.fnbTransactions = parsed.fnbTransactions;
-        this.financeTransactions = parsed.financeTransactions;
+        this.shows = Array.isArray(parsed?.shows) ? parsed.shows.filter((item: any) => item && typeof item === 'object') : [];
+        this.tickets = Array.isArray(parsed?.tickets) ? parsed.tickets.filter((item: any) => item && typeof item === 'object') : [];
+        this.fnbTransactions = Array.isArray(parsed?.fnbTransactions) ? parsed.fnbTransactions.filter((item: any) => item && typeof item === 'object') : [];
+        this.financeTransactions = Array.isArray(parsed?.financeTransactions) ? parsed.financeTransactions.filter((item: any) => item && typeof item === 'object') : [];
+        if (this.shows.length === 0) {
+          this.seedRelational();
+        }
       } catch (e) {
         this.seedRelational();
       }
@@ -1081,12 +1087,12 @@ export class ConnCloudStore {
     }
 
     // Ensure Ahilyanagar shows and finance records are seeded if missing from relational store
-    const hasAhilyaShows = this.shows && this.shows.some(s => s.screenId === 's20' || s.screenId === 's21');
-    const hasAhilyaFin = this.financeTransactions && this.financeTransactions.some(f => f.cinemaId === 'c5');
+    const hasAhilyaShows = Array.isArray(this.shows) && this.shows.some(s => s && (s.screenId === 's20' || s.screenId === 's21'));
+    const hasAhilyaFin = Array.isArray(this.financeTransactions) && this.financeTransactions.some(f => f && f.cinemaId === 'c5');
 
     if (!hasAhilyaShows || !hasAhilyaFin) {
       const dates = getDatesInRange(30);
-      const ahilyaScreens = INITIAL_SCREENS.filter(s => s.cinemaId === 'c5');
+      const ahilyaScreens = INITIAL_SCREENS.filter(s => s && s.cinemaId === 'c5');
       const showTimes = ['11:00', '14:15', '17:30', '20:45'];
       let showIdCounter = (this.shows?.length || 0) + 1000;
       let fnbIdCounter = (this.fnbTransactions?.length || 0) + 1000;
@@ -1213,10 +1219,10 @@ export class ConnCloudStore {
     }
 
     // Ensure Ahilyanagar tickets are generated
-    if (!this.tickets) this.tickets = [];
-    const hasAhilyaTickets = this.tickets.some(t => t.screenId === 's20' || t.screenId === 's21');
+    if (!Array.isArray(this.tickets)) this.tickets = [];
+    const hasAhilyaTickets = this.tickets.some(t => t && (t.screenId === 's20' || t.screenId === 's21'));
     if (!hasAhilyaTickets) {
-      const ahilyaShows = (this.shows || []).filter(s => s.screenId === 's20' || s.screenId === 's21');
+      const ahilyaShows = (this.shows || []).filter(s => s && (s.screenId === 's20' || s.screenId === 's21'));
       let ticketIdCounter = (this.tickets.length || 0) + 5000;
       const channels: ('Online' | 'Counter' | 'Kiosk')[] = ['Online', 'Online', 'Online', 'Counter', 'Online', 'Counter', 'Online'];
       const payments: ('UPI' | 'Card' | 'Cash' | 'Wallet')[] = ['UPI', 'UPI', 'Card', 'Cash', 'UPI'];
@@ -1283,9 +1289,10 @@ export class ConnCloudStore {
     let changed = false;
 
     // 1. Inventory Warnings
-    this.fnbProducts.forEach((product) => {
-      const stock = product.stock;
-      const min = product.minStock;
+    (this.fnbProducts || []).forEach((product) => {
+      if (!product) return;
+      const stock = typeof product.stock === 'number' ? product.stock : 0;
+      const min = typeof product.minStock === 'number' ? product.minStock : 10;
       let newStatus: FnBProduct['status'] = 'Healthy';
 
       if (stock === 0) newStatus = 'Out of Stock';
@@ -1315,11 +1322,12 @@ export class ConnCloudStore {
     });
 
     // 2. Equipment failure automations
-    this.equipment.forEach((eq) => {
-      if (eq.status === 'Offline' && eq.health <= 20) {
+    (this.equipment || []).forEach((eq) => {
+      if (!eq) return;
+      if (eq.status === 'Offline' && (eq.health || 0) <= 20) {
         // Check if there is already an open maintenance ticket for this equipment
-        const hasOpenTicket = this.maintenance.some(
-          (t) => t.equipmentId === eq.equipmentId && t.status !== 'Closed' && t.status !== 'Resolved'
+        const hasOpenTicket = (this.maintenance || []).some(
+          (t) => t && t.equipmentId === eq.equipmentId && t.status !== 'Closed' && t.status !== 'Resolved'
         );
 
         if (!hasOpenTicket) {
@@ -1375,41 +1383,42 @@ export class ConnCloudStore {
     }
   }
 
-  // Getters
-  public static getCinemas() { this.init(); return (this.cinemas && this.cinemas.length > 0) ? this.cinemas : INITIAL_CINEMAS; }
-  public static getScreens() { this.init(); return (this.screens && this.screens.length > 0) ? this.screens : INITIAL_SCREENS; }
-  public static getMovies() { this.init(); return (this.movies && this.movies.length > 0) ? this.movies : INITIAL_MOVIES; }
-  public static getShows() { this.init(); return this.shows || []; }
-  public static getTickets() { this.init(); return this.tickets || []; }
-  public static getFnBProducts() { this.init(); return (this.fnbProducts && this.fnbProducts.length > 0) ? this.fnbProducts : INITIAL_FNB; }
-  public static getFnBTransactions() { this.init(); return this.fnbTransactions || []; }
-  public static getFinanceTransactions() { this.init(); return this.financeTransactions || []; }
-  public static getStaff() { this.init(); return (this.staff && this.staff.length > 0) ? this.staff : INITIAL_STAFF; }
-  public static getEquipment() { this.init(); return (this.equipment && this.equipment.length > 0) ? this.equipment : INITIAL_EQUIPMENT; }
-  public static getMaintenanceTickets() { this.init(); return (this.maintenance && this.maintenance.length > 0) ? this.maintenance : INITIAL_MAINTENANCE; }
-  public static getCampaigns() { this.init(); return (this.campaigns && this.campaigns.length > 0) ? this.campaigns : INITIAL_CAMPAIGNS; }
-  public static getDocuments() { this.init(); return (this.documents && this.documents.length > 0) ? this.documents : INITIAL_DOCS; }
-  public static getNotifications() { this.init(); return (this.notifications && this.notifications.length > 0) ? this.notifications : INITIAL_NOTIFS; }
-  public static getAuditLogs() { this.init(); return (this.auditLogs && this.auditLogs.length > 0) ? this.auditLogs : INITIAL_AUDITS; }
-  public static getMerchandiseProducts() { this.init(); return (this.merchandiseProducts && this.merchandiseProducts.length > 0) ? this.merchandiseProducts : INITIAL_MERCHANDISE; }
-  public static getMerchandiseOrders() { this.init(); return (this.merchandiseOrders && this.merchandiseOrders.length > 0) ? this.merchandiseOrders : INITIAL_MERCHANDISE_ORDERS; }
-  public static getGroupBookings() { this.init(); return (this.groupBookings && this.groupBookings.length > 0) ? this.groupBookings : INITIAL_GROUP_BOOKINGS; }
-  public static getGroupPackages() { this.init(); return (this.groupPackages && this.groupPackages.length > 0) ? this.groupPackages : INITIAL_GROUP_PACKAGES; }
-  public static getLicenses() { this.init(); return (this.licenses && this.licenses.length > 0) ? this.licenses : INITIAL_LICENSES; }
-  public static getOffers() { this.init(); return (this.offers && this.offers.length > 0) ? this.offers : INITIAL_OFFERS; }
-  public static getMISData() { this.init(); return (this.misSummaries && this.misSummaries.length > 0) ? this.misSummaries : INITIAL_MIS_SUMMARIES; }
-  public static getTrainingModules() { this.init(); return (this.trainingModules && this.trainingModules.length > 0) ? this.trainingModules : INITIAL_TRAINING_MODULES; }
-  public static getStaffOrientations() { this.init(); return (this.staffOrientations && this.staffOrientations.length > 0) ? this.staffOrientations : INITIAL_STAFF_ORIENTATIONS; }
-  public static getCertifications() { this.init(); return (this.certifications && this.certifications.length > 0) ? this.certifications : INITIAL_TRAINING_CERTIFICATIONS; }
+  // Getters - Bulletproof null and undefined filtering for all callers
+  public static getCinemas() { this.init(); return ((this.cinemas && this.cinemas.length > 0) ? this.cinemas : INITIAL_CINEMAS).filter(item => Boolean(item && item.cinemaId)); }
+  public static getScreens() { this.init(); return ((this.screens && this.screens.length > 0) ? this.screens : INITIAL_SCREENS).filter(item => Boolean(item && item.screenId)); }
+  public static getMovies() { this.init(); return ((this.movies && this.movies.length > 0) ? this.movies : INITIAL_MOVIES).filter(item => Boolean(item && item.movieId)); }
+  public static getShows() { this.init(); return (this.shows || []).filter(item => Boolean(item && item.showId)); }
+  public static getTickets() { this.init(); return (this.tickets || []).filter(item => Boolean(item && item.bookingId)); }
+  public static getFnBProducts() { this.init(); return ((this.fnbProducts && this.fnbProducts.length > 0) ? this.fnbProducts : INITIAL_FNB).filter(item => Boolean(item && item.productId)); }
+  public static getFnBTransactions() { this.init(); return (this.fnbTransactions || []).filter(item => Boolean(item && item.transactionId)); }
+  public static getFinanceTransactions() { this.init(); return (this.financeTransactions || []).filter(item => Boolean(item && item.transactionId)); }
+  public static getStaff() { this.init(); return ((this.staff && this.staff.length > 0) ? this.staff : INITIAL_STAFF).filter(item => Boolean(item && item.employeeId)); }
+  public static getEquipment() { this.init(); return ((this.equipment && this.equipment.length > 0) ? this.equipment : INITIAL_EQUIPMENT).filter(item => Boolean(item && item.equipmentId)); }
+  public static getMaintenanceTickets() { this.init(); return ((this.maintenance && this.maintenance.length > 0) ? this.maintenance : INITIAL_MAINTENANCE).filter(item => Boolean(item && item.ticketId)); }
+  public static getCampaigns() { this.init(); return ((this.campaigns && this.campaigns.length > 0) ? this.campaigns : INITIAL_CAMPAIGNS).filter(item => Boolean(item && item.campaignId)); }
+  public static getDocuments() { this.init(); return ((this.documents && this.documents.length > 0) ? this.documents : INITIAL_DOCS).filter(item => Boolean(item && item.documentId)); }
+  public static getNotifications() { this.init(); return ((this.notifications && this.notifications.length > 0) ? this.notifications : INITIAL_NOTIFS).filter(item => Boolean(item && item.notificationId)); }
+  public static getAuditLogs() { this.init(); return ((this.auditLogs && this.auditLogs.length > 0) ? this.auditLogs : INITIAL_AUDITS).filter(item => Boolean(item && item.auditId)); }
+  public static getMerchandiseProducts() { this.init(); return ((this.merchandiseProducts && this.merchandiseProducts.length > 0) ? this.merchandiseProducts : INITIAL_MERCHANDISE).filter(item => Boolean(item && item.productId)); }
+  public static getMerchandiseOrders() { this.init(); return ((this.merchandiseOrders && this.merchandiseOrders.length > 0) ? this.merchandiseOrders : INITIAL_MERCHANDISE_ORDERS).filter(item => Boolean(item && item.orderId)); }
+  public static getGroupBookings() { this.init(); return ((this.groupBookings && this.groupBookings.length > 0) ? this.groupBookings : INITIAL_GROUP_BOOKINGS).filter(item => Boolean(item && item.bookingId)); }
+  public static getGroupPackages() { this.init(); return ((this.groupPackages && this.groupPackages.length > 0) ? this.groupPackages : INITIAL_GROUP_PACKAGES).filter(item => Boolean(item && item.packageId)); }
+  public static getLicenses() { this.init(); return ((this.licenses && this.licenses.length > 0) ? this.licenses : INITIAL_LICENSES).filter(item => Boolean(item && item.licenseId)); }
+  public static getOffers() { this.init(); return ((this.offers && this.offers.length > 0) ? this.offers : INITIAL_OFFERS).filter(item => Boolean(item && item.offerId)); }
+  public static getMISData() { this.init(); return ((this.misSummaries && this.misSummaries.length > 0) ? this.misSummaries : INITIAL_MIS_SUMMARIES).filter(item => Boolean(item && item.cinemaId)); }
+  public static getTrainingModules() { this.init(); return ((this.trainingModules && this.trainingModules.length > 0) ? this.trainingModules : INITIAL_TRAINING_MODULES).filter(item => Boolean(item && item.moduleId)); }
+  public static getStaffOrientations() { this.init(); return ((this.staffOrientations && this.staffOrientations.length > 0) ? this.staffOrientations : INITIAL_STAFF_ORIENTATIONS).filter(item => Boolean(item && item.orientationId)); }
+  public static getCertifications() { this.init(); return ((this.certifications && this.certifications.length > 0) ? this.certifications : INITIAL_TRAINING_CERTIFICATIONS).filter(item => Boolean(item && item.certId)); }
 
   // Date Range Filtering Utility
   public static filterByDateRange<T extends { date?: string }>(items: T[], dateRange: string): T[] {
-    if (!items || items.length === 0 || !dateRange) return items || [];
+    if (!items || !Array.isArray(items) || items.length === 0 || !dateRange) return (items || []).filter(Boolean);
 
+    const safeItems = items.filter(i => i && typeof i === 'object');
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
-    const datesWithItems = items.map(i => i.date).filter(Boolean) as string[];
+    const datesWithItems = safeItems.map(i => i.date).filter(Boolean) as string[];
     const maxDateStr = datesWithItems.length > 0
       ? [...datesWithItems].sort((a, b) => b.localeCompare(a))[0]
       : todayStr;
@@ -1420,19 +1429,19 @@ export class ConnCloudStore {
 
     switch (dateRange) {
       case 'Today': {
-        return items.filter(item => item.date && item.date.startsWith(anchorDateStr));
+        return safeItems.filter(item => item.date && item.date.startsWith(anchorDateStr));
       }
       case 'Yesterday': {
         const yDate = new Date(anchorDate);
         yDate.setDate(anchorDate.getDate() - 1);
         const yStr = yDate.toISOString().split('T')[0];
-        return items.filter(item => item.date && item.date.startsWith(yStr));
+        return safeItems.filter(item => item.date && item.date.startsWith(yStr));
       }
       case 'Last 7 Days': {
         const cutoff = new Date(anchorDate);
         cutoff.setDate(anchorDate.getDate() - 6);
         const cutoffStr = cutoff.toISOString().split('T')[0];
-        return items.filter(item => {
+        return safeItems.filter(item => {
           if (!item.date) return false;
           const d = item.date.split('T')[0];
           return d >= cutoffStr && d <= anchorDateStr;
@@ -1440,13 +1449,13 @@ export class ConnCloudStore {
       }
       case 'This Month': {
         const yearMonth = anchorDateStr.slice(0, 7);
-        return items.filter(item => item.date && item.date.startsWith(yearMonth));
+        return safeItems.filter(item => item.date && item.date.startsWith(yearMonth));
       }
       case 'Last 30 Days': {
         const cutoff = new Date(anchorDate);
         cutoff.setDate(anchorDate.getDate() - 29);
         const cutoffStr = cutoff.toISOString().split('T')[0];
-        return items.filter(item => {
+        return safeItems.filter(item => {
           if (!item.date) return false;
           const d = item.date.split('T')[0];
           return d >= cutoffStr && d <= anchorDateStr;
@@ -1454,10 +1463,10 @@ export class ConnCloudStore {
       }
       case 'This Year': {
         const year = anchorDateStr.slice(0, 4);
-        return items.filter(item => item.date && item.date.startsWith(year));
+        return safeItems.filter(item => item.date && item.date.startsWith(year));
       }
       default:
-        return items;
+        return safeItems;
     }
   }
 

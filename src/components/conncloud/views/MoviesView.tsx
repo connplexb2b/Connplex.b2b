@@ -42,27 +42,30 @@ export default function MoviesView({
 
   // Pull records from store
   const movies = ConnCloudStore.getMovies();
-  const screens = ConnCloudStore.getScreens().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
+  const screens = ConnCloudStore.getScreens().filter(s => s && (selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId));
   const shows = ConnCloudStore.getShows().filter(sh => {
-    const scr = ConnCloudStore.getScreens().find(s => s.screenId === sh.screenId);
+    if (!sh) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === sh.screenId);
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
 
   // Calculate Today's date (or most recent date in shows)
   const todayDateStr = new Date().toISOString().split('T')[0];
-  const latestDateInShows = shows.length > 0 
-    ? [...shows].sort((a, b) => b.date.localeCompare(a.date))[0].date 
+  const datesInShows = shows.map(s => s?.date).filter(Boolean) as string[];
+  const latestDateInShows = datesInShows.length > 0 
+    ? [...datesInShows].sort((a, b) => b.localeCompare(a))[0] 
     : todayDateStr;
-  const activeShowDate = shows.some(s => s.date === todayDateStr) ? todayDateStr : latestDateInShows;
+  const activeShowDate = shows.some(s => s && s.date === todayDateStr) ? todayDateStr : latestDateInShows;
 
   // Today's live shows
-  const todayShows = shows.filter(s => s.date === activeShowDate);
+  const todayShows = shows.filter(s => s && s.date === activeShowDate);
 
   // Helper to format currency
-  const formatCurrency = (val: number) => {
-    if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)}Cr`;
-    if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
-    return `₹${val.toLocaleString('en-IN')}`;
+  const formatCurrency = (val: number | undefined | null) => {
+    const num = (typeof val === 'number' && !isNaN(val)) ? val : 0;
+    if (num >= 10000000) return `₹${(num / 10000000).toFixed(2)}Cr`;
+    if (num >= 100000) return `₹${(num / 100000).toFixed(2)}L`;
+    return `₹${num.toLocaleString('en-IN')}`;
   };
 
   // Helper to compute movie specific stats dynamically

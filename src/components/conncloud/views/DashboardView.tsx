@@ -21,12 +21,13 @@ export default function DashboardView({
   // Pull data from central state store
   const isAhilyanagar = selectedCinemaId === 'c5';
   const cinemas = ConnCloudStore.getCinemas();
-  const screens = ConnCloudStore.getScreens().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);
+  const screens = ConnCloudStore.getScreens().filter(s => s && (selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId));
   const rawShows = ConnCloudStore.getShows().filter(sh => {
+    if (!sh) return false;
     return selectedCinemaId === 'all' || 
-      ConnCloudStore.getScreens().find(scr => scr.screenId === sh.screenId)?.cinemaId === selectedCinemaId;
+      ConnCloudStore.getScreens().find(scr => scr && scr.screenId === sh.screenId)?.cinemaId === selectedCinemaId;
   });
-  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId);
+  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => t && (selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId));
   
   // Date-range filtered collections
   const shows = ConnCloudStore.filterByDateRange(rawShows, selectedDateRange);
@@ -39,20 +40,21 @@ export default function DashboardView({
   const monthFinance = ConnCloudStore.filterByDateRange(rawFinance, 'Last 30 Days');
   const monthShows = ConnCloudStore.filterByDateRange(rawShows, 'Last 30 Days');
 
-  const todayGross = todayFinance.filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 102000 : 480000);
-  const weekGross = weekFinance.filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 725000 : 3200000);
-  const monthGross = monthFinance.filter(t => t.type === 'Income').reduce((acc, t) => acc + t.amount, 0) || (isAhilyanagar ? 3140000 : 12800000);
+  const todayGross = todayFinance.filter(t => t && t.type === 'Income').reduce((acc, t) => acc + (t.amount || 0), 0) || (isAhilyanagar ? 102000 : 480000);
+  const weekGross = weekFinance.filter(t => t && t.type === 'Income').reduce((acc, t) => acc + (t.amount || 0), 0) || (isAhilyanagar ? 725000 : 3200000);
+  const monthGross = monthFinance.filter(t => t && t.type === 'Income').reduce((acc, t) => acc + (t.amount || 0), 0) || (isAhilyanagar ? 3140000 : 12800000);
 
   const fnbProducts = ConnCloudStore.getFnBProducts();
   const equipment = ConnCloudStore.getEquipment().filter(eq => {
-    const scr = ConnCloudStore.getScreens().find(s => s.screenId === eq.screenId);
+    if (!eq) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === eq.screenId);
     return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
   });
 
   // KPI Calculations based on selected date range
-  const ticketRevenue = finance.filter(t => t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + t.amount, 0);
-  const fnbRevenue = finance.filter(t => t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + t.amount, 0);
-  const expenses = finance.filter(t => t.type === 'Expense').reduce((acc, t) => acc + t.amount, 0);
+  const ticketRevenue = finance.filter(t => t && t.type === 'Income' && t.category === 'Tickets').reduce((acc, t) => acc + (t.amount || 0), 0);
+  const fnbRevenue = finance.filter(t => t && t.type === 'Income' && t.category === 'Food & Beverage').reduce((acc, t) => acc + (t.amount || 0), 0);
+  const expenses = finance.filter(t => t && t.type === 'Expense').reduce((acc, t) => acc + (t.amount || 0), 0);
   
   // Total Revenue for the active date range
   const totalRevenue = ticketRevenue + fnbRevenue || (selectedDateRange === 'Today' ? todayGross : monthGross);

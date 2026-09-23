@@ -16,11 +16,15 @@ export default function ConnCloudErrorBoundary({
   const handleHardReset = () => {
     try {
       if (typeof window !== 'undefined') {
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('cc_') || key.startsWith('franchisee_')) {
-            localStorage.removeItem(key);
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && (k.startsWith('cc_') || k.startsWith('franchisee_'))) {
+            keysToRemove.push(k);
           }
-        });
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+        sessionStorage.clear();
       }
     } catch {}
     reset();
@@ -40,6 +44,11 @@ export default function ConnCloudErrorBoundary({
           <p className="text-xs text-gray-400 mt-2 leading-relaxed">
             The workspace encountered a temporary rendering interruption. Click below to restore full operational status.
           </p>
+          {error?.message && (
+            <div className="mt-3 p-2.5 rounded bg-black/40 border border-white/5 text-[11px] text-amber-300/80 font-mono break-words text-left">
+              {error.message}
+            </div>
+          )}
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
           <button
