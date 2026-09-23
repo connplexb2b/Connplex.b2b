@@ -274,6 +274,23 @@ export default function InvestorsPage() {
               size: 742035
             });
           }
+
+          // Check if 22.09.2026 already exists (unshift to place newest at the very top)
+          const exists22Sep = data.investorsPdfs.some(
+            (f: any) =>
+              (f.originalname || '').includes('22.09.2026') ||
+              (f.title || '').includes('22.09.2026')
+          );
+          if (!exists22Sep) {
+            data.investorsPdfs.unshift({
+              _id: 'd2209202-6000-4000-8000-000000000001',
+              title: 'Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.',
+              originalname: 'Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d2209202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 780590
+            });
+          }
         }
 
         const isGeneralMeeting = activeCategory.toLowerCase() === 'general meeting';
@@ -289,6 +306,22 @@ export default function InvestorsPage() {
           }
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
+          }
+          const existsProceeding = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Proceeding of AGM.pdf' ||
+              (f.title && f.title.toLowerCase().includes('proceeding of agm')) ||
+              (f.fileName && f.fileName.includes('g2109202-6000-4000-8000-000000000001'))
+          );
+          if (!existsProceeding) {
+            data.investorsPdfs.unshift({
+              _id: 'g2109202-6000-4000-8000-000000000001',
+              title: 'Proceeding of AGM.',
+              originalname: 'Proceeding of AGM.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g2109202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 756833
+            });
           }
           const exists17Sep = data.investorsPdfs.some(
             (f: any) =>
@@ -642,6 +675,8 @@ export default function InvestorsPage() {
 
           if (activeCategory.toLowerCase() === 'general meeting') {
             const seqOrder = [
+              'Proceeding of AGM.',
+              'Proceeding of AGM',
               'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',
               'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026',
               'EGM Notice._16.09.2026',
