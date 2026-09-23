@@ -307,6 +307,22 @@ export default function InvestorRelationsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+          const existsVoting = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Voting result and Scrutinizers report.pdf' ||
+              (f.title && f.title.toLowerCase().includes('voting result')) ||
+              (f.fileName && f.fileName.includes('g2209202-6000-4000-8000-000000000001'))
+          );
+          if (!existsVoting) {
+            data.investorsPdfs.unshift({
+              _id: 'g2209202-6000-4000-8000-000000000001',
+              title: 'Voting Result and Scrutinizers Report.',
+              originalname: 'Voting result and Scrutinizers report.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g2209202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 14179470
+            });
+          }
           const existsProceeding = data.investorsPdfs.some(
             (f: any) =>
               f.originalname === 'Proceeding of AGM.pdf' ||
@@ -675,6 +691,9 @@ export default function InvestorRelationsPage() {
 
           if (activeCategory.toLowerCase() === 'general meeting') {
             const seqOrder = [
+              'Voting Result and Scrutinizers Report.',
+              'Voting Result and Scrutinizers Report',
+              'Voting result and Scrutinizers report.pdf',
               'Proceeding of AGM.',
               'Proceeding of AGM',
               'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',

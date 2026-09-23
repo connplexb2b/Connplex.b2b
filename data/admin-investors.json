@@ -179,6 +179,15 @@
     "parent": "Announcements",
     "files": [
       {
+        "id": "g2209202-6000-4000-8000-000000000001",
+        "originalName": "Voting result and Scrutinizers report.pdf",
+        "storedName": "g2209202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025884/g2209202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 14179470,
+        "title": "Voting Result and Scrutinizers Report."
+      },
+      {
         "id": "g2109202-6000-4000-8000-000000000001",
         "originalName": "Proceeding of AGM.pdf",
         "storedName": "g2109202-6000-4000-8000-000000000001.pdf",
@@ -233,7 +242,7 @@
         "title": "Pre-dispatch Notice_Newspaper Advt..20082026"
       }
     ],
-    "updatedAt": "2026-09-23T07:34:22.551Z"
+    "updatedAt": "2026-09-23T07:47:58.761Z"
   },
   {
     "id": "6805e8297f482b5677025898",

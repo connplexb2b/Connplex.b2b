@@ -10,20 +10,11 @@ const OTHER_ANNOUNCEMENT_ID = "4887120f-272d-4780-852b-9620e1f4e1ef";
 const filesToProcess = [
   {
     investorId: GENERAL_MEETING_ID,
-    id: "g2109202-6000-4000-8000-000000000001",
-    srcPath: "C:\\Users\\admin\\Downloads\\Proceeding of AGM.pdf",
-    originalName: "Proceeding of AGM.pdf",
-    storedName: "g2109202-6000-4000-8000-000000000001.pdf",
-    title: "Proceeding of AGM.",
-    mimeType: "application/pdf"
-  },
-  {
-    investorId: OTHER_ANNOUNCEMENT_ID,
-    id: "d2209202-6000-4000-8000-000000000001",
-    srcPath: "C:\\Users\\admin\\Downloads\\Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.pdf",
-    originalName: "Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.pdf",
-    storedName: "d2209202-6000-4000-8000-000000000001.pdf",
-    title: "Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.",
+    id: "g2209202-6000-4000-8000-000000000001",
+    srcPath: "C:\\Users\\admin\\Downloads\\Voting result and Scrutinizers report.pdf",
+    originalName: "Voting result and Scrutinizers report.pdf",
+    storedName: "g2209202-6000-4000-8000-000000000001.pdf",
+    title: "Voting Result and Scrutinizers Report.",
     mimeType: "application/pdf"
   }
 ];
@@ -107,7 +98,7 @@ async function run() {
       url: gmItem.url,
       mimeType: gmItem.mimeType,
       size: gmItem.size,
-      title: 'Proceeding of AGM.'
+      title: gmItem.title
     };
     const existingGM = await investorCol.findOne({ id: GENERAL_MEETING_ID });
     if (existingGM) {
@@ -122,25 +113,27 @@ async function run() {
       console.log("Updated General Meeting in MongoDB.");
     }
 
-    // Update Other Announcement in MongoDB
+    // Update Other Announcement in MongoDB if present
     const oaItem = fileEntries.find(f => f.investorId === OTHER_ANNOUNCEMENT_ID);
-    const oaFileObj = {
-      id: oaItem.id,
-      originalName: oaItem.originalName,
-      storedName: oaItem.storedName,
-      url: oaItem.url,
-      mimeType: oaItem.mimeType,
-      size: oaItem.size,
-      title: oaItem.title
-    };
-    const existingOA = await investorCol.findOne({ id: OTHER_ANNOUNCEMENT_ID });
-    if (existingOA) {
-      const filtered = (existingOA.files || []).filter(
-        f => f.id !== oaItem.id && f.storedName !== oaItem.storedName && f.originalName !== oaItem.originalName && f.title !== oaFileObj.title
-      );
-      const newFiles = [oaFileObj, ...filtered];
-      await investorCol.updateOne({ id: OTHER_ANNOUNCEMENT_ID }, { $set: { files: newFiles, updatedAt: new Date() } });
-      console.log("Updated Other Announcement in MongoDB.");
+    if (oaItem) {
+      const oaFileObj = {
+        id: oaItem.id,
+        originalName: oaItem.originalName,
+        storedName: oaItem.storedName,
+        url: oaItem.url,
+        mimeType: oaItem.mimeType,
+        size: oaItem.size,
+        title: oaItem.title
+      };
+      const existingOA = await investorCol.findOne({ id: OTHER_ANNOUNCEMENT_ID });
+      if (existingOA) {
+        const filtered = (existingOA.files || []).filter(
+          f => f.id !== oaItem.id && f.storedName !== oaItem.storedName && f.originalName !== oaItem.originalName && f.title !== oaFileObj.title
+        );
+        const newFiles = [oaFileObj, ...filtered];
+        await investorCol.updateOne({ id: OTHER_ANNOUNCEMENT_ID }, { $set: { files: newFiles, updatedAt: new Date() } });
+        console.log("Updated Other Announcement in MongoDB.");
+      }
     }
 
     // Update data/admin-investors.json
@@ -159,18 +152,28 @@ async function run() {
       }
 
       // Update Other Announcement
-      const localOA = dbData.find(
-        e => e.id === OTHER_ANNOUNCEMENT_ID || 
-             e.title.toLowerCase() === 'other annoucment' || 
-             e.title.toLowerCase() === 'other announcement' ||
-             e.title.toLowerCase() === 'other announcements'
-      );
-      if (localOA) {
-        const filtered = (localOA.files || []).filter(
-          f => f.id !== oaItem.id && f.storedName !== oaItem.storedName && f.originalName !== oaItem.originalName && f.title !== oaFileObj.title
+      if (oaItem) {
+        const localOA = dbData.find(
+          e => e.id === OTHER_ANNOUNCEMENT_ID || 
+               e.title.toLowerCase() === 'other annoucment' || 
+               e.title.toLowerCase() === 'other announcement' ||
+               e.title.toLowerCase() === 'other announcements'
         );
-        localOA.files = [oaFileObj, ...filtered];
-        localOA.updatedAt = new Date().toISOString();
+        if (localOA) {
+          const filtered = (localOA.files || []).filter(
+            f => f.id !== oaItem.id && f.storedName !== oaItem.storedName && f.originalName !== oaItem.originalName && f.title !== oaItem.title
+          );
+          localOA.files = [{
+            id: oaItem.id,
+            originalName: oaItem.originalName,
+            storedName: oaItem.storedName,
+            url: oaItem.url,
+            mimeType: oaItem.mimeType,
+            size: oaItem.size,
+            title: oaItem.title
+          }, ...filtered];
+          localOA.updatedAt = new Date().toISOString();
+        }
       }
 
       fs.writeFileSync(dbPath, JSON.stringify(dbData, null, 2), 'utf8');
