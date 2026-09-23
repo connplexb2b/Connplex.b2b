@@ -646,7 +646,15 @@ export default function InvestorRelationsPage() {
               const found = data.investorsPdfs.find((f: any) =>
                 (f.originalname || '').includes(dateKey) || (f.title || '').includes(dateKey)
               );
-              if (found) {
+              if (
+                found &&
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && found._id && t._id === found._id) ||
+                    (t.fileName && found.fileName && t.fileName === found.fileName) ||
+                    (t.originalname && found.originalname && t.originalname.toLowerCase() === found.originalname.toLowerCase())
+                )
+              ) {
                 targetPdfs.push(found);
               }
             });
@@ -675,7 +683,15 @@ export default function InvestorRelationsPage() {
                 (f.title || '').trim().toLowerCase() === titleKey.trim().toLowerCase() ||
                 (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === titleKey.trim().toLowerCase()
               );
-              if (found) {
+              if (
+                found &&
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && found._id && t._id === found._id) ||
+                    (t.fileName && found.fileName && t.fileName === found.fileName) ||
+                    (t.originalname && found.originalname && t.originalname.toLowerCase() === found.originalname.toLowerCase())
+                )
+              ) {
                 targetPdfs.push(found);
               }
             });
@@ -692,12 +708,8 @@ export default function InvestorRelationsPage() {
           if (activeCategory.toLowerCase() === 'general meeting') {
             const seqOrder = [
               'Voting Result and Scrutinizers Report.',
-              'Voting Result and Scrutinizers Report',
-              'Voting result and Scrutinizers report.pdf',
               'Proceeding of AGM.',
-              'Proceeding of AGM',
               'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',
-              'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026',
               'EGM Notice._16.09.2026',
               'Pre-dispatch Notice_Newspaper Advt._14.09.2026',
               'NOTICE OF 11TH ANNUAL GENERAL MEETING',
@@ -707,24 +719,65 @@ export default function InvestorRelationsPage() {
             const otherPdfs: any[] = [];
 
             seqOrder.forEach((key) => {
-              const found = data.investorsPdfs.find((f: any) =>
-                (f.title || '').trim().toLowerCase() === key.trim().toLowerCase() ||
-                (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === key.trim().toLowerCase() ||
-                (f.originalname || '').includes(key)
-              );
-              if (found) {
+              const cleanKey = key.replace(/\.pdf$/i, '').trim().toLowerCase();
+              const found = data.investorsPdfs.find((f: any) => {
+                const normTitle = (f.title || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                const normName = (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
+              });
+              if (
+                found &&
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && found._id && t._id === found._id) ||
+                    (t.fileName && found.fileName && t.fileName === found.fileName) ||
+                    (t.originalname && found.originalname && t.originalname.toLowerCase() === found.originalname.toLowerCase()) ||
+                    ((t.title || t.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === (found.title || found.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase())
+                )
+              ) {
                 targetPdfs.push(found);
               }
             });
 
             data.investorsPdfs.forEach((f: any) => {
-              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+              if (
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && f._id && t._id === f._id) ||
+                    (t.fileName && f.fileName && t.fileName === f.fileName) ||
+                    (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase()) ||
+                    ((t.title || t.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === (f.title || f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase())
+                )
+              ) {
                 otherPdfs.push(f);
               }
             });
 
             data.investorsPdfs = [...targetPdfs, ...otherPdfs];
           }
+
+          // Universal deduplication filter to guarantee no duplicates are rendered
+          const normalizeDocKey = (str: string) =>
+            (str || '')
+              .toLowerCase()
+              .replace(/\.pdf$/i, '')
+              .replace(/[\s._-]+/g, ' ')
+              .trim();
+
+          const seenDocs = new Set<string>();
+          data.investorsPdfs = data.investorsPdfs.filter((f: any) => {
+            const normTitle = normalizeDocKey(f.title);
+            const normOrig = normalizeDocKey(f.originalname);
+            const normFile = normalizeDocKey(f.fileName);
+            const mainKey = normTitle || normOrig || normFile;
+            if (!mainKey || seenDocs.has(mainKey) || (normOrig && seenDocs.has(normOrig)) || (normTitle && seenDocs.has(normTitle))) {
+              return false;
+            }
+            seenDocs.add(mainKey);
+            if (normOrig) seenDocs.add(normOrig);
+            if (normTitle) seenDocs.add(normTitle);
+            return true;
+          });
         }
 
         setActiveDetails(data);
