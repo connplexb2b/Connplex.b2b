@@ -35,12 +35,12 @@ export default function DataExtractionMatrix({
   const filteredCategories = useMemo(() => {
     return EXTRACTION_CATEGORIES_SPEC.filter(cat => {
       const sourceMatch = sourceFilter === 'all' || 
-        cat.sourceSummary.toLowerCase().includes(sourceFilter.toLowerCase()) ||
-        cat.features.some(f => f.dataSource.toLowerCase().includes(sourceFilter.toLowerCase()));
+        Boolean(cat?.sourceSummary?.toLowerCase().includes(sourceFilter.toLowerCase())) ||
+        Boolean(cat?.features?.some(f => f?.dataSource?.toLowerCase().includes(sourceFilter.toLowerCase())));
 
       const searchMatch = searchQuery === '' ||
-        cat.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cat.features.some(f => f.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        Boolean(cat?.category?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        Boolean(cat?.features?.some(f => f?.name?.toLowerCase().includes(searchQuery.toLowerCase())));
 
       return sourceMatch && searchMatch;
     });

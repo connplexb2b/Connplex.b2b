@@ -51,9 +51,10 @@ export default function OffersView({
     const typeMatch = filterType === 'all' || o.discountType === filterType;
     const isArchive = subSection === 'archive';
     const statusMatch = isArchive ? (o.status === 'Expired') : (o.status === 'Active' || o.status === 'Paused');
-    const searchMatch = o.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        o.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        o.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchMatch = searchQuery === '' ||
+                        Boolean(o?.code?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(o?.title?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(o?.description?.toLowerCase().includes(searchQuery.toLowerCase()));
     return cinemaMatch && typeMatch && statusMatch && searchMatch;
   });
 

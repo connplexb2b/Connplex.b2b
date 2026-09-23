@@ -489,7 +489,7 @@ const generateBaseData = () => {
           // Screen pricing: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
           const price = isAhilya
             ? (screen.screenId === 's20' ? 350 : 280)
-            : (screen.format.includes('IMAX') ? 350 : 220);
+            : (screen.format?.includes('IMAX') ? 350 : 220);
           ticketRevenue += price;
 
           if (channel === 'Online') onlineCount++;
@@ -971,26 +971,42 @@ export class ConnCloudStore {
     if (this.isInitialized) return;
 
     // Invalidate outdated browser cache if version changed
-    const STORE_VERSION = 'v2_ahilyanagar_calibrated_80seats';
+    const STORE_VERSION = 'v4_ahilyanagar_stable_cleanslate';
     const currentVer = localStorage.getItem('cc_store_version');
     if (currentVer !== STORE_VERSION) {
-      localStorage.removeItem('cc_relational_base');
-      localStorage.removeItem('cc_misSummaries');
+      // Clear all cached cc_ collections to guarantee clean schema & synchronized datasets
+      try {
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith('cc_')) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+      } catch (e) {
+        console.warn('Failed clearing outdated cc_ keys from localStorage:', e);
+      }
       localStorage.setItem('cc_store_version', STORE_VERSION);
     }
 
     // Load from localStorage or seed
     const cacheOrSeed = <T>(key: string, initial: T[]): T[] => {
-      const stored = localStorage.getItem(`cc_${key}`);
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch (e) {
-          console.error(`Failed parsing storage for key ${key}, reseeding...`);
+      try {
+        const stored = localStorage.getItem(`cc_${key}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
         }
+      } catch (e) {
+        console.error(`Failed parsing storage for key ${key}, reseeding...`);
       }
-      localStorage.setItem(`cc_${key}`, JSON.stringify(initial));
-      return initial;
+      try {
+        localStorage.setItem(`cc_${key}`, JSON.stringify(initial));
+      } catch (e) {}
+      return [...initial];
     };
 
     this.cinemas = cacheOrSeed('cinemas', INITIAL_CINEMAS);
@@ -1018,13 +1034,18 @@ export class ConnCloudStore {
     // Reconcile and merge any newly added items (e.g. Ahilyanagar c5, s20, s21, staff, licenses)
     // into previously stored localStorage cache
     const reconcileCollection = <T>(key: string, current: T[], initial: T[], idKey: keyof T): T[] => {
-      const existingIds = new Set(current.map(item => item[idKey]));
-      const missing = initial.filter(item => !existingIds.has(item[idKey]));
+      const safeCurrent = Array.isArray(current)
+        ? current.filter(item => item && typeof item === 'object' && item[idKey] !== undefined)
+        : [];
+      const existingIds = new Set(safeCurrent.map(item => item[idKey]));
+      const missing = initial.filter(item => item && item[idKey] !== undefined && !existingIds.has(item[idKey]));
       if (missing.length > 0) {
-        current.push(...missing);
-        localStorage.setItem(`cc_${key}`, JSON.stringify(current));
+        safeCurrent.push(...missing);
+        try {
+          localStorage.setItem(`cc_${key}`, JSON.stringify(safeCurrent));
+        } catch (e) {}
       }
-      return current;
+      return safeCurrent.length > 0 ? safeCurrent : [...initial];
     };
 
     this.cinemas = reconcileCollection('cinemas', this.cinemas, INITIAL_CINEMAS, 'cinemaId');
@@ -1355,31 +1376,31 @@ export class ConnCloudStore {
   }
 
   // Getters
-  public static getCinemas() { this.init(); return this.cinemas; }
-  public static getScreens() { this.init(); return this.screens; }
-  public static getMovies() { this.init(); return this.movies; }
-  public static getShows() { this.init(); return this.shows; }
-  public static getTickets() { this.init(); return this.tickets; }
-  public static getFnBProducts() { this.init(); return this.fnbProducts; }
-  public static getFnBTransactions() { this.init(); return this.fnbTransactions; }
-  public static getFinanceTransactions() { this.init(); return this.financeTransactions; }
-  public static getStaff() { this.init(); return this.staff; }
-  public static getEquipment() { this.init(); return this.equipment; }
-  public static getMaintenanceTickets() { this.init(); return this.maintenance; }
-  public static getCampaigns() { this.init(); return this.campaigns; }
-  public static getDocuments() { this.init(); return this.documents; }
-  public static getNotifications() { this.init(); return this.notifications; }
-  public static getAuditLogs() { this.init(); return this.auditLogs; }
-  public static getMerchandiseProducts() { this.init(); return this.merchandiseProducts; }
-  public static getMerchandiseOrders() { this.init(); return this.merchandiseOrders; }
-  public static getGroupBookings() { this.init(); return this.groupBookings; }
-  public static getGroupPackages() { this.init(); return this.groupPackages; }
-  public static getLicenses() { this.init(); return this.licenses; }
-  public static getOffers() { this.init(); return this.offers; }
-  public static getMISData() { this.init(); return this.misSummaries; }
-  public static getTrainingModules() { this.init(); return this.trainingModules; }
-  public static getStaffOrientations() { this.init(); return this.staffOrientations; }
-  public static getCertifications() { this.init(); return this.certifications; }
+  public static getCinemas() { this.init(); return (this.cinemas && this.cinemas.length > 0) ? this.cinemas : INITIAL_CINEMAS; }
+  public static getScreens() { this.init(); return (this.screens && this.screens.length > 0) ? this.screens : INITIAL_SCREENS; }
+  public static getMovies() { this.init(); return (this.movies && this.movies.length > 0) ? this.movies : INITIAL_MOVIES; }
+  public static getShows() { this.init(); return this.shows || []; }
+  public static getTickets() { this.init(); return this.tickets || []; }
+  public static getFnBProducts() { this.init(); return (this.fnbProducts && this.fnbProducts.length > 0) ? this.fnbProducts : INITIAL_FNB; }
+  public static getFnBTransactions() { this.init(); return this.fnbTransactions || []; }
+  public static getFinanceTransactions() { this.init(); return this.financeTransactions || []; }
+  public static getStaff() { this.init(); return (this.staff && this.staff.length > 0) ? this.staff : INITIAL_STAFF; }
+  public static getEquipment() { this.init(); return (this.equipment && this.equipment.length > 0) ? this.equipment : INITIAL_EQUIPMENT; }
+  public static getMaintenanceTickets() { this.init(); return (this.maintenance && this.maintenance.length > 0) ? this.maintenance : INITIAL_MAINTENANCE; }
+  public static getCampaigns() { this.init(); return (this.campaigns && this.campaigns.length > 0) ? this.campaigns : INITIAL_CAMPAIGNS; }
+  public static getDocuments() { this.init(); return (this.documents && this.documents.length > 0) ? this.documents : INITIAL_DOCS; }
+  public static getNotifications() { this.init(); return (this.notifications && this.notifications.length > 0) ? this.notifications : INITIAL_NOTIFS; }
+  public static getAuditLogs() { this.init(); return (this.auditLogs && this.auditLogs.length > 0) ? this.auditLogs : INITIAL_AUDITS; }
+  public static getMerchandiseProducts() { this.init(); return (this.merchandiseProducts && this.merchandiseProducts.length > 0) ? this.merchandiseProducts : INITIAL_MERCHANDISE; }
+  public static getMerchandiseOrders() { this.init(); return (this.merchandiseOrders && this.merchandiseOrders.length > 0) ? this.merchandiseOrders : INITIAL_MERCHANDISE_ORDERS; }
+  public static getGroupBookings() { this.init(); return (this.groupBookings && this.groupBookings.length > 0) ? this.groupBookings : INITIAL_GROUP_BOOKINGS; }
+  public static getGroupPackages() { this.init(); return (this.groupPackages && this.groupPackages.length > 0) ? this.groupPackages : INITIAL_GROUP_PACKAGES; }
+  public static getLicenses() { this.init(); return (this.licenses && this.licenses.length > 0) ? this.licenses : INITIAL_LICENSES; }
+  public static getOffers() { this.init(); return (this.offers && this.offers.length > 0) ? this.offers : INITIAL_OFFERS; }
+  public static getMISData() { this.init(); return (this.misSummaries && this.misSummaries.length > 0) ? this.misSummaries : INITIAL_MIS_SUMMARIES; }
+  public static getTrainingModules() { this.init(); return (this.trainingModules && this.trainingModules.length > 0) ? this.trainingModules : INITIAL_TRAINING_MODULES; }
+  public static getStaffOrientations() { this.init(); return (this.staffOrientations && this.staffOrientations.length > 0) ? this.staffOrientations : INITIAL_STAFF_ORIENTATIONS; }
+  public static getCertifications() { this.init(); return (this.certifications && this.certifications.length > 0) ? this.certifications : INITIAL_TRAINING_CERTIFICATIONS; }
 
   // Date Range Filtering Utility
   public static filterByDateRange<T extends { date?: string }>(items: T[], dateRange: string): T[] {

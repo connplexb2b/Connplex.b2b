@@ -66,11 +66,13 @@ export default function AnalyticsView({
     const screenOccupancy = screenCap > 0 ? Math.round((screenTickets / screenCap) * 100) : 0;
     
     // Weight revenue based on screen price tier: Screen 1 couple recliner is ₹350, Screen 2 gold class is ₹280
-    const ticketPrice = screen.cinemaId === 'c5'
-      ? (screen.screenId === 's20' ? 350 : 280)
-      : (screen.format.includes('IMAX') 
-          ? 350 
-          : (screen.name.toLowerCase().includes('couple') ? 350 : (screen.name.toLowerCase().includes('gold') ? 280 : 240)));
+    const isImax = Boolean(screen?.format?.includes('IMAX'));
+    const scrName = screen?.name?.toLowerCase() || '';
+    const isCouple = scrName.includes('couple');
+    const isGold = scrName.includes('gold');
+    const ticketPrice = screen?.cinemaId === 'c5'
+      ? (screen?.screenId === 's20' ? 350 : 280)
+      : (isImax ? 350 : (isCouple ? 350 : (isGold ? 280 : 240)));
     const rawRevenue = screenShows.reduce((acc, s) => acc + (s.ticketsSold * ticketPrice), 0);
 
     return {
@@ -299,9 +301,9 @@ export default function AnalyticsView({
                 const totalMovieTix = movieStats.reduce((acc, m) => acc + m.tickets, 0) || admissions || 1;
                 const admissionsShare = Math.round((stat.tickets / totalMovieTix) * 100);
                 return (
-                  <div key={stat.movie.movieId}>
+                  <div key={stat.movie?.movieId || Math.random()}>
                     <div className="flex justify-between text-xs font-semibold mb-1">
-                      <span className="text-white">{stat.movie.title}</span>
+                      <span className="text-white">{stat.movie?.title || 'Feature Film'}</span>
                       <span className="text-gray-400">{admissionsShare}% ({stat.tickets.toLocaleString('en-IN')} tickets)</span>
                     </div>
                     <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
@@ -387,13 +389,14 @@ export default function AnalyticsView({
               <div className="space-y-3.5">
                 {screenItems.map(item => {
                   const screenTicketShare = admissions > 0 ? Math.round((item.tickets / admissions) * 100) : item.share;
+                  const scrName = item.screen?.name?.toLowerCase() || '';
                   const estimatedScreenAtp = item.tickets > 0 
                     ? Math.round(item.revenue / item.tickets) 
-                    : (item.screen.name.includes('Couple') ? 350 : 280);
+                    : (scrName.includes('couple') ? 350 : 280);
                   return (
-                    <div key={item.screen.screenId}>
+                    <div key={item.screen?.screenId || Math.random()}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-300">{item.screen.name}</span>
+                        <span className="text-gray-300">{item.screen?.name || 'Screen'}</span>
                         <span className="font-semibold text-white">₹{estimatedScreenAtp} ({screenTicketShare}% admissions)</span>
                       </div>
                       <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">

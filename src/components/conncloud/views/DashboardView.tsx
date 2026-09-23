@@ -350,9 +350,13 @@ export default function DashboardView({
                     const adm = mShows.reduce((acc, s) => acc + s.ticketsSold, 0);
                     const gross = mShows.reduce((acc, s) => {
                       const scr = screens.find(sc => sc.screenId === s.screenId);
+                      const isImax = Boolean(scr?.format?.includes('IMAX'));
+                      const scrName = scr?.name?.toLowerCase() || '';
+                      const isCouple = scrName.includes('couple');
+                      const isGold = scrName.includes('gold');
                       const price = scr?.cinemaId === 'c5'
                         ? (scr.screenId === 's20' ? 350 : 280)
-                        : (scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 350 : (scr?.name.toLowerCase().includes('gold') ? 280 : 240)));
+                        : (isImax ? 350 : (isCouple ? 350 : (isGold ? 280 : 240)));
                       return acc + (s.ticketsSold * price);
                     }, 0);
                     return {

@@ -80,9 +80,13 @@ export default function MoviesView({
     // Revenue calculated by screen pricing
     const boxOffice = movieShows.reduce((acc, s) => {
       const scr = screens.find(sc => sc.screenId === s.screenId);
+      const isImax = Boolean(scr?.format?.includes('IMAX'));
+      const scrName = scr?.name?.toLowerCase() || '';
+      const isCouple = scrName.includes('couple');
+      const isGold = scrName.includes('gold');
       const price = scr?.cinemaId === 'c5'
         ? (scr.screenId === 's20' ? 350 : 280)
-        : (scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 350 : (scr?.name.toLowerCase().includes('gold') ? 280 : 240)));
+        : (isImax ? 350 : (isCouple ? 350 : (isGold ? 280 : 240)));
       return acc + (s.ticketsSold * price);
     }, 0);
 
@@ -109,9 +113,13 @@ export default function MoviesView({
   const totalCinemaAdmissions = shows.reduce((acc, s) => acc + s.ticketsSold, 0);
   const totalCinemaBoxOffice = shows.reduce((acc, s) => {
     const scr = screens.find(sc => sc.screenId === s.screenId);
+    const isImax = Boolean(scr?.format?.includes('IMAX'));
+    const scrName = scr?.name?.toLowerCase() || '';
+    const isCouple = scrName.includes('couple');
+    const isGold = scrName.includes('gold');
     const price = scr?.cinemaId === 'c5'
       ? (scr.screenId === 's20' ? 350 : 280)
-      : (scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 350 : (scr?.name.toLowerCase().includes('gold') ? 280 : 240)));
+      : (isImax ? 350 : (isCouple ? 350 : (isGold ? 280 : 240)));
     return acc + (s.ticketsSold * price);
   }, 0);
   const totalCinemaCapacity = shows.reduce((acc, s) => acc + s.capacity, 0);
@@ -493,7 +501,12 @@ export default function MoviesView({
             {todayShows.map((sh, idx) => {
               const movie = movies.find(m => m.movieId === sh.movieId);
               const scr = screens.find(s => s.screenId === sh.screenId);
-              const ticketPrice = scr?.format.includes('IMAX') ? 350 : (scr?.name.toLowerCase().includes('couple') ? 280 : 240);
+              const isImax = Boolean(scr?.format?.includes('IMAX'));
+              const scrName = scr?.name?.toLowerCase() || '';
+              const isCouple = scrName.includes('couple');
+              const ticketPrice = scr?.cinemaId === 'c5'
+                ? (scr?.screenId === 's20' ? 350 : 280)
+                : (isImax ? 350 : (isCouple ? 280 : 240));
               const sessionRevenue = sh.ticketsSold * ticketPrice;
               const occupancyPct = sh.capacity > 0 ? Math.round((sh.ticketsSold / sh.capacity) * 100) : 0;
               const seatsLeft = Math.max(0, sh.capacity - sh.ticketsSold);

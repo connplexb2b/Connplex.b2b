@@ -57,9 +57,10 @@ export default function TrainingView({
   // Filtered modules
   const filteredModules = modules.filter(m => {
     const catMatch = selectedCategory === 'all' || m.category === selectedCategory;
-    const searchMatch = m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        m.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        m.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchMatch = searchQuery === '' ||
+                        Boolean(m?.title?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(m?.description?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(m?.category?.toLowerCase().includes(searchQuery.toLowerCase()));
     return catMatch && searchMatch;
   });
 

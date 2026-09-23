@@ -97,7 +97,7 @@ export default function ConnCloudPage() {
           setSelectedCinema('c5');
         } else if (cinemaParam) {
           const match = ConnCloudStore.getCinemas().find(c => 
-            c.cinemaId === cinemaParam || c.name.toLowerCase().includes(cinemaParam.toLowerCase())
+            c?.cinemaId === cinemaParam || (c?.name && c.name.toLowerCase().includes(cinemaParam.toLowerCase()))
           );
           if (match) setSelectedCinema(match.cinemaId);
         }

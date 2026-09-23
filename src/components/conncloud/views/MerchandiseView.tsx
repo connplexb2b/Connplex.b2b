@@ -61,9 +61,10 @@ export default function MerchandiseView({
   // Filtered products
   const filteredProducts = products.filter(p => {
     const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          p.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          p.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = searchQuery === '' ||
+                          Boolean(p?.name?.toLowerCase().includes(searchQuery.toLowerCase())) || 
+                          Boolean(p?.sku?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                          Boolean(p?.description?.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCat && matchesSearch;
   });
 

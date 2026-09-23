@@ -69,9 +69,10 @@ export default function LicenseView({
     const cinemaMatch = selectedCinemaId === 'all' || lic.cinemaId === selectedCinemaId;
     const catMatch = categoryFilter === 'all' || lic.category === categoryFilter;
     const statusMatch = statusFilter === 'all' || lic.status === statusFilter;
-    const searchMatch = lic.licenseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        lic.licenseNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        lic.issuingAuthority.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchMatch = searchQuery === '' ||
+                        Boolean(lic?.licenseName?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(lic?.licenseNumber?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(lic?.issuingAuthority?.toLowerCase().includes(searchQuery.toLowerCase()));
     return cinemaMatch && catMatch && statusMatch && searchMatch;
   });
 

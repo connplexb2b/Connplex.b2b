@@ -38,9 +38,9 @@ export default function DocumentsView({
   };
 
   const filteredDocs = docs.filter(d => 
-    d.name.toLowerCase().includes(search.toLowerCase()) || 
-    d.category.toLowerCase().includes(search.toLowerCase()) ||
-    d.uploadedBy.toLowerCase().includes(search.toLowerCase())
+    Boolean(d?.name?.toLowerCase().includes(search.toLowerCase())) || 
+    Boolean(d?.category?.toLowerCase().includes(search.toLowerCase())) ||
+    Boolean(d?.uploadedBy?.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (

@@ -38,7 +38,8 @@ export default function TicketSalesView({
 
   // Seat Map Configuration based on Selected Screen
   const activeScreen = screens.find(s => s.screenId === selectedScreenId) || screens[0];
-  const isCoupleScreen = isAhilyanagar && (activeScreen?.name.toLowerCase().includes('couple') || activeScreen?.screenId === 's20');
+  const screenName = activeScreen?.name?.toLowerCase() || '';
+  const isCoupleScreen = isAhilyanagar && (screenName.includes('couple') || activeScreen?.screenId === 's20');
   
   const rows = isCoupleScreen ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C', 'D', 'E', 'F'];
   const cols = isCoupleScreen ? [1, 2, 3, 4, 5] : Array.from({ length: 10 }, (_, i) => i + 1);

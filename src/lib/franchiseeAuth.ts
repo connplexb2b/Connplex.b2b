@@ -136,38 +136,48 @@ export function verifyFranchiseeCredentials(
 
 export function storeFranchiseeSession(user: FranchiseeUser) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('franchisee_session', 'authenticated');
-  localStorage.setItem('franchisee_cinema', user.cinemaId);
-  localStorage.setItem('franchisee_location', user.locationKey);
-  localStorage.setItem('franchisee_user', JSON.stringify(user));
+  try {
+    localStorage.setItem('franchisee_session', 'authenticated');
+    localStorage.setItem('franchisee_cinema', user.cinemaId);
+    localStorage.setItem('franchisee_location', user.locationKey);
+    localStorage.setItem('franchisee_user', JSON.stringify(user));
+  } catch (e) {
+    console.warn('[franchiseeAuth] Unable to store session:', e);
+  }
 }
 
 export function getStoredFranchiseeUser(): FranchiseeUser | null {
   if (typeof window === 'undefined') return null;
-  const raw = localStorage.getItem('franchisee_user');
-  if (raw) {
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
+  try {
+    const raw = localStorage.getItem('franchisee_user');
+    if (raw) {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
     }
-  }
-  // Check if session is authenticated
-  const session = localStorage.getItem('franchisee_session');
-  if (session === 'authenticated') {
-    const cinema = localStorage.getItem('franchisee_cinema');
-    if (cinema === 'c5' || localStorage.getItem('franchisee_location') === 'ahilyanagar') {
-      return AHILYANAGAR_USER;
+    // Check if session is authenticated
+    const session = localStorage.getItem('franchisee_session');
+    if (session === 'authenticated') {
+      const cinema = localStorage.getItem('franchisee_cinema');
+      if (cinema === 'c5' || localStorage.getItem('franchisee_location') === 'ahilyanagar') {
+        return AHILYANAGAR_USER;
+      }
+      return DEFAULT_CORPORATE_USER;
     }
-    return DEFAULT_CORPORATE_USER;
+  } catch (e) {
+    console.warn('[franchiseeAuth] Unable to read stored session:', e);
   }
   return null;
 }
 
 export function clearFranchiseeSession() {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem('franchisee_session');
-  localStorage.removeItem('franchisee_cinema');
-  localStorage.removeItem('franchisee_location');
-  localStorage.removeItem('franchisee_user');
+  try {
+    localStorage.removeItem('franchisee_session');
+    localStorage.removeItem('franchisee_cinema');
+    localStorage.removeItem('franchisee_location');
+    localStorage.removeItem('franchisee_user');
+  } catch (e) {}
 }

@@ -34,9 +34,9 @@ export default function FinanceView({
     const cinemaMatch = selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId;
     const statusMatch = statusFilter === 'all' || t.status === statusFilter;
     const searchMatch = searchQuery === '' || 
-      t.category.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      t.transactionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (t.vendor && t.vendor.toLowerCase().includes(searchQuery.toLowerCase()));
+      Boolean(t?.category?.toLowerCase().includes(searchQuery.toLowerCase())) || 
+      Boolean(t?.transactionId?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      Boolean(t?.vendor && t.vendor.toLowerCase().includes(searchQuery.toLowerCase()));
     
     return cinemaMatch && statusMatch && searchMatch;
   });

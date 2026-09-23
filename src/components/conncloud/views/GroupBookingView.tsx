@@ -73,10 +73,11 @@ export default function GroupBookingView({
     const cinemaMatch = selectedCinemaId === 'all' || b.cinemaId === selectedCinemaId;
     const typeMatch = typeFilter === 'all' || b.eventType === typeFilter;
     const statusMatch = statusFilter === 'all' || b.status === statusFilter;
-    const searchMatch = b.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        b.organization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        b.movieTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        b.bookingId.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchMatch = searchQuery === '' ||
+                        Boolean(b?.clientName?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(b?.organization?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(b?.movieTitle?.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                        Boolean(b?.bookingId?.toLowerCase().includes(searchQuery.toLowerCase()));
     return cinemaMatch && typeMatch && statusMatch && searchMatch;
   });
 

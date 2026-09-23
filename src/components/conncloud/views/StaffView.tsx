@@ -21,8 +21,8 @@ export default function StaffView({
   // Pull staff list filtered by cinema
   const allStaff = ConnCloudStore.getStaff();
   const staff = isAhilyanagar
-    ? allStaff.filter(s => s.employeeId.includes('ah') || s.name.includes('Shinde') || s.name.includes('Kadam') || s.name.includes('Deshmukh'))
-    : (selectedCinemaId === 'all' ? allStaff : allStaff.filter(s => !s.employeeId.includes('ah')));
+    ? allStaff.filter(s => Boolean(s?.employeeId?.includes('ah')) || Boolean(s?.name?.includes('Shinde')) || Boolean(s?.name?.includes('Kadam')) || Boolean(s?.name?.includes('Deshmukh')))
+    : (selectedCinemaId === 'all' ? allStaff : allStaff.filter(s => !s?.employeeId?.includes('ah')));
 
   // Leaves management local state
   const [leaves, setLeaves] = useState(() => isAhilyanagar ? [
