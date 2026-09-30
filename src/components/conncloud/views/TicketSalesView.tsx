@@ -22,7 +22,7 @@ export default function TicketSalesView({
 
   const [selectedScreenId, setSelectedScreenId] = useState<string>(screens[0]?.screenId || 's20');
 
-  // Pull tickets filtered by cinema and channel, sorted latest first
+  // Pull sample tickets filtered by cinema and channel, sorted latest first (for ledger rows)
   const rawTickets = ConnCloudStore.getTickets().filter(t => {
     if (!t) return false;
     const channelMatch = channelFilter === 'all' || t.channel === channelFilter;
@@ -37,6 +37,63 @@ export default function TicketSalesView({
     const num = (typeof val === 'number' && !isNaN(val)) ? val : 0;
     return `₹${num.toLocaleString('en-IN')}`;
   };
+
+  // Transaction-level Financials & Operational Admissions Logic
+  const rawFinance = ConnCloudStore.getFinanceTransactions().filter(t => 
+    t && (selectedCinemaId === 'all' || t.cinemaId === selectedCinemaId) && t.type === 'Income' && t.category === 'Tickets'
+  );
+  const finance = ConnCloudStore.filterByDateRange(rawFinance, selectedDateRange);
+  const totalTxTicketRevenue = finance.reduce((acc, t) => acc + (t.amount || 0), 0);
+
+  const rawShows = ConnCloudStore.getShows().filter(sh => {
+    if (!sh) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === sh.screenId);
+    return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
+  });
+  const shows = ConnCloudStore.filterByDateRange(rawShows, selectedDateRange);
+  const totalAdmissionsFromShows = shows.reduce((acc, s) => acc + (s?.ticketsSold || 0), 0);
+
+  // Derive channel distribution ratios across cinema transactions
+  const rawCinemaTickets = ConnCloudStore.getTickets().filter(t => {
+    if (!t) return false;
+    const scr = ConnCloudStore.getScreens().find(s => s && s.screenId === t.screenId);
+    return selectedCinemaId === 'all' || scr?.cinemaId === selectedCinemaId;
+  });
+  const cinemaTickets = ConnCloudStore.filterByDateRange(rawCinemaTickets, selectedDateRange);
+  const onlineCount = cinemaTickets.filter(t => t && t.channel === 'Online').length;
+  const counterCount = cinemaTickets.filter(t => t && t.channel === 'Counter').length;
+  const kioskCount = cinemaTickets.filter(t => t && t.channel === 'Kiosk').length;
+  const totalSampleCount = cinemaTickets.length;
+
+  const defaultOnlineRatio = isAhilyanagar ? 0.716 : 0.682;
+  const onlineShareRatio = totalSampleCount > 0 ? (onlineCount / totalSampleCount) : defaultOnlineRatio;
+  const counterShareRatio = 1 - onlineShareRatio;
+  const counterOnlyRatio = totalSampleCount > 0 ? (counterCount / totalSampleCount) : (counterShareRatio * 0.7);
+  const kioskOnlyRatio = totalSampleCount > 0 ? (kioskCount / totalSampleCount) : (counterShareRatio * 0.3);
+
+  // Base admissions & revenue from ledger/shows
+  const baseAdmissions = totalAdmissionsFromShows > 0 
+    ? totalAdmissionsFromShows 
+    : (totalTxTicketRevenue > 0 ? Math.round(totalTxTicketRevenue / (isAhilyanagar ? 298 : 250)) : tickets.length);
+
+  const baseRevenue = totalTxTicketRevenue > 0
+    ? totalTxTicketRevenue
+    : tickets.reduce((acc, t) => acc + (t.price || 0), 0);
+
+  // Scaled totals according to selected channel
+  let totalTicketsSold = baseAdmissions;
+  let totalRevenue = baseRevenue;
+
+  if (channelFilter === 'Online') {
+    totalTicketsSold = Math.round(baseAdmissions * onlineShareRatio);
+    totalRevenue = Math.round(baseRevenue * onlineShareRatio);
+  } else if (channelFilter === 'Counter') {
+    totalTicketsSold = Math.round(baseAdmissions * counterOnlyRatio);
+    totalRevenue = Math.round(baseRevenue * counterOnlyRatio);
+  } else if (channelFilter === 'Kiosk') {
+    totalTicketsSold = Math.max(1, Math.round(baseAdmissions * kioskOnlyRatio));
+    totalRevenue = Math.max(1, Math.round(baseRevenue * kioskOnlyRatio));
+  }
 
   // Seat Map Configuration based on Selected Screen
   const activeScreen = screens.find(s => s.screenId === selectedScreenId) || screens[0];
@@ -75,9 +132,6 @@ export default function TicketSalesView({
       default: return 'bg-transparent border-white/20 text-gray-400 hover:border-white/50 hover:bg-white/5';
     }
   };
-
-  const totalTicketsSold = tickets.filter(t => t.status === 'Confirmed').length;
-  const totalRevenue = tickets.filter(t => t.status === 'Confirmed').reduce((acc, t) => acc + t.price, 0);
 
   return (
     <div className="space-y-6">
@@ -124,28 +178,36 @@ export default function TicketSalesView({
           <div className="text-xl font-extrabold text-white">
             {totalTicketsSold.toLocaleString('en-IN')}
           </div>
-          <span className="text-[10px] text-gray-500 mt-1 block">Ledger transaction count</span>
+          <span className="text-[10px] text-gray-500 mt-1 block">
+            {channelFilter === 'all' ? 'Ledger transaction count' : `${channelFilter} channel bookings`}
+          </span>
         </div>
         <div className="cc-card p-3">
           <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider block mb-0.5">Online Web/App Share</span>
           <div className="text-xl font-extrabold text-emerald-400">
-            {tickets.length > 0 ? Math.round((tickets.filter(t => t.channel === 'Online').length / tickets.length) * 100) : 68}%
+            {Math.round(onlineShareRatio * 100)}%
           </div>
-          <span className="text-[10px] text-gray-500 mt-1 block">Digital bookings</span>
+          <span className="text-[10px] text-gray-500 mt-1 block">
+            {formatCurrency(Math.round(baseRevenue * onlineShareRatio))} ({Math.round(baseAdmissions * onlineShareRatio).toLocaleString('en-IN')} tickets)
+          </span>
         </div>
         <div className="cc-card p-3">
           <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider block mb-0.5">Counter / POS Share</span>
           <div className="text-xl font-extrabold text-blue-400">
-            {tickets.length > 0 ? Math.round((tickets.filter(t => t.channel === 'Counter').length / tickets.length) * 100) : 32}%
+            {Math.round(counterShareRatio * 100)}%
           </div>
-          <span className="text-[10px] text-gray-500 mt-1 block">Box office kiosk &amp; counter</span>
+          <span className="text-[10px] text-gray-500 mt-1 block">
+            {formatCurrency(Math.round(baseRevenue * counterShareRatio))} ({Math.round(baseAdmissions * counterShareRatio).toLocaleString('en-IN')} tickets)
+          </span>
         </div>
         <div className="cc-card p-3">
           <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider block mb-0.5">Ticket Sales Gross</span>
           <div className="text-xl font-extrabold text-[#f5b041]">
             {formatCurrency(totalRevenue)}
           </div>
-          <span className="text-[10px] text-gray-500 mt-1 block">Total ticket collections</span>
+          <span className="text-[10px] text-gray-500 mt-1 block">
+            {channelFilter === 'all' ? 'Total ticket collections' : `${channelFilter} collections`}
+          </span>
         </div>
       </div>
 
@@ -202,10 +264,17 @@ export default function TicketSalesView({
         <div className="cc-card">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
-                Ticket Bookings Transactions ({tickets.length} Records)
-              </h3>
-              <p className="text-xs text-gray-500 mt-0.5">Real-time ticket issue ledger for {cinemaName}.</p>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-200">
+                  Ticket Bookings Ledger
+                </h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                  {totalTicketsSold.toLocaleString('en-IN')} Total Tickets Sold
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Displaying latest audited transaction receipts ({Math.min(tickets.length, 25)} of {totalTicketsSold.toLocaleString('en-IN')}) for {cinemaName}.
+              </p>
             </div>
             
             <div className="flex items-center gap-2">
@@ -239,7 +308,7 @@ export default function TicketSalesView({
                 </tr>
               </thead>
               <tbody>
-                {tickets.slice(0, 15).map((t) => {
+                {tickets.slice(0, 25).map((t) => {
                   const m = ConnCloudStore.getMovies().find(mov => mov.movieId === t.movieId);
                   const scr = ConnCloudStore.getScreens().find(s => s.screenId === t.screenId);
                   return (
