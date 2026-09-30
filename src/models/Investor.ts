@@ -13,7 +13,7 @@ const InvestorFileSchema = new Schema({
 const InvestorSchema = new Schema({
   id: { type: String, required: true, unique: true },
   title: { type: String, required: true, trim: true },
-  type: { type: String, enum: ['pdf', 'audio'], default: 'pdf' },
+  type: { type: String, default: 'pdf' },
   parent: { type: String, default: '', trim: true },
   files: [InvestorFileSchema],
 }, { timestamps: true });

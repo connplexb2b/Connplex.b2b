@@ -26,9 +26,14 @@ const AUDIO_MIME = new Set([
   'audio/aac',
 ]);
 
-export function isAllowedMime(type: InvestorFileType, mime: string): boolean {
-  if (type === 'pdf') return PDF_MIME.has(mime) || mime === 'application/octet-stream';
-  return AUDIO_MIME.has(mime) || mime.startsWith('audio/');
+export function isAllowedMime(type: string, mime: string): boolean {
+  if (type === 'pdf' || type === 'Files' || !type) {
+    return PDF_MIME.has(mime) || mime === 'application/octet-stream' || mime === 'application/x-pdf';
+  }
+  if (type === 'audio') {
+    return AUDIO_MIME.has(mime) || mime.startsWith('audio/');
+  }
+  return PDF_MIME.has(mime) || AUDIO_MIME.has(mime) || mime.startsWith('audio/') || mime === 'application/octet-stream';
 }
 
 export async function ensureUploadDir(investorId: string): Promise<string> {
@@ -239,32 +244,38 @@ export async function addFileToInvestor(
   if (file.size > maxSize) return { error: 'File exceeds 50MB limit' };
 
   const ext = path.extname(file.name).toLowerCase();
-  const extOk =
-    doc.type === 'pdf'
-      ? ext === '.pdf'
-      : ['.mp3', '.wav', '.m4a', '.ogg', '.webm', '.aac'].includes(ext);
+  const isPdf = ext === '.pdf' || file.type === 'application/pdf' || file.type === 'application/octet-stream' || file.type === 'application/x-pdf';
+  const isAudio = ['.mp3', '.wav', '.m4a', '.ogg', '.webm', '.aac'].includes(ext) || file.type.startsWith('audio/');
 
-  if (!isAllowedMime(doc.type as InvestorFileType, file.type) && !extOk) {
+  if (!isPdf && !isAudio) {
     return {
-      error:
-        doc.type === 'pdf'
-          ? 'Only PDF files are allowed for this investor'
-          : 'Only audio files are allowed for this investor',
+      error: 'Only PDF or Audio files (.mp3, .wav, .m4a) are allowed.',
     };
   }
 
-  const fileExt = ext || (doc.type === 'pdf' ? '.pdf' : '.mp3');
+  // Auto-adapt investor category type if needed
+  if (isPdf && doc.type === 'audio') {
+    doc.type = 'pdf';
+  }
+
+  const fileExt = ext || (isPdf ? '.pdf' : '.mp3');
   const storedName = `${randomUUID()}${fileExt}`;
+  const mime = file.type || (isPdf ? 'application/pdf' : 'audio/mpeg');
   
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  // Save raw binary file content to MongoDB
+  // Save raw binary file content to MongoDB under BOTH storedName and original file.name
   try {
-    await InvestorFileContentModel.create({
-      filename: storedName,
-      data: buffer,
-      mimeType: file.type || (doc.type === 'pdf' ? 'application/pdf' : 'audio/mpeg')
-    });
+    await InvestorFileContentModel.findOneAndUpdate(
+      { filename: storedName },
+      { $set: { filename: storedName, data: buffer, mimeType: mime, updatedAt: new Date() } },
+      { upsert: true }
+    );
+    await InvestorFileContentModel.findOneAndUpdate(
+      { filename: file.name },
+      { $set: { filename: file.name, data: buffer, mimeType: mime, updatedAt: new Date() } },
+      { upsert: true }
+    );
   } catch (err: any) {
     console.error('Failed to write file to MongoDB:', err);
     return { error: 'Failed to upload file to database: ' + err.message };
@@ -274,17 +285,20 @@ export async function addFileToInvestor(
   try {
     const dir = await ensureUploadDir(investorId);
     await fs.writeFile(path.join(dir, storedName), buffer);
+    await fs.writeFile(path.join(dir, file.name), buffer);
   } catch (err) {
     console.warn('Silent warning: Failed to write file to local filesystem:', err);
   }
 
+  const title = file.name.replace(/\.pdf$/i, '').replace(/\.mp3$/i, '').trim();
   const stored: InvestorFile = {
     id: randomUUID(),
     originalName: file.name,
     storedName,
     url: `/uploads/investors/${investorId}/${storedName}`,
-    mimeType: file.type || (doc.type === 'pdf' ? 'application/pdf' : 'audio/mpeg'),
+    mimeType: mime,
     size: file.size,
+    title,
   };
 
   doc.files.push(stored);

@@ -577,21 +577,27 @@ export default function InvestorsPage() {
                 }
                 
                 localMatching.files.forEach((f: any) => {
-                  const exists = data.investorsPdfs.some(
+                  const existingIdx = data.investorsPdfs.findIndex(
                     (existing: any) =>
-                      existing._id === f.id ||
-                      existing.originalname === f.originalName ||
+                      (existing._id && f.id && existing._id === f.id) ||
+                      (existing.originalname && f.originalName && existing.originalname.toLowerCase().trim() === f.originalName.toLowerCase().trim()) ||
+                      (existing.title && f.title && existing.title.toLowerCase().trim() === f.title.toLowerCase().trim()) ||
                       existing.fileName === f.url
                   );
-                  if (!exists) {
-                    data.investorsPdfs.push({
-                      _id: f.id,
-                      originalname: f.originalName,
-                      fileName: f.url,
-                      mimeType: f.mimeType,
-                      size: f.size,
-                      title: f.title
-                    });
+                  const formattedFile = {
+                    _id: f.id,
+                    originalname: f.originalName,
+                    fileName: f.url,
+                    mimeType: f.mimeType || 'application/pdf',
+                    size: f.size,
+                    title: f.title || f.originalName?.replace(/\.pdf$/i, '').trim()
+                  };
+                  if (existingIdx !== -1) {
+                    // Update / replace with the uploaded file from database
+                    data.investorsPdfs[existingIdx] = formattedFile;
+                  } else {
+                    // Prepend new uploaded files so they are preserved
+                    data.investorsPdfs.unshift(formattedFile);
                   }
                 });
               }
