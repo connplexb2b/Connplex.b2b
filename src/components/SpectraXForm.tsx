@@ -115,8 +115,8 @@ export default function SpectraXForm() {
   };
 
   return (
-    <section className="bg-black pt-10 pb-20 border-t border-[#C9A84C]/10 px-[15px] sm:px-[28px] lg:px-[5%]">
-      <div className="max-w-[760px] mx-auto">
+    <div className="w-full max-w-[760px] mx-auto text-left">
+      <div>
         {success ? (
           <div className="bg-[#080808] border border-[#C9A84C]/25 rounded-2xl p-8 md:p-12 text-center shadow-[0_10px_35px_rgba(201,168,76,0.04)] animate-fade-in-up">
             <div className="w-16 h-16 bg-[#C9A84C]/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-[#C9A84C]/20">
@@ -267,6 +267,6 @@ export default function SpectraXForm() {
           </form>
         )}
       </div>
-    </section>
+    </div>
   );
 }
