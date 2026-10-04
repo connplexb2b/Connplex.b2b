@@ -1,5 +1,5 @@
-import { FranchiseDashboardService } from "../../src/services/FranchiseDashboardService.js";
-import { resolveDashboardAuth } from "../../src/lib/dashboardAuth.js";
+import { FranchiseDashboardService } from "../services/FranchiseDashboardService.js";
+import { resolveDashboardAuth } from "../services/dashboardAuth.js";
 
 export const getSummary = async (req, res, next) => {
   try {
