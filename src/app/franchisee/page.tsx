@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import './franchisee.css';
 import AhilyanagarApiIntegration from '../../components/conncloud/AhilyanagarApiIntegration';
 import AhilyanagarFranchiseDashboard from '../../components/conncloud/AhilyanagarFranchiseDashboard';
+import ConnplexFranchiseRevenueDashboard from '../../components/franchisee/ConnplexFranchiseRevenueDashboard';
 import {
   verifyFranchiseeCredentials,
   storeFranchiseeSession,
@@ -1100,13 +1101,22 @@ export default function FranchiseePortal() {
             ))}
           </section>
 
-          {/* Ahilyanagar Franchise Daily Revenue Dashboard & Vista Integration */}
+          {/* Multi-Tenant Connplex Franchise Revenue Dashboard (Vista Integration Engine) */}
+          <div style={{ marginBottom: '1.75rem' }} className="space-y-4">
+            <ConnplexFranchiseRevenueDashboard
+              currentLocationKey={selectedLocationKey}
+              userRole={currentUser?.role || 'partner'}
+              onNotification={showToast}
+            />
+          </div>
+
+          {/* Ahilyanagar Legacy Specialized Views & Raw API Console */}
           {selectedLocationKey === 'ahilyanagar' && (
             <div style={{ marginBottom: '1.75rem' }} className="space-y-4">
-              {/* Daily Revenue Dashboard (4 KPI cards, date presets, day-by-day table, CSV export, Schema specs) */}
+              {/* Daily Revenue Dashboard (Legacy Fallback) */}
               <AhilyanagarFranchiseDashboard 
                 onNotification={showToast} 
-                defaultExpanded={true} 
+                defaultExpanded={false} 
               />
 
               {/* Vista Raw POS ASMX API Integration & Sync Scripts Section */}
