@@ -307,6 +307,23 @@ export default function InvestorRelationsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+          const existsProceedingEGM = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Proceeding of EGM_09.10.2026.pdf' ||
+              f.originalname === 'Proceedings of EGM_09102026.pdf' ||
+              (f.title && f.title.toLowerCase().includes('proceeding of egm_09.10.2026')) ||
+              (f.fileName && f.fileName.includes('g0910202-6000-4000-8000-000000000001'))
+          );
+          if (!existsProceedingEGM) {
+            data.investorsPdfs.unshift({
+              _id: 'g0910202-6000-4000-8000-000000000001',
+              title: 'Proceeding of EGM_09.10.2026',
+              originalname: 'Proceeding of EGM_09.10.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g0910202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 820834
+            });
+          }
           const existsVoting = data.investorsPdfs.some(
             (f: any) =>
               f.originalname === 'Voting result and Scrutinizers report.pdf' ||
