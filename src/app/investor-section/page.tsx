@@ -307,6 +307,22 @@ export default function InvestorRelationsPage() {
           if (!data.investorsPdfs) {
             data.investorsPdfs = [];
           }
+          const existsVotingEGM_0910 = data.investorsPdfs.some(
+            (f: any) =>
+              f.originalname === 'Voting Result and scrutinizer report EGM_09.10.2026.pdf' ||
+              (f.title && f.title.toLowerCase().includes('voting result and scrutinizer report egm_09.10.2026')) ||
+              (f.fileName && f.fileName.includes('g1010202-6000-4000-8000-000000000001'))
+          );
+          if (!existsVotingEGM_0910) {
+            data.investorsPdfs.unshift({
+              _id: 'g1010202-6000-4000-8000-000000000001',
+              title: 'Voting Result and scrutinizer report EGM_09.10.2026',
+              originalname: 'Voting Result and scrutinizer report EGM_09.10.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025884/g1010202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 4593574
+            });
+          }
           const existsProceedingEGM = data.investorsPdfs.some(
             (f: any) =>
               f.originalname === 'Proceeding of EGM_09.10.2026.pdf' ||
@@ -730,6 +746,8 @@ export default function InvestorRelationsPage() {
 
           if (activeCategory.toLowerCase() === 'general meeting') {
             const seqOrder = [
+              'Voting Result and scrutinizer report EGM_09.10.2026',
+              'Proceeding of EGM_09.10.2026',
               'Voting Result and Scrutinizers Report.',
               'Proceeding of AGM.',
               'Post-Dispatch EGM Notice_Newspaper Adv._17.09.2026.',
