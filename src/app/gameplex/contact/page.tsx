@@ -1,66 +1,78 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { PageHero } from "@/components/gameplex/PageHero";
 import { Reveal } from "@/components/gameplex/Reveal";
-import { formats } from "@/lib/gameplex-data";
 
 function ContactForm() {
-  const searchParams = useSearchParams();
-  const [selected, setSelected] = useState("GamePlex Standard");
   const [sending, setSending] = useState(false);
 
-  useEffect(() => {
-    if (!searchParams) return;
-    const formatParam = searchParams.get("format");
-    if (formatParam && formats.some((f) => f.code === formatParam)) {
-      setSelected(formatParam);
-    }
-  }, [searchParams]);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSending(true);
     const data = new FormData(e.currentTarget);
-    setTimeout(() => {
-      setSending(false);
-      (e.target as HTMLFormElement).reset();
-      toast.success(
-        `Thanks ${String(data.get("name") || "").split(" ")[0]}! Our expansion team will reach out within 48 hours.`
-      );
-    }, 700);
+    const firstName = String(data.get("firstName") || "").trim();
+    const lastName = String(data.get("lastName") || "").trim();
+    const fullName = `${firstName} ${lastName}`.trim();
+    const phone = String(data.get("phone") || "").trim();
+    const city = String(data.get("city") || "").trim();
+    const state = String(data.get("state") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    try {
+      await fetch("/api/forms/contact-messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName,
+          phone,
+          city,
+          state,
+          message,
+          company: "GamePlex Inquiry",
+          businessType: "GamePlex Franchise",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to submit inquiry:", err);
+    }
+
+    setSending(false);
+    (e.target as HTMLFormElement).reset();
+    toast.success(
+      `Thanks ${firstName || "there"}! Our expansion team will reach out within 48 hours.`
+    );
   };
 
   return (
     <form className="surface-card rounded-2xl p-8" onSubmit={handleSubmit}>
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block text-sm font-medium text-white">
-          Full name
+          First name
           <input
-            name="name"
+            name="firstName"
             required
-            placeholder="Your name"
+            placeholder="First name"
             className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
           />
         </label>
         <label className="block text-sm font-medium text-white">
-          Phone
+          Last name
+          <input
+            name="lastName"
+            required
+            placeholder="Last name"
+            className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
+          />
+        </label>
+        <label className="block text-sm font-medium text-white sm:col-span-2">
+          Phone number
           <input
             name="phone"
+            type="tel"
             required
             placeholder="+91 "
-            className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
-          />
-        </label>
-        <label className="block text-sm font-medium text-white">
-          Email
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder="you@company.com"
             className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
           />
         </label>
@@ -73,29 +85,19 @@ function ContactForm() {
             className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
           />
         </label>
+        <label className="block text-sm font-medium text-white">
+          State
+          <input
+            name="state"
+            required
+            placeholder="State"
+            className="mt-2 w-full rounded-lg border border-border/80 bg-background px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary text-white"
+          />
+        </label>
       </div>
 
-      <p className="mt-8 eyebrow m-0">Format of interest</p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        {formats.map((f) => (
-          <button
-            key={f.code}
-            type="button"
-            onClick={() => setSelected(f.code)}
-            className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors ${
-              selected === f.code
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-            }`}
-          >
-            {f.code}
-          </button>
-        ))}
-      </div>
-      <input type="hidden" name="format" value={selected} />
-
-      <label className="mt-8 block text-sm font-medium text-white">
-        Message
+      <label className="mt-5 block text-sm font-medium text-white">
+        Message (optional)
         <textarea
           name="message"
           rows={4}
@@ -128,15 +130,7 @@ export default function ContactPage() {
       <section className="pb-28 font-sans">
         <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
           <Reveal>
-            <Suspense
-              fallback={
-                <div className="surface-card rounded-2xl p-8 min-h-[400px] flex items-center justify-center text-muted-foreground">
-                  Loading inquiry form...
-                </div>
-              }
-            >
-              <ContactForm />
-            </Suspense>
+            <ContactForm />
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -153,16 +147,16 @@ export default function ContactPage() {
               <div className="surface-card rounded-2xl p-8">
                 <p className="eyebrow m-0 font-sans">Talk to us</p>
                 <a
-                  href="mailto:franchise@gameplex.in"
+                  href="mailto:franchise@theconnplex.com"
                   className="mt-4 block font-display text-lg font-bold hover:text-primary transition-colors text-white font-sora no-underline"
                 >
-                  franchise@gameplex.in
+                  franchise@theconnplex.com
                 </a>
                 <a
-                  href="tel:+919000000000"
+                  href="tel:+919213015573"
                   className="mt-2 block font-display text-lg font-bold hover:text-primary transition-colors text-white font-sora no-underline"
                 >
-                  +91 90000 00000
+                  +91 92130 15573
                 </a>
               </div>
             </div>
@@ -172,3 +166,4 @@ export default function ContactPage() {
     </div>
   );
 }
+
