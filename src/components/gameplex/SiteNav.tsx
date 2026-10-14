@@ -11,7 +11,7 @@ const leftLinks = [
 ] as const;
 
 const rightLinks = [
-  { to: "/franchise", label: "Franchise" },
+  { to: "https://www.theconnplex.com/franchise-with-us", label: "Franchise" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -30,6 +30,7 @@ export function SiteNav() {
   }, []);
 
   const getHref = (to: string) => {
+    if (to.startsWith("http")) return to;
     if (pathname?.startsWith("/gameplex")) {
       if (to === "/") return "/gameplex";
       return `/gameplex${to}`;
@@ -95,7 +96,7 @@ export function SiteNav() {
         </Link>
 
         {/* Franchise */}
-        <Link href={getHref("/franchise")} className={getLinkClass("/franchise")}>
+        <Link href="https://www.theconnplex.com/franchise-with-us" className={getLinkClass("/franchise")}>
           Franchise
         </Link>
 

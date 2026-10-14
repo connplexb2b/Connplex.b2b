@@ -7,6 +7,7 @@ export function SiteFooter() {
   const pathname = usePathname();
 
   const getHref = (to: string) => {
+    if (to.startsWith("http")) return to;
     if (pathname?.startsWith("/gameplex")) {
       if (to === "/") return "/gameplex";
       return `/gameplex${to}`;
@@ -47,7 +48,7 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
-                <Link href={getHref("/franchise")} className="hover:text-white transition-colors">
+                <Link href="https://www.theconnplex.com/franchise-with-us" className="hover:text-white transition-colors">
                   Franchise
                 </Link>
               </li>
