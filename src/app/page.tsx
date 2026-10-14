@@ -459,7 +459,7 @@ export default function Home() {
             <p className="text-2xl sm:text-3xl font-bold text-white text-center mb-2 font-outfit uppercase">SpectraX</p>
             <p className="text-sm sm:text-[0.95rem] text-text-secondary text-center mb-6">Experience beyond the screen.</p>
             <div className="flex items-center gap-5 mb-8">
-              <Link href="/spectra-x">
+              <Link href="https://spectrax.theconnplex.com">
                 <button className="bg-white text-black rounded-full px-6 py-2 text-[0.88rem] font-semibold transition-all duration-200 hover:opacity-85 hover:scale-105">Explore</button>
               </Link>
             </div>

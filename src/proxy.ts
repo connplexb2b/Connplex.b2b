@@ -39,6 +39,41 @@ export function proxy(request: NextRequest) {
     }
   }
 
+  // 3. Subdomain check and redirect for Spectra-X
+  // Matches "spectrax.theconnplex.com", "spectrax.localhost:3000", "spectrax.local:3000" etc.
+  const isSpectraxSubdomain = hostname.startsWith('spectrax.');
+
+  if (isSpectraxSubdomain) {
+    // If user accesses /spectra-x on the subdomain, redirect to root /
+    if (pathname === '/spectra-x' || pathname === '/spectra-x/') {
+      url.pathname = '/';
+      return NextResponse.redirect(url);
+    }
+    // Route root / to the internal /spectra-x page
+    if (pathname === '/') {
+      url.pathname = '/spectra-x';
+      return NextResponse.rewrite(url);
+    }
+    // For other paths on the spectrax subdomain, redirect to the main domain
+    const mainHost = hostname.includes('localhost')
+      ? hostname.replace(/^spectrax\./, '')
+      : 'www.theconnplex.com';
+    const mainProtocol = hostname.includes('localhost') ? 'http' : 'https';
+    const mainUrl = new URL(pathname, `${mainProtocol}://${mainHost}`);
+    url.searchParams.forEach((val, key) => mainUrl.searchParams.set(key, val));
+    return NextResponse.redirect(mainUrl);
+  } else {
+    // On main domain (or any non-spectrax domain), redirect /spectra-x to subdomain spectrax.theconnplex.com
+    if (pathname === '/spectra-x' || pathname === '/spectra-x/') {
+      const redirectTarget = hostname.includes('localhost')
+        ? `http://spectrax.${hostname}`
+        : 'https://spectrax.theconnplex.com';
+      const redirectUrl = new URL('/', redirectTarget);
+      url.searchParams.forEach((val, key) => redirectUrl.searchParams.set(key, val));
+      return NextResponse.redirect(redirectUrl, { status: 308 });
+    }
+  }
+
   return NextResponse.next();
 }
 
