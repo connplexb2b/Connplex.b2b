@@ -62,6 +62,16 @@ export function proxy(request: NextRequest) {
     const mainUrl = new URL(pathname, `${mainProtocol}://${mainHost}`);
     url.searchParams.forEach((val, key) => mainUrl.searchParams.set(key, val));
     return NextResponse.redirect(mainUrl);
+  } else {
+    // On main domain (or any non-spectrax domain), redirect /spectra-x to subdomain spectrax.theconnplex.com
+    if (pathname === '/spectra-x' || pathname === '/spectra-x/') {
+      const redirectTarget = hostname.includes('localhost')
+        ? `http://spectrax.${hostname}`
+        : 'https://spectrax.theconnplex.com';
+      const redirectUrl = new URL('/', redirectTarget);
+      url.searchParams.forEach((val, key) => redirectUrl.searchParams.set(key, val));
+      return NextResponse.redirect(redirectUrl, { status: 308 });
+    }
   }
 
   return NextResponse.next();
