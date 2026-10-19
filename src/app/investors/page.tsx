@@ -564,6 +564,68 @@ export default function InvestorsPage() {
           });
         }
 
+        const isShareholdingPattern =
+          activeCategory.toLowerCase() === 'shareholding pattern' ||
+          activeCategory.toLowerCase() === 'shareholding patterns';
+        if (isShareholdingPattern) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b56770258a3',
+              title: activeCategory,
+              type: 'Files',
+              parent: '',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+
+          const shareholdingPdfs = [
+            {
+              _id: 's3009202-6000-4000-8000-000000000001',
+              title: 'Shareholding Pattern_30.09.2026.',
+              originalname: 'Shareholding Pattern_30.09.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b56770258a3/s3009202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 1680192
+            },
+            {
+              _id: '69e09312f784cad73d7132fb',
+              title: 'Shareholding Patterns - 31.03.2026',
+              originalname: 'Shareholding Patterns - 31.03.2026.pdf',
+              fileName: '1776325394551-381997228.pdf',
+              mimeType: 'application/pdf',
+              size: 3190816
+            },
+            {
+              _id: '68ef3389fa40030d7538a39c',
+              title: 'Shareholding Patterns - 30.09.2025',
+              originalname: 'Shareholding Patterns - 30.09.2025.pdf',
+              fileName: '1760506761417-525539123.pdf',
+              mimeType: 'application/pdf',
+              size: 2500000
+            }
+          ];
+
+          shareholdingPdfs.forEach((sp) => {
+            const exists = data.investorsPdfs.some(
+              (f: any) =>
+                f._id === sp._id ||
+                f.originalname === sp.originalname ||
+                f.fileName === sp.fileName ||
+                (f.title && f.title === sp.title) ||
+                (sp._id === 's3009202-6000-4000-8000-000000000001' && (
+                  (f.originalname && f.originalname.includes('30.09.2026')) ||
+                  (f.title && f.title.includes('30.09.2026'))
+                ))
+            );
+            if (!exists) {
+              data.investorsPdfs.push(sp);
+            }
+          });
+        }
+
         const isGrievance = activeCategory.toLowerCase() === 'investor grievances';
         if (isGrievance) {
           if (!data) {
@@ -588,7 +650,9 @@ export default function InvestorsPage() {
                 inv.title.toLowerCase().trim() === activeCategory.toLowerCase().trim() ||
                 (activeCategory.toLowerCase() === 'other announcements' && inv.title.toLowerCase() === 'other annoucment') ||
                 (activeCategory.toLowerCase() === 'other announcement' && inv.title.toLowerCase() === 'other annoucment') ||
-                (activeCategory.toLowerCase() === 'other annoucment' && inv.title.toLowerCase() === 'other annoucment')
+                (activeCategory.toLowerCase() === 'other annoucment' && inv.title.toLowerCase() === 'other annoucment') ||
+                (activeCategory.toLowerCase() === 'shareholding patterns' && inv.title.toLowerCase() === 'shareholding pattern') ||
+                (activeCategory.toLowerCase() === 'shareholding pattern' && inv.title.toLowerCase() === 'shareholding patterns')
             );
             
             if (localMatching) {
@@ -788,6 +852,51 @@ export default function InvestorsPage() {
                     (t.fileName && f.fileName && t.fileName === f.fileName) ||
                     (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase()) ||
                     ((t.title || t.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === (f.title || f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase())
+                )
+              ) {
+                otherPdfs.push(f);
+              }
+            });
+
+            data.investorsPdfs = [...targetPdfs, ...otherPdfs];
+          }
+
+          if (isShareholdingPattern) {
+            const seqOrder = [
+              'Shareholding Pattern_30.09.2026.',
+              'Shareholding Patterns - 31.03.2026',
+              'Shareholding Patterns - 30.09.2025'
+            ];
+            const targetPdfs: any[] = [];
+            const otherPdfs: any[] = [];
+
+            seqOrder.forEach((titleKey) => {
+              const cleanKey = titleKey.replace(/\.pdf$/i, '').trim().toLowerCase();
+              const found = data.investorsPdfs.find((f: any) => {
+                const normTitle = (f.title || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                const normName = (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
+              });
+              if (
+                found &&
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && found._id && t._id === found._id) ||
+                    (t.fileName && found.fileName && t.fileName === found.fileName) ||
+                    (t.originalname && found.originalname && t.originalname.toLowerCase() === found.originalname.toLowerCase())
+                )
+              ) {
+                targetPdfs.push(found);
+              }
+            });
+
+            data.investorsPdfs.forEach((f: any) => {
+              if (
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && f._id && t._id === f._id) ||
+                    (t.fileName && f.fileName && t.fileName === f.fileName) ||
+                    (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase())
                 )
               ) {
                 otherPdfs.push(f);

@@ -37,7 +37,12 @@ export default async function InvestorDocumentsPage({
 
     // Find all investors matching the slug
     const matchingInvestors = investors.filter(
-        inv => inv.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
+        inv => {
+            const invSlug = inv.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            return invSlug === slug ||
+                (slug === 'shareholding-pattern' && invSlug === 'shareholding-patterns') ||
+                (slug === 'shareholding-patterns' && invSlug === 'shareholding-pattern');
+        }
     );
 
     // Collect all files from these investors

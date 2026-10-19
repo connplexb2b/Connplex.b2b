@@ -350,5 +350,41 @@
       }
     ],
     "updatedAt": "2026-08-21T06:40:38.874Z"
+  },
+  {
+    "id": "6805e8297f482b56770258a3",
+    "title": "Shareholding Patterns",
+    "type": "Files",
+    "parent": "",
+    "files": [
+      {
+        "id": "s3009202-6000-4000-8000-000000000001",
+        "originalName": "Shareholding Pattern_30.09.2026.pdf",
+        "storedName": "s3009202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b56770258a3/s3009202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 1680192,
+        "title": "Shareholding Pattern_30.09.2026."
+      },
+      {
+        "id": "69e09312f784cad73d7132fb",
+        "originalName": "Shareholding Patterns - 31.03.2026.pdf",
+        "storedName": "1776325394551-381997228.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1776325394551-381997228.pdf",
+        "mimeType": "application/pdf",
+        "size": 3190816,
+        "title": "Shareholding Patterns - 31.03.2026"
+      },
+      {
+        "id": "68ef3389fa40030d7538a39c",
+        "originalName": "Shareholding Patterns - 30.09.2025.pdf",
+        "storedName": "1760506761417-525539123.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1760506761417-525539123.pdf",
+        "mimeType": "application/pdf",
+        "size": 2500000,
+        "title": "Shareholding Patterns - 30.09.2025"
+      }
+    ],
+    "updatedAt": "2026-10-19T14:01:07.716Z"
   }
 ]
