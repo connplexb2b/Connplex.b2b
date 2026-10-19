@@ -159,7 +159,7 @@ const cards: EcosystemCardProps[] = [
     id: 'spectrax',
     title: 'SPECTRA X',
     description: 'Pioneering the future of smart interactive screen technologies and high-res projection.',
-    link: 'https://spectrax.theconnplex.com',
+    link: '/spectra-x',
     bgClass: "bg-[linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.85)),url('/ecosystem-assets/spectrax-bg.png')]",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

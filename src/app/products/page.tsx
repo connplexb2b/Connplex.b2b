@@ -25,7 +25,7 @@ const ProductsPage = () => {
     {
       name: "SpectraX",
       tagline: "Experience beyond the screen.",
-      href: "https://spectrax.theconnplex.com",
+      href: "/spectra-x",
       img: "/spectra-x-hero.png",
       alt: "SpectraX Screen"
     },
