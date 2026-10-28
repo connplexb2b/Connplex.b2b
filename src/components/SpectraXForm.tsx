@@ -42,6 +42,8 @@ export default function SpectraXForm() {
       city: formData.city.trim(),
       state: formData.state.trim(),
       message: formData.message.trim(),
+      company: fullName || 'Spectra-X Inquiry',
+      businessType: 'B2B SPECTRAX',
       preferredInvestment: 'N/A',
       preferredCity: 'N/A',
       hasProperty: 'N/A',
@@ -63,24 +65,32 @@ export default function SpectraXForm() {
         throw new Error(result.message || 'Something went wrong. Please try again.');
       }
 
-      // Submit to Zoho CRM in the background (Web-to-Lead)
+      // Submit to Zoho CRM in the background (Web-to-Lead Form: 329426000026757143)
       try {
         const zohoParams = new URLSearchParams();
-        zohoParams.append('xnQsjsdp', '9d75c1ec9a9ce89c1cfde5512ee7be07aeb6ae92d5477978cc7f09d73e0cebca');
-        zohoParams.append('xmIwtLD', '47701f059aba5ae3d9a8d34438d171279271c6d7dd42b4f15387889d32a2e308d0dc40500d53bfff4f42dd4952cbc0a9');
+        // Zoho CRM Form Identification Tokens
+        zohoParams.append('xnQsjsdp', '8d492f4937bacd064ca51e7be5119c9713bc431fcf7d9bf584ddfcc00c1d15d5');
+        zohoParams.append('xmIwtLD', '9950cc491e98672a350068c5b7bcaeb745c156c2029dea60a0560dc44255f2e1e192054f26cdc75f6cf0639047fb30c4');
         zohoParams.append('actionType', 'TGVhZHM=');
         zohoParams.append('returnURL', 'null');
+
+        // Lead Details
         zohoParams.append('First Name', firstNameTrim);
-        zohoParams.append('Last Name', lastNameTrim || 'Unknown');
+        zohoParams.append('Last Name', lastNameTrim || 'Inquiry');
         zohoParams.append('Email', formData.email.trim());
         zohoParams.append('Phone', formData.phone.trim());
         zohoParams.append('City', formData.city.trim());
         zohoParams.append('State', formData.state.trim());
-        zohoParams.append('Company', fullName || 'Individual');
-        zohoParams.append('LEADCF126', 'B2B Franchise'); // Business Type (Mandatory in Zoho)
-        zohoParams.append('LEADCF10', 'Less than 1 Crore'); // Investment Range (Mandatory in Zoho)
+        zohoParams.append('Company', fullName || 'Spectra-X Inquiry');
+
+        // Custom Zoho Mappings for Spectra-X
+        zohoParams.append('LEADCF130', formData.city.trim()); // Property Address - City
+        zohoParams.append('LEADCF151', formData.state.trim()); // Property Address - State / Province
+        zohoParams.append('LEADCF126', 'B2B SPECTRAX'); // Business Type
+        zohoParams.append('Lead Source', 'Spectra-X Website Leads');
         zohoParams.append('Description', `Spectra X Technology Enquiry: ${formData.message.trim()}`);
         zohoParams.append('aG9uZXlwb3Q', '');
+        zohoParams.append('wFaTrisJS', 'true');
 
         console.log('Submitting Spectra X enquiry to Zoho CRM...');
         fetch('https://crm.zoho.in/crm/WebToLeadForm', {
@@ -91,10 +101,10 @@ export default function SpectraXForm() {
           },
           body: zohoParams.toString(),
         })
-          .then(() => console.log('Zoho CRM submission request dispatched successfully'))
-          .catch(err => console.error('Zoho CRM dispatch failed:', err));
+          .then(() => console.log('Zoho CRM Spectra-X submission request dispatched successfully'))
+          .catch(err => console.error('Zoho CRM Spectra-X dispatch failed:', err));
       } catch (zohoErr) {
-        console.error('Failed to prepare Zoho CRM payload:', zohoErr);
+        console.error('Failed to prepare Zoho CRM Spectra-X payload:', zohoErr);
       }
 
       setSuccess(true);
