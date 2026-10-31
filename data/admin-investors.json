@@ -40,9 +40,27 @@
         "mimeType": "application/pdf",
         "size": 742035,
         "title": "Outcome of Board Meeting_11.09.2026"
+      },
+      {
+        "id": "b3010202-6000-4000-8000-000000000005",
+        "originalName": "OUTCOME OF BOARD MEETING_30.10.2026.pdf",
+        "storedName": "b3010202-6000-4000-8000-000000000005.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b3010202-6000-4000-8000-000000000005.pdf",
+        "mimeType": "application/pdf",
+        "size": 954059,
+        "title": "OUTCOME OF BOARD MEETING_30.10.2026"
+      },
+      {
+        "id": "b3010202-6000-4000-8000-000000000006",
+        "originalName": "Prior Intimation of Board Meeting_30.10.2026.pdf",
+        "storedName": "b3010202-6000-4000-8000-000000000006.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b3010202-6000-4000-8000-000000000006.pdf",
+        "mimeType": "application/pdf",
+        "size": 630093,
+        "title": "PRIOR INTIMATION OF BOARD MEETING_30.10.2026"
       }
     ],
-    "updatedAt": "2026-09-11T16:56:53.509Z"
+    "updatedAt": "2026-10-31T08:08:27.602Z"
   },
   {
     "id": "4887120f-272d-4780-852b-9620e1f4e1ef",
@@ -269,6 +287,15 @@
     "parent": "",
     "files": [
       {
+        "id": "p3010202-6000-4000-8000-000000000001",
+        "originalName": "ALLOTMENT OF WARRANTS_30.10.2026.pdf",
+        "storedName": "p3010202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025898/p3010202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 954059,
+        "title": ".ALLOTMENT OF WARRANTS_30.10.2026"
+      },
+      {
         "id": "p1609202-6000-4000-8000-000000000001",
         "originalName": "EGM Notice._16.09.2026.pdf",
         "storedName": "p1609202-6000-4000-8000-000000000001.pdf",
@@ -305,7 +332,7 @@
         "title": "PCS Certificate- Compliance of SEBI ICDR"
       }
     ],
-    "updatedAt": "2026-09-17T08:46:05.596Z"
+    "updatedAt": "2026-10-31T07:59:24.520Z"
   },
   {
     "id": "6805e8297f482b5677025897",

@@ -483,6 +483,22 @@ export default function InvestorsPage() {
               fileName: '/uploads/investors/6805e8297f482b5677025882/b1109202-6000-4000-8000-000000000004.pdf',
               mimeType: 'application/pdf',
               size: 742035
+            },
+            {
+              _id: 'b3010202-6000-4000-8000-000000000005',
+              title: 'OUTCOME OF BOARD MEETING_30.10.2026',
+              originalname: 'OUTCOME OF BOARD MEETING_30.10.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b3010202-6000-4000-8000-000000000005.pdf',
+              mimeType: 'application/pdf',
+              size: 954059
+            },
+            {
+              _id: 'b3010202-6000-4000-8000-000000000006',
+              title: 'PRIOR INTIMATION OF BOARD MEETING_30.10.2026',
+              originalname: 'Prior Intimation of Board Meeting_30.10.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025882/b3010202-6000-4000-8000-000000000006.pdf',
+              mimeType: 'application/pdf',
+              size: 630093
             }
           ];
 
@@ -516,6 +532,14 @@ export default function InvestorsPage() {
           }
 
           const prefPdfs = [
+            {
+              _id: 'p3010202-6000-4000-8000-000000000001',
+              title: '.ALLOTMENT OF WARRANTS_30.10.2026',
+              originalname: 'ALLOTMENT OF WARRANTS_30.10.2026.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025898/p3010202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 954059
+            },
             {
               _id: 'p1609202-6000-4000-8000-000000000001',
               title: 'EGM Notice._16.09.2026',
@@ -556,7 +580,11 @@ export default function InvestorsPage() {
                 f._id === pp._id ||
                 f.originalname === pp.originalname ||
                 f.fileName === pp.fileName ||
-                (f.title && f.title === pp.title)
+                (f.title && f.title === pp.title) ||
+                (pp._id === 'p3010202-6000-4000-8000-000000000001' && (
+                  (f.originalname && f.originalname.includes('30.10.2026')) ||
+                  (f.title && f.title.includes('30.10.2026'))
+                ))
             );
             if (!exists) {
               data.investorsPdfs.push(pp);
@@ -731,24 +759,31 @@ export default function InvestorsPage() {
           });
 
           if (activeCategory.toLowerCase() === 'board meeting') {
-            // Sequence requested:
-            // 1. Prior intimation of Board Meeting_14.08.2026 (14/08/2026)
-            // 2. Outcome of Board Meeting_19.08.2026 (19/08/2026)
-            // 3. Prior Intimation of Board Meeting_07.09.2026 (07/09/2026)
-            // 4. Outcome of Board Meeting_11.09.2026 (11/09/2026)
+            // Sequence:
+            // 1. Prior intimation of Board Meeting_14.08.2026
+            // 2. Outcome of Board Meeting_19.08.2026
+            // 3. Prior Intimation of Board Meeting_07.09.2026
+            // 4. Outcome of Board Meeting_11.09.2026
+            // 5. OUTCOME OF BOARD MEETING_30.10.2026
+            // 6. PRIOR INTIMATION OF BOARD MEETING_30.10.2026
             const seqOrder = [
-              '14.08.2026',
-              '19.08.2026',
-              '07.09.2026',
-              '11.09.2026'
+              'Prior intimation of Board Meeting_14.08.2026',
+              'Outcome of Board Meeting_19.08.2026',
+              'Prior Intimation of Board Meeting_07.09.2026',
+              'Outcome of Board Meeting_11.09.2026',
+              'OUTCOME OF BOARD MEETING_30.10.2026',
+              'PRIOR INTIMATION OF BOARD MEETING_30.10.2026'
             ];
             const targetPdfs: any[] = [];
             const otherPdfs: any[] = [];
 
-            seqOrder.forEach((dateKey) => {
-              const found = data.investorsPdfs.find((f: any) =>
-                (f.originalname || '').includes(dateKey) || (f.title || '').includes(dateKey)
-              );
+            seqOrder.forEach((titleKey) => {
+              const cleanKey = titleKey.replace(/\.pdf$/i, '').trim().toLowerCase();
+              const found = data.investorsPdfs.find((f: any) => {
+                const normTitle = (f.title || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                const normName = (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
+              });
               if (
                 found &&
                 !targetPdfs.some(
@@ -763,7 +798,14 @@ export default function InvestorsPage() {
             });
 
             data.investorsPdfs.forEach((f: any) => {
-              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+              if (
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && f._id && t._id === f._id) ||
+                    (t.fileName && f.fileName && t.fileName === f.fileName) ||
+                    (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase())
+                )
+              ) {
                 otherPdfs.push(f);
               }
             });
@@ -773,6 +815,8 @@ export default function InvestorsPage() {
 
           if (activeCategory.toLowerCase() === 'preferential issue') {
             const seqOrder = [
+              '.ALLOTMENT OF WARRANTS_30.10.2026',
+              'ALLOTMENT OF WARRANTS_30.10.2026',
               'EGM Notice._16.09.2026',
               'Issuance of securities_11.09.2026',
               'Pricing Certificate',
@@ -782,10 +826,12 @@ export default function InvestorsPage() {
             const otherPdfs: any[] = [];
 
             seqOrder.forEach((titleKey) => {
-              const found = data.investorsPdfs.find((f: any) =>
-                (f.title || '').trim().toLowerCase() === titleKey.trim().toLowerCase() ||
-                (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase() === titleKey.trim().toLowerCase()
-              );
+              const cleanKey = titleKey.replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
+              const found = data.investorsPdfs.find((f: any) => {
+                const normTitle = (f.title || '').replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                const normName = (f.originalname || '').replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
+              });
               if (
                 found &&
                 !targetPdfs.some(
@@ -800,7 +846,14 @@ export default function InvestorsPage() {
             });
 
             data.investorsPdfs.forEach((f: any) => {
-              if (!targetPdfs.some((t: any) => t._id === f._id || t.fileName === f.fileName || t.originalname === f.originalname)) {
+              if (
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && f._id && t._id === f._id) ||
+                    (t.fileName && f.fileName && t.fileName === f.fileName) ||
+                    (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase())
+                )
+              ) {
                 otherPdfs.push(f);
               }
             });
