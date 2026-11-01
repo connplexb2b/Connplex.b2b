@@ -85,6 +85,13 @@ export class VistaClient {
     throw new Error(`Max retries reached for ${endpoint}`);
   }
 
+  async getConsolidatedRevenue(cinemaId, businessDate) {
+    return this.executeWithRetry('/api.asmx/GetFranchiseDailyConsolidatedRevenue', {
+      CinemaID: cinemaId,
+      BusinessDate: businessDate,
+    });
+  }
+
   async getFranchiseRevenueDashboard(cinemaId, fromDate, toDate) {
     return this.executeWithRetry('/api.asmx/GetFranchiseRevenueDashboard', {
       CinemaID: cinemaId,

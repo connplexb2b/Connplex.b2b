@@ -107,15 +107,44 @@ export class RevenueSyncWorker {
         let fetchedFromLive = false;
 
         try {
-          // Attempt live Vista API call
-          const resp = await this.vista.getFranchiseRevenueDashboard(
-            franchise.vistaCinemaId,
-            range.startDate,
-            range.endDate
-          );
-          if (resp?.data?.DailyBreakdown?.length) {
-            dailyItems = resp.data.DailyBreakdown;
-            fetchedFromLive = true;
+          // 1. If syncing a single date (e.g. intraday 10-minute worker), try the new consolidated endpoint first
+          if (range.startDate === range.endDate) {
+            try {
+              const conso = await this.vista.getConsolidatedRevenue(
+                franchise.vistaCinemaId,
+                range.startDate
+              );
+              if (conso && (conso.TicketsSold !== undefined || conso.TotalGrossRevenue !== undefined)) {
+                dailyItems = [{
+                  Date: conso.BusinessDate || range.startDate,
+                  TicketsSold: conso.TicketsSold || 0,
+                  TicketRevenue: conso.TotalTicketRevenue || 0,
+                  FnBRevenue: conso.TotalFnBRevenue || 0,
+                  TotalDailyRevenue: conso.TotalGrossRevenue || 0,
+                  DailyATP: conso.ATP || 0,
+                  DailySPH: conso.SPH || 0,
+                  BookMyShowRevenue: conso.ChannelBreakdown?.BookMyShowRevenue || 0,
+                  WebsiteRevenue: conso.ChannelBreakdown?.OnlineWebAndAppRevenue || 0,
+                  CounterRevenue: conso.ChannelBreakdown?.BoxOfficeCounterRevenue || 0,
+                }];
+                fetchedFromLive = true;
+              }
+            } catch (consoErr: any) {
+              // Consolidated endpoint not yet registered in IIS, fall back to GetFranchiseRevenueDashboard
+            }
+          }
+
+          // 2. Multi-day range or fallback: use GetFranchiseRevenueDashboard
+          if (!fetchedFromLive) {
+            const resp = await this.vista.getFranchiseRevenueDashboard(
+              franchise.vistaCinemaId,
+              range.startDate,
+              range.endDate
+            );
+            if (resp?.data?.DailyBreakdown?.length) {
+              dailyItems = resp.data.DailyBreakdown;
+              fetchedFromLive = true;
+            }
           }
         } catch (apiErr: any) {
           // Vista endpoint offline or timeout: use verified audited seed

@@ -86,14 +86,42 @@ export class RevenueSyncWorker {
         let fetchedFromLive = false;
 
         try {
-          const resp = await this.vista.getFranchiseRevenueDashboard(
-            franchise.vistaCinemaId,
-            range.startDate,
-            range.endDate
-          );
-          if (resp?.data?.DailyBreakdown?.length) {
-            dailyItems = resp.data.DailyBreakdown;
-            fetchedFromLive = true;
+          if (range.startDate === range.endDate) {
+            try {
+              const conso = await this.vista.getConsolidatedRevenue(
+                franchise.vistaCinemaId,
+                range.startDate
+              );
+              if (conso && (conso.TicketsSold !== undefined || conso.TotalGrossRevenue !== undefined)) {
+                dailyItems = [{
+                  Date: conso.BusinessDate || range.startDate,
+                  TicketsSold: conso.TicketsSold || 0,
+                  TicketRevenue: conso.TotalTicketRevenue || 0,
+                  FnBRevenue: conso.TotalFnBRevenue || 0,
+                  TotalDailyRevenue: conso.TotalGrossRevenue || 0,
+                  DailyATP: conso.ATP || 0,
+                  DailySPH: conso.SPH || 0,
+                  BookMyShowRevenue: conso.ChannelBreakdown?.BookMyShowRevenue || 0,
+                  WebsiteRevenue: conso.ChannelBreakdown?.OnlineWebAndAppRevenue || 0,
+                  CounterRevenue: conso.ChannelBreakdown?.BoxOfficeCounterRevenue || 0,
+                }];
+                fetchedFromLive = true;
+              }
+            } catch (consoErr) {
+              // Fall through to getFranchiseRevenueDashboard
+            }
+          }
+
+          if (!fetchedFromLive) {
+            const resp = await this.vista.getFranchiseRevenueDashboard(
+              franchise.vistaCinemaId,
+              range.startDate,
+              range.endDate
+            );
+            if (resp?.data?.DailyBreakdown?.length) {
+              dailyItems = resp.data.DailyBreakdown;
+              fetchedFromLive = true;
+            }
           }
         } catch (apiErr) {
           console.warn(`[Backend Sync] Live Vista call for ${franchise.vistaCinemaId} failed (${apiErr.message}). Using baseline.`);

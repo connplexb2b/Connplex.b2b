@@ -32,6 +32,24 @@ export interface VistaDailyBreakdown {
   CounterRevenue?: number;
 }
 
+export interface VistaConsolidatedRevenueResponse {
+  CinemaID: string;
+  BusinessDate: string;
+  TicketsSold: number;
+  TotalTicketRevenue: number;
+  ChannelBreakdown: {
+    BookMyShowRevenue: number;
+    OnlineWebAndAppRevenue: number;
+    BoxOfficeCounterRevenue: number;
+  };
+  TotalFnBRevenue: number;
+  FnBUnitsSold: number;
+  MerchandiseRevenue: number;
+  TotalGrossRevenue: number;
+  ATP: number;
+  SPH: number;
+}
+
 export interface VistaRevenueResponse {
   Status: string;
   msg: string;
@@ -184,6 +202,23 @@ export class VistaClient {
     }
 
     throw new Error(`Max retries reached for ${endpoint}`);
+  }
+
+  /**
+   * Primary Consolidated Revenue API: POST /api.asmx/GetFranchiseDailyConsolidatedRevenue
+   * Returns exact channel breakdown (BMS, Web/App, Counter), F&B, Merchandise, ATP & SPH
+   */
+  public async getConsolidatedRevenue(
+    cinemaId: string,
+    businessDate: string
+  ): Promise<VistaConsolidatedRevenueResponse> {
+    return this.executeWithRetry<VistaConsolidatedRevenueResponse>(
+      '/api.asmx/GetFranchiseDailyConsolidatedRevenue',
+      {
+        CinemaID: cinemaId,
+        BusinessDate: businessDate,
+      }
+    );
   }
 
   /**
