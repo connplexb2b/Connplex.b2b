@@ -90,6 +90,37 @@ export default function InvestorRelationsPage() {
             }
           }
 
+          // Ensure "Others" tab is present under Announcements
+          const annGroup = list.find(
+            (c: any) => (c.parent || '').toLowerCase().trim() === 'announcements'
+          );
+          if (annGroup && annGroup.children) {
+            const hasOthers = annGroup.children.some(
+              (ch: any) => (ch.title || '').toLowerCase().trim() === 'others'
+            );
+            if (!hasOthers) {
+              annGroup.children.push({
+                _id: '6805e8297f482b5677025899',
+                title: 'Others',
+                type: 'Files',
+                parent: 'Announcements',
+                investorsPdfs: []
+              });
+            }
+          }
+
+          // Ensure "ESOP" tab is present
+          const hasESOP = list.some(
+            (c: any) => (c.title || c.parent || '').toLowerCase().trim() === 'esop'
+          );
+          if (!hasESOP) {
+            list.push({
+              parent: '',
+              title: 'ESOP',
+              children: []
+            });
+          }
+
           setCategories(list);
           
           // Auto-select first item
@@ -272,6 +303,40 @@ export default function InvestorRelationsPage() {
               fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d1109202-6000-4000-8000-000000000001.pdf',
               mimeType: 'application/pdf',
               size: 742035
+            });
+          }
+
+          // Check if Record Date already exists (unshift to place newest at the very top)
+          const existsRecordDate = data.investorsPdfs.some(
+            (f: any) =>
+              (f.originalname || '').includes('RECORD DATE FOR THE FIRST INTERIM DIVIDEND') ||
+              (f.title || '').includes('RECORD DATE FOR THE FIRST INTERIM DIVIDEND')
+          );
+          if (!existsRecordDate) {
+            data.investorsPdfs.unshift({
+              _id: 'd0411202-6000-4000-8000-000000000001',
+              title: 'RECORD DATE FOR THE FIRST INTERIM DIVIDEND F0R FY 2026-27',
+              originalname: 'RECORD DATE FOR THE FIRST INTERIM DIVIDEND F0R FY 2026-27.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d0411202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 12185359
+            });
+          }
+
+          // Check if First Interim Dividend already exists in other announcements
+          const existsFirstDividend = data.investorsPdfs.some(
+            (f: any) =>
+              (f.originalname || '').includes('FIRST INTERIM DIVIDEND_FY 2026-27') ||
+              (f.title || '').includes('FIRST INTERIM DIVIDEND_FY 2026-27')
+          );
+          if (!existsFirstDividend) {
+            data.investorsPdfs.unshift({
+              _id: 'd0411202-6000-4000-8000-000000000002',
+              title: 'FIRST INTERIM DIVIDEND_FY 2026-27',
+              originalname: 'FIRST INTERIM DIVIDEND_FY 2026-27.pdf',
+              fileName: '/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d0411202-6000-4000-8000-000000000002.pdf',
+              mimeType: 'application/pdf',
+              size: 12185359
             });
           }
 
@@ -668,6 +733,88 @@ export default function InvestorRelationsPage() {
           data.content = `<p><strong>For any investor complaints/grievances, kindly contact us -</strong></p><p>CS Jaydeep Dahyabhai Prajapati,&nbsp;<br>Company Secretary &amp; Compliance Officer.</p><p><strong>Address:</strong> &nbsp;C-Block, 10 Floor, Krish Cubical, Govardhan Party Plot,<br>Avalon Hotel Road, Sindhu Bhavan Marg, Thaltej, Ahmedabad, Gujarat 380059</p><p><strong>Tel. No.:</strong> +91 07935289865/ 07935288291</p><p><strong>E-mail:</strong> cs@theconnplex.com, investor@theconnplex.com</p><p>&nbsp;</p><p><strong>Registrar &amp; Share Transfer Agent</strong></p><p><strong>ACCURATE SECURITIES AND REGISTRY PRIVATE LIMITED</strong><br><strong>Address:</strong> B1105 - 1108, K P Epitome, Nr. Makarba Lake, Nr. Siddhi Vinayak Towers,<br>Makarba, Ahmedabad - 380051.<br><strong>Tel. No.:</strong> +91-79-48000319<br><strong>Email:</strong> investor@accuratesecurities.com<br><strong>Website:</strong> www.accuratesecurities.com</p>`;
         }
 
+        const isOthers = activeCategory.toLowerCase() === 'others';
+        if (isOthers) {
+          if (!data) {
+            data = {
+              _id: '6805e8297f482b5677025899',
+              title: 'Others',
+              type: 'Files',
+              parent: 'Announcements',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+
+          const othersPdfs = [
+            {
+              _id: 'o0411202-6000-4000-8000-000000000001',
+              title: 'FIRST INTERIM DIVIDEND_FY 2026-27',
+              originalname: 'FIRST INTERIM DIVIDEND_FY 2026-27.pdf',
+              fileName: '/uploads/investors/6805e8297f482b5677025899/o0411202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 12185359
+            }
+          ];
+
+          othersPdfs.forEach((op) => {
+            const exists = data.investorsPdfs.some(
+              (f: any) =>
+                f._id === op._id ||
+                f.originalname === op.originalname ||
+                f.fileName === op.fileName ||
+                (f.title && f.title === op.title) ||
+                ((f.originalname && f.originalname.includes('FIRST INTERIM DIVIDEND')) || (f.title && f.title.includes('FIRST INTERIM DIVIDEND')))
+            );
+            if (!exists) {
+              data.investorsPdfs.unshift(op);
+            }
+          });
+        }
+
+        const isESOP = activeCategory.toLowerCase() === 'esop';
+        if (isESOP) {
+          if (!data) {
+            data = {
+              _id: '68ea24cbb1ee9afbc84e63e0',
+              title: 'ESOP',
+              type: 'Files',
+              parent: '',
+              investorsPdfs: []
+            };
+          }
+          if (!data.investorsPdfs) {
+            data.investorsPdfs = [];
+          }
+
+          const esopPdfs = [
+            {
+              _id: 'e0411202-6000-4000-8000-000000000001',
+              title: 'GRANT ESOP-NRC MEETING_04.11.2026',
+              originalname: 'GRANT ESOP-NRC MEETING_04.11.2026.pdf',
+              fileName: '/uploads/investors/68ea24cbb1ee9afbc84e63e0/e0411202-6000-4000-8000-000000000001.pdf',
+              mimeType: 'application/pdf',
+              size: 890580
+            }
+          ];
+
+          esopPdfs.forEach((ep) => {
+            const exists = data.investorsPdfs.some(
+              (f: any) =>
+                f._id === ep._id ||
+                f.originalname === ep.originalname ||
+                f.fileName === ep.fileName ||
+                (f.title && f.title === ep.title) ||
+                ((f.originalname && f.originalname.includes('04.11.2026')) || (f.title && f.title.includes('04.11.2026')))
+            );
+            if (!exists) {
+              data.investorsPdfs.unshift(ep);
+            }
+          });
+        }
+
         // Fetch local database details to merge uploads
         try {
           const localRes = await fetch('/api/investors');
@@ -679,6 +826,7 @@ export default function InvestorRelationsPage() {
                 (activeCategory.toLowerCase() === 'other announcements' && inv.title.toLowerCase() === 'other annoucment') ||
                 (activeCategory.toLowerCase() === 'other announcement' && inv.title.toLowerCase() === 'other annoucment') ||
                 (activeCategory.toLowerCase() === 'other annoucment' && inv.title.toLowerCase() === 'other annoucment') ||
+                (activeCategory.toLowerCase() === 'others' && inv.title.toLowerCase() === 'others') ||
                 (activeCategory.toLowerCase() === 'shareholding patterns' && inv.title.toLowerCase() === 'shareholding pattern') ||
                 (activeCategory.toLowerCase() === 'shareholding pattern' && inv.title.toLowerCase() === 'shareholding patterns')
             );
@@ -928,6 +1076,55 @@ export default function InvestorRelationsPage() {
               const found = data.investorsPdfs.find((f: any) => {
                 const normTitle = (f.title || '').replace(/\.pdf$/i, '').trim().toLowerCase();
                 const normName = (f.originalname || '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
+              });
+              if (
+                found &&
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && found._id && t._id === found._id) ||
+                    (t.fileName && found.fileName && t.fileName === found.fileName) ||
+                    (t.originalname && found.originalname && t.originalname.toLowerCase() === found.originalname.toLowerCase())
+                )
+              ) {
+                targetPdfs.push(found);
+              }
+            });
+
+            data.investorsPdfs.forEach((f: any) => {
+              if (
+                !targetPdfs.some(
+                  (t: any) =>
+                    (t._id && f._id && t._id === f._id) ||
+                    (t.fileName && f.fileName && t.fileName === f.fileName) ||
+                    (t.originalname && f.originalname && t.originalname.toLowerCase() === f.originalname.toLowerCase())
+                )
+              ) {
+                otherPdfs.push(f);
+              }
+            });
+
+            data.investorsPdfs = [...targetPdfs, ...otherPdfs];
+          }
+
+          if (activeCategory.toLowerCase() === 'esop') {
+            const seqOrder = [
+              'GRANT ESOP-NRC MEETING_04.11.2026',
+              'Scheme 2025',
+              'Voting Result - Postal ballot 11-11-2025',
+              'Postal Ballot Notice - 10-10-2025',
+              'Newspaper Advertisement - Postal Ballot',
+              'Board Meeting Outcome - 07.10.2025',
+              'Board Meeting Intimation - 01.10.2025'
+            ];
+            const targetPdfs: any[] = [];
+            const otherPdfs: any[] = [];
+
+            seqOrder.forEach((titleKey) => {
+              const cleanKey = titleKey.replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
+              const found = data.investorsPdfs.find((f: any) => {
+                const normTitle = (f.title || '').replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
+                const normName = (f.originalname || '').replace(/^\./, '').replace(/\.pdf$/i, '').trim().toLowerCase();
                 return normTitle === cleanKey || normName === cleanKey || normTitle.includes(cleanKey) || normName.includes(cleanKey);
               });
               if (

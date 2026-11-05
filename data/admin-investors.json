@@ -58,9 +58,18 @@
         "mimeType": "application/pdf",
         "size": 630093,
         "title": "PRIOR INTIMATION OF BOARD MEETING_30.10.2026"
+      },
+      {
+        "id": "b0411202-6000-4000-8000-000000000007",
+        "originalName": "OUTCOME OF BOARD MEETING_04.11.2026.pdf",
+        "storedName": "b0411202-6000-4000-8000-000000000007.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025882/b0411202-6000-4000-8000-000000000007.pdf",
+        "mimeType": "application/pdf",
+        "size": 12185359,
+        "title": "OUTCOME OF BOARD MEETING_04.11.2026"
       }
     ],
-    "updatedAt": "2026-10-31T08:08:27.602Z"
+    "updatedAt": "2026-11-04T15:30:00.000Z"
   },
   {
     "id": "4887120f-272d-4780-852b-9620e1f4e1ef",
@@ -68,6 +77,24 @@
     "type": "pdf",
     "parent": "Announcements",
     "files": [
+      {
+        "id": "d0411202-6000-4000-8000-000000000002",
+        "originalName": "FIRST INTERIM DIVIDEND_FY 2026-27.pdf",
+        "storedName": "d0411202-6000-4000-8000-000000000002.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d0411202-6000-4000-8000-000000000002.pdf",
+        "mimeType": "application/pdf",
+        "size": 12185359,
+        "title": "FIRST INTERIM DIVIDEND_FY 2026-27"
+      },
+      {
+        "id": "d0411202-6000-4000-8000-000000000001",
+        "originalName": "RECORD DATE FOR THE FIRST INTERIM DIVIDEND F0R FY 2026-27.pdf",
+        "storedName": "d0411202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/4887120f-272d-4780-852b-9620e1f4e1ef/d0411202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 12185359,
+        "title": "RECORD DATE FOR THE FIRST INTERIM DIVIDEND F0R FY 2026-27"
+      },
       {
         "id": "d2209202-6000-4000-8000-000000000001",
         "originalName": "Intimation under SEBI (LODR) Regulations, 2015-22.09.2026.pdf",
@@ -188,7 +215,7 @@
         "size": 33
       }
     ],
-    "updatedAt": "2026-09-23T07:34:22.562Z"
+    "updatedAt": "2026-11-04T15:30:00.000Z"
   },
   {
     "id": "6805e8297f482b5677025884",
@@ -413,5 +440,95 @@
       }
     ],
     "updatedAt": "2026-10-19T14:01:07.716Z"
+  },
+  {
+    "id": "68ea24cbb1ee9afbc84e63e0",
+    "title": "ESOP",
+    "type": "Files",
+    "parent": "",
+    "files": [
+      {
+        "id": "e0411202-6000-4000-8000-000000000001",
+        "originalName": "GRANT ESOP-NRC MEETING_04.11.2026.pdf",
+        "storedName": "e0411202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/68ea24cbb1ee9afbc84e63e0/e0411202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 890580,
+        "title": "GRANT ESOP-NRC MEETING_04.11.2026"
+      },
+      {
+        "id": "692a944328a8bb2b5a67a52c",
+        "originalName": "Scheme 2025.pdf",
+        "storedName": "1764398147776-419370945.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1764398147776-419370945.pdf",
+        "mimeType": "application/pdf",
+        "size": 4340138,
+        "title": "Scheme 2025"
+      },
+      {
+        "id": "691332df0b37aca75ce79a24",
+        "originalName": "Voting Result - Postal ballot 11-11-2025.pdf",
+        "storedName": "1762865887754-680594615.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1762865887754-680594615.pdf",
+        "mimeType": "application/pdf",
+        "size": 500000,
+        "title": "Voting Result - Postal ballot 11-11-2025"
+      },
+      {
+        "id": "68ea24cbb1ee9afbc84e63e4",
+        "originalName": "Newspaper Advertisement - Postal Ballot.pdf",
+        "storedName": "1760175307363-177618185.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1760175307363-177618185.pdf",
+        "mimeType": "application/pdf",
+        "size": 500000,
+        "title": "Newspaper Advertisement - Postal Ballot"
+      },
+      {
+        "id": "68ea24cbb1ee9afbc84e63e3",
+        "originalName": "Postal Ballot Notice - 10-10-2025.pdf",
+        "storedName": "1760175307120-403568912.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1760175307120-403568912.pdf",
+        "mimeType": "application/pdf",
+        "size": 500000,
+        "title": "Postal Ballot Notice - 10-10-2025"
+      },
+      {
+        "id": "68ea24cbb1ee9afbc84e63e2",
+        "originalName": "Board Meeting Outcome - 07.10.2025.pdf",
+        "storedName": "1760175307084-117465098.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1760175307084-117465098.pdf",
+        "mimeType": "application/pdf",
+        "size": 500000,
+        "title": "Board Meeting Outcome - 07.10.2025"
+      },
+      {
+        "id": "68ea24cbb1ee9afbc84e63e1",
+        "originalName": "Board Meeting Intimation - 01.10.2025.pdf",
+        "storedName": "1760175307022-121271345.pdf",
+        "url": "https://webadmin.theconnplex.com/api/file//1760175307022-121271345.pdf",
+        "mimeType": "application/pdf",
+        "size": 500000,
+        "title": "Board Meeting Intimation - 01.10.2025"
+      }
+    ],
+    "updatedAt": "2026-11-04T15:30:00.000Z"
+  },
+  {
+    "id": "6805e8297f482b5677025899",
+    "title": "Others",
+    "type": "Files",
+    "parent": "Announcements",
+    "files": [
+      {
+        "id": "o0411202-6000-4000-8000-000000000001",
+        "originalName": "FIRST INTERIM DIVIDEND_FY 2026-27.pdf",
+        "storedName": "o0411202-6000-4000-8000-000000000001.pdf",
+        "url": "/uploads/investors/6805e8297f482b5677025899/o0411202-6000-4000-8000-000000000001.pdf",
+        "mimeType": "application/pdf",
+        "size": 12185359,
+        "title": "FIRST INTERIM DIVIDEND_FY 2026-27"
+      }
+    ],
+    "updatedAt": "2026-11-04T15:30:00.000Z"
   }
 ]
