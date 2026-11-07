@@ -5,9 +5,11 @@ import type { Investor, InvestorFileType, InvestorFile } from '@/lib/media-utils
 import { connectToDatabase } from '@/lib/db';
 import { Investor as InvestorModel } from '@/models/Investor';
 import { InvestorFileContent as InvestorFileContentModel } from '@/models/InvestorFileContent';
+import { ALL_PREDEFINED_SECTIONS, doSectionTitlesMatch } from '@/lib/investor-sections';
 
 export type { Investor, InvestorFileType, InvestorFile };
 export { formatDate, formatFileSize, getAcceptForType } from '@/lib/media-utils';
+export { INVESTOR_SECTION_GROUPS, ALL_PREDEFINED_SECTIONS, doSectionTitlesMatch } from '@/lib/investor-sections';
 
 const DATA_PATH = path.join(process.cwd(), 'data', 'admin-investors.json');
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'investors');
@@ -234,7 +236,8 @@ export async function deleteInvestor(id: string): Promise<boolean> {
 
 export async function addFileToInvestor(
   investorId: string,
-  file: File
+  file: File,
+  customTitle?: string
 ): Promise<{ investor: Investor; file: InvestorFile } | { error: string }> {
   await connectToDatabase();
   const doc = await InvestorModel.findOne({ id: investorId });
@@ -264,7 +267,12 @@ export async function addFileToInvestor(
   
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  // Save raw binary file content to MongoDB under BOTH storedName and original file.name
+  // Determine user title or clean fallback
+  const finalTitle = customTitle && customTitle.trim()
+    ? customTitle.trim()
+    : file.name.replace(/\.pdf$/i, '').replace(/\.mp3$/i, '').trim();
+
+  // Save raw binary file content to MongoDB under storedName, file.name, and title if distinct
   try {
     await InvestorFileContentModel.findOneAndUpdate(
       { filename: storedName },
@@ -276,6 +284,14 @@ export async function addFileToInvestor(
       { $set: { filename: file.name, data: buffer, mimeType: mime, updatedAt: new Date() } },
       { upsert: true }
     );
+    if (finalTitle && finalTitle !== file.name) {
+      const titleFilename = finalTitle.endsWith(fileExt) ? finalTitle : `${finalTitle}${fileExt}`;
+      await InvestorFileContentModel.findOneAndUpdate(
+        { filename: titleFilename },
+        { $set: { filename: titleFilename, data: buffer, mimeType: mime, updatedAt: new Date() } },
+        { upsert: true }
+      );
+    }
   } catch (err: any) {
     console.error('Failed to write file to MongoDB:', err);
     return { error: 'Failed to upload file to database: ' + err.message };
@@ -290,7 +306,6 @@ export async function addFileToInvestor(
     console.warn('Silent warning: Failed to write file to local filesystem:', err);
   }
 
-  const title = file.name.replace(/\.pdf$/i, '').replace(/\.mp3$/i, '').trim();
   const stored: InvestorFile = {
     id: randomUUID(),
     originalName: file.name,
@@ -298,10 +313,11 @@ export async function addFileToInvestor(
     url: `/uploads/investors/${investorId}/${storedName}`,
     mimeType: mime,
     size: file.size,
-    title,
+    title: finalTitle,
   };
 
-  doc.files.push(stored);
+  // Place newest uploaded documents at the top of the list
+  doc.files.unshift(stored);
   doc.updatedAt = new Date().toISOString();
   await doc.save();
 
@@ -326,6 +342,101 @@ export async function addFileToInvestor(
   };
 
   return { investor: updatedInvestor, file: stored };
+}
+
+export async function updateInvestorFileTitle(
+  investorId: string,
+  fileId: string,
+  newTitle: string
+): Promise<{ investor: Investor; file: InvestorFile } | { error: string }> {
+  if (!newTitle || !newTitle.trim()) {
+    return { error: 'Document name cannot be empty' };
+  }
+
+  await connectToDatabase();
+  const doc = await InvestorModel.findOne({ id: investorId });
+  if (!doc) return { error: 'Section not found' };
+
+  const fileItem = doc.files.find((f: any) => f.id === fileId);
+  if (!fileItem) return { error: 'Document not found' };
+
+  fileItem.title = newTitle.trim();
+  doc.updatedAt = new Date().toISOString();
+  await doc.save();
+
+  readInvestors().then(writeInvestors).catch(() => {});
+
+  const updatedInvestor: Investor = {
+    id: doc.id,
+    title: doc.title,
+    type: doc.type as InvestorFileType,
+    parent: doc.parent || '',
+    files: doc.files.map((f: any) => ({
+      id: f.id,
+      originalName: f.originalName,
+      storedName: f.storedName,
+      url: f.url,
+      mimeType: f.mimeType,
+      size: f.size,
+      title: f.title
+    })),
+    updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
+  };
+
+  return {
+    investor: updatedInvestor,
+    file: {
+      id: fileItem.id,
+      originalName: fileItem.originalName,
+      storedName: fileItem.storedName,
+      url: fileItem.url,
+      mimeType: fileItem.mimeType,
+      size: fileItem.size,
+      title: fileItem.title
+    }
+  };
+}
+
+export async function getOrCreateSection(
+  title: string,
+  parent?: string,
+  type?: InvestorFileType
+): Promise<Investor> {
+  const cleanTitle = title.trim();
+  await connectToDatabase();
+
+  const all = await readInvestors();
+  const matched = all.find((inv) => doSectionTitlesMatch(inv.title, cleanTitle));
+  if (matched) {
+    return matched;
+  }
+
+  const predefined = ALL_PREDEFINED_SECTIONS.find((p) =>
+    doSectionTitlesMatch(p.title, cleanTitle)
+  );
+
+  const newId = predefined?.id || randomUUID();
+  const newParent = (parent !== undefined ? parent : predefined?.parent) || '';
+  const newType = type || predefined?.type || 'pdf';
+
+  const doc = await InvestorModel.create({
+    id: newId,
+    title: predefined?.title || cleanTitle,
+    type: newType,
+    parent: newParent,
+    files: [],
+  });
+
+  readInvestors().then(writeInvestors).catch(() => {});
+
+  return {
+    id: doc.id,
+    title: doc.title,
+    type: doc.type as InvestorFileType,
+    parent: doc.parent,
+    files: [],
+    updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : new Date().toISOString()
+  };
 }
 
 export async function removeFileFromInvestor(

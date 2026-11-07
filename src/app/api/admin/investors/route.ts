@@ -39,11 +39,19 @@ export async function POST(request: Request) {
 
       const investor = await createInvestor({ title, type, parent });
       const files = formData.getAll('files');
+      const fileTitlesRaw = formData.get('fileTitles');
+      let fileTitles: string[] = [];
+      if (fileTitlesRaw) {
+        try {
+          fileTitles = JSON.parse(String(fileTitlesRaw));
+        } catch {}
+      }
 
-      for (const item of files) {
-        const fileItem = item as any;
+      for (let i = 0; i < files.length; i++) {
+        const fileItem = files[i] as any;
         if (fileItem && typeof fileItem.name === 'string' && fileItem.size > 0) {
-          const result = await addFileToInvestor(investor.id, fileItem);
+          const customTitle = fileTitles[i] || undefined;
+          const result = await addFileToInvestor(investor.id, fileItem, customTitle);
           if ('error' in result) {
             return NextResponse.json({ error: result.error }, { status: 400 });
           }
