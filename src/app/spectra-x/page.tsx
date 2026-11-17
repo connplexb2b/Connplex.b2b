@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SpectraXForm from '@/components/SpectraXForm';
@@ -13,6 +14,31 @@ export const metadata = {
 const SpectraXPage = () => {
     return (
         <div className="font-outfit bg-black text-[#e0e0e0] antialiased overflow-x-hidden selection:bg-[#C9A84C]/30 selection:text-white">
+            {/* Meta Pixel Code */}
+            <Script id="meta-pixel-spectra-x" strategy="afterInteractive">
+                {`
+                    !function(f,b,e,v,n,t,s)
+                    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                    n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)}(window, document,'script',
+                    'https://connect.facebook.net/en_US/fbevents.js');
+                    fbq('init', '882762604894501');
+                    fbq('track', 'PageView');
+                `}
+            </Script>
+            <noscript>
+                <img
+                    height="1"
+                    width="1"
+                    style={{ display: 'none' }}
+                    src="https://www.facebook.com/tr?id=882762604894501&ev=PageView&noscript=1"
+                    alt=""
+                />
+            </noscript>
+
             {/* Header Overlay */}
             <Header />
 
