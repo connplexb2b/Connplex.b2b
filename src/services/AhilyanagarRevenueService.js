@@ -196,26 +196,31 @@ export const getAhilyanagarDailyRevenue = async ({
     let resolvedFromDate = fromDate;
     let resolvedToDate = toDate;
 
+    const today = new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const firstOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+
     // Handle standard presets
     if (preset && (!resolvedFromDate || !resolvedToDate)) {
-      const today = "2026-09-22";
       if (preset === "Today") {
         resolvedFromDate = today;
         resolvedToDate = today;
       } else if (preset === "Yesterday") {
-        resolvedFromDate = "2026-09-21";
-        resolvedToDate = "2026-09-21";
+        const yest = new Date(now.getTime() - 86400000).toISOString().split("T")[0];
+        resolvedFromDate = yest;
+        resolvedToDate = yest;
       } else if (preset === "Last 7 Days") {
-        resolvedFromDate = "2026-09-15";
+        const d7 = new Date(now.getTime() - 7 * 86400000).toISOString().split("T")[0];
+        resolvedFromDate = d7;
         resolvedToDate = today;
       } else if (preset === "Month-to-Date") {
-        resolvedFromDate = "2026-09-01";
+        resolvedFromDate = firstOfMonth;
         resolvedToDate = today;
       }
     }
 
-    if (!resolvedFromDate) resolvedFromDate = "2026-09-01";
-    if (!resolvedToDate) resolvedToDate = "2026-09-22";
+    if (!resolvedFromDate) resolvedFromDate = firstOfMonth;
+    if (!resolvedToDate) resolvedToDate = today;
 
     const targetCinemaId = resolveVistaCinemaId(cinemaId);
     const cleanBase = (serverUrl || DEFAULT_VISTA_BASE).replace(/\/+$/, "");

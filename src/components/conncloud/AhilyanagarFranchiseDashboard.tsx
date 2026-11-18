@@ -60,10 +60,17 @@ export default function AhilyanagarFranchiseDashboard({
   onNotification,
   defaultExpanded = true
 }: AhilyanagarFranchiseDashboardProps) {
+  // Helpers for dynamic dates
+  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getFirstOfMonthStr = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+  };
+
   // Filter States
   const [datePreset, setDatePreset] = useState<'Today' | 'Yesterday' | 'Last 7 Days' | 'Month-to-Date' | 'Custom'>('Month-to-Date');
-  const [fromDate, setFromDate] = useState<string>('2026-09-01');
-  const [toDate, setToDate] = useState<string>('2026-09-20');
+  const [fromDate, setFromDate] = useState<string>(getFirstOfMonthStr());
+  const [toDate, setToDate] = useState<string>(getTodayStr());
   
   // Data States
   const [summary, setSummary] = useState<SummaryData | null>(null);
@@ -131,19 +138,22 @@ export default function AhilyanagarFranchiseDashboard({
   // Helper date preset updater
   const handlePresetChange = (preset: 'Today' | 'Yesterday' | 'Last 7 Days' | 'Month-to-Date' | 'Custom') => {
     setDatePreset(preset);
-    const end = '2026-09-20'; // Anchor date of verified collection period
+    const today = getTodayStr();
+    const now = new Date();
     if (preset === 'Today') {
-      setFromDate(end);
-      setToDate(end);
+      setFromDate(today);
+      setToDate(today);
     } else if (preset === 'Yesterday') {
-      setFromDate('2026-09-19');
-      setToDate('2026-09-19');
+      const yest = new Date(now.getTime() - 86400000).toISOString().split('T')[0];
+      setFromDate(yest);
+      setToDate(yest);
     } else if (preset === 'Last 7 Days') {
-      setFromDate('2026-09-14');
-      setToDate(end);
+      const d7 = new Date(now.getTime() - 7 * 86400000).toISOString().split('T')[0];
+      setFromDate(d7);
+      setToDate(today);
     } else if (preset === 'Month-to-Date') {
-      setFromDate('2026-09-01');
-      setToDate(end);
+      setFromDate(getFirstOfMonthStr());
+      setToDate(today);
     }
   };
 

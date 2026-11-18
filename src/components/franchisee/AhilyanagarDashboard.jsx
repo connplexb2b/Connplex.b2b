@@ -9,10 +9,17 @@ const AhilyanagarDashboard = () => {
   const [cinemaDetails, setCinemaDetails] = useState(null);
   const [isLive, setIsLive] = useState(false);
 
+  // Helper to format Date to YYYY-MM-DD in local/IST time
+  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getFirstOfMonthStr = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+  };
+
   // Filters
   const [activePreset, setActivePreset] = useState("Month-to-Date");
-  const [fromDate, setFromDate] = useState("2026-09-01");
-  const [toDate, setToDate] = useState("2026-09-20");
+  const [fromDate, setFromDate] = useState(getFirstOfMonthStr());
+  const [toDate, setToDate] = useState(getTodayStr());
 
   // Toggles
   const [showConfig, setShowConfig] = useState(false);
@@ -31,18 +38,21 @@ const AhilyanagarDashboard = () => {
 
   const handlePresetClick = (preset) => {
     setActivePreset(preset);
-    const today = "2026-09-20";
+    const today = getTodayStr();
+    const now = new Date();
     if (preset === "Today") {
       setFromDate(today);
       setToDate(today);
     } else if (preset === "Yesterday") {
-      setFromDate("2026-09-19");
-      setToDate("2026-09-19");
+      const yest = new Date(now.getTime() - 86400000).toISOString().split('T')[0];
+      setFromDate(yest);
+      setToDate(yest);
     } else if (preset === "Last 7 Days") {
-      setFromDate("2026-09-14");
+      const d7 = new Date(now.getTime() - 7 * 86400000).toISOString().split('T')[0];
+      setFromDate(d7);
       setToDate(today);
     } else if (preset === "Month-to-Date") {
-      setFromDate("2026-09-01");
+      setFromDate(getFirstOfMonthStr());
       setToDate(today);
     }
   };

@@ -44,10 +44,17 @@ export default function ConnplexFranchiseRevenueDashboard({
   const [isCorporateView, setIsCorporateView] = useState<boolean>(false);
   const [adminSelectedCinema, setAdminSelectedCinema] = useState<string>('ALL');
 
+  // Helpers for dynamic dates
+  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getFirstOfMonthStr = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+  };
+
   // State: Filters
   const [datePreset, setDatePreset] = useState<'Today' | 'Yesterday' | 'Last 7 Days' | 'Last 30 Days' | 'This Month' | 'Custom'>('This Month');
-  const [customStartDate, setCustomStartDate] = useState<string>('2026-09-01');
-  const [customEndDate, setCustomEndDate] = useState<string>('2026-10-05');
+  const [customStartDate, setCustomStartDate] = useState<string>(getFirstOfMonthStr());
+  const [customEndDate, setCustomEndDate] = useState<string>(getTodayStr());
 
   // State: Data
   const [summaryData, setSummaryData] = useState<any>(null);
