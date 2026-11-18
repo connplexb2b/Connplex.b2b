@@ -16,13 +16,6 @@ export class FranchiseDashboardService {
    */
   private static async ensureInitialized(): Promise<void> {
     await connectToDatabase();
-    const count = await DailyFranchiseRevenue.countDocuments();
-    if (count === 0) {
-      await defaultRevenueSyncWorker.syncAllFranchises({
-        startDate: '2026-09-01',
-        endDate: '2026-10-05',
-      });
-    }
   }
 
   /**
@@ -102,7 +95,7 @@ export class FranchiseDashboardService {
     const dodPercent =
       activeYesterday.totalGross > 0
         ? Math.round(((activeToday.totalGross - activeYesterday.totalGross) / activeYesterday.totalGross) * 1000) / 10
-        : 8.5;
+        : 0;
 
     // Derived metrics
     const todayAtp = activeToday.tickets > 0 ? Math.round((activeToday.ticketRev / activeToday.tickets) * 100) / 100 : 0;
@@ -110,11 +103,11 @@ export class FranchiseDashboardService {
     const todayOccupancy =
       activeToday.seats > 0
         ? Math.round((activeToday.tickets / activeToday.seats) * 1000) / 10
-        : 72.4;
+        : 0;
     const fnbToBoxOfficePercent =
       activeToday.ticketRev > 0
         ? Math.round((activeToday.fnbRev / activeToday.ticketRev) * 1000) / 10
-        : 45.2;
+        : 0;
 
     const lastSync = await SyncStatus.findOne({ syncType: 'REVENUE_10MIN' }).sort({ startedAt: -1 });
 
