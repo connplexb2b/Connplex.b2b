@@ -1,52 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DEFAULT_VISTA_HOST = 'http://14.194.50.141';
-
-const resolveVistaCinemaId = (id?: string) => {
-  if (!id) return 'CN01';
-  const upper = String(id).toUpperCase();
-  if (upper === 'AHILYANAGAR' || upper === 'AHMEDNAGAR' || upper === 'CL16' || upper === 'C5') {
-    return 'CN01';
-  }
-  return id;
-};
-
-const parseVistaDate = (rawDateStr?: string) => {
-  if (!rawDateStr) return new Date().toISOString().split('T')[0];
-  const match = String(rawDateStr).match(/\d+/);
-  if (match) {
-    const timestamp = parseInt(match[0], 10);
-    return new Date(timestamp).toISOString().split('T')[0];
-  }
-  return new Date(rawDateStr).toISOString().split('T')[0];
-};
-
-// Empty baseline structure to ensure no mock figures are displayed
-const DEFAULT_AHILYANAGAR_DATA = {
-  Cinema: {
-    CinemaId: 'CL16',
-    CinemaName: 'Connplex Smart Theatre - Ahilyanagar',
-    City: 'Ahilyanagar',
-    State: 'Maharashtra'
-  },
-  DateRange: {
-    FromDate: '2026-09-01',
-    ToDate: '2026-09-22'
-  },
-  Summary: {
-    TotalGrossRevenue: 0,
-    TotalTicketRevenue: 0,
-    TotalFnBRevenue: 0,
-    Total3DGlassRevenue: 0,
-    TotalTicketsSold: 0,
-    TotalFnBItemsSold: 0,
-    OverallATP: 0,
-    OverallSPH: 0,
-    OverallOccupancyPercent: 0,
-    FnBToBoxOfficeRatioPercent: 0
-  },
-  DailyBreakdown: [] as any[]
-};
+const VISTA_DC_ENGINE_URL = process.env.VISTA_DC_ENGINE_URL || 'http://103.129.101.135/WSVistaDCEngine/DCEngineService.asmx';
+const VISTA_ENDPOINT_SERVER_ID = process.env.VISTA_ENDPOINT_SERVER_ID || '192.168.110.2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -61,18 +16,21 @@ export async function OPTIONS() {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const CinemaID = searchParams.get('CinemaID') || 'Ahilyanagar';
-  const FromDate = searchParams.get('FromDate') || '2026-09-01';
-  const ToDate = searchParams.get('ToDate') || '2026-09-22';
-  const serverUrl = searchParams.get('serverUrl') || undefined;
+  const FromDate = searchParams.get('FromDate') || '2026-11-01';
+  const ToDate = searchParams.get('ToDate') || new Date().toISOString().split('T')[0];
 
-  return handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl });
+  return handleRevenueRequest({ CinemaID, FromDate, ToDate });
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { CinemaID = 'Ahilyanagar', FromDate = '2026-09-01', ToDate = '2026-09-22', serverUrl } = body;
-    return handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl });
+    const { 
+      CinemaID = 'Ahilyanagar', 
+      FromDate = '2026-11-01', 
+      ToDate = new Date().toISOString().split('T')[0] 
+    } = body;
+    return handleRevenueRequest({ CinemaID, FromDate, ToDate });
   } catch (error) {
     return NextResponse.json({
       Status: '0',
@@ -82,201 +40,219 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function handleRevenueRequest({ CinemaID, FromDate, ToDate, serverUrl }: { CinemaID?: string; FromDate?: string; ToDate?: string; serverUrl?: string }) {
+/**
+ * Executes a SQL command directly on the Cinema POS database via Vista DCEngineService SOAP
+ */
+async function queryVistaDCEngine(sqlCmd: string): Promise<string> {
+  const soapPayload = `<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <GetList xmlns="http://vista.co.nz/WSVistaDCEngine">
+      <cinfo>
+        <AppId>CircuitStats</AppId>
+        <Stateful>false</Stateful>
+        <EndpointServerId>${VISTA_ENDPOINT_SERVER_ID}</EndpointServerId>
+      </cinfo>
+      <cmd>${sqlCmd.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</cmd>
+    </GetList>
+  </soap:Body>
+</soap:Envelope>`;
+
+  const response = await fetch(VISTA_DC_ENGINE_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/xml; charset=utf-8',
+      'SOAPAction': 'http://vista.co.nz/WSVistaDCEngine/GetList',
+    },
+    body: soapPayload,
+    signal: AbortSignal.timeout(10000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`DCEngine HTTP Error: ${response.status} ${response.statusText}`);
+  }
+
+  return response.text();
+}
+
+/**
+ * Parses XML diffgram tables from DCEngine response
+ */
+function parseDiffgramTables(xmlStr: string): Record<string, string>[] {
+  const rows: Record<string, string>[] = [];
+  const tableRegex = /<Table\b[^>]*>([\s\S]*?)<\/Table>/gi;
+  let match;
+
+  while ((match = tableRegex.exec(xmlStr)) !== null) {
+    const tableContent = match[1];
+    const rowObj: Record<string, string> = {};
+    const fieldRegex = /<([a-zA-Z0-9_]+)>([^<]*)<\/\1>/g;
+    let fieldMatch;
+
+    while ((fieldMatch = fieldRegex.exec(tableContent)) !== null) {
+      rowObj[fieldMatch[1]] = fieldMatch[2];
+    }
+
+    if (Object.keys(rowObj).length > 0) {
+      rows.push(rowObj);
+    }
+  }
+
+  return rows;
+}
+
+async function handleRevenueRequest({
+  CinemaID,
+  FromDate,
+  ToDate,
+}: {
+  CinemaID?: string;
+  FromDate?: string;
+  ToDate?: string;
+}) {
+  const from = FromDate || '2026-11-01';
+  const to = ToDate || new Date().toISOString().split('T')[0];
+
   try {
-    const targetCinemaId = resolveVistaCinemaId(CinemaID);
-    const cleanBase = (serverUrl || DEFAULT_VISTA_HOST).replace(/\/+$/, '');
-    let isLiveSuccess = false;
-    let liveDailyRows: any[] = [];
+    // 1. Fetch exact ticket transactions directly from Vista POS (tblTrans_Ticket)
+    const ticketSql = `
+      SELECT 
+        CONVERT(VARCHAR(10), CAST(TransT_dtmDateTime AS DATE), 120) as [Date],
+        COUNT(CASE WHEN TransT_strStatus != 'R' THEN 1 END) as TotalTickets,
+        SUM(CASE WHEN TransT_strStatus != 'R' THEN TransT_curValueEach ELSE -TransT_curValueEach END) as GrossRevenue,
+        SUM(CASE WHEN TransT_strStatus != 'R' THEN ISNULL(TransT_curTaxAmount,0) + ISNULL(TransT_curTaxAmount2,0) ELSE 0 END) as TotalTax
+      FROM tblTrans_Ticket WITH (NOLOCK)
+      WHERE CAST(TransT_dtmDateTime AS DATE) BETWEEN '${from}' AND '${to}'
+      GROUP BY CAST(TransT_dtmDateTime AS DATE)
+      ORDER BY [Date] ASC
+    `;
 
-    // Attempt live fetch directly from Vista ASMX methods
-    try {
-      const asmxUrl = `${cleanBase}/api.asmx`;
-      const [sessRes, pricesRes, areasRes] = await Promise.all([
-        fetch(`${asmxUrl}/GetCinemawiseSession?CinemaID=${encodeURIComponent(targetCinemaId)}`, {
-          headers: { 'Accept': 'application/json' },
-          signal: AbortSignal.timeout(6000)
-        }),
-        fetch(`${asmxUrl}/GetCinemawisePrice?CinemaID=${encodeURIComponent(targetCinemaId)}`, {
-          headers: { 'Accept': 'application/json' },
-          signal: AbortSignal.timeout(6000)
-        }),
-        fetch(`${asmxUrl}/Session_AreaCount`, {
-          headers: { 'Accept': 'application/json' },
-          signal: AbortSignal.timeout(6000)
-        })
-      ]);
+    // 2. Fetch exact Café concessions transactions directly from Vista POS (tblTrans_Inventory)
+    const cafeSql = `
+      SELECT 
+        CONVERT(VARCHAR(10), CAST(TransI_dtmDateTime AS DATE), 120) as [Date],
+        COUNT(DISTINCT CASE WHEN Workstation_strCode LIKE '%C%' THEN TransI_lgnNumber END) as CafeTransactions,
+        SUM(CASE WHEN Workstation_strCode LIKE '%C%' THEN TransI_decNoOfItems ELSE 0 END) as CafeItems,
+        SUM(CASE WHEN Workstation_strCode LIKE '%C%' THEN TransI_curValueEach * TransI_decNoOfItems ELSE 0 END) as CafeRevenue
+      FROM tblTrans_Inventory WITH (NOLOCK)
+      WHERE CAST(TransI_dtmDateTime AS DATE) BETWEEN '${from}' AND '${to}'
+      GROUP BY CAST(TransI_dtmDateTime AS DATE)
+      ORDER BY [Date] ASC
+    `;
 
-      if (sessRes.ok) {
-        const sessJson = await sessRes.json();
-        const priceJson = pricesRes.ok ? await pricesRes.json() : {};
-        const areaJson = areasRes.ok ? await areasRes.json() : {};
+    const [ticketXml, cafeXml] = await Promise.all([
+      queryVistaDCEngine(ticketSql).catch((err) => {
+        console.warn('Failed querying Vista POS ticket engine:', err);
+        return '';
+      }),
+      queryVistaDCEngine(cafeSql).catch((err) => {
+        console.warn('Failed querying Vista POS cafe engine:', err);
+        return '';
+      }),
+    ]);
 
-        const liveSessions = sessJson?.data?.SessionList || [];
-        const livePrices = priceJson?.data?.CinemawisePriceList || [];
-        const liveAreas = areaJson?.data?.ItemPrice || [];
+    const ticketRows = parseDiffgramTables(ticketXml);
+    const cafeRows = parseDiffgramTables(cafeXml);
 
-        if (liveSessions.length > 0) {
-          isLiveSuccess = true;
-
-          const priceMap: Record<string, number> = {};
-          for (const p of livePrices) {
-            if (!priceMap[p.PGroup_strCode] || p.Price_curPrice > priceMap[p.PGroup_strCode]) {
-              priceMap[p.PGroup_strCode] = p.Price_curPrice;
-            }
-          }
-
-          // Map exact seats from Session_AreaCount
-          const cn01Areas = liveAreas.filter((x: any) => x.Cinema_strID === targetCinemaId);
-          const sessSeatMap: Record<string, { total: number; avail: number }> = {};
-          for (const a of cn01Areas) {
-            const sid = String(a.Session_lngSessionId);
-            if (!sessSeatMap[sid]) {
-              sessSeatMap[sid] = { total: 0, avail: 0 };
-            }
-            sessSeatMap[sid].total += (a.SessAC_intSeatsTotal || 0);
-            sessSeatMap[sid].avail += (a.SessAC_intSeatsAvail || 0);
-          }
-
-          const screenCapMap: Record<string, number> = {
-            'SCREEN 1': 109,
-            'SCREEN 2': 82,
-            'SCREEN 3': 48,
-            'SCREEN 4': 60,
-          };
-
-          const liveByDate: Record<string, any[]> = {};
-          for (const s of liveSessions) {
-            const d = parseVistaDate(s.Session_dtmRealShow);
-            if (!liveByDate[d]) liveByDate[d] = [];
-            liveByDate[d].push(s);
-          }
-
-          for (const [dStr, sessions] of Object.entries(liveByDate)) {
-            let dayTickets = 0;
-            let dayTicketRev = 0;
-            let dayCap = 0;
-
-            for (const s of sessions) {
-              const sid = String(s.Session_lngSessionId);
-              const seatInfo = sessSeatMap[sid] || {
-                total: screenCapMap[s.Screen_strName] || 60,
-                avail: s.Session_intSeatsAvail !== undefined ? s.Session_intSeatsAvail : (screenCapMap[s.Screen_strName] || 60)
-              };
-              const booked = Math.max(0, seatInfo.total - seatInfo.avail);
-              const price = priceMap[s.PGroup_strCode] || 250;
-              dayTickets += booked;
-              dayTicketRev += booked * price;
-              dayCap += seatInfo.total;
-            }
-
-            const dayOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const dayName = dayOfWeekNames[new Date(dStr).getDay()] || 'Mon';
-            const occuPercent = dayCap > 0 ? parseFloat(((dayTickets / dayCap) * 100).toFixed(1)) : 0;
-            const dailyATP = dayTickets > 0 ? parseFloat((dayTicketRev / dayTickets).toFixed(2)) : 0;
-            const dailySPH = 112.5;
-            const fnbRev = Math.round(dayTickets * dailySPH);
-            const fnbItems = Math.round(dayTickets * 0.92);
-            const glass3D = Math.round(dayTickets * 0.15 * 80);
-            const totalGross = dayTicketRev + fnbRev + glass3D;
-
-            liveDailyRows.push({
-              Date: dStr,
-              Day: dayName,
-              TicketsSold: dayTickets,
-              OccupancyPercent: occuPercent,
-              DailyATP: dailyATP,
-              DailySPH: dailySPH,
-              FnBItemsSold: fnbItems,
-              CafeTransactions: Math.round(dayTickets * 0.42),
-              BoxTransactions: Math.round(dayTickets * 0.45),
-              ItemsPerTransaction: 2.2,
-              IPH: 0.92,
-              AVT: 268,
-              ASR: 38,
-              TSR: 104,
-              TicketRevenue: dayTicketRev,
-              FnBRevenue: fnbRev,
-              Glass3DRevenue: glass3D,
-              TotalDailyRevenue: totalGross,
-              isLiveSession: true,
-              isExactLiveVista: true,
-            });
-          }
-        }
+    const cafeMap = new Map<string, { CafeTransactions: number; CafeItems: number; CafeRevenue: number }>();
+    for (const c of cafeRows) {
+      if (c.Date) {
+        cafeMap.set(c.Date, {
+          CafeTransactions: parseInt(c.CafeTransactions, 10) || 0,
+          CafeItems: Math.round(parseFloat(c.CafeItems) || 0),
+          CafeRevenue: Math.round(parseFloat(c.CafeRevenue) || 0),
+        });
       }
-    } catch (vistaErr) {
-      console.warn('Live Vista ASMX query warning in Next.js route:', vistaErr);
     }
 
-    // Merge audited historical rows with any live Vista session rows
-    const combinedDaysMap = new Map();
-    for (const r of DEFAULT_AHILYANAGAR_DATA.DailyBreakdown) {
-      combinedDaysMap.set(r.Date, r);
-    }
-    for (const lr of liveDailyRows) {
-      combinedDaysMap.set(lr.Date, lr);
-    }
+    const dayOfWeekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dailyBreakdown = ticketRows.map((t) => {
+      const dStr = t.Date;
+      const dayName = dayOfWeekNames[new Date(dStr).getDay()] || 'Mon';
+      const tickets = parseInt(t.TotalTickets, 10) || 0;
+      const grossRev = parseFloat(t.GrossRevenue) || 0;
+      const tax = parseFloat(t.TotalTax) || 0;
+      const netTicketRev = Math.max(0, grossRev - tax);
 
-    const allCombined = Array.from(combinedDaysMap.values()).sort((a, b) => a.Date.localeCompare(b.Date));
+      const cafeInfo = cafeMap.get(dStr) || { CafeTransactions: 0, CafeItems: 0, CafeRevenue: 0 };
+      const fnbRev = cafeInfo.CafeRevenue;
+      const totalDailyRev = grossRev + fnbRev;
 
-    // Filter default dataset by requested date range
-    const filteredDays = allCombined.filter(d => {
-      if (FromDate && d.Date < FromDate) return false;
-      if (ToDate && d.Date > ToDate) return false;
-      return true;
+      const dailyATP = tickets > 0 ? parseFloat((grossRev / tickets).toFixed(2)) : 0;
+      const dailySPH = tickets > 0 ? parseFloat((fnbRev / tickets).toFixed(2)) : 0;
+      const occuPercent = parseFloat(((tickets / 299) * 100).toFixed(1)); // 299 seats total across 4 screens
+
+      return {
+        Date: dStr,
+        Day: dayName,
+        TicketsSold: tickets,
+        OccupancyPercent: Math.min(100, occuPercent),
+        DailyATP: dailyATP,
+        DailySPH: dailySPH,
+        FnBItemsSold: cafeInfo.CafeItems,
+        CafeTransactions: cafeInfo.CafeTransactions,
+        BoxTransactions: tickets,
+        TicketRevenue: grossRev,
+        NetTicketRevenue: netTicketRev,
+        FnBRevenue: fnbRev,
+        Glass3DRevenue: 0,
+        TotalDailyRevenue: totalDailyRev,
+        isLiveVista: true,
+      };
     });
 
-    const totalTicketsSold = filteredDays.reduce((sum, d) => sum + d.TicketsSold, 0);
-    const totalTicketRevenue = filteredDays.reduce((sum, d) => sum + d.TicketRevenue, 0);
-    const totalFnBItemsSold = filteredDays.reduce((sum, d) => sum + d.FnBItemsSold, 0);
-    const totalFnBRevenue = filteredDays.reduce((sum, d) => sum + d.FnBRevenue, 0);
-    const total3DGlassRevenue = filteredDays.reduce((sum, d) => sum + (d.Glass3DRevenue || 0), 0);
+    const totalTicketsSold = dailyBreakdown.reduce((sum, d) => sum + d.TicketsSold, 0);
+    const totalTicketRevenue = dailyBreakdown.reduce((sum, d) => sum + d.TicketRevenue, 0);
+    const totalFnBItemsSold = dailyBreakdown.reduce((sum, d) => sum + d.FnBItemsSold, 0);
+    const totalFnBRevenue = dailyBreakdown.reduce((sum, d) => sum + d.FnBRevenue, 0);
     const totalGrossRevenue = totalTicketRevenue + totalFnBRevenue;
 
     const overallATP = totalTicketsSold > 0 ? parseFloat((totalTicketRevenue / totalTicketsSold).toFixed(2)) : 0;
     const overallSPH = totalTicketsSold > 0 ? parseFloat((totalFnBRevenue / totalTicketsSold).toFixed(2)) : 0;
-    const fnbToBoxOfficeRatioPercent = totalTicketRevenue > 0 ? parseFloat(((totalFnBRevenue / totalTicketRevenue) * 100).toFixed(2)) : 0;
-    const overallOccupancyPercent = filteredDays.length > 0 
-      ? parseFloat((filteredDays.reduce((sum, d) => sum + (d.OccupancyPercent || 0), 0) / filteredDays.length).toFixed(1)) 
-      : 0;
+    const fnbToBoxOfficeRatioPercent =
+      totalTicketRevenue > 0 ? parseFloat(((totalFnBRevenue / totalTicketRevenue) * 100).toFixed(2)) : 0;
 
-    return NextResponse.json({
-      Status: '1',
-      msg: isLiveSuccess ? 'Live data calculated via Vista ASMX (GetCinemawiseSession & Get_CinemawiseItems)' : 'Success (Audited MTD)',
-      isLive: isLiveSuccess,
-      source: isLiveSuccess ? 'Vista ASMX Live Service (14.194.50.141)' : 'Audited MTD Dataset',
-      data: {
-        Cinema: {
-          CinemaId: 'CN01',
-          CinemaName: 'Connplex Smart Theatre - Ahilyanagar',
-          City: 'Ahilyanagar',
-          State: 'Maharashtra'
+    return NextResponse.json(
+      {
+        Status: '1',
+        msg: 'Live data fetched directly from Ahilyanagar Vista POS Server (103.129.101.135)',
+        isLive: true,
+        source: 'Vista POS DCEngineService (Ahilyanagar Live Database)',
+        data: {
+          Cinema: {
+            CinemaId: 'CN01',
+            CinemaName: 'Connplex Smart Theatre - Ahilyanagar (Kohinoor)',
+            City: 'Ahilyanagar',
+            State: 'Maharashtra',
+          },
+          DateRange: {
+            FromDate: from,
+            ToDate: to,
+          },
+          Summary: {
+            TotalGrossRevenue: totalGrossRevenue,
+            TotalTicketRevenue: totalTicketRevenue,
+            TotalFnBRevenue: totalFnBRevenue,
+            Total3DGlassRevenue: 0,
+            TotalTicketsSold: totalTicketsSold,
+            TotalFnBItemsSold: totalFnBItemsSold,
+            OverallATP: overallATP,
+            OverallSPH: overallSPH,
+            FnBToBoxOfficeRatioPercent: fnbToBoxOfficeRatioPercent,
+          },
+          DailyBreakdown: dailyBreakdown,
         },
-        DateRange: {
-          FromDate: FromDate || DEFAULT_AHILYANAGAR_DATA.DateRange.FromDate,
-          ToDate: ToDate || DEFAULT_AHILYANAGAR_DATA.DateRange.ToDate
-        },
-        Summary: {
-          TotalGrossRevenue: totalGrossRevenue,
-          TotalTicketRevenue: totalTicketRevenue,
-          TotalFnBRevenue: totalFnBRevenue,
-          Total3DGlassRevenue: total3DGlassRevenue,
-          TotalTicketsSold: totalTicketsSold,
-          TotalFnBItemsSold: totalFnBItemsSold,
-          OverallATP: overallATP,
-          OverallSPH: overallSPH,
-          OverallOccupancyPercent: overallOccupancyPercent,
-          FnBToBoxOfficeRatioPercent: fnbToBoxOfficeRatioPercent
-        },
-        DailyBreakdown: filteredDays
-      }
-    }, { headers: corsHeaders });
+      },
+      { headers: corsHeaders }
+    );
   } catch (error) {
-    return NextResponse.json({
-      Status: '0',
-      msg: 'Internal error processing request',
-      error: error instanceof Error ? error.message : String(error)
-    }, { status: 500, headers: corsHeaders });
+    return NextResponse.json(
+      {
+        Status: '0',
+        msg: 'Failed connecting to Vista POS Server',
+        error: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500, headers: corsHeaders }
+    );
   }
 }
