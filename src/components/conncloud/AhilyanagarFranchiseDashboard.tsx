@@ -32,10 +32,15 @@ export interface DailyRecord {
   FnBRevenue: number;
   Glass3DRevenue?: number;
   DailySPH: number;
+  DailySPHIncludingOSV?: number;
   TotalDailyRevenue: number;
   CafeTransactions?: number;
   BoxTransactions?: number;
   ItemsPerTransaction?: number;
+  IPH?: number;
+  AVT?: number;
+  ASR?: string | number;
+  TSR?: string | number;
 }
 
 export interface SummaryData {
@@ -667,39 +672,53 @@ export default function AhilyanagarFranchiseDashboard({
             <thead className="sticky top-0 bg-[#0f172a] text-gray-400 uppercase text-[10px] tracking-wider z-10 border-b border-white/10">
               <tr>
                 <th className="py-2.5 px-3">Date</th>
-                <th className="py-2.5 px-2.5 text-center">Day</th>
-                <th className="py-2.5 px-2.5 text-right">Admits</th>
+                <th className="py-2.5 px-2 text-center">Day</th>
+                <th className="py-2.5 px-2 text-right">Admits</th>
                 <th className="py-2.5 px-2 text-right">Occu %</th>
-                <th className="py-2.5 px-3 text-right">Box Office</th>
-                <th className="py-2.5 px-2.5 text-right">ATP</th>
-                <th className="py-2.5 px-2 text-right">F&amp;B Items</th>
-                <th className="py-2.5 px-3 text-right">Café F&amp;B</th>
-                <th className="py-2.5 px-2.5 text-right">SPH</th>
-                <th className="py-2.5 px-2.5 text-right">3D Glass</th>
+                <th className="py-2.5 px-2 text-right">ATP</th>
+                <th className="py-2.5 px-2 text-right">SPH</th>
+                <th className="py-2.5 px-2 text-right">Items Sold</th>
+                <th className="py-2.5 px-2 text-right">Trans Café</th>
+                <th className="py-2.5 px-2 text-right">Trans Box</th>
+                <th className="py-2.5 px-2 text-right">Items/Txn</th>
+                <th className="py-2.5 px-2 text-right">IPH</th>
+                <th className="py-2.5 px-2 text-right">AVT</th>
+                <th className="py-2.5 px-2 text-right">ASR</th>
+                <th className="py-2.5 px-2 text-right">TSR</th>
+                <th className="py-2.5 px-2.5 text-right text-blue-400">Box Collection</th>
+                <th className="py-2.5 px-2.5 text-right text-amber-400">Café Collection</th>
+                <th className="py-2.5 px-2 text-right text-emerald-400">3D Glass</th>
                 <th className="py-2.5 px-3 text-right text-[#f5b041]">Total Gross</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-gray-200">
               {dailyRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="text-center py-6 text-gray-500">
+                  <td colSpan={18} className="text-center py-6 text-gray-500">
                     No transactions found for the selected date range.
                   </td>
                 </tr>
               ) : (
                 dailyRecords.map((r, idx) => (
                   <tr key={idx} className="hover:bg-white/[0.03] transition-colors">
-                    <td className="py-2.5 px-3 font-medium text-white whitespace-nowrap">{r.Date}</td>
-                    <td className="py-2.5 px-2.5 text-center text-gray-400 font-mono text-[11px]">{r.Day || '-'}</td>
-                    <td className="py-2.5 px-2.5 text-right font-semibold text-white">{r.TicketsSold.toLocaleString('en-IN')}</td>
-                    <td className="py-2.5 px-2 text-right text-purple-300">{r.OccupancyPercent !== undefined ? `${r.OccupancyPercent}%` : '-'}</td>
-                    <td className="py-2.5 px-3 text-right text-blue-400 font-medium">{formatINR(r.TicketRevenue)}</td>
-                    <td className="py-2.5 px-2.5 text-right text-gray-300">₹{r.DailyATP.toFixed(2)}</td>
-                    <td className="py-2.5 px-2 text-right text-gray-300">{r.FnBItemsSold.toLocaleString('en-IN')}</td>
-                    <td className="py-2.5 px-3 text-right text-amber-400 font-medium">{formatINR(r.FnBRevenue)}</td>
-                    <td className="py-2.5 px-2.5 text-right text-gray-300">₹{r.DailySPH.toFixed(2)}</td>
-                    <td className="py-2.5 px-2.5 text-right text-emerald-400/80">{(r.Glass3DRevenue || 0) > 0 ? formatINR(r.Glass3DRevenue) : '₹0.00'}</td>
-                    <td className="py-2.5 px-3 text-right font-bold text-white">{formatINR(r.TotalDailyRevenue)}</td>
+                    <td className="py-2 px-3 font-medium text-white whitespace-nowrap">{r.Date}</td>
+                    <td className="py-2 px-2 text-center text-gray-400 font-mono text-[11px]">{r.Day || '-'}</td>
+                    <td className="py-2 px-2 text-right font-semibold text-white">{r.TicketsSold.toLocaleString('en-IN')}</td>
+                    <td className="py-2 px-2 text-right text-purple-300">{r.OccupancyPercent !== undefined ? `${r.OccupancyPercent}%` : '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">₹{r.DailyATP.toFixed(2)}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">₹{r.DailySPH.toFixed(2)}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.FnBItemsSold.toLocaleString('en-IN')}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.CafeTransactions ?? '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.BoxTransactions ?? '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.ItemsPerTransaction !== undefined ? r.ItemsPerTransaction.toFixed(2) : '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.IPH !== undefined ? r.IPH.toFixed(2) : '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">₹{r.AVT ?? '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.ASR ?? '-'}</td>
+                    <td className="py-2 px-2 text-right text-gray-300">{r.TSR ?? '-'}</td>
+                    <td className="py-2 px-2.5 text-right text-blue-400 font-medium">{formatINR(r.TicketRevenue)}</td>
+                    <td className="py-2 px-2.5 text-right text-amber-400 font-medium">{formatINR(r.FnBRevenue)}</td>
+                    <td className="py-2 px-2 text-right text-emerald-400/80">{(r.Glass3DRevenue || 0) > 0 ? formatINR(r.Glass3DRevenue) : '₹0.00'}</td>
+                    <td className="py-2 px-3 text-right font-bold text-white">{formatINR(r.TotalDailyRevenue)}</td>
                   </tr>
                 ))
               )}
@@ -709,15 +728,22 @@ export default function AhilyanagarFranchiseDashboard({
               <tfoot className="sticky bottom-0 bg-[#0f172a] text-white font-bold border-t-2 border-[#f5b041]/40 text-xs">
                 <tr>
                   <td className="py-3 px-3 text-[#f5b041] uppercase tracking-wider">MTD TOTAL</td>
-                  <td className="py-3 px-2.5 text-center text-[#f5b041] text-[10px]">{dailyRecords.length} {dailyRecords.length === 1 ? 'DAY' : 'DAYS'}</td>
-                  <td className="py-3 px-2.5 text-right text-[#f5b041] font-bold">{formatNumber(summary.TotalTicketsSold)}</td>
+                  <td className="py-3 px-2 text-center text-[#f5b041] text-[10px]">{dailyRecords.length} DAYS</td>
+                  <td className="py-3 px-2 text-right text-[#f5b041] font-bold">{formatNumber(summary.TotalTicketsSold)}</td>
                   <td className="py-3 px-2 text-right text-purple-300">{summary.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : '-'}</td>
-                  <td className="py-3 px-3 text-right text-blue-400">{formatINR(summary.TotalTicketRevenue)}</td>
-                  <td className="py-3 px-2.5 text-right">₹{summary.OverallATP.toFixed(2)}</td>
+                  <td className="py-3 px-2 text-right">₹{summary.OverallATP.toFixed(2)}</td>
+                  <td className="py-3 px-2 text-right">₹{summary.OverallSPH.toFixed(2)}</td>
                   <td className="py-3 px-2 text-right">{formatNumber(summary.TotalFnBItemsSold)}</td>
-                  <td className="py-3 px-3 text-right text-amber-400">{formatINR(summary.TotalFnBRevenue)}</td>
-                  <td className="py-3 px-2.5 text-right">₹{summary.OverallSPH.toFixed(2)}</td>
-                  <td className="py-3 px-2.5 text-right text-emerald-400">{formatINR(summary.Total3DGlassRevenue || 0)}</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2 text-right">-</td>
+                  <td className="py-3 px-2.5 text-right text-blue-400">{formatINR(summary.TotalTicketRevenue)}</td>
+                  <td className="py-3 px-2.5 text-right text-amber-400">{formatINR(summary.TotalFnBRevenue)}</td>
+                  <td className="py-3 px-2 text-right text-emerald-400">{formatINR(summary.Total3DGlassRevenue || 0)}</td>
                   <td className="py-3 px-3 text-right text-[#f5b041] text-sm">{formatINR(summary.TotalGrossRevenue)}</td>
                 </tr>
               </tfoot>

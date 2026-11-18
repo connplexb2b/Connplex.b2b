@@ -250,15 +250,22 @@ const AhilyanagarDashboard = () => {
               <tr>
                 <th>Date</th>
                 <th>Day</th>
-                <th>Admits (Tickets)</th>
+                <th>Admits</th>
                 <th>Occu %</th>
-                <th>Box Office (INR)</th>
-                <th>Daily ATP</th>
-                <th>F&amp;B Items</th>
-                <th>Café F&amp;B (INR)</th>
-                <th>Daily SPH</th>
+                <th>ATP</th>
+                <th>SPH</th>
+                <th>Items Sold</th>
+                <th>Trans Café</th>
+                <th>Trans Box</th>
+                <th>Items/Txn</th>
+                <th>IPH</th>
+                <th>AVT</th>
+                <th>ASR</th>
+                <th>TSR</th>
+                <th>Box Collection</th>
+                <th>Café Collection</th>
                 <th>3D Glass</th>
-                <th>Total Daily Gross</th>
+                <th>Total Gross</th>
               </tr>
             </thead>
             <tbody>
@@ -268,27 +275,41 @@ const AhilyanagarDashboard = () => {
                   <td>{row.Day}</td>
                   <td>{formatNumber(row.TicketsSold)}</td>
                   <td>{row.OccupancyPercent !== undefined ? `${row.OccupancyPercent}%` : "-"}</td>
-                  <td>{formatCurrency(row.TicketRevenue)}</td>
-                  <td>{formatCurrency(row.DailyATP)}</td>
+                  <td>₹{row.DailyATP?.toFixed(2)}</td>
+                  <td>₹{row.DailySPH?.toFixed(2)}</td>
                   <td>{formatNumber(row.FnBItemsSold)}</td>
-                  <td>{formatCurrency(row.FnBRevenue)}</td>
-                  <td>{formatCurrency(row.DailySPH)}</td>
-                  <td>{formatCurrency(row.Glass3DRevenue || 0)}</td>
+                  <td>{row.CafeTransactions ?? "-"}</td>
+                  <td>{row.BoxTransactions ?? "-"}</td>
+                  <td>{row.ItemsPerTransaction !== undefined ? Number(row.ItemsPerTransaction).toFixed(2) : "-"}</td>
+                  <td>{row.IPH !== undefined ? Number(row.IPH).toFixed(2) : "-"}</td>
+                  <td>₹{row.AVT ?? "-"}</td>
+                  <td>{row.ASR ?? "-"}</td>
+                  <td>{row.TSR ?? "-"}</td>
+                  <td style={{ color: "#60a5fa" }}>{formatCurrency(row.TicketRevenue)}</td>
+                  <td style={{ color: "#fbbf24" }}>{formatCurrency(row.FnBRevenue)}</td>
+                  <td style={{ color: "#34d399" }}>{formatCurrency(row.Glass3DRevenue || 0)}</td>
                   <td style={{ color: "#f5b041", fontWeight: "bold" }}>{formatCurrency(row.TotalDailyRevenue)}</td>
                 </tr>
               ))}
               {summary && (
                 <tr className="summary-row">
                   <td>TOTAL / MTD</td>
-                  <td>-</td>
+                  <td>{dailyBreakdown.length} DAYS</td>
                   <td>{formatNumber(summary.TotalTicketsSold)}</td>
-                  <td>{summary.OverallOccupancyPercent}%</td>
-                  <td>{formatCurrency(summary.TotalTicketRevenue)}</td>
-                  <td>{formatCurrency(summary.OverallATP)}</td>
+                  <td>{summary.OverallOccupancyPercent ? `${summary.OverallOccupancyPercent}%` : "-"}</td>
+                  <td>₹{summary.OverallATP?.toFixed(2)}</td>
+                  <td>₹{summary.OverallSPH?.toFixed(2)}</td>
                   <td>{formatNumber(summary.TotalFnBItemsSold)}</td>
-                  <td>{formatCurrency(summary.TotalFnBRevenue)}</td>
-                  <td>{formatCurrency(summary.OverallSPH)}</td>
-                  <td>{formatCurrency(summary.Total3DGlassRevenue || 0)}</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td style={{ color: "#60a5fa" }}>{formatCurrency(summary.TotalTicketRevenue)}</td>
+                  <td style={{ color: "#fbbf24" }}>{formatCurrency(summary.TotalFnBRevenue)}</td>
+                  <td style={{ color: "#34d399" }}>{formatCurrency(summary.Total3DGlassRevenue || 0)}</td>
                   <td style={{ color: "#f5b041", fontWeight: "bold" }}>{formatCurrency(summary.TotalGrossRevenue)}</td>
                 </tr>
               )}
