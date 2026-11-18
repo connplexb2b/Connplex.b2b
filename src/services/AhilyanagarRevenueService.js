@@ -314,7 +314,7 @@ export const getAhilyanagarDailyRevenue = async ({
           const fnbRev = Math.round(dayTickets * dailySPH);
           const fnbItems = Math.round(dayTickets * 0.92);
           const glass3D = Math.round(dayTickets * 0.15 * 80);
-          const totalGross = dayTicketRev + fnbRev + glass3D;
+          const totalGross = dayTicketRev + fnbRev;
 
           liveDailyRows.push({
             Date: dStr,

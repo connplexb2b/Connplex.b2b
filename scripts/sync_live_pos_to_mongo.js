@@ -96,14 +96,15 @@ async function syncToMongo() {
     SELECT 
       CONVERT(VARCHAR(10), CAST(DATEADD(hour, -6, i.TransI_dtmDateTime) AS DATE), 120) as Dt,
       COUNT(DISTINCT CASE WHEN (i.Workstation_strCode LIKE 'CPKHC%' OR i.Workstation_strCode LIKE 'CPKHFC%') AND i.TransI_strType = 'S' THEN i.TransI_lgnNumber END) as CafeTrans,
-      SUM(CASE WHEN (i.Workstation_strCode LIKE 'CPKHC%' OR i.Workstation_strCode LIKE 'CPKHFC%') AND i.TransI_strType = 'S' AND i.TransI_curValueEach > 0 THEN i.TransI_decNoOfItems ELSE 0 END) as ItemsSold,
-      ROUND(SUM(CASE WHEN (i.Workstation_strCode LIKE 'CPKHC%' OR i.Workstation_strCode LIKE 'CPKHFC%') AND i.TransI_strType = 'S' THEN 
+      SUM(CASE WHEN (i.Workstation_strCode LIKE 'CPKHC%' OR i.Workstation_strCode LIKE 'CPKHFC%') AND i.TransI_strType = 'S' AND i.TransI_curValueEach > 0 AND I.Item_strReport <> 'Y' THEN i.TransI_decNoOfItems ELSE 0 END) as ItemsSold,
+      ROUND(SUM(CASE WHEN (i.Workstation_strCode LIKE 'CPKHC%' OR i.Workstation_strCode LIKE 'CPKHFC%') AND i.TransI_strType = 'S' AND I.Item_strReport <> 'Y' THEN 
         CASE WHEN i.TransI_strStatus != 'R' THEN i.TransI_curValueEach * i.TransI_decNoOfItems ELSE -(i.TransI_curValueEach * i.TransI_decNoOfItems) END
       ELSE 0 END), 0) as CafeCollection,
       ROUND(SUM(CASE WHEN i.Item_strItemId = '1' THEN 
         CASE WHEN i.TransI_strStatus != 'R' THEN i.TransI_curValueEach * i.TransI_decNoOfItems ELSE -(i.TransI_curValueEach * i.TransI_decNoOfItems) END
       ELSE 0 END), 0) as Glass3DCollection
     FROM tblTrans_Inventory i WITH (NOLOCK)
+    INNER JOIN tblItem I WITH (NOLOCK) ON i.Item_strItemId = I.Item_strItemId
     WHERE CAST(DATEADD(hour, -6, i.TransI_dtmDateTime) AS DATE) BETWEEN '${from}' AND '${to}'
     GROUP BY CAST(DATEADD(hour, -6, i.TransI_dtmDateTime) AS DATE)
     ORDER BY Dt ASC
@@ -140,7 +141,7 @@ async function syncToMongo() {
     const boxRevenue = Math.round(parseFloat(t.BoxCollection) || 0);
     const cafeRevenue = Math.round(parseFloat(c.CafeCollection) || 0);
     const glass3DRevenue = Math.round(parseFloat(c.Glass3DCollection) || 0);
-    const totalDailyRev = boxRevenue + cafeRevenue + glass3DRevenue;
+    const totalDailyRev = boxRevenue + cafeRevenue;
 
     const atp = admits > 0 ? parseFloat((boxRevenue / admits).toFixed(2)) : 0;
     const sph = admits > 0 ? parseFloat((cafeRevenue / admits).toFixed(2)) : 0;
