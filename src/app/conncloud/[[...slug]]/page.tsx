@@ -47,6 +47,9 @@ export default function ConnCloudPage() {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Active navigation tab state for immediate, guaranteed view transitions
+  const [activeTab, setActiveTab] = useState<string>(() => pathname || '/conncloud/dashboard');
+
   // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<FranchiseeUser | null>(null);
@@ -123,6 +126,24 @@ export default function ConnCloudPage() {
     setAuthLoading(false);
   }, [pathname]);
 
+  // Synchronize activeTab with router pathname changes
+  useEffect(() => {
+    if (pathname) {
+      setActiveTab(pathname);
+    }
+  }, [pathname]);
+
+  // Handle browser Back / Forward history navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        setActiveTab(window.location.pathname);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Handle click outside dropdowns
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -172,13 +193,36 @@ export default function ConnCloudPage() {
     triggerNotification('Signed out from ConnCloud session.');
   };
 
+  // Navigation click handler guaranteeing instant client state switch + route sync
+  const handleNavClick = (route: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setActiveTab(route);
+
+    // Maintain cinema query param if present
+    let targetUrl = route;
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cinemaParam = urlParams.get('cinema') || (selectedCinema !== 'all' ? selectedCinema : null);
+      if (cinemaParam) {
+        targetUrl = `${route}?cinema=${cinemaParam}`;
+      }
+    }
+
+    router.push(targetUrl);
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', targetUrl);
+    }
+  };
+
   // Nav item route helper
   const isRouteActive = (route: string) => {
-    if (!pathname) return false;
+    const current = activeTab || pathname || '';
     if (route === '/conncloud/dashboard') {
-      return pathname === '/conncloud' || pathname === '/conncloud/dashboard';
+      return current === '/conncloud' || current === '/conncloud/dashboard' || current.startsWith('/conncloud/dashboard');
     }
-    return pathname.startsWith(route);
+    return current.startsWith(route);
   };
 
   // Sidebar navigation configuration
@@ -210,10 +254,10 @@ export default function ConnCloudPage() {
 
   // Helper to extract nested sub-tab routes (e.g. /conncloud/operations/maintenance -> 'maintenance')
   const getSubRoute = (baseRoute: string) => {
-    if (!pathname) return '';
+    const current = activeTab || pathname || '';
     const prefix = `/conncloud/${baseRoute}`;
-    if (pathname.startsWith(prefix)) {
-      const remainder = pathname.slice(prefix.length).replace(/^\//, '');
+    if (current.startsWith(prefix)) {
+      const remainder = current.slice(prefix.length).replace(/^\//, '');
       return remainder.split('/')[0] || '';
     }
     return '';
@@ -221,92 +265,95 @@ export default function ConnCloudPage() {
 
   // Routing Handler mapping pathnames directly to Subviews
   const renderActiveView = () => {
-    if (!pathname || pathname === '/conncloud' || pathname === '/conncloud/dashboard' || pathname.startsWith('/conncloud/dashboard/')) {
-      return <DashboardView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNavigate={(r) => router.push(r)} triggerNotification={triggerNotification} />;
+    const currentPath = activeTab || pathname || '/conncloud/dashboard';
+
+    if (currentPath === '/conncloud' || currentPath === '/conncloud/dashboard' || currentPath.startsWith('/conncloud/dashboard/')) {
+      return <DashboardView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNavigate={(r) => handleNavClick(r)} triggerNotification={triggerNotification} />;
     }
-    if (pathname.startsWith('/conncloud/ahilyanagar') || pathname.startsWith('/conncloud/franchise-revenue')) {
+    if (currentPath.startsWith('/conncloud/ahilyanagar') || currentPath.startsWith('/conncloud/franchise-revenue')) {
       return (
         <div className="space-y-6">
           <AhilyanagarFranchiseDashboard onNotification={triggerNotification} defaultExpanded={true} />
         </div>
       );
     }
-    if (pathname.startsWith('/conncloud/data-extract') || pathname.startsWith('/conncloud/extraction-matrix')) {
+    if (currentPath.startsWith('/conncloud/data-extract') || currentPath.startsWith('/conncloud/extraction-matrix')) {
       return (
         <div className="space-y-6">
           <DataExtractionMatrix selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNotification={triggerNotification} />
         </div>
       );
     }
-    if (pathname.startsWith('/conncloud/analytics')) {
+    if (currentPath.startsWith('/conncloud/analytics')) {
       return <AnalyticsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubTab={getSubRoute('analytics')} />;
     }
-    if (pathname.startsWith('/conncloud/finance')) {
+    if (currentPath.startsWith('/conncloud/finance')) {
       return <FinanceView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('finance')} />;
     }
-    if (pathname.startsWith('/conncloud/movies')) {
+    if (currentPath.startsWith('/conncloud/movies')) {
       return <MoviesView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('movies')} />;
     }
-    if (pathname.startsWith('/conncloud/ticket-sales')) {
+    if (currentPath.startsWith('/conncloud/ticket-sales')) {
       return <TicketSalesView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('ticket-sales')} />;
     }
-    if (pathname.startsWith('/conncloud/group-booking')) {
+    if (currentPath.startsWith('/conncloud/group-booking')) {
       return <GroupBookingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('group-booking')} />;
     }
-    if (pathname.startsWith('/conncloud/fnb')) {
+    if (currentPath.startsWith('/conncloud/fnb')) {
       return <FnBView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('fnb')} />;
     }
-    if (pathname.startsWith('/conncloud/merchandise')) {
+    if (currentPath.startsWith('/conncloud/merchandise')) {
       return <MerchandiseView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('merchandise')} />;
     }
-    if (pathname.startsWith('/conncloud/staff')) {
+    if (currentPath.startsWith('/conncloud/staff')) {
       return <StaffView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('staff')} />;
     }
-    if (pathname.startsWith('/conncloud/training')) {
+    if (currentPath.startsWith('/conncloud/training')) {
       return <TrainingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('training')} />;
     }
-    if (pathname.startsWith('/conncloud/operations')) {
+    if (currentPath.startsWith('/conncloud/operations')) {
       return <OperationsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('operations')} />;
     }
-    if (pathname.startsWith('/conncloud/marketing')) {
+    if (currentPath.startsWith('/conncloud/marketing')) {
       return <MarketingView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('marketing')} />;
     }
-    if (pathname.startsWith('/conncloud/offers')) {
+    if (currentPath.startsWith('/conncloud/offers')) {
       return <OffersView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('offers')} />;
     }
-    if (pathname.startsWith('/conncloud/reports')) {
+    if (currentPath.startsWith('/conncloud/reports')) {
       return <ReportsView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} />;
     }
-    if (pathname.startsWith('/conncloud/mis')) {
+    if (currentPath.startsWith('/conncloud/mis')) {
       return <MISView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('mis')} />;
     }
-    if (pathname.startsWith('/conncloud/documents')) {
+    if (currentPath.startsWith('/conncloud/documents')) {
       return <DocumentsView selectedCinemaId={selectedCinema} triggerNotification={triggerNotification} />;
     }
-    if (pathname.startsWith('/conncloud/license')) {
+    if (currentPath.startsWith('/conncloud/license')) {
       return <LicenseView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} triggerNotification={triggerNotification} initialSubSection={getSubRoute('license')} />;
     }
-    if (pathname.startsWith('/conncloud/support')) {
+    if (currentPath.startsWith('/conncloud/support')) {
       return <SupportView selectedCinemaId={selectedCinema} triggerNotification={triggerNotification} initialSubTab={getSubRoute('support')} />;
     }
-    if (pathname.startsWith('/conncloud/calendar')) {
+    if (currentPath.startsWith('/conncloud/calendar')) {
       return <CalendarView selectedCinemaId={selectedCinema} />;
     }
-    if (pathname.startsWith('/conncloud/settings')) {
+    if (currentPath.startsWith('/conncloud/settings')) {
       return <SettingsView selectedCinemaId={selectedCinema} initialSubTab={getSubRoute('settings')} />;
     }
-    if (pathname.startsWith('/conncloud/notifications')) {
-      return <NotificationsView onNavigate={(r) => router.push(r)} triggerNotification={triggerNotification} />;
+    if (currentPath.startsWith('/conncloud/notifications')) {
+      return <NotificationsView onNavigate={(r) => handleNavClick(r)} triggerNotification={triggerNotification} />;
     }
 
     // Default Fallback
-    return <DashboardView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNavigate={(r) => router.push(r)} triggerNotification={triggerNotification} />;
+    return <DashboardView selectedCinemaId={selectedCinema} selectedDateRange={selectedDateRange} onNavigate={(r) => handleNavClick(r)} triggerNotification={triggerNotification} />;
   };
 
   // Resolve breadcrumbs dynamically
   const getBreadcrumbs = () => {
-    if (!pathname) return ['ConnCloud'];
-    const parts = pathname.split('/').filter(Boolean);
+    const currentPath = activeTab || pathname || '/conncloud/dashboard';
+    const cleanPath = currentPath.split('?')[0];
+    const parts = cleanPath.split('/').filter(Boolean);
     return parts.map(p => {
       if (p === 'conncloud') return 'ConnCloud';
       if (p === 'group-booking') return 'Group Booking';
@@ -474,7 +521,8 @@ export default function ConnCloudPage() {
               <Link 
                 key={item.name} 
                 href={item.route}
-                className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-xs font-semibold transition-all relative group ${
+                onClick={(e) => handleNavClick(item.route, e)}
+                className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-xs font-semibold transition-all relative group cursor-pointer ${
                   active 
                     ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -648,10 +696,10 @@ export default function ConnCloudPage() {
               </button>
               {profileOpen && (
                 <div className="absolute top-full right-0 mt-2 bg-[#111827] border border-white/10 p-1.5 rounded-lg shadow-2xl w-44 z-50 flex flex-col gap-0.5 animate-dropdownFade">
-                  <button onClick={() => { setProfileOpen(false); router.push('/conncloud/settings/profile'); }} className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-2">
+                  <button onClick={() => { setProfileOpen(false); handleNavClick('/conncloud/settings/profile'); }} className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-2">
                     <i className="fa-solid fa-user-circle"></i> Profile Settings
                   </button>
-                  <button onClick={() => { setProfileOpen(false); router.push('/conncloud/settings/profile'); }} className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-2">
+                  <button onClick={() => { setProfileOpen(false); handleNavClick('/conncloud/settings/profile'); }} className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center gap-2">
                     <i className="fa-solid fa-building"></i> Cinema Settings
                   </button>
                   <button onClick={handleLogout} className="p-2 text-left rounded hover:bg-red-500/10 text-xs text-red-400 flex items-center gap-2">
