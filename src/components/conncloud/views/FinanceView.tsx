@@ -6,6 +6,7 @@ interface FinanceViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 interface RevenueLedgerRow {
@@ -99,9 +100,27 @@ interface FinanceOverviewData {
 export default function FinanceView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: FinanceViewProps) {
-  const [subSection, setSubSection] = useState<'overview' | 'ledger' | 'expenses' | 'gst-royalty' | 'pnl-budget' | 'reconciliation'>('overview');
+  const resolveSubSection = (sec?: string): 'overview' | 'ledger' | 'expenses' | 'gst-royalty' | 'pnl-budget' | 'reconciliation' => {
+    if (!sec) return 'overview';
+    const s = sec.toLowerCase();
+    if (s.includes('ledger') || s.includes('invoice')) return 'ledger';
+    if (s.includes('expense')) return 'expenses';
+    if (s.includes('gst') || s.includes('royalt')) return 'gst-royalty';
+    if (s.includes('pnl') || s.includes('budget')) return 'pnl-budget';
+    if (s.includes('reconcil') || s.includes('bank')) return 'reconciliation';
+    return 'overview';
+  };
+
+  const [subSection, setSubSection] = useState<'overview' | 'ledger' | 'expenses' | 'gst-royalty' | 'pnl-budget' | 'reconciliation'>(() => resolveSubSection(initialSubSection));
+
+  useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   
   // Data state
   const [financeData, setFinanceData] = useState<FinanceOverviewData | null>(null);

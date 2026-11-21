@@ -6,14 +6,30 @@ interface MerchandiseViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function MerchandiseView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: MerchandiseViewProps) {
-  const [subSection, setSubSection] = useState<'catalog' | 'orders' | 'inventory'>('catalog');
+  const resolveSubSection = (sec?: string): 'catalog' | 'orders' | 'inventory' => {
+    if (!sec) return 'catalog';
+    const s = sec.toLowerCase();
+    if (s.includes('order')) return 'orders';
+    if (s.includes('invent') || s.includes('stock')) return 'inventory';
+    return 'catalog';
+  };
+
+  const [subSection, setSubSection] = useState<'catalog' | 'orders' | 'inventory'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   

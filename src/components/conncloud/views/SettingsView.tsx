@@ -5,11 +5,30 @@ import DataExtractionMatrix from '../DataExtractionMatrix';
 
 interface SettingsViewProps {
   selectedCinemaId?: string;
+  initialSubTab?: string;
 }
 
-export default function SettingsView({ selectedCinemaId = 'all' }: SettingsViewProps) {
+export default function SettingsView({ selectedCinemaId = 'all', initialSubTab }: SettingsViewProps) {
   const isAhilyanagar = selectedCinemaId === 'c5';
-  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations' | 'matrix'>('matrix');
+
+  const resolveSubTab = (tab?: string): 'profile' | 'permissions' | 'audit' | 'integrations' | 'matrix' => {
+    if (!tab) return 'matrix';
+    const t = tab.toLowerCase();
+    if (t.includes('prof') || t.includes('cinema')) return 'profile';
+    if (t.includes('perm') || t.includes('role')) return 'permissions';
+    if (t.includes('aud')) return 'audit';
+    if (t.includes('integ') || t.includes('api') || t.includes('vista')) return 'integrations';
+    if (t.includes('matrix') || t.includes('extract')) return 'matrix';
+    return 'matrix';
+  };
+
+  const [subTab, setSubTab] = useState<'profile' | 'permissions' | 'audit' | 'integrations' | 'matrix'>(() => resolveSubTab(initialSubTab));
+
+  React.useEffect(() => {
+    if (initialSubTab) {
+      setSubTab(resolveSubTab(initialSubTab));
+    }
+  }, [initialSubTab]);
 
   // Pull audits
   const audits = ConnCloudStore.getAuditLogs();

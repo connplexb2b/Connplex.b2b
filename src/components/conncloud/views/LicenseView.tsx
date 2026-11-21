@@ -5,14 +5,30 @@ interface LicenseViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function LicenseView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: LicenseViewProps) {
-  const [subSection, setSubSection] = useState<'registry' | 'renewals' | 'authorities'>('registry');
+  const resolveSubSection = (sec?: string): 'registry' | 'renewals' | 'authorities' => {
+    if (!sec) return 'registry';
+    const s = sec.toLowerCase();
+    if (s.includes('renew')) return 'renewals';
+    if (s.includes('auth')) return 'authorities';
+    return 'registry';
+  };
+
+  const [subSection, setSubSection] = useState<'registry' | 'renewals' | 'authorities'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');

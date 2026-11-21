@@ -5,14 +5,32 @@ interface FnBViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function FnBView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: FnBViewProps) {
-  const [subSection, setSubSection] = useState<'overview' | 'catalog' | 'combos' | 'inventory' | 'wastage'>('overview');
+  const resolveSubSection = (sec?: string): 'overview' | 'catalog' | 'combos' | 'inventory' | 'wastage' => {
+    if (!sec) return 'overview';
+    const s = sec.toLowerCase();
+    if (s.includes('catalog') || s.includes('product')) return 'catalog';
+    if (s.includes('combo')) return 'combos';
+    if (s.includes('invent') || s.includes('stock')) return 'inventory';
+    if (s.includes('waste') || s.includes('wastage')) return 'wastage';
+    return 'overview';
+  };
+
+  const [subSection, setSubSection] = useState<'overview' | 'catalog' | 'combos' | 'inventory' | 'wastage'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   
   // Roster of products
   const products = ConnCloudStore.getFnBProducts();

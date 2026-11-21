@@ -5,14 +5,30 @@ interface GroupBookingViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function GroupBookingView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: GroupBookingViewProps) {
-  const [subSection, setSubSection] = useState<'pipeline' | 'packages' | 'calendar'>('pipeline');
+  const resolveSubSection = (sec?: string): 'pipeline' | 'packages' | 'calendar' => {
+    if (!sec) return 'pipeline';
+    const s = sec.toLowerCase();
+    if (s.includes('pack')) return 'packages';
+    if (s.includes('cal')) return 'calendar';
+    return 'pipeline';
+  };
+
+  const [subSection, setSubSection] = useState<'pipeline' | 'packages' | 'calendar'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');

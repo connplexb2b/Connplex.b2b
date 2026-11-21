@@ -13,7 +13,7 @@ export interface FranchiseeUser {
   locationTitle: string;
 }
 
-const DEFAULT_CORPORATE_USER: FranchiseeUser = {
+export const DEFAULT_CORPORATE_USER: FranchiseeUser = {
   id: 'user_corp',
   name: 'Rakesh Patel',
   role: 'Franchise Partner & Super Admin',
@@ -26,7 +26,7 @@ const DEFAULT_CORPORATE_USER: FranchiseeUser = {
   locationTitle: 'Connplex Capital 2, Gandhinagar'
 };
 
-const AHILYANAGAR_USER: FranchiseeUser = {
+export const AHILYANAGAR_USER: FranchiseeUser = {
   id: 'user_ahilyanagar',
   name: 'Vikram Shinde',
   role: 'Ahilyanagar Franchise Partner',

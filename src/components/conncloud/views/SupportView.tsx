@@ -2,13 +2,31 @@ import React, { useState } from 'react';
 
 interface SupportViewProps {
   selectedCinemaId?: string;
-  triggerNotification: (msg: string) => void;
+  triggerNotification?: (msg: string) => void;
+  initialSubTab?: string;
 }
 
-export default function SupportView({ selectedCinemaId = 'all', triggerNotification }: SupportViewProps) {
+export default function SupportView({ selectedCinemaId = 'all', triggerNotification, initialSubTab }: SupportViewProps) {
   const isAhilyanagar = selectedCinemaId === 'c5';
   const partnerName = isAhilyanagar ? 'Vikram' : 'Rakesh';
-  const [subTab, setSubTab] = useState<'tickets' | 'chat' | 'knowledge' | 'training' | 'emergency'>('tickets');
+
+  const resolveSubTab = (tab?: string): 'tickets' | 'chat' | 'knowledge' | 'training' | 'emergency' => {
+    if (!tab) return 'tickets';
+    const t = tab.toLowerCase();
+    if (t.includes('chat')) return 'chat';
+    if (t.includes('know')) return 'knowledge';
+    if (t.includes('train')) return 'training';
+    if (t.includes('emerg')) return 'emergency';
+    return 'tickets';
+  };
+
+  const [subTab, setSubTab] = useState<'tickets' | 'chat' | 'knowledge' | 'training' | 'emergency'>(() => resolveSubTab(initialSubTab));
+
+  React.useEffect(() => {
+    if (initialSubTab) {
+      setSubTab(resolveSubTab(initialSubTab));
+    }
+  }, [initialSubTab]);
   
   // Tickets log state
   const [tickets, setTickets] = useState(() => isAhilyanagar ? [

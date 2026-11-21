@@ -5,14 +5,31 @@ interface TicketSalesViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function TicketSalesView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: TicketSalesViewProps) {
-  const [subSection, setSubSection] = useState<'sales' | 'seat-map' | 'discounts' | 'refunds'>('sales');
+  const resolveSubSection = (sec?: string): 'sales' | 'seat-map' | 'discounts' | 'refunds' => {
+    if (!sec) return 'sales';
+    const s = sec.toLowerCase();
+    if (s.includes('seat') || s.includes('map')) return 'seat-map';
+    if (s.includes('discount') || s.includes('campaign')) return 'discounts';
+    if (s.includes('refund') || s.includes('cancel')) return 'refunds';
+    return 'sales';
+  };
+
+  const [subSection, setSubSection] = useState<'sales' | 'seat-map' | 'discounts' | 'refunds'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [channelFilter, setChannelFilter] = useState<'all' | 'Online' | 'Counter' | 'Kiosk'>('all');
 
   const isAhilyanagar = selectedCinemaId === 'c5';

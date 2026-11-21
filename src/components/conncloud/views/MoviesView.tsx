@@ -6,6 +6,7 @@ interface MoviesViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export interface VistaMovie {
@@ -68,9 +69,26 @@ export interface UpcomingReleaseRequest {
 export default function MoviesView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: MoviesViewProps) {
-  const [subSection, setSubSection] = useState<'library' | 'today-sessions' | 'details' | 'allocation' | 'request'>('library');
+  const resolveSubSection = (sec?: string): 'library' | 'today-sessions' | 'details' | 'allocation' | 'request' => {
+    if (!sec) return 'library';
+    const s = sec.toLowerCase();
+    if (s.includes('session') || s.includes('today') || s.includes('live')) return 'today-sessions';
+    if (s.includes('detail')) return 'details';
+    if (s.includes('allocat')) return 'allocation';
+    if (s.includes('request')) return 'request';
+    return 'library';
+  };
+
+  const [subSection, setSubSection] = useState<'library' | 'today-sessions' | 'details' | 'allocation' | 'request'>(() => resolveSubSection(initialSubSection));
+
+  useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [selectedMovie, setSelectedMovie] = useState<VistaMovie | null>(null);
   const [filterMode, setFilterMode] = useState<'all' | 'screening' | 'unscheduled'>('screening');
   const [searchQuery, setSearchQuery] = useState('');

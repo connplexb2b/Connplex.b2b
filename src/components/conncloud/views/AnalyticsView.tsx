@@ -5,14 +5,32 @@ interface AnalyticsViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubTab?: string;
 }
 
 export default function AnalyticsView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubTab
 }: AnalyticsViewProps) {
-  const [subTab, setSubTab] = useState<'revenue' | 'admissions' | 'occupancy' | 'atp-sph' | 'forecast'>('revenue');
+  const resolveSubTab = (tab?: string): 'revenue' | 'admissions' | 'occupancy' | 'atp-sph' | 'forecast' => {
+    if (!tab) return 'revenue';
+    const t = tab.toLowerCase();
+    if (t.includes('admit') || t.includes('admission') || t.includes('footfall')) return 'admissions';
+    if (t.includes('occupan') || t.includes('heat')) return 'occupancy';
+    if (t.includes('atp') || t.includes('sph') || t.includes('trend')) return 'atp-sph';
+    if (t.includes('fore') || t.includes('project')) return 'forecast';
+    return 'revenue';
+  };
+
+  const [subTab, setSubTab] = useState<'revenue' | 'admissions' | 'occupancy' | 'atp-sph' | 'forecast'>(() => resolveSubTab(initialSubTab));
+
+  React.useEffect(() => {
+    if (initialSubTab) {
+      setSubTab(resolveSubTab(initialSubTab));
+    }
+  }, [initialSubTab]);
 
   // Pull calculations from ConnCloudStore
   const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);

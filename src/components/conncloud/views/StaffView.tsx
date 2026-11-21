@@ -5,14 +5,31 @@ interface StaffViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function StaffView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: StaffViewProps) {
-  const [subSection, setSubSection] = useState<'roster' | 'attendance' | 'shifts' | 'leaves'>('roster');
+  const resolveSubSection = (sec?: string): 'roster' | 'attendance' | 'shifts' | 'leaves' => {
+    if (!sec) return 'roster';
+    const s = sec.toLowerCase();
+    if (s.includes('attend')) return 'attendance';
+    if (s.includes('shift')) return 'shifts';
+    if (s.includes('leave')) return 'leaves';
+    return 'roster';
+  };
+
+  const [subSection, setSubSection] = useState<'roster' | 'attendance' | 'shifts' | 'leaves'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
 
   const isAhilyanagar = selectedCinemaId === 'c5';
   const currentCinema = ConnCloudStore.getCinemas().find(c => c.cinemaId === selectedCinemaId);

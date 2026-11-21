@@ -5,14 +5,31 @@ interface MISViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function MISView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: MISViewProps) {
-  const [subSection, setSubSection] = useState<'summary' | 'waterfall' | 'variance' | 'screen-yield'>('summary');
+  const resolveSubSection = (sec?: string): 'summary' | 'waterfall' | 'variance' | 'screen-yield' => {
+    if (!sec) return 'summary';
+    const s = sec.toLowerCase();
+    if (s.includes('water')) return 'waterfall';
+    if (s.includes('var')) return 'variance';
+    if (s.includes('yield') || s.includes('screen')) return 'screen-yield';
+    return 'summary';
+  };
+
+  const [subSection, setSubSection] = useState<'summary' | 'waterfall' | 'variance' | 'screen-yield'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [period, setPeriod] = useState<'MTD' | 'QTD' | 'YTD'>('MTD');
 
   const misData: MISCinemaSummary[] = ConnCloudStore.getMISData().filter(item => 

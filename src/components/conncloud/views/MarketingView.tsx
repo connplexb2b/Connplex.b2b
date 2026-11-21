@@ -5,14 +5,31 @@ interface MarketingViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function MarketingView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: MarketingViewProps) {
-  const [subSection, setSubSection] = useState<'campaigns' | 'toolkit' | 'posters' | 'guidelines'>('campaigns');
+  const resolveSubSection = (sec?: string): 'campaigns' | 'toolkit' | 'posters' | 'guidelines' => {
+    if (!sec) return 'campaigns';
+    const s = sec.toLowerCase();
+    if (s.includes('tool')) return 'toolkit';
+    if (s.includes('post')) return 'posters';
+    if (s.includes('guide') || s.includes('brand')) return 'guidelines';
+    return 'campaigns';
+  };
+
+  const [subSection, setSubSection] = useState<'campaigns' | 'toolkit' | 'posters' | 'guidelines'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
 
   // Wizard state

@@ -5,14 +5,31 @@ interface OperationsViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function OperationsView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: OperationsViewProps) {
-  const [subSection, setSubSection] = useState<'screens' | 'equipment' | 'maintenance' | 'simulator'>('screens');
+  const resolveSubSection = (sec?: string): 'screens' | 'equipment' | 'maintenance' | 'simulator' => {
+    if (!sec) return 'screens';
+    const s = sec.toLowerCase();
+    if (s.includes('equip')) return 'equipment';
+    if (s.includes('maint') || s.includes('ticket')) return 'maintenance';
+    if (s.includes('sim')) return 'simulator';
+    return 'screens';
+  };
+
+  const [subSection, setSubSection] = useState<'screens' | 'equipment' | 'maintenance' | 'simulator'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
 
   // Pull records from store
   const screens = ConnCloudStore.getScreens().filter(s => selectedCinemaId === 'all' || s.cinemaId === selectedCinemaId);

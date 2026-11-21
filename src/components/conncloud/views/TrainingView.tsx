@@ -5,14 +5,31 @@ interface TrainingViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function TrainingView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: TrainingViewProps) {
-  const [subSection, setSubSection] = useState<'modules' | 'orientation' | 'certifications' | 'drills'>('modules');
+  const resolveSubSection = (sec?: string): 'modules' | 'orientation' | 'certifications' | 'drills' => {
+    if (!sec) return 'modules';
+    const s = sec.toLowerCase();
+    if (s.includes('orient')) return 'orientation';
+    if (s.includes('cert')) return 'certifications';
+    if (s.includes('drill') || s.includes('safety')) return 'drills';
+    return 'modules';
+  };
+
+  const [subSection, setSubSection] = useState<'modules' | 'orientation' | 'certifications' | 'drills'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 

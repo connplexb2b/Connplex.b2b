@@ -13,7 +13,9 @@ import {
   storeFranchiseeSession,
   getStoredFranchiseeUser,
   clearFranchiseeSession,
-  FranchiseeUser
+  FranchiseeUser,
+  AHILYANAGAR_USER,
+  DEFAULT_CORPORATE_USER
 } from '../../lib/franchiseeAuth';
 
 // TypeScript Interfaces
@@ -539,23 +541,36 @@ export default function FranchiseePortal() {
   const handleNavClick = (tab: string) => {
     const slugMap: Record<string, string> = {
       'Dashboard': 'dashboard',
+      'Ahilyanagar Franchise': 'ahilyanagar',
+      'Data Extraction Matrix': 'data-extract',
       'Analytics': 'analytics',
       'Finance': 'finance',
       'Movies': 'movies',
       'Ticket Sales': 'ticket-sales',
+      'Group Booking': 'group-booking',
       'Food & Beverage': 'fnb',
+      'Merchandise / Store': 'merchandise',
       'Staff': 'staff',
+      'Training & Orientation': 'training',
       'Operations': 'operations',
       'Marketing': 'marketing',
+      'My Offers': 'offers',
       'Reports': 'reports',
+      'MIS': 'mis',
       'Documents': 'documents',
+      'License': 'license',
       'Support': 'support',
+      'Notifications': 'notifications',
+      'Calendar': 'calendar',
       'Settings': 'settings'
     };
     const slug = slugMap[tab] || '';
     if (typeof window !== 'undefined') {
       localStorage.setItem('franchisee_cinema', currentLocation.cinemaId);
       localStorage.setItem('franchisee_location', currentLocation.id);
+      localStorage.setItem('cc_selected_cinema', currentLocation.cinemaId);
+      const userToStore = currentUser || (currentLocation.cinemaId === 'c5' ? AHILYANAGAR_USER : DEFAULT_CORPORATE_USER);
+      storeFranchiseeSession(userToStore);
     }
     router.push(`/conncloud/${slug}?cinema=${currentLocation.cinemaId}`);
   };

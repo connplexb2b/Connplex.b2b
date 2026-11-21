@@ -5,14 +5,30 @@ interface OffersViewProps {
   selectedCinemaId: string;
   selectedDateRange: string;
   triggerNotification: (msg: string) => void;
+  initialSubSection?: string;
 }
 
 export default function OffersView({
   selectedCinemaId,
   selectedDateRange,
-  triggerNotification
+  triggerNotification,
+  initialSubSection
 }: OffersViewProps) {
-  const [subSection, setSubSection] = useState<'active' | 'analytics' | 'archive'>('active');
+  const resolveSubSection = (sec?: string): 'active' | 'analytics' | 'archive' => {
+    if (!sec) return 'active';
+    const s = sec.toLowerCase();
+    if (s.includes('analy')) return 'analytics';
+    if (s.includes('arch') || s.includes('expire')) return 'archive';
+    return 'active';
+  };
+
+  const [subSection, setSubSection] = useState<'active' | 'analytics' | 'archive'>(() => resolveSubSection(initialSubSection));
+
+  React.useEffect(() => {
+    if (initialSubSection) {
+      setSubSection(resolveSubSection(initialSubSection));
+    }
+  }, [initialSubSection]);
   const [filterType, setFilterType] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
