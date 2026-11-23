@@ -363,17 +363,31 @@ const CareerPage = () => {
         };
 
         try {
-            const apiUrl = getApiUrl();
-            const response = await fetch(`${apiUrl}/api/forms/career-application`, {
+            // First attempt submission to the internal API route
+            let response = await fetch('/api/forms/career-application', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload),
-            });
+            }).catch(() => null);
 
-            const result = await response.json();
-            if (!response.ok) {
+            // Fallback to configured external API URL if internal returns non-ok or failed
+            if (!response || !response.ok) {
+                const apiUrl = getApiUrl();
+                if (apiUrl) {
+                    response = await fetch(`${apiUrl}/api/forms/career-application`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+                }
+            }
+
+            if (!response || !response.ok) {
+                const result = response ? await response.json().catch(() => ({})) : {};
                 throw new Error(result.message || 'Submission failed. Please try again.');
             }
 

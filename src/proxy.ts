@@ -15,6 +15,26 @@ export function proxy(request: NextRequest) {
   if (isAdminPage || isAdminApi) {
     const session = request.cookies.get(ADMIN_COOKIE)?.value;
     if (session === ADMIN_COOKIE_VALUE) {
+      const role = request.cookies.get('admin_role')?.value;
+      if (role === 'hr') {
+        const isHrAllowedPage =
+          pathname.startsWith('/admin/careers') ||
+          pathname.startsWith('/admin/submissions');
+        const isHrAllowedApi =
+          pathname.startsWith('/api/admin/careers') ||
+          pathname.startsWith('/api/admin/form-submissions') ||
+          pathname.startsWith('/api/admin/auth');
+
+        if (isAdminPage && !isHrAllowedPage) {
+          const careersUrl = new URL('/admin/careers', request.url);
+          return NextResponse.redirect(careersUrl);
+        }
+
+        if (isAdminApi && !isHrAllowedApi) {
+          return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+      }
+
       return NextResponse.next();
     }
 

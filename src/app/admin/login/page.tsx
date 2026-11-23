@@ -8,8 +8,8 @@ import '../admin.css';
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -27,20 +27,31 @@ function AdminLoginForm() {
 
       if (!res.ok) {
         setLoading(false);
-        setError('Invalid credentials. Please try again.');
+        setError('Invalid username or password. Please try again.');
         return;
       }
 
-      // Successfully authenticated, navigate to dashboard
-      const from = searchParams?.get('from') || '/admin/news';
-      
+      const data = await res.json();
+      // If HR, always direct to /admin/careers unless from is specifically careers/submissions
+      let target = data.redirectTo || '/admin/news';
+      const fromParam = searchParams?.get('from');
+
+      if (data.role === 'hr') {
+        if (fromParam && (fromParam.startsWith('/admin/careers') || fromParam.startsWith('/admin/submissions'))) {
+          target = fromParam;
+        } else {
+          target = '/admin/careers';
+        }
+      } else if (fromParam) {
+        target = fromParam;
+      }
+
       // Refresh session first, then navigate
       router.refresh();
-      
-      // Small delay to ensure cookie is set before redirect
+
       setTimeout(() => {
-        router.push(from);
-      }, 100);
+        router.push(target);
+      }, 150);
     } catch (err) {
       setLoading(false);
       setError('Connection error. Please try again.');
@@ -65,14 +76,54 @@ function AdminLoginForm() {
           width={160}
           height={48}
           style={{ objectFit: 'contain', margin: '0 auto 1.5rem', display: 'block', height: 'auto' }}
+          priority
         />
-        <h1>Admin Login</h1>
-        <p>Upload and manage PDF &amp; audio files</p>
+        <h1 style={{ fontSize: '1.4rem', fontWeight: 700, marginBottom: '0.35rem' }}>
+          Connplex Portal Login
+        </h1>
+        <p style={{ color: 'var(--admin-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+          Sign in to access Admin Management or HR Career Applications
+        </p>
+
         {error && <p className="admin-error">{error}</p>}
+
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+          <div
+            style={{
+              flex: 1,
+              padding: '0.45rem',
+              textAlign: 'center',
+              borderRadius: '6px',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              background: 'rgba(193, 155, 98, 0.1)',
+              border: '1px solid rgba(193, 155, 98, 0.25)',
+              color: 'var(--admin-gold)',
+            }}
+          >
+            🔑 Admin Portal
+          </div>
+          <div
+            style={{
+              flex: 1,
+              padding: '0.45rem',
+              textAlign: 'center',
+              borderRadius: '6px',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              color: '#10b981',
+            }}
+          >
+            👥 HR Recruitment
+          </div>
+        </div>
+
         <input
           type="text"
           className="admin-input"
-          placeholder="Admin username"
+          placeholder="Username or email (e.g. admin or hr)"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -82,11 +133,12 @@ function AdminLoginForm() {
         <input
           type="password"
           className="admin-input"
-          placeholder="Admin password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           autoComplete="current-password"
+          style={{ marginBottom: '1rem' }}
         />
         <button
           type="submit"
@@ -96,7 +148,6 @@ function AdminLoginForm() {
         >
           {loading ? 'Signing in…' : 'Sign In'}
         </button>
-       
       </form>
     </div>
   );
