@@ -1004,7 +1004,7 @@
     border: 1px solid var(--gold-border);
     border-radius: 12px;
     width: 100%;
-    max-width: 680px;
+    max-width: 760px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -1451,4 +1451,218 @@
 
         padding: 1rem;
     }
+}
+
+/* ==========================================================================
+   ENHANCED JOB DETAILS & INTERACTIVE MODAL STYLES
+   ========================================================================== */
+
+.career-page .modal-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin: 1.2rem 0 2rem;
+    border-bottom: 1px solid rgba(223, 185, 115, 0.15);
+    padding-bottom: 0.75rem;
+}
+
+.career-page .modal-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.career-page .modal-tab-btn:hover {
+    color: var(--text-white);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.career-page .modal-tab-btn.active {
+    color: var(--gold-primary);
+    background: rgba(223, 185, 115, 0.08);
+}
+
+.career-page .modal-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -0.75rem;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gold-primary);
+    box-shadow: 0 0 10px var(--gold-glow);
+}
+
+.career-page .job-badges-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.career-page .job-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(223, 185, 115, 0.2);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    color: var(--text-silver);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.career-page .job-badge.badge-gold {
+    background: rgba(223, 185, 115, 0.12);
+    border-color: rgba(223, 185, 115, 0.4);
+    color: var(--gold-light);
+    font-weight: 600;
+}
+
+.career-page .job-badge-icon {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.career-page .job-details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    color: var(--text-silver);
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.career-page .job-details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.career-page .job-section-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid rgba(223, 185, 115, 0.12);
+    padding-bottom: 0.5rem;
+}
+
+.career-page .job-section-desc {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: #c9c7c3;
+    white-space: pre-line;
+}
+
+.career-page .job-responsibility-category {
+    margin-top: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 2px solid var(--gold-primary);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.career-page .job-category-heading {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.3px;
+}
+
+.career-page .job-bullets-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 0.2rem;
+}
+
+.career-page .job-bullets-list li {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #c9c7c3;
+    position: relative;
+    padding-left: 1.35rem;
+}
+
+.career-page .job-bullets-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0.25rem;
+    color: var(--gold-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.career-page .job-details-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 1rem;
+}
+
+.career-page .btn-back-details {
+    background: transparent;
+    border: none;
+    color: var(--gold-primary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    margin-bottom: 1.2rem;
+    transition: var(--transition-fast);
+    text-transform: uppercase;
+}
+
+.career-page .btn-back-details:hover {
+    color: var(--gold-light);
+    transform: translateX(-4px);
+}
+
+.career-page .btn-remove-file {
+    background: transparent;
+    border: none;
+    color: #ff6b6b;
+    margin-left: 0.75rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    vertical-align: middle;
+    transition: var(--transition-fast);
+}
+
+.career-page .btn-remove-file:hover {
+    color: #ff4757;
+    text-decoration: underline;
+}
+
+.career-page .form-alert-error {
+    background: rgba(220, 53, 69, 0.15);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: #ff8585;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
 }
