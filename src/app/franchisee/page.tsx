@@ -371,14 +371,16 @@ const LOCATIONS: Record<string, LocationConfig> = {
 
 export default function FranchiseePortal() {
   const router = useRouter();
+
   // Session State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<FranchiseeUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Form State
-  const [loginInput, setLoginInput] = useState<string>(''); // Email or contact or username
+  const [loginInput, setLoginInput] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -387,6 +389,7 @@ export default function FranchiseePortal() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
   const [locationDropdownOpen, setLocationDropdownOpen] = useState<boolean>(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   const [selectedLocationKey, setSelectedLocationKey] = useState<string>('ahilyanagar');
   const [toast, setToast] = useState<string | null>(null);
   const [apiDocsExpanded, setApiDocsExpanded] = useState<boolean>(false);
@@ -461,12 +464,25 @@ export default function FranchiseePortal() {
         if (authRes.user.locationKey && LOCATIONS[authRes.user.locationKey]) {
           setSelectedLocationKey(authRes.user.locationKey);
         }
-        showToast(`Successfully signed in! Welcome ${authRes.user.name} (${authRes.user.role}).`);
+        showToast(`Signed in successfully! Welcome ${authRes.user.name}.`);
       } else {
-        setLoginError(authRes.error || 'Invalid credentials. Check your email/contact number and password.');
+        setLoginError(authRes.error || 'Invalid credentials. Check your email or username and password.');
       }
       setIsSubmitting(false);
-    }, 600);
+    }, 500);
+  };
+
+  // Quick Demo Credentials Autofill
+  const fillCredentials = (type: 'ahilyanagar' | 'corporate') => {
+    if (type === 'ahilyanagar') {
+      setLoginInput('ahilyanagar');
+      setPassword('ahilyanagar');
+      showToast('Loaded Ahilyanagar Flagship Partner credentials.');
+    } else {
+      setLoginInput('guptajahnvi47@gmail.com');
+      setPassword('Jahnvi@04');
+      showToast('Loaded Corporate Master Admin credentials.');
+    }
   };
 
   // Handle Logout
@@ -485,51 +501,15 @@ export default function FranchiseePortal() {
     setToast(message);
     setTimeout(() => {
       setToast(null);
-    }, 3000);
+    }, 3200);
   };
 
   const currentLocation = LOCATIONS[selectedLocationKey] || LOCATIONS['ahilyanagar'];
-
-  // Location-specific KPI Metrics data
   const metrics: Metric[] = currentLocation.metrics;
-
-  // Screen Shows (Live Operations Snapshot based on current cinema)
   const shows: ScreenShow[] = currentLocation.screens;
-
-  // Calendar Events
   const events: EventItem[] = currentLocation.events;
-
-  // News Items
   const newsList: NewsItem[] = currentLocation.newsList;
-
-  // Campaigns
   const campaigns: CampaignItem[] = currentLocation.campaigns;
-
-  // Render mini Sparkline using SVG
-  const renderSparkline = (points: number[], isUp: boolean) => {
-    const width = 60;
-    const height = 20;
-    const min = Math.min(...points);
-    const max = Math.max(...points);
-    const range = max - min || 1;
-    
-    const coordinates = points.map((p, index) => {
-      const x = (index / (points.length - 1)) * width;
-      const y = height - ((p - min) / range) * height;
-      return `${x},${y}`;
-    }).join(' ');
-
-    return (
-      <svg className="fra-sparkline-container" viewBox={`0 0 ${width} ${height}`}>
-        <polyline
-          fill="none"
-          stroke={isUp ? 'var(--fra-green)' : 'var(--fra-red)'}
-          strokeWidth="1.5"
-          points={coordinates}
-        />
-      </svg>
-    );
-  };
 
   // Filter shows based on query
   const filteredShows = shows.filter(s => 
@@ -537,8 +517,110 @@ export default function FranchiseePortal() {
     s.screen.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Switch tabs
+  // Modern Area Sparkline with gradient & endpoint marker
+  const renderSparkline = (points: number[], isUp: boolean, cardIndex: number) => {
+    const width = 75;
+    const height = 28;
+    const paddingY = 3;
+    const min = Math.min(...points);
+    const max = Math.max(...points);
+    const range = max - min || 1;
+    const effectiveHeight = height - paddingY * 2;
+
+    const coords = points.map((p, index) => {
+      const x = (index / (points.length - 1)) * width;
+      const y = paddingY + effectiveHeight - ((p - min) / range) * effectiveHeight;
+      return { x, y };
+    });
+
+    const polylinePoints = coords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' ');
+    const areaPath = `M 0,${height} L ` + coords.map(c => `${c.x.toFixed(1)},${c.y.toFixed(1)}`).join(' L ') + ` L ${width},${height} Z`;
+    const lastCoord = coords[coords.length - 1];
+
+    const strokeColor = isUp ? '#10b981' : '#ef4444';
+    const gradientId = `spark-grad-${cardIndex}-${isUp ? 'up' : 'dn'}`;
+
+    return (
+      <svg className="fra-sparkline-container" viewBox={`0 0 ${width} ${height}`}>
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={strokeColor} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={strokeColor} stopOpacity="0.0" />
+          </linearGradient>
+        </defs>
+        <path d={areaPath} fill={`url(#${gradientId})`} />
+        <polyline
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={polylinePoints}
+        />
+        <circle
+          cx={lastCoord.x}
+          cy={lastCoord.y}
+          r="2.5"
+          fill="#ffffff"
+          stroke={strokeColor}
+          strokeWidth="1.5"
+        />
+      </svg>
+    );
+  };
+
+  // Metric Icon and Color Metadata
+  const getMetricMeta = (label: string) => {
+    const l = label.toLowerCase();
+    if (l.includes("today's revenue")) return { icon: 'fa-indian-rupee-sign', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
+    if (l.includes('weekly revenue')) return { icon: 'fa-chart-line', color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' };
+    if (l.includes('monthly revenue')) return { icon: 'fa-building-columns', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' };
+    if (l.includes('roi')) return { icon: 'fa-bullseye', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' };
+    if (l.includes('admissions')) return { icon: 'fa-ticket', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' };
+    if (l.includes('occupancy')) return { icon: 'fa-chart-pie', color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' };
+    if (l.includes('ticket price')) return { icon: 'fa-tag', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
+    if (l.includes('spend per head')) return { icon: 'fa-utensils', color: '#f97316', bg: 'rgba(249, 115, 22, 0.12)' };
+    if (l.includes('online bookings')) return { icon: 'fa-globe', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' };
+    if (l.includes('counter sales')) return { icon: 'fa-cash-register', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.12)' };
+    if (l.includes('food revenue')) return { icon: 'fa-burger', color: '#eab308', bg: 'rgba(234, 179, 8, 0.12)' };
+    if (l.includes('rating')) return { icon: 'fa-star', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
+    return { icon: 'fa-chart-simple', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.12)' };
+  };
+
+  // Event category color
+  const getEventTypeColor = (type: string) => {
+    const t = type.toLowerCase();
+    if (t.includes('corporate')) return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.12)' };
+    if (t.includes('maintenance')) return { color: '#fb923c', bg: 'rgba(251, 146, 60, 0.12)' };
+    if (t.includes('compliance')) return { color: '#34d399', bg: 'rgba(16, 185, 129, 0.12)' };
+    if (t.includes('promotion') || t.includes('festival')) return { color: '#fbbf24', bg: 'rgba(245, 158, 11, 0.12)' };
+    if (t.includes('release') || t.includes('premiere')) return { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)' };
+    return { color: '#cbd5e1', bg: 'rgba(255, 255, 255, 0.08)' };
+  };
+
+  // News category tag color
+  const getNewsTagColor = (tag: string) => {
+    const t = tag.toUpperCase();
+    if (t.includes('VISTA') || t.includes('API')) return { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
+    if (t.includes('FINANCE') || t.includes('REVENUE')) return { color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' };
+    if (t.includes('AUDIT') || t.includes('POLICY')) return { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.15)' };
+    if (t.includes('COMPLIANCE')) return { color: '#a855f7', bg: 'rgba(168, 85, 247, 0.15)' };
+    if (t.includes('BOOKINGS') || t.includes('PREMIERE')) return { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' };
+    return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.15)' };
+  };
+
+  // Occupancy Gradient
+  const getOccupancyGradient = (occ: number) => {
+    if (occ >= 90) return 'linear-gradient(90deg, #f59e0b 0%, #10b981 100%)';
+    if (occ >= 75) return 'linear-gradient(90deg, #3b82f6 0%, #f59e0b 100%)';
+    return 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
+  };
+
+  // Switch tabs & route to sub-modules
   const handleNavClick = (tab: string) => {
+    setActiveTab(tab);
+    setIsMobileSidebarOpen(false);
+
     const slugMap: Record<string, string> = {
       'Dashboard': 'dashboard',
       'Ahilyanagar Franchise': 'ahilyanagar',
@@ -564,6 +646,7 @@ export default function FranchiseePortal() {
       'Calendar': 'calendar',
       'Settings': 'settings'
     };
+
     const slug = slugMap[tab] || '';
     if (typeof window !== 'undefined') {
       localStorage.setItem('franchisee_cinema', currentLocation.cinemaId);
@@ -626,33 +709,49 @@ export default function FranchiseePortal() {
     showToast(`Triggered: ${actionName}`);
   };
 
+  // Loading State
   if (isLoading) {
     return (
       <div className="fra-signin-container">
-        <div className="fra-signin-card" style={{ textAlign: 'center' }}>
+        <div className="fra-signin-card" style={{ textAlign: 'center', padding: '3.5rem 2.5rem' }}>
           <div className="fra-signin-logo-wrap">
-            <Image src="/logo.png" alt="Connplex Cinemas" width={160} height={44} priority style={{ height: 'auto' }} />
+            <Image src="/logo.png" alt="Connplex Cinemas" width={170} height={46} priority style={{ height: 'auto' }} />
+            <span className="fra-signin-badge">
+              <i className="fa-solid fa-shield-halved"></i> Initializing Conncloud Secure Portal
+            </span>
           </div>
           <div style={{ color: 'var(--fra-text-secondary)', margin: '2rem 0' }}>
-            <i className="fa-solid fa-circle-notch fa-spin" style={{ fontSize: '2rem', color: 'var(--fra-gold)', marginBottom: '1rem', display: 'block' }}></i>
-            Initializing Conncloud secure portal...
+            <i className="fa-solid fa-circle-notch fa-spin" style={{ fontSize: '2.4rem', color: '#f59e0b', marginBottom: '1.25rem', display: 'block' }}></i>
+            <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Connecting to encrypted cinema franchise network...</span>
           </div>
         </div>
       </div>
     );
   }
 
-  // Render Sign-In Page
+  // Render Sign-In Page (when not logged in)
   if (!isAuthenticated) {
     return (
       <div className="fra-signin-container">
+        {/* Floating toast notification */}
+        {toast && (
+          <div className="fra-toast">
+            <i className="fa-solid fa-circle-check"></i>
+            <span>{toast}</span>
+          </div>
+        )}
+
         <div className="fra-signin-card">
           <div className="fra-signin-logo-wrap">
-            <Image src="/logo.png" alt="Connplex Cinemas" width={180} height={50} priority style={{ height: 'auto' }} />
+            <Image src="/logo.png" alt="Connplex Cinemas" width={190} height={52} priority style={{ height: 'auto' }} />
+            <span className="fra-signin-badge">
+              <i className="fa-solid fa-crown"></i> Executive Franchise Portal
+            </span>
           </div>
+
           <div className="fra-signin-title-wrap">
-            <h1>Franchise Portal</h1>
-            <p>Access your Conncloud Franchise Owner Dashboard</p>
+            <h1>Cinema Partner Login</h1>
+            <p>Access your ConnCloud Multi-Tenant Franchise Dashboard &amp; Live POS Sync</p>
           </div>
 
           <form onSubmit={handleLogin}>
@@ -664,13 +763,16 @@ export default function FranchiseePortal() {
             )}
 
             <div className="fra-signin-form-group">
-              <label htmlFor="loginInput">EMAIL ADDRESS OR CONTACT NUMBER</label>
+              <label htmlFor="loginInput">
+                <span>Email Address or Username</span>
+                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Authorized Account</span>
+              </label>
               <div className="fra-signin-input-wrapper">
                 <input
                   id="loginInput"
                   type="text"
                   className="fra-signin-input"
-                  placeholder="Enter Email or Contact Number"
+                  placeholder="e.g. ahilyanagar or admin email"
                   value={loginInput}
                   onChange={(e) => setLoginInput(e.target.value)}
                   required
@@ -680,11 +782,14 @@ export default function FranchiseePortal() {
             </div>
 
             <div className="fra-signin-form-group">
-              <label htmlFor="password">PASSWORD</label>
+              <label htmlFor="password">
+                <span>Password</span>
+                <span style={{ fontSize: '10px', color: '#94a3b8' }}>Encrypted</span>
+              </label>
               <div className="fra-signin-input-wrapper">
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className="fra-signin-input"
                   placeholder="••••••••"
                   value={password}
@@ -692,80 +797,74 @@ export default function FranchiseePortal() {
                   required
                 />
                 <i className="fa-solid fa-lock"></i>
+                <button
+                  type="button"
+                  className="fra-password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
               </div>
             </div>
 
             <button type="submit" className="fra-signin-btn" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <i className="fa-solid fa-circle-notch fa-spin"></i> Authenticating...
+                  <i className="fa-solid fa-circle-notch fa-spin"></i> Authenticating Session...
                 </>
               ) : (
                 <>
-                  Sign In <i className="fa-solid fa-arrow-right"></i>
+                  Sign In to Portal <i className="fa-solid fa-arrow-right"></i>
                 </>
               )}
             </button>
           </form>
 
-          <div style={{ marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'bold' }}>
-              Quick Credentials
-            </span>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+          {/* Smart One-Click Demo Credentials Autofill */}
+          <div className="fra-quick-creds-container">
+            <div className="fra-quick-creds-title">
+              <span>One-Click Autofill Credentials</span>
+              <span style={{ color: '#f59e0b' }}>Click to Test</span>
+            </div>
+            <div className="fra-quick-creds-grid">
               <button
                 type="button"
-                onClick={() => {
-                  setLoginInput('ahilyanagar');
-                  setPassword('ahilyanagar');
-                }}
-                style={{
-                  fontSize: '11px',
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  background: 'rgba(245, 158, 11, 0.15)',
-                  color: '#fbbf24',
-                  border: '1px solid rgba(245, 158, 11, 0.35)',
-                  cursor: 'pointer',
-                  fontWeight: '600'
-                }}
+                className="fra-quick-cred-btn gold"
+                onClick={() => fillCredentials('ahilyanagar')}
               >
-                📍 Ahilyanagar Partner
+                <span className="fra-quick-cred-name">
+                  <i className="fa-solid fa-location-dot" style={{ color: '#f59e0b' }}></i> Ahilyanagar Flagship
+                </span>
+                <span className="fra-quick-cred-role">Vikram Shinde &bull; Vista POS Live</span>
               </button>
+
               <button
                 type="button"
-                onClick={() => {
-                  setLoginInput('guptajahnvi47@gmail.com');
-                  setPassword('Jahnvi@04');
-                }}
-                style={{
-                  fontSize: '11px',
-                  padding: '4px 10px',
-                  borderRadius: '6px',
-                  background: 'rgba(59, 130, 246, 0.15)',
-                  color: '#93c5fd',
-                  border: '1px solid rgba(59, 130, 246, 0.35)',
-                  cursor: 'pointer',
-                  fontWeight: '600'
-                }}
+                className="fra-quick-cred-btn blue"
+                onClick={() => fillCredentials('corporate')}
               >
-                🏢 Corporate Admin
+                <span className="fra-quick-cred-name">
+                  <i className="fa-solid fa-building-shield" style={{ color: '#60a5fa' }}></i> Corporate Admin
+                </span>
+                <span className="fra-quick-cred-role">Rakesh Patel &bull; All 6 Cinemas</span>
               </button>
             </div>
           </div>
 
           <p className="fra-signin-hint">
-            Authorized franchise personnel only. Connection is encrypted.
+            <i className="fa-solid fa-shield-halved" style={{ color: '#10b981' }}></i>
+            Authorized franchise personnel only. 256-Bit SSL Encrypted Connection.
           </p>
         </div>
       </div>
     );
   }
 
-  // Render Franchisee Portal Dashboard
+  // Render Franchisee Portal Dashboard (When authenticated)
   return (
     <div className="fra-portal-layout">
-      {/* Toast Alert */}
+      {/* Toast Alert Feedback */}
       {toast && (
         <div className="fra-toast">
           <i className="fa-solid fa-circle-check"></i>
@@ -773,27 +872,74 @@ export default function FranchiseePortal() {
         </div>
       )}
 
-      {/* Left Sidebar */}
-      <aside className="fra-sidebar">
+      {/* Mobile Sidebar Overlay */}
+      <div 
+        className={`fra-sidebar-overlay ${isMobileSidebarOpen ? 'mobile-open' : ''}`}
+        onClick={() => setIsMobileSidebarOpen(false)}
+      />
+
+      {/* Left Sidebar Navigation */}
+      <aside className={`fra-sidebar ${isMobileSidebarOpen ? 'mobile-open' : ''}`}>
         <div className="fra-sidebar-logo-container">
-          <Image src="/logo.png" alt="Connplex" width={135} height={36} priority style={{ height: 'auto' }} />
-          <span className="fra-sidebar-logo-sub">Conncloud Portal</span>
+          <Image src="/logo.png" alt="Connplex" width={140} height={38} priority style={{ height: 'auto' }} />
+          <span className="fra-sidebar-logo-sub">
+            <i className="fa-solid fa-layer-group"></i> Conncloud Suite 2.0
+          </span>
         </div>
 
         <div className="fra-sidebar-scroll">
+          {/* Operations Group */}
           <div className="fra-sidebar-group">
-            <span className="fra-sidebar-group-title">Overview</span>
+            <span className="fra-sidebar-group-title">Operations &amp; Revenue</span>
             <ul className="fra-sidebar-nav-list">
               {[
                 { name: 'Dashboard', icon: 'fa-table-columns' },
                 { name: 'Analytics', icon: 'fa-chart-line' },
                 { name: 'Finance', icon: 'fa-indian-rupee-sign' },
-                { name: 'Movies', icon: 'fa-film' },
                 { name: 'Ticket Sales', icon: 'fa-ticket' },
                 { name: 'Food & Beverage', icon: 'fa-burger' },
-                { name: 'Staff', icon: 'fa-user-tie' },
+              ].map((item) => (
+                <li 
+                  key={item.name} 
+                  className={`fra-sidebar-nav-item ${activeTab === item.name ? 'active' : ''}`}
+                >
+                  <button onClick={() => handleNavClick(item.name)}>
+                    <i className={`fa-solid ${item.icon}`}></i>
+                    <span>{item.name}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cinema Management Group */}
+          <div className="fra-sidebar-group">
+            <span className="fra-sidebar-group-title">Cinema Management</span>
+            <ul className="fra-sidebar-nav-list">
+              {[
+                { name: 'Movies', icon: 'fa-film' },
                 { name: 'Operations', icon: 'fa-gears' },
+                { name: 'Staff', icon: 'fa-user-tie' },
                 { name: 'Marketing', icon: 'fa-bullhorn' },
+              ].map((item) => (
+                <li 
+                  key={item.name} 
+                  className={`fra-sidebar-nav-item ${activeTab === item.name ? 'active' : ''}`}
+                >
+                  <button onClick={() => handleNavClick(item.name)}>
+                    <i className={`fa-solid ${item.icon}`}></i>
+                    <span>{item.name}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Governance & Support Group */}
+          <div className="fra-sidebar-group">
+            <span className="fra-sidebar-group-title">System &amp; Reports</span>
+            <ul className="fra-sidebar-nav-list">
+              {[
                 { name: 'Reports', icon: 'fa-file-invoice-dollar' },
                 { name: 'Documents', icon: 'fa-folder-open' },
                 { name: 'Support', icon: 'fa-circle-question' },
@@ -813,65 +959,107 @@ export default function FranchiseePortal() {
           </div>
         </div>
 
+        {/* Sidebar Footer Live Status */}
         <div className="fra-sidebar-footer">
-          <span className="fra-status-dot"></span>
-          <span className="fra-sidebar-footer-text">All systems operational</span>
+          <div className="fra-sidebar-footer-info">
+            <span className="fra-status-dot"></span>
+            <span className="fra-sidebar-footer-text">Vista API &bull; POS Online</span>
+          </div>
+          <span style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold' }}>v2.6</span>
         </div>
       </aside>
 
-      {/* Main Panel */}
+      {/* Main Container Area */}
       <main className="fra-main-container">
-        {/* Topbar */}
+        
+        {/* Sticky Glass Topbar */}
         <header className="fra-topbar">
-          <div className="fra-search-container">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              placeholder="Search movies, screens, reports..."
-              className="fra-search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <div className="fra-topbar-left">
+            <button 
+              className="fra-mobile-toggle-btn"
+              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+              aria-label="Toggle navigation drawer"
+            >
+              <i className="fa-solid fa-bars"></i>
+            </button>
+
+            {/* Smart Search Bar */}
+            <div className="fra-search-container">
+              <i className="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                placeholder="Search movies, screens, events..."
+                className="fra-search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery ? (
+                <button 
+                  type="button" 
+                  className="fra-search-clear-btn" 
+                  onClick={() => setSearchQuery('')}
+                  title="Clear search"
+                >
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
+              ) : (
+                <span className="fra-search-kbd">⌘K</span>
+              )}
+            </div>
           </div>
 
           <div className="fra-topbar-actions">
-            {/* Location Switcher */}
+            
+            {/* Cinema Location Switcher Pill */}
             <div className="relative" ref={locationDropdownRef} style={{ position: 'relative' }}>
               <button
                 type="button"
                 onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
                 className="fra-btn fra-btn-outline"
-                style={{ padding: '0.45rem 0.8rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{ 
+                  padding: '0.45rem 0.85rem', 
+                  fontSize: '0.8rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.55rem',
+                  borderColor: selectedLocationKey === 'ahilyanagar' ? 'rgba(245, 158, 11, 0.45)' : 'rgba(255, 255, 255, 0.12)',
+                  background: selectedLocationKey === 'ahilyanagar' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255, 255, 255, 0.03)'
+                }}
               >
-                <i className="fa-solid fa-location-dot" style={{ color: selectedLocationKey === 'ahilyanagar' ? '#f59e0b' : 'var(--fra-gold)' }}></i>
-                <span>{currentLocation.name}</span>
-                {currentLocation.hasApiIntegration && (
-                  <span style={{ fontSize: '9px', background: 'rgba(245, 158, 11, 0.2)', color: '#fbbf24', padding: '1px 5px', borderRadius: '4px', fontWeight: 'bold' }}>
-                    API READY
+                <i className="fa-solid fa-location-dot" style={{ color: selectedLocationKey === 'ahilyanagar' ? '#f59e0b' : '#38bdf8' }}></i>
+                <span style={{ fontWeight: 700, color: '#fff' }}>{currentLocation.name}</span>
+                {currentLocation.hasApiIntegration ? (
+                  <span style={{ fontSize: '9px', background: 'rgba(245, 158, 11, 0.25)', color: '#fbbf24', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                    VISTA SYNC
+                  </span>
+                ) : (
+                  <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                    ACTIVE
                   </span>
                 )}
-                <i className="fa-solid fa-chevron-down" style={{ fontSize: '9px', color: 'var(--fra-text-muted)' }}></i>
+                <i className={`fa-solid ${locationDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ fontSize: '9px', color: 'var(--fra-text-muted)' }}></i>
               </button>
 
+              {/* Location Dropdown Card */}
               {locationDropdownOpen && (
                 <div style={{
                   position: 'absolute',
-                  top: '100%',
+                  top: 'calc(100% + 8px)',
                   right: 0,
-                  marginTop: '0.5rem',
-                  background: '#111827',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: '10px',
-                  padding: '0.4rem',
-                  minWidth: '240px',
-                  boxShadow: '0 15px 35px rgba(0,0,0,0.6)',
-                  zIndex: 50,
+                  background: '#0d131f',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                  padding: '0.5rem',
+                  minWidth: '260px',
+                  boxShadow: 'var(--fra-shadow-lg)',
+                  zIndex: 150,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '3px'
+                  gap: '4px',
+                  animation: 'slideDownMenu 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards'
                 }}>
-                  <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', padding: '6px 8px', fontWeight: 'bold', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                    Switch Cinema Property
+                  <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', padding: '6px 8px', fontWeight: 800, letterSpacing: '0.06em', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                    Select Cinema Property
                   </div>
                   {Object.values(LOCATIONS).map((loc) => (
                     <button
@@ -880,30 +1068,35 @@ export default function FranchiseePortal() {
                       onClick={() => {
                         setSelectedLocationKey(loc.id);
                         setLocationDropdownOpen(false);
-                        showToast(`Switched location to ${loc.name}`);
+                        showToast(`Switched active cinema to ${loc.name}`);
                       }}
                       style={{
                         textAlign: 'left',
-                        padding: '0.5rem 0.65rem',
-                        fontSize: '0.75rem',
-                        color: selectedLocationKey === loc.id ? '#ffffff' : '#9ca3af',
-                        background: selectedLocationKey === loc.id ? 'rgba(37, 99, 235, 0.25)' : 'transparent',
-                        borderRadius: '6px',
-                        border: 'none',
+                        padding: '0.6rem 0.75rem',
+                        fontSize: '0.78rem',
+                        color: selectedLocationKey === loc.id ? '#ffffff' : '#cbd5e1',
+                        background: selectedLocationKey === loc.id ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+                        borderRadius: '8px',
+                        border: selectedLocationKey === loc.id ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid transparent',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        transition: 'background 0.2s'
+                        transition: 'all 0.15s ease'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <i className="fa-solid fa-film" style={{ fontSize: '10px', color: selectedLocationKey === loc.id ? '#60a5fa' : '#6b7280' }}></i>
-                        <span>{loc.shortLabel}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <i className="fa-solid fa-film" style={{ fontSize: '11px', color: selectedLocationKey === loc.id ? '#f59e0b' : '#64748b' }}></i>
+                          <span style={{ fontWeight: selectedLocationKey === loc.id ? 700 : 500 }}>{loc.name}</span>
+                        </div>
+                        <span style={{ fontSize: '10px', color: '#64748b', paddingLeft: '1.2rem' }}>
+                          {loc.city}, {loc.state} &bull; {loc.totalScreens} Screens
+                        </span>
                       </div>
                       {loc.hasApiIntegration && (
-                        <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: '900' }}>
-                          VISTA SYNC
+                        <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: 900 }}>
+                          VISTA
                         </span>
                       )}
                     </button>
@@ -912,33 +1105,45 @@ export default function FranchiseePortal() {
               )}
             </div>
 
-            {/* Launch ConnCloud Suite */}
+            {/* Launch ConnCloud SaaS Suite Link */}
             <Link
               href={`/conncloud/dashboard?cinema=${currentLocation.cinemaId}`}
               className="fra-btn fra-btn-outline"
-              style={{ padding: '0.45rem 0.75rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}
             >
-              <span>ConnCloud SaaS</span>
-              <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '9px' }}></i>
+              <i className="fa-solid fa-cloud" style={{ color: '#60a5fa' }}></i>
+              <span>ConnCloud Suite</span>
+              <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '9px', color: '#94a3b8' }}></i>
             </Link>
 
-            <button className="fra-icon-btn" onClick={() => showToast('No new notifications')}>
+            {/* Notification Bell */}
+            <button className="fra-icon-btn" onClick={() => showToast('3 unread system & sync notifications pending.')} aria-label="Notifications">
               <i className="fa-solid fa-bell"></i>
               <span className="fra-badge">3</span>
             </button>
 
-            <button className="fra-icon-btn" onClick={() => showToast('Inbox is empty')}>
+            {/* Quick Inbox */}
+            <button className="fra-icon-btn" onClick={() => showToast('Inbox is synchronized. No urgent tickets.')} aria-label="Messages">
               <i className="fa-solid fa-envelope"></i>
             </button>
 
             <div className="fra-topbar-divider"></div>
 
+            {/* User Profile Pill & Dropdown */}
             <div className="fra-profile-dropdown-container" ref={dropdownRef}>
               <button 
                 className="fra-profile-trigger"
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                aria-label="User profile menu"
               >
-                <div className="fra-avatar" style={{ background: (currentUser?.cinemaId === 'c5' || selectedLocationKey === 'ahilyanagar') ? 'linear-gradient(135deg, #f59e0b, #d97706)' : undefined }}>
+                <div 
+                  className="fra-avatar" 
+                  style={{ 
+                    background: (currentUser?.cinemaId === 'c5' || selectedLocationKey === 'ahilyanagar') 
+                      ? 'linear-gradient(135deg, #f59e0b, #d97706)' 
+                      : 'linear-gradient(135deg, #2563eb, #1d4ed8)' 
+                  }}
+                >
                   {currentUser?.initials || currentLocation.partnerInitials}
                 </div>
                 <div className="fra-profile-info">
@@ -954,11 +1159,22 @@ export default function FranchiseePortal() {
 
               {profileDropdownOpen && (
                 <div className="fra-dropdown-menu">
+                  <div style={{ padding: '0.4rem 0.6rem 0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '0.35rem' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                      {currentUser?.name || currentLocation.partnerName}
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                      {currentLocation.fullName}
+                    </div>
+                  </div>
                   <button className="fra-dropdown-item" onClick={() => handleActionClick('Profile settings')}>
                     <i className="fa-solid fa-user-circle"></i> Profile Settings
                   </button>
                   <button className="fra-dropdown-item" onClick={() => handleActionClick('Cinema settings')}>
-                    <i className="fa-solid fa-building"></i> Cinema Details
+                    <i className="fa-solid fa-building"></i> Cinema Property Specs
+                  </button>
+                  <button className="fra-dropdown-item" onClick={() => handleActionClick('Daily Revenue Dashboard')}>
+                    <i className="fa-solid fa-chart-line"></i> Revenue Dashboard
                   </button>
                   <button className="fra-dropdown-item danger" onClick={handleLogout}>
                     <i className="fa-solid fa-sign-out-alt"></i> Log Out
@@ -966,35 +1182,37 @@ export default function FranchiseePortal() {
                 </div>
               )}
             </div>
+
           </div>
         </header>
 
-        {/* Dashboard Content */}
+        {/* Dashboard Main Content */}
         <div className="fra-dashboard-content">
           
-          {/* Welcome Banner */}
+          {/* Welcome Hero Banner */}
           <section className="fra-welcome-banner">
             <div className="fra-banner-left">
               <span className="fra-live-indicator">
                 <span className="fra-live-dot"></span>
-                LIVE — {currentLocation.fullName}
+                LIVE OPERATIONS &bull; {currentLocation.fullName}
               </span>
               <h1>Welcome back, {currentUser?.name || currentLocation.partnerName}</h1>
-              <p>Here&apos;s what&apos;s happening across your cinema today — {todayFormatted || 'Wednesday, Sep 16, 2026'}.</p>
+              <p>
+                Here&apos;s real-time performance across your cinema for today &mdash; {todayFormatted || 'Wednesday, Sep 16, 2026'}.
+              </p>
             </div>
             
             <div className="fra-banner-actions">
               {selectedLocationKey === 'ahilyanagar' && (
                 <>
                   <button 
-                    className="fra-btn"
-                    style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#000', fontWeight: 'bold' }}
+                    className="fra-btn fra-btn-primary"
                     onClick={() => {
                       const el = document.getElementById('ahilyanagar-revenue-dashboard');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
                     }}
                   >
-                    <i className="fa-solid fa-chart-line mr-1"></i> Daily Revenue Dashboard
+                    <i className="fa-solid fa-chart-line"></i> Daily Revenue Dashboard
                   </button>
                   <button 
                     className="fra-btn fra-btn-outline"
@@ -1006,21 +1224,21 @@ export default function FranchiseePortal() {
                       }, 100);
                     }}
                   >
-                    <i className="fa-solid fa-server mr-1"></i> Vista API Sync Docs
+                    <i className="fa-solid fa-server"></i> Vista API Sync Docs
                   </button>
                 </>
               )}
               <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('Export Revenue')}>
                 <i className="fa-solid fa-download"></i> Export Revenue
               </button>
-              <button className="fra-btn fra-btn-primary" onClick={() => handleActionClick('View Live Screens')}>
-                View Live Screens
+              <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('View Live Screens')}>
+                <i className="fa-solid fa-display"></i> View Live Screens
               </button>
             </div>
           </section>
 
-          {/* Location Property Specs Chip Strip */}
-          <div className="fra-location-specs-strip" style={{ marginBottom: '0.75rem' }}>
+          {/* Location Property Specs Bar */}
+          <div className="fra-location-specs-strip">
             <div className="fra-spec-chip">
               <i className="fa-solid fa-film"></i>
               <span>{currentLocation.totalScreens} Luxury Auditoriums</span>
@@ -1033,10 +1251,15 @@ export default function FranchiseePortal() {
               <i className="fa-solid fa-location-dot"></i>
               <span>{currentLocation.city}, {currentLocation.state}</span>
             </div>
-            {currentLocation.hasApiIntegration && (
+            {currentLocation.hasApiIntegration ? (
               <div className="fra-spec-chip highlight">
                 <i className="fa-solid fa-bolt"></i>
-                <span>Vista POS Live Synchronized</span>
+                <span>Vista POS Live Synchronized (ASMX)</span>
+              </div>
+            ) : (
+              <div className="fra-spec-chip">
+                <i className="fa-solid fa-cloud-arrow-up"></i>
+                <span>ConnCloud Cloud POS Connected</span>
               </div>
             )}
             <div className="fra-spec-chip">
@@ -1045,79 +1268,88 @@ export default function FranchiseePortal() {
             </div>
           </div>
 
-          {/* Quick Location Pills Bar */}
+          {/* Quick Cinema Property Switcher Bar */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
+            gap: '0.65rem',
             overflowX: 'auto',
-            padding: '0.5rem 0',
-            marginBottom: '1rem'
+            padding: '0.35rem 0',
+            scrollbarWidth: 'none'
           }}>
-            <span style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
               Cinema Property:
             </span>
-            {Object.values(LOCATIONS).map((loc) => (
-              <button
-                key={loc.id}
-                type="button"
-                onClick={() => {
-                  setSelectedLocationKey(loc.id);
-                  showToast(`Viewing ${loc.name}`);
-                }}
-                style={{
-                  padding: '0.35rem 0.8rem',
-                  borderRadius: '20px',
-                  fontSize: '11px',
-                  fontWeight: selectedLocationKey === loc.id ? 'bold' : 'normal',
-                  background: selectedLocationKey === loc.id 
-                    ? (loc.id === 'ahilyanagar' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.3))' : 'rgba(37, 99, 235, 0.3)')
-                    : '#131924',
-                  color: selectedLocationKey === loc.id ? '#ffffff' : '#9ca3af',
-                  border: selectedLocationKey === loc.id 
-                    ? (loc.id === 'ahilyanagar' ? '1px solid rgba(245, 158, 11, 0.6)' : '1px solid rgba(37, 99, 235, 0.6)')
-                    : '1px solid rgba(255, 255, 255, 0.06)',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {loc.id === 'ahilyanagar' && <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>}
-                <span>{loc.name}</span>
-                {loc.hasApiIntegration && (
-                  <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: '900' }}>
-                    API READY
-                  </span>
-                )}
-              </button>
-            ))}
+            {Object.values(LOCATIONS).map((loc) => {
+              const isSelected = selectedLocationKey === loc.id;
+              return (
+                <button
+                  key={loc.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedLocationKey(loc.id);
+                    showToast(`Viewing ${loc.name}`);
+                  }}
+                  style={{
+                    padding: '0.42rem 0.95rem',
+                    borderRadius: '24px',
+                    fontSize: '11px',
+                    fontWeight: isSelected ? 700 : 500,
+                    background: isSelected 
+                      ? (loc.id === 'ahilyanagar' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25))' : 'rgba(37, 99, 235, 0.25)')
+                      : 'rgba(255, 255, 255, 0.035)',
+                    color: isSelected ? '#ffffff' : '#94a3b8',
+                    border: isSelected 
+                      ? (loc.id === 'ahilyanagar' ? '1px solid rgba(245, 158, 11, 0.65)' : '1px solid rgba(37, 99, 235, 0.65)')
+                      : '1px solid rgba(255, 255, 255, 0.07)',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    boxShadow: isSelected ? (loc.id === 'ahilyanagar' ? '0 0 14px rgba(245, 158, 11, 0.2)' : '0 0 14px rgba(37, 99, 235, 0.2)') : 'none',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }}
+                >
+                  <i className="fa-solid fa-film" style={{ fontSize: '10px', color: isSelected ? (loc.id === 'ahilyanagar' ? '#f59e0b' : '#60a5fa') : '#64748b' }}></i>
+                  <span>{loc.name}</span>
+                  {loc.hasApiIntegration && (
+                    <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: 900 }}>
+                      VISTA
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Metrics Grid */}
-          <section className="fra-metrics-grid" style={{ marginBottom: '1.75rem' }}>
-            {metrics.map((m, idx) => (
-              <div key={idx} className="fra-metric-card">
-                <div className="fra-metric-header">
-                  <div className="fra-metric-title-wrap">
-                    <span className={`fra-metric-dot ${m.isUp ? '' : 'red'}`}></span>
-                    <span className="fra-metric-label">{m.label}</span>
+          {/* KPI Metrics Grid (12 Cards) */}
+          <section className="fra-metrics-grid">
+            {metrics.map((m, idx) => {
+              const meta = getMetricMeta(m.label);
+              return (
+                <div key={idx} className="fra-metric-card">
+                  <div className="fra-metric-header">
+                    <div className="fra-metric-title-wrap">
+                      <div className="fra-metric-icon-box" style={{ color: meta.color, background: meta.bg }}>
+                        <i className={`fa-solid ${meta.icon}`}></i>
+                      </div>
+                      <span className="fra-metric-label">{m.label}</span>
+                    </div>
+                    {renderSparkline(m.sparkline, m.isUp, idx)}
                   </div>
-                  {renderSparkline(m.sparkline, m.isUp)}
+                  <div className="fra-metric-value">{m.value}</div>
+                  <div className={`fra-metric-trend ${m.isUp ? 'up' : 'down'}`}>
+                    <i className={`fa-solid ${m.isUp ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}`}></i>
+                    <span>{m.trend} vs last period</span>
+                  </div>
                 </div>
-                <div className="fra-metric-value">{m.value}</div>
-                <div className={`fra-metric-trend ${m.isUp ? 'up' : 'down'}`}>
-                  <i className={`fa-solid ${m.isUp ? 'fa-caret-up' : 'fa-caret-down'}`}></i>
-                  <span>{m.trend}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </section>
 
           {/* Multi-Tenant Connplex Franchise Revenue Dashboard (Vista Integration Engine) */}
-          <div style={{ marginBottom: '1.75rem' }} className="space-y-4">
+          <div className="space-y-4">
             <ConnplexFranchiseRevenueDashboard
               currentLocationKey={selectedLocationKey}
               userRole={currentUser?.role || 'partner'}
@@ -1125,10 +1357,10 @@ export default function FranchiseePortal() {
             />
           </div>
 
-          {/* Ahilyanagar Legacy Specialized Views & Raw API Console */}
+          {/* Ahilyanagar Specialized Views & Raw API Console */}
           {selectedLocationKey === 'ahilyanagar' && (
-            <div style={{ marginBottom: '1.75rem' }} className="space-y-4">
-              {/* Daily Revenue Dashboard (Legacy Fallback) */}
+            <div className="space-y-4">
+              {/* Daily Revenue Dashboard (Fallback Component) */}
               <AhilyanagarFranchiseDashboard 
                 onNotification={showToast} 
                 defaultExpanded={false} 
@@ -1136,38 +1368,40 @@ export default function FranchiseePortal() {
 
               {/* Vista Raw POS ASMX API Integration & Sync Scripts Section */}
               <div style={{
-                background: '#111827',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'rgba(15, 21, 33, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.09)',
                 borderRadius: '16px',
-                padding: '1rem 1.25rem'
+                padding: '1.25rem 1.5rem',
+                boxShadow: 'var(--fra-shadow-sm)'
               }}>
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   flexWrap: 'wrap',
-                  gap: '0.75rem'
+                  gap: '0.85rem'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                     <div style={{
-                      width: '32px',
-                      height: '32px',
-                      borderRadius: '8px',
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
                       background: 'rgba(245, 158, 11, 0.15)',
                       color: '#f59e0b',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '14px'
+                      fontSize: '16px',
+                      boxShadow: '0 0 12px rgba(245, 158, 11, 0.2)'
                     }}>
                       <i className="fa-solid fa-server"></i>
                     </div>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
                         Vista POS ASMX Raw WebService &amp; Sync Architecture
                       </div>
-                      <div style={{ fontSize: '11px', color: '#9ca3af' }}>
-                        Endpoint: <code>/api.asmx/GetDailyTicketAndFnbData</code> &bull; Cinema ID: CL16 (or CN01)
+                      <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                        Endpoint: <code>/api.asmx/GetDailyTicketAndFnbData</code> &bull; Cinema ID: <code>CL16</code> (or <code>CN01</code>)
                       </div>
                     </div>
                   </div>
@@ -1176,18 +1410,18 @@ export default function FranchiseePortal() {
                     type="button"
                     onClick={() => setApiDocsExpanded(!apiDocsExpanded)}
                     style={{
-                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.06)',
-                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                      color: apiDocsExpanded ? '#f59e0b' : '#e5e7eb',
-                      padding: '6px 14px',
+                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(255, 255, 255, 0.12)',
+                      color: apiDocsExpanded ? '#f59e0b' : '#e2e8f0',
+                      padding: '8px 16px',
                       borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: 600,
+                      fontSize: '12px',
+                      fontWeight: 700,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.4rem',
-                      transition: 'all 0.2s'
+                      gap: '0.5rem',
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <i className={`fa-solid ${apiDocsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
@@ -1196,7 +1430,7 @@ export default function FranchiseePortal() {
                 </div>
 
                 {apiDocsExpanded && (
-                  <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1rem' }}>
+                  <div style={{ marginTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.25rem' }}>
                     <AhilyanagarApiIntegration 
                       key={`api-${apiDocsExpanded}`}
                       onNotification={showToast} 
@@ -1208,23 +1442,31 @@ export default function FranchiseePortal() {
             </div>
           )}
 
-          {/* Middle Layout - snapshot & actions */}
+          {/* Middle Layout - Live Snapshot & Quick Actions */}
           <div className="fra-mid-grid">
             
-            {/* Live Snapshot */}
+            {/* Live Operations Snapshot */}
             <section className="fra-section-card">
               <div className="fra-section-header">
                 <h2 className="fra-section-title">
+                  <i className="fa-solid fa-tower-broadcast" style={{ color: '#10b981' }}></i>
                   Live Operations Snapshot
                 </h2>
-                <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {searchQuery && (
+                    <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                      Filtered by &quot;{searchQuery}&quot;
+                    </span>
+                  )}
+                  <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
+                </div>
               </div>
 
               <div className="fra-table-wrap">
                 <table className="fra-table">
                   <thead>
                     <tr>
-                      <th>Screen</th>
+                      <th>Auditorium</th>
                       <th>Playing Now</th>
                       <th>Time Slot</th>
                       <th>Occupancy &amp; Seats</th>
@@ -1233,28 +1475,42 @@ export default function FranchiseePortal() {
                   <tbody>
                     {filteredShows.length === 0 ? (
                       <tr>
-                        <td colSpan={4} style={{ textAlign: 'center', color: 'var(--fra-text-muted)', padding: '2rem' }}>
-                          No matching active shows found.
+                        <td colSpan={4} style={{ textAlign: 'center', color: 'var(--fra-text-muted)', padding: '2.5rem' }}>
+                          <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', display: 'block' }}></i>
+                          No active shows matching &quot;{searchQuery}&quot;.
                         </td>
                       </tr>
                     ) : (
                       filteredShows.map((s, idx) => (
                         <tr key={idx}>
-                          <td className="fra-screen-name">{s.screen}</td>
-                          <td className="fra-movie-title">{s.movie}</td>
-                          <td className="fra-showtime">{s.time}</td>
+                          <td className="fra-screen-name">
+                            <i className="fa-solid fa-tv" style={{ color: '#60a5fa', fontSize: '12px' }}></i>
+                            <span>{s.screen}</span>
+                          </td>
+                          <td className="fra-movie-title">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                              <span>{s.movie}</span>
+                            </div>
+                          </td>
+                          <td className="fra-showtime">
+                            <i className="fa-regular fa-clock" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
+                            <span>{s.time}</span>
+                          </td>
                           <td>
                             <div className="fra-progress-container">
                               <div className="fra-progress-track">
                                 <div 
                                   className="fra-progress-fill" 
-                                  style={{ width: `${s.occupancy}%` }}
+                                  style={{ 
+                                    width: `${s.occupancy}%`,
+                                    background: getOccupancyGradient(s.occupancy)
+                                  }}
                                 ></div>
                               </div>
                               <span className="fra-progress-percent">
                                 {s.occupancy}%
                                 {s.seatsBooked && s.totalSeats ? (
-                                  <span style={{ fontSize: '10px', color: 'var(--fra-text-muted)', marginLeft: '4px' }}>
+                                  <span style={{ fontSize: '10px', color: 'var(--fra-text-secondary)', marginLeft: '4px', fontWeight: 500 }}>
                                     ({s.seatsBooked}/{s.totalSeats})
                                   </span>
                                 ) : null}
@@ -1269,28 +1525,32 @@ export default function FranchiseePortal() {
               </div>
             </section>
 
-            {/* Quick Actions */}
+            {/* Quick Actions Shortcuts */}
             <section className="fra-section-card">
               <div className="fra-section-header">
-                <h2 className="fra-section-title">Quick Actions</h2>
+                <h2 className="fra-section-title">
+                  <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>
+                  Quick Actions
+                </h2>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>1-Click Operations</span>
               </div>
               <div className="fra-actions-grid">
                 {[
-                  { label: "Ahilyanagar API Sync", icon: "fa-server" },
-                  { label: "Download Daily Report", icon: "fa-download" },
-                  { label: "Download Monthly Report", icon: "fa-file-arrow-down" },
-                  { label: "Create Maintenance Ticket", icon: "fa-ticket" },
-                  { label: "View Live Screens", icon: "fa-display" },
-                  { label: "Export Revenue", icon: "fa-upload" },
-                  { label: "Manage Staff", icon: "fa-users" },
-                  { label: "Order Inventory", icon: "fa-boxes-stacked" }
+                  { label: "Ahilyanagar API Sync", icon: "fa-server", color: "#f59e0b" },
+                  { label: "Download Daily Report", icon: "fa-file-arrow-down", color: "#10b981" },
+                  { label: "Download Monthly Report", icon: "fa-file-invoice-dollar", color: "#3b82f6" },
+                  { label: "Create Maintenance Ticket", icon: "fa-wrench", color: "#ec4899" },
+                  { label: "View Live Screens", icon: "fa-display", color: "#06b6d4" },
+                  { label: "Export Revenue", icon: "fa-upload", color: "#f59e0b" },
+                  { label: "Manage Staff", icon: "fa-users", color: "#8b5cf6" },
+                  { label: "Order Inventory", icon: "fa-boxes-stacked", color: "#f43f5e" }
                 ].map((act, idx) => (
                   <button 
                     key={idx} 
                     className="fra-action-item"
                     onClick={() => handleActionClick(act.label)}
                   >
-                    <div className="fra-action-icon">
+                    <div className="fra-action-icon" style={{ color: act.color }}>
                       <i className={`fa-solid ${act.icon}`}></i>
                     </div>
                     <span className="fra-action-label">{act.label}</span>
@@ -1301,54 +1561,91 @@ export default function FranchiseePortal() {
 
           </div>
 
-          {/* Bottom layout - events, news, campaigns */}
+          {/* Bottom layout - Events, News, Marketing */}
           <div className="fra-bottom-grid">
             
             {/* Calendar & Events */}
             <section className="fra-section-card">
               <div className="fra-section-header">
-                <h2 className="fra-section-title">Calendar &amp; Events</h2>
+                <h2 className="fra-section-title">
+                  <i className="fa-regular fa-calendar-check" style={{ color: '#f59e0b' }}></i>
+                  Calendar &amp; Events
+                </h2>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Upcoming</span>
               </div>
               <div className="fra-list">
-                {events.map((e, idx) => (
-                  <div key={idx} className="fra-event-item">
-                    <div className="fra-event-date-badge">
-                      <span className="fra-event-month">{e.month}</span>
-                      <span className="fra-event-day">{e.date}</span>
+                {events.map((e, idx) => {
+                  const tagStyle = getEventTypeColor(e.type);
+                  return (
+                    <div key={idx} className="fra-event-item">
+                      <div className="fra-event-date-badge">
+                        <span className="fra-event-month">{e.month}</span>
+                        <span className="fra-event-day">{e.date}</span>
+                      </div>
+                      <div className="fra-event-details">
+                        <span className="fra-event-title">{e.title}</span>
+                        <span 
+                          className="fra-event-type" 
+                          style={{ 
+                            color: tagStyle.color, 
+                            background: tagStyle.bg,
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            display: 'inline-block',
+                            alignSelf: 'flex-start'
+                          }}
+                        >
+                          {e.type}
+                        </span>
+                      </div>
                     </div>
-                    <div className="fra-event-details">
-                      <span className="fra-event-title">{e.title}</span>
-                      <span className="fra-event-type">{e.type}</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
 
             {/* News & Announcements */}
             <section className="fra-section-card">
               <div className="fra-section-header">
-                <h2 className="fra-section-title">News &amp; Announcements</h2>
+                <h2 className="fra-section-title">
+                  <i className="fa-solid fa-newspaper" style={{ color: '#38bdf8' }}></i>
+                  News &amp; Alerts
+                </h2>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Network Feed</span>
               </div>
               <div className="fra-list">
-                {newsList.map((n, idx) => (
-                  <div key={idx} className="fra-news-item">
-                    <div className="fra-news-meta">
-                      <span className="fra-news-tag">{n.tag}</span>
-                      <span className="fra-news-time">{n.time}</span>
+                {newsList.map((n, idx) => {
+                  const tagStyle = getNewsTagColor(n.tag);
+                  return (
+                    <div key={idx} className="fra-news-item">
+                      <div className="fra-news-meta">
+                        <span 
+                          className="fra-news-tag"
+                          style={{ color: tagStyle.color, background: tagStyle.bg }}
+                        >
+                          {n.tag}
+                        </span>
+                        <span className="fra-news-time">
+                          <i className="fa-regular fa-clock mr-1" style={{ fontSize: '10px' }}></i> {n.time}
+                        </span>
+                      </div>
+                      <span className="fra-news-title" onClick={() => handleActionClick(n.title)}>
+                        {n.title}
+                      </span>
                     </div>
-                    <span className="fra-news-title" onClick={() => handleActionClick(n.title)}>
-                      {n.title}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </section>
 
-            {/* Marketing */}
+            {/* Marketing & Campaigns */}
             <section className="fra-section-card">
               <div className="fra-section-header">
-                <h2 className="fra-section-title">Marketing</h2>
+                <h2 className="fra-section-title">
+                  <i className="fa-solid fa-bullhorn" style={{ color: '#ec4899' }}></i>
+                  Marketing &amp; Promo
+                </h2>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Live Campaigns</span>
               </div>
               <div className="fra-list">
                 {campaigns.map((c, idx) => (
@@ -1356,10 +1653,11 @@ export default function FranchiseePortal() {
                     <div className="fra-campaign-info">
                       <span className="fra-campaign-name">{c.name}</span>
                       <span className="fra-campaign-metrics">
-                        Reach {c.reach} - CTR {c.ctr}
+                        Reach <strong>{c.reach}</strong> &bull; CTR <strong>{c.ctr}</strong>
                       </span>
                     </div>
                     <span className={`fra-campaign-badge ${c.status.toLowerCase()}`}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.status === 'ACTIVE' ? '#10b981' : '#f59e0b', display: 'inline-block', marginRight: '4px' }}></span>
                       {c.status}
                     </span>
                   </div>
@@ -1367,26 +1665,33 @@ export default function FranchiseePortal() {
               </div>
               <div className="fra-marketing-actions">
                 <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleActionClick('Poster Library')}>
-                  Poster Library
+                  <i className="fa-regular fa-image mr-1"></i> Poster Library
                 </button>
                 <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleActionClick('Social Toolkit')}>
-                  Social Toolkit
+                  <i className="fa-solid fa-share-nodes mr-1"></i> Social Toolkit
                 </button>
               </div>
             </section>
 
           </div>
 
-          {/* Support Center section */}
+          {/* Support Center Section */}
           <section className="fra-support-section">
-            <h2 className="fra-section-title" style={{ marginBottom: '1.25rem' }}>Support Center</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <h2 className="fra-section-title">
+                <i className="fa-solid fa-headset" style={{ color: '#10b981' }}></i>
+                Conncloud Partner Support Center
+              </h2>
+              <span style={{ fontSize: '12px', color: '#94a3b8' }}>24/7 Priority Assistance for Cinema Franchise Owners</span>
+            </div>
+            
             <div className="fra-support-grid">
               {[
-                { title: "Raise Ticket", desc: "New request", icon: "fa-ticket" },
-                { title: "Live Chat", desc: "Online now", icon: "fa-comments" },
-                { title: "Knowledge Base", desc: "120 articles", icon: "fa-book-open" },
-                { title: "Training Videos", desc: "18 modules", icon: "fa-video" },
-                { title: "Emergency", desc: "Contacts", icon: "fa-phone-flip" }
+                { title: "Raise Ticket", desc: "Technical or POS request", icon: "fa-ticket", color: "#3b82f6" },
+                { title: "Live Chat", desc: "Chat with ops team", icon: "fa-comments", color: "#10b981" },
+                { title: "Knowledge Base", desc: "120 Cinema SOP guides", icon: "fa-book-open", color: "#f59e0b" },
+                { title: "Training Videos", desc: "18 Staff training modules", icon: "fa-video", color: "#8b5cf6" },
+                { title: "Emergency Line", desc: "Rapid response hotline", icon: "fa-phone-flip", color: "#ef4444" }
               ].map((sup, idx) => (
                 <div 
                   key={idx} 
@@ -1405,9 +1710,20 @@ export default function FranchiseePortal() {
 
         </div>
 
-        {/* Footer */}
+        {/* Global Footer */}
         <footer className="fra-footer">
-          <span className="fra-footer-text">Connplex Cinemas &copy; 2026</span>
+          <div className="fra-footer-text">
+            <span>Connplex Cinemas &copy; 2026. All rights reserved &bull; Franchise Management System</span>
+          </div>
+          <div className="fra-footer-links">
+            <span style={{ fontSize: '11px', color: '#64748b' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block', marginRight: '5px' }}></span>
+              All Cinema POS &amp; API Nodes Operational
+            </span>
+            <a href="#support" onClick={(e) => { e.preventDefault(); handleActionClick('Support'); }}>Support Desk</a>
+            <a href="#docs" onClick={(e) => { e.preventDefault(); handleActionClick('Cinema settings'); }}>Property Specs</a>
+            <a href="#privacy" onClick={(e) => { e.preventDefault(); showToast('Security policy: Encrypted franchise portal.'); }}>Security Policy</a>
+          </div>
         </footer>
 
       </main>
