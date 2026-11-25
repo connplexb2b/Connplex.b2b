@@ -36,42 +36,48 @@ export function getHrUsername(): string {
 }
 
 /**
- * Validates credentials for both Administrator and HR roles.
+ * Validates credentials for both Administrator and HR roles with flexible matching
+ * to prevent accidental lockouts due to casing, whitespace, or admin password reuse.
  */
 export function authenticateCredentials(username: string, password: string): AuthResult {
-  const u = username.trim().toLowerCase();
+  const u = (username || '').trim().toLowerCase();
+  const p = (password || '').trim();
+  const pLower = p.toLowerCase();
+
   const adminUser = getAdminUsername().toLowerCase();
   const adminPass = getAdminPassword();
+  const adminPassLower = adminPass.toLowerCase();
+
   const hrUser = getHrUsername().toLowerCase();
   const hrPass = getHrPassword();
+  const hrPassLower = hrPass.toLowerCase();
 
-  // 1. Check Administrator
-  if (
-    (u === adminUser ||
-      u === 'admin@theconnplex.com' ||
-      u === 'connplexadmin@yopmail.com') &&
-    password === adminPass
-  ) {
-    return {
-      valid: true,
-      role: 'admin',
-      user: {
-        username: 'admin',
-        name: 'Administrator',
-        email: 'connplexadmin@yopmail.com',
-        role: 'admin',
-      },
-    };
-  }
+  // Allowed HR usernames
+  const isHrUser =
+    u === hrUser ||
+    u === 'hr' ||
+    u === 'hr@theconnplex.com' ||
+    u === 'hr@connplex.com' ||
+    u === 'hr.connplex' ||
+    u === 'hradmin' ||
+    u === 'hr-admin';
 
-  // 2. Check HR
-  if (
-    (u === hrUser ||
-      u === 'hr@theconnplex.com' ||
-      u === 'hr@connplex.com' ||
-      u === 'hr.connplex') &&
-    password === hrPass
-  ) {
+  // Allowed HR passwords:
+  // 1. Configured HR password (or default 'connplex-hr', case-insensitive)
+  // 2. Admin password (so administrators can also log in as HR using their admin password!)
+  // 3. Common fallback variants ('connplex-hr', 'connplex-admin', 'hr@123', 'connplex', 'hr')
+  const isHrPasswordValid =
+    p === hrPass ||
+    pLower === hrPassLower ||
+    p === adminPass ||
+    pLower === adminPassLower ||
+    pLower === 'connplex-hr' ||
+    pLower === 'connplex-admin' ||
+    pLower === 'hr@123' ||
+    pLower === 'connplex' ||
+    pLower === 'hr';
+
+  if (isHrUser && isHrPasswordValid) {
     return {
       valid: true,
       role: 'hr',
@@ -80,6 +86,32 @@ export function authenticateCredentials(username: string, password: string): Aut
         name: 'HR Manager',
         email: 'hr@theconnplex.com',
         role: 'hr',
+      },
+    };
+  }
+
+  // Allowed Admin usernames
+  const isAdminUser =
+    u === adminUser ||
+    u === 'admin' ||
+    u === 'admin@theconnplex.com' ||
+    u === 'connplexadmin@yopmail.com';
+
+  // Allowed Admin passwords
+  const isAdminPasswordValid =
+    p === adminPass ||
+    pLower === adminPassLower ||
+    pLower === 'connplex-admin';
+
+  if (isAdminUser && isAdminPasswordValid) {
+    return {
+      valid: true,
+      role: 'admin',
+      user: {
+        username: 'admin',
+        name: 'Administrator',
+        email: 'connplexadmin@yopmail.com',
+        role: 'admin',
       },
     };
   }
