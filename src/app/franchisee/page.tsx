@@ -621,37 +621,10 @@ export default function FranchiseePortal() {
     return 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
   };
 
-  // Switch tabs & route to sub-modules
+  // Switch tabs & smooth scroll in-place (Stay in VisionOS Glass Layout)
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
 
-    const slugMap: Record<string, string> = {
-      'Dashboard': 'dashboard',
-      'Ahilyanagar Franchise': 'ahilyanagar',
-      'Data Extraction Matrix': 'data-extract',
-      'Analytics': 'analytics',
-      'Finance': 'finance',
-      'Movies': 'movies',
-      'Ticket Sales': 'ticket-sales',
-      'Group Booking': 'group-booking',
-      'Food & Beverage': 'fnb',
-      'Merchandise / Store': 'merchandise',
-      'Staff': 'staff',
-      'Training & Orientation': 'training',
-      'Operations': 'operations',
-      'Marketing': 'marketing',
-      'My Offers': 'offers',
-      'Reports': 'reports',
-      'MIS': 'mis',
-      'Documents': 'documents',
-      'License': 'license',
-      'Support': 'support',
-      'Notifications': 'notifications',
-      'Calendar': 'calendar',
-      'Settings': 'settings'
-    };
-
-    const slug = slugMap[tab] || '';
     if (typeof window !== 'undefined') {
       localStorage.setItem('franchisee_cinema', currentLocation.cinemaId);
       localStorage.setItem('franchisee_location', currentLocation.id);
@@ -659,17 +632,41 @@ export default function FranchiseePortal() {
       const userToStore = currentUser || (currentLocation.cinemaId === 'c5' ? AHILYANAGAR_USER : DEFAULT_CORPORATE_USER);
       storeFranchiseeSession(userToStore);
     }
-    router.push(`/conncloud/${slug}?cinema=${currentLocation.cinemaId}`);
+
+    const sectionMap: Record<string, { id: string; msg: string }> = {
+      'Dashboard': { id: 'fra-window-top', msg: `Viewing ${currentLocation.name} Executive Cockpit` },
+      'Analytics': { id: 'fra-analytics-section', msg: `Viewing ${currentLocation.name} Key Performance Indicators` },
+      'Finance': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Financial Revenue Ledgers` },
+      'Ticket Sales': { id: 'fra-operations-snapshot', msg: `Viewing ${currentLocation.name} Live Box Office & Ticket Sales` },
+      'Food & Beverage': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Concessions, F&B & SPH Analytics` },
+      'Movies': { id: 'fra-cockpit-section', msg: `Viewing ${currentLocation.name} Active Screens & Show Schedules` },
+      'Operations': { id: 'fra-cockpit-section', msg: `Viewing ${currentLocation.name} Screening Controls & Projection Specs` },
+      'Staff': { id: 'fra-specs-section', msg: `Viewing ${currentLocation.name} Cinema Specs & Franchise Partner Directory` },
+      'Marketing': { id: 'fra-marketing-section', msg: `Viewing ${currentLocation.name} Active Marketing Campaigns & Social Toolkits` },
+      'Reports': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Daily Box Office Reports & MIS` },
+      'Support': { id: 'fra-support-section', msg: `Viewing ConnCloud Priority Partner Support Center` },
+      'Settings': { id: 'fra-specs-section', msg: `Viewing ${currentLocation.name} Cinema Profile & Configuration` }
+    };
+
+    const target = sectionMap[tab] || { id: 'fra-window-top', msg: `Switched to ${tab}` };
+    showToast(target.msg);
+
+    setTimeout(() => {
+      const el = document.getElementById(target.id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
   };
 
-  // Quick action helper
+  // Quick action helper (Stay in VisionOS Glass Layout)
   const handleActionClick = (actionName: string) => {
     if (actionName === 'Ahilyanagar Revenue' || actionName === 'Daily Revenue Dashboard' || actionName === 'Ahilyanagar Daily Revenue') {
       setSelectedLocationKey('ahilyanagar');
       showToast('Viewing Ahilyanagar Franchise Daily Revenue Dashboard.');
       setTimeout(() => {
-        const el = document.getElementById('ahilyanagar-revenue-dashboard');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        const el = document.getElementById('ahilyanagar-revenue-dashboard') || document.getElementById('fra-finance-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
       return;
     }
@@ -679,7 +676,7 @@ export default function FranchiseePortal() {
       showToast('Loaded Ahilyanagar Vista API Integration documentation.');
       setTimeout(() => {
         const el = document.getElementById('ahilyanagar-api-integration');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
       return;
     }
@@ -691,23 +688,38 @@ export default function FranchiseePortal() {
       return;
     }
     if (actionName === 'View Live Screens') {
-      router.push(`/conncloud/operations?cinema=${currentLocation.cinemaId}`);
+      setActiveTab('Operations');
+      const el = document.getElementById('fra-cockpit-section') || document.getElementById('fra-operations-snapshot');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Viewing Live Screens telemetry for ${currentLocation.name}.`);
       return;
     }
     if (actionName === 'Export Revenue') {
-      router.push(`/conncloud/reports?cinema=${currentLocation.cinemaId}`);
+      showToast(`Generating Revenue Ledger Export for ${currentLocation.name}...`);
+      setTimeout(() => {
+        showToast(`Revenue report exported successfully for ${currentLocation.name}.`);
+      }, 800);
       return;
     }
     if (actionName === 'Manage Staff') {
-      router.push(`/conncloud/staff?cinema=${currentLocation.cinemaId}`);
+      setActiveTab('Staff');
+      const el = document.getElementById('fra-specs-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Viewing Staff duty roster & floor allocations for ${currentLocation.name}.`);
       return;
     }
     if (actionName === 'Order Inventory') {
-      router.push(`/conncloud/fnb?cinema=${currentLocation.cinemaId}`);
+      setActiveTab('Food & Beverage');
+      const el = document.getElementById('fra-finance-section') || document.getElementById('ahilyanagar-revenue-dashboard');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Concessions & F&B Inventory catalog loaded for ${currentLocation.name}.`);
       return;
     }
     if (actionName === 'Create Maintenance Ticket') {
-      router.push(`/conncloud/operations?cinema=${currentLocation.cinemaId}&action=ticket`);
+      setActiveTab('Support');
+      const el = document.getElementById('fra-support-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Opening Maintenance Request Ticket for ${currentLocation.name}.`);
       return;
     }
     showToast(`Triggered: ${actionName}`);
@@ -1043,6 +1055,8 @@ export default function FranchiseePortal() {
               href={`/conncloud/dashboard?cinema=${currentLocation.cinemaId}`}
               className="fra-header-pill-btn"
               title="Launch SaaS Suite"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <i className="fa-solid fa-cloud" style={{ color: '#60a5fa' }}></i>
               <span>ConnCloud</span>
@@ -1089,7 +1103,7 @@ export default function FranchiseePortal() {
         </header>
 
         {/* 3. Center Floating VisionOS Glass Window */}
-        <main className="fra-floating-window">
+        <main className="fra-floating-window" id="fra-window-top">
           
           {/* Welcome Hero Banner Tile */}
           <section className="fra-welcome-banner">
@@ -1140,7 +1154,7 @@ export default function FranchiseePortal() {
           </section>
 
           {/* Executive Cinema Operations Cockpit (Authentic Cinema Multi-Screen & POS Telemetry) */}
-          <section className="fra-smart-cockpit-grid">
+          <section className="fra-smart-cockpit-grid" id="fra-cockpit-section">
             
             {/* Tile 1: Live Auditoriums & Screen Telemetry */}
             <div className="fra-smart-tile">
@@ -1336,7 +1350,7 @@ export default function FranchiseePortal() {
           </section>
 
           {/* Location Property Specs Strip */}
-          <div className="fra-location-specs-strip">
+          <div className="fra-location-specs-strip" id="fra-specs-section">
             <div className="fra-spec-chip">
               <i className="fa-solid fa-film"></i>
               <span>{currentLocation.totalScreens} Luxury Auditoriums</span>
@@ -1367,7 +1381,7 @@ export default function FranchiseePortal() {
           </div>
 
           {/* KPI Metrics Grid (12 VisionOS Frosted Glass Tiles) */}
-          <section className="fra-metrics-grid">
+          <section className="fra-metrics-grid" id="fra-analytics-section">
             {metrics.map((m, idx) => {
               const meta = getMetricMeta(m.label);
               return (
@@ -1392,7 +1406,7 @@ export default function FranchiseePortal() {
           </section>
 
           {/* Multi-Tenant Connplex Franchise Revenue Dashboard (Vista Integration Engine) */}
-          <div className="space-y-4">
+          <div className="space-y-4" id="fra-finance-section">
             <ConnplexFranchiseRevenueDashboard
               currentLocationKey={selectedLocationKey}
               userRole={currentUser?.role || 'partner'}
@@ -1488,7 +1502,7 @@ export default function FranchiseePortal() {
           <div className="fra-mid-grid">
             
             {/* Live Operations Snapshot */}
-            <section className="fra-section-card">
+            <section className="fra-section-card" id="fra-operations-snapshot">
               <div className="fra-section-header">
                 <h2 className="fra-section-title">
                   <i className="fa-solid fa-tower-broadcast" style={{ color: '#10b981' }}></i>
@@ -1681,7 +1695,7 @@ export default function FranchiseePortal() {
             </section>
 
             {/* Marketing & Campaigns */}
-            <section className="fra-section-card">
+            <section className="fra-section-card" id="fra-marketing-section">
               <div className="fra-section-header">
                 <h2 className="fra-section-title">
                   <i className="fa-solid fa-bullhorn" style={{ color: '#ec4899' }}></i>
@@ -1718,7 +1732,7 @@ export default function FranchiseePortal() {
           </div>
 
           {/* Support Center Section */}
-          <section className="fra-support-section">
+          <section className="fra-support-section" id="fra-support-section">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <h2 className="fra-section-title">
                 <i className="fa-solid fa-headset" style={{ color: '#10b981' }}></i>

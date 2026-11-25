@@ -467,6 +467,20 @@
   gap: 2rem;
   position: relative;
   transition: all 0.3s ease;
+  scroll-margin-top: 5.5rem;
+}
+
+/* Scroll Offset Clearance for Sticky Header when Nav Tabs are Clicked */
+#fra-window-top,
+#fra-cockpit-section,
+#fra-specs-section,
+#fra-analytics-section,
+#fra-finance-section,
+#ahilyanagar-revenue-dashboard,
+#fra-operations-snapshot,
+#fra-marketing-section,
+#fra-support-section {
+  scroll-margin-top: 5.5rem;
 }
 
 /* Welcome Banner Tile */
