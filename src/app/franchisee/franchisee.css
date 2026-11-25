@@ -67,17 +67,17 @@
   box-sizing: border-box;
 }
 
-/* Main Viewport Padding for Fixed Floating Dock */
+/* Main Viewport Padding for Fixed Floating Dock with Generous Clearance */
 .fra-main-viewport {
   width: 100%;
   min-height: 100vh;
-  padding: 1.5rem 1.5rem 6.5rem 5.8rem;
+  padding: 1.5rem 1.5rem 8.5rem 5.8rem;
   box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .fra-main-viewport {
-    padding: 1rem 1rem 6.5rem 1rem;
+    padding: 1rem 1rem 8.5rem 1rem;
   }
 }
 
@@ -177,21 +177,6 @@
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(245, 158, 11, 0.55);
   box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.25);
-}
-
-.fra-search-orb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #93c5fd 0%, #3b82f6 50%, #f59e0b 100%);
-  box-shadow: 0 0 10px rgba(96, 165, 250, 0.8);
-  flex-shrink: 0;
-  animation: orbSpin 5s linear infinite;
-}
-
-@keyframes orbSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .fra-header-search-input {
@@ -528,14 +513,7 @@
   height: 7px;
   background-color: var(--fra-green);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--fra-green);
-  animation: pulseGreen 1.5s infinite;
-}
-
-@keyframes pulseGreen {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-  70% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
 }
 
 .fra-welcome-banner h1 {
@@ -732,283 +710,91 @@
   align-items: center;
 }
 
-/* Secondary Smart Cockpit Row */
-.fra-smart-cockpit-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1.25fr 1fr;
-  gap: 1.25rem;
-  margin-top: 1.25rem;
-}
-
-@media (max-width: 1100px) {
-  .fra-smart-cockpit-grid-2 {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 4-bar Airflow / Signal Meter */
-.fra-signal-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2.5px;
-  height: 14px;
-}
-
-.fra-signal-bar {
-  width: 3.5px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-  transition: all 0.2s;
-}
-
-.fra-signal-bar.bar-1 { height: 4px; }
-.fra-signal-bar.bar-2 { height: 7px; }
-.fra-signal-bar.bar-3 { height: 10px; }
-.fra-signal-bar.bar-4 { height: 14px; }
-
-.fra-signal-bar.active {
-  background: #38bdf8;
-  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
-}
-
-/* Source Shortcut Pills */
-.fra-source-pills {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  flex-wrap: wrap;
-  padding: 0.15rem 0;
-}
-
-.fra-source-pill {
-  padding: 0.3rem 0.65rem;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
-  font-size: 0.72rem;
+/* Cinema Operations Cockpit Components (Human Enterprise Craft) */
+.fra-status-pill {
+  font-size: 11px;
   font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 9999px;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  cursor: pointer;
-  transition: all 0.18s ease;
+  gap: 5px;
 }
 
-.fra-source-pill:hover,
-.fra-source-pill.active {
-  background: rgba(245, 158, 11, 0.2);
-  border-color: rgba(245, 158, 11, 0.5);
-  color: #fef08a;
-  transform: translateY(-1px);
-}
-
-/* Media Scrub bar & Controls */
-.fra-scrub-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin: 0.15rem 0;
-}
-
-.fra-scrub-track {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-  position: relative;
-  overflow: hidden;
-}
-
-.fra-scrub-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ec4899, #f59e0b);
-  border-radius: 9999px;
-  width: 54%;
-}
-
-.fra-scrub-times {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.68rem;
-  color: var(--fra-text-muted);
-  font-family: monospace;
-}
-
-.fra-media-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.15rem;
-  padding-top: 0.2rem;
-}
-
-.fra-media-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fra-media-btn:hover {
-  color: #ffffff;
-  transform: scale(1.12);
-}
-
-.fra-media-btn.play {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #0c0a06;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
-}
-
-.fra-media-btn.play:hover {
-  background: #fef08a;
-  color: #0c0a06;
-}
-
-/* Audio Waveform Animation */
-.fra-waveform {
-  display: flex;
-  align-items: center;
-  gap: 2.5px;
-  height: 14px;
-}
-
-.fra-wave-bar {
-  width: 2.5px;
-  height: 100%;
-  background: #ec4899;
-  border-radius: 2px;
-  animation: wavePulse 1.2s ease-in-out infinite alternate;
-}
-
-.fra-wave-bar:nth-child(2) { animation-delay: 0.2s; }
-.fra-wave-bar:nth-child(3) { animation-delay: 0.4s; }
-.fra-wave-bar:nth-child(4) { animation-delay: 0.1s; }
-.fra-wave-bar:nth-child(5) { animation-delay: 0.5s; }
-
-@keyframes wavePulse {
-  0% { height: 25%; }
-  100% { height: 100%; }
-}
-
-/* Health Rings Grid (Exact Match to Reference Battery Rings) */
-.fra-health-rings-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  align-items: center;
-  justify-items: center;
-  padding: 0.25rem 0;
-}
-
-.fra-health-ring-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.fra-ring-svg-wrap {
-  position: relative;
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fra-ring-svg {
-  width: 52px;
-  height: 52px;
-  transform: rotate(-90deg);
-}
-
-.fra-ring-bg {
-  stroke: rgba(255, 255, 255, 0.08);
-  stroke-width: 4;
-}
-
-.fra-ring-fill {
-  stroke: #10b981;
-  stroke-width: 4;
-  stroke-linecap: round;
-  fill: none;
-  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.65));
-}
-
-.fra-ring-center-icon {
-  position: absolute;
-  font-size: 0.85rem;
-  color: #ffffff;
-}
-
-.fra-ring-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--fra-text-secondary);
-  text-align: center;
-}
-
-.fra-ring-pct {
-  font-size: 0.65rem;
+.fra-status-pill.green {
+  background: rgba(16, 185, 129, 0.16);
   color: #34d399;
-  font-weight: 800;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
-/* Cinema SOP Checklist */
-.fra-sop-checklist {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
+.fra-status-pill.amber {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-.fra-sop-item {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.65rem;
-  border-radius: 10px;
+.fra-status-pill.blue {
+  background: rgba(56, 189, 248, 0.16);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.fra-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Facility & Screening Control Cards */
+.fra-control-box {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.74rem;
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  border-radius: 14px;
+  padding: 0.75rem 0.85rem;
+  transition: all 0.2s ease;
 }
 
-.fra-sop-item:hover {
+.fra-control-box:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-.fra-sop-item.done {
-  text-decoration: line-through;
-  opacity: 0.55;
-  color: #94a3b8;
+.fra-control-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
 }
 
-.fra-sop-counter {
-  font-size: 2.2rem;
-  font-weight: 800;
+.fra-control-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fra-control-title {
+  font-size: 0.78rem;
+  font-weight: 700;
   color: #ffffff;
-  line-height: 1;
+}
+
+.fra-control-status {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
 }
 
 /* Left dock subtle divider */
 .fra-dock-divider {
-  width: 24px;
+  width: 20px;
   height: 1px;
   background: rgba(255, 255, 255, 0.15);
-  margin: 0.2rem 0;
+  margin: 0.25rem 0;
 }
 
 /* Specs Strip */

@@ -394,19 +394,11 @@ export default function FranchiseePortal() {
   const [apiDocsExpanded, setApiDocsExpanded] = useState<boolean>(false);
   const [todayFormatted, setTodayFormatted] = useState<string>('');
 
-  // VisionOS Smart Interactive Cockpit Controls (Inspired by Reference Image's AC, Smart TV & Battery Widgets)
+  // Cinema Facility & Operations State
   const [auditoriumTemp, setAuditoriumTemp] = useState<number>(21);
-  const [climateAuto, setClimateAuto] = useState<boolean>(true);
-  const [projectionActive, setProjectionActive] = useState<boolean>(true);
   const [ambientLightsOn, setAmbientLightsOn] = useState<boolean>(true);
   const [curtainsClosed, setCurtainsClosed] = useState<boolean>(true);
   const [ambienceTheme, setAmbienceTheme] = useState<'ambient' | 'cinema'>('ambient');
-  const [isPlayingDcp, setIsPlayingDcp] = useState<boolean>(true);
-  const [checklistItems, setChecklistItems] = useState<{ id: number; text: string; done: boolean }[]>([
-    { id: 1, text: 'Daikin VRV Pre-Cooling Audit (21°C Setpoint)', done: true },
-    { id: 2, text: 'Concession F&B Daily Inventory Count', done: false },
-    { id: 3, text: 'Christie Laser & Dolby Atmos KDM Ingest', done: false }
-  ]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
@@ -729,19 +721,19 @@ export default function FranchiseePortal() {
           <div className="fra-signin-logo-wrap">
             <Image src="/logo.png" alt="Connplex Cinemas" width={180} height={48} priority style={{ height: 'auto' }} />
             <span className="fra-signin-badge">
-              <i className="fa-solid fa-shield-halved"></i> Initializing Conncloud Portal
+              Connplex Franchise Portal
             </span>
           </div>
           <div style={{ color: 'var(--fra-text-secondary)', margin: '2rem 0' }}>
-            <i className="fa-solid fa-circle-notch fa-spin" style={{ fontSize: '2.4rem', color: '#f59e0b', marginBottom: '1.25rem', display: 'block' }}></i>
-            <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Connecting to encrypted cinema franchise network...</span>
+            <i className="fa-solid fa-circle-notch fa-spin" style={{ fontSize: '1.8rem', color: '#f59e0b', marginBottom: '1rem', display: 'block' }}></i>
+            <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>Loading cinema workspace...</span>
           </div>
         </div>
       </div>
     );
   }
 
-  // Render Sign-In Page (Spatial VisionOS Floating Card over Cinema Hall Background)
+  // Render Sign-In Page (Frosted Glass Card over Cinema Hall Background)
   if (!isAuthenticated) {
     return (
       <div className="fra-signin-container">
@@ -756,7 +748,7 @@ export default function FranchiseePortal() {
           <div className="fra-signin-logo-wrap">
             <Image src="/logo.png" alt="Connplex Cinemas" width={190} height={52} priority style={{ height: 'auto' }} />
             <span className="fra-signin-badge">
-              <i className="fa-solid fa-crown"></i> Executive Franchise Portal
+              Franchise Partner Portal
             </span>
           </div>
 
@@ -822,7 +814,7 @@ export default function FranchiseePortal() {
             <button type="submit" className="fra-signin-btn" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <i className="fa-solid fa-circle-notch fa-spin"></i> Authenticating Session...
+                  <i className="fa-solid fa-circle-notch fa-spin"></i> Authenticating...
                 </>
               ) : (
                 <>
@@ -832,11 +824,11 @@ export default function FranchiseePortal() {
             </button>
           </form>
 
-          {/* Smart 1-Click Demo Credentials Autofill */}
+          {/* 1-Click Demo Accounts */}
           <div className="fra-quick-creds-container">
             <div className="fra-quick-creds-title">
-              <span>One-Click Autofill Credentials</span>
-              <span style={{ color: '#f59e0b' }}>Click to Test</span>
+              <span>Demo Accounts</span>
+              <span style={{ color: '#f59e0b' }}>Click to Autofill</span>
             </div>
             <div className="fra-quick-creds-grid">
               <button
@@ -864,8 +856,8 @@ export default function FranchiseePortal() {
           </div>
 
           <p className="fra-signin-hint">
-            <i className="fa-solid fa-shield-halved" style={{ color: '#10b981' }}></i>
-            Authorized franchise personnel only. 256-Bit SSL Encrypted Connection.
+            <i className="fa-solid fa-shield-check" style={{ color: '#10b981' }}></i>
+            Connplex Cinemas Franchise Operations &bull; Authorized Access
           </p>
         </div>
       </div>
@@ -975,12 +967,12 @@ export default function FranchiseePortal() {
             )}
           </div>
 
-          {/* Center Search Capsule with Glowing AI Orb */}
+          {/* Global Workspace Search */}
           <div className="fra-header-search-capsule">
-            <div className="fra-search-orb" title="ConnCloud Spatial AI"></div>
+            <i className="fa-solid fa-magnifying-glass" style={{ color: 'var(--fra-text-muted)', fontSize: '0.82rem' }}></i>
             <input
               type="text"
-              placeholder="Search movies, screens, events, reports..."
+              placeholder="Search movies, auditoriums, box office reports..."
               className="fra-header-search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -1104,11 +1096,11 @@ export default function FranchiseePortal() {
             <div className="fra-banner-left">
               <span className="fra-live-indicator">
                 <span className="fra-live-dot"></span>
-                LIVE OPERATIONS &bull; {currentLocation.fullName}
+                <span>{currentLocation.name} &bull; Live Operations</span>
               </span>
-              <h1>Welcome back, {currentUser?.name || currentLocation.partnerName}</h1>
+              <h1>Welcome back, {currentUser?.name ? currentUser.name.split(' ')[0] : currentLocation.partnerName.split(' ')[0]}</h1>
               <p>
-                Real-time performance across your cinema for today &mdash; {todayFormatted || 'Wednesday, Sep 16, 2026'}.
+                Performance overview and box office summary for {todayFormatted || 'Wednesday, Nov 25, 2026'}.
               </p>
             </div>
             
@@ -1147,352 +1139,149 @@ export default function FranchiseePortal() {
             </div>
           </section>
 
-          {/* Smart Cinema Environment & Hardware Cockpit (Direct Homage to Reference Image's AC, TV, Media, Checklist & Battery Widgets) */}
+          {/* Executive Cinema Operations Cockpit (Authentic Cinema Multi-Screen & POS Telemetry) */}
           <section className="fra-smart-cockpit-grid">
             
-            {/* Widget 1: Auditorium Climate & Comfort (Exact Match to Reference AC Widget) */}
+            {/* Tile 1: Live Auditoriums & Screen Telemetry */}
             <div className="fra-smart-tile">
               <div className="fra-smart-tile-header">
                 <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-fan" style={{ color: '#38bdf8' }}></i>
-                  <span>Auditorium Climate (VRV)</span>
+                  <i className="fa-solid fa-film" style={{ color: '#f59e0b' }}></i>
+                  <span>Live Auditoriums &amp; Screening Status</span>
                 </div>
-                <div 
-                  className="fra-smart-switch" 
-                  style={{ background: climateAuto ? '#10b981' : '#475569' }}
-                  onClick={() => {
-                    setClimateAuto(!climateAuto);
-                    showToast(`Auditorium Climate Auto-Regulation ${!climateAuto ? 'Enabled (21°C Setpoint)' : 'Switched to Manual'}`);
-                  }}
-                  title="Toggle Climate Auto-Regulation"
-                >
-                  <div className="fra-smart-switch-handle" style={{ right: climateAuto ? '3px' : '23px' }}></div>
-                </div>
+                <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                  {currentLocation.totalScreens} Screens Active
+                </span>
               </div>
 
-              <div className="fra-temp-display-wrap">
-                <div className="fra-temp-big">{auditoriumTemp}&deg;C</div>
-                <div className="fra-temp-stepper">
-                  <button 
-                    type="button" 
-                    className="fra-temp-step-btn"
-                    onClick={() => {
-                      const next = Math.min(26, auditoriumTemp + 1);
-                      setAuditoriumTemp(next);
-                      showToast(`Auditorium temperature set to ${next}°C`);
-                    }}
-                    title="Increase Temperature"
-                  >
-                    <i className="fa-solid fa-chevron-up"></i>
-                  </button>
-                  <button 
-                    type="button" 
-                    className="fra-temp-step-btn"
-                    onClick={() => {
-                      const next = Math.max(16, auditoriumTemp - 1);
-                      setAuditoriumTemp(next);
-                      showToast(`Auditorium temperature set to ${next}°C`);
-                    }}
-                    title="Decrease Temperature"
-                  >
-                    <i className="fa-solid fa-chevron-down"></i>
-                  </button>
+              {/* Real Screen 1 and Screen 2 from Current Location */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                {[
+                  shows.find(s => s.screen.toLowerCase().includes('screen 1')) || shows[0],
+                  shows.find(s => s.screen.toLowerCase().includes('screen 2')) || shows[1]
+                ].filter(Boolean).map((s, idx) => (
+                  <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem 0.85rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <i className="fa-solid fa-tv" style={{ fontSize: '11px', color: '#60a5fa' }}></i>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>{s.screen}</span>
+                      </div>
+                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+                        <i className="fa-regular fa-clock" style={{ marginRight: '3px' }}></i> {s.time}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {s.movie}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '130px' }}>
+                        <div className="fra-progress-track" style={{ flex: 1, height: '6px' }}>
+                          <div 
+                            className="fra-progress-fill" 
+                            style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}
+                          ></div>
+                        </div>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#34d399', whiteSpace: 'nowrap' }}>
+                          {s.occupancy}%
+                          {s.seatsBooked && s.totalSeats ? (
+                            <span style={{ fontSize: '10px', color: '#94a3b8', marginLeft: '3px', fontWeight: 500 }}>
+                              ({s.seatsBooked}/{s.totalSeats})
+                            </span>
+                          ) : null}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="fra-smart-tile-meta-grid">
+                <div className="fra-smart-tile-meta-item">
+                  <span>Projection Core</span>
+                  <strong style={{ color: '#34d399' }}>Christie 4K Laser</strong>
+                </div>
+                <div className="fra-smart-tile-meta-item">
+                  <span>Sound Audio</span>
+                  <strong style={{ color: '#38bdf8' }}>Dolby Atmos 7.1</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Tile 2: Box Office Realtime Velocity & POS Telemetry */}
+            <div className="fra-smart-tile">
+              <div className="fra-smart-tile-header">
+                <div className="fra-smart-tile-title">
+                  <i className="fa-solid fa-chart-line" style={{ color: '#10b981' }}></i>
+                  <span>Box Office &amp; POS Telemetry</span>
+                </div>
+                <span style={{ fontSize: '11px', background: 'rgba(245, 158, 11, 0.16)', color: '#fbbf24', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                  {currentLocation.hasApiIntegration ? 'Vista POS Live' : 'Cloud POS'}
+                </span>
+              </div>
+
+              {/* 4-Stat Grid from Real Metrics */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Today&apos;s Revenue</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[0]?.value || '₹1.02L'}</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[0]?.trend || '+8.2%'}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Admissions</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[4]?.value || '268'}</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[4]?.trend || '+7.2%'}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Spend Per Head</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[7]?.value || '₹110'}</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[7]?.trend || '+4.2%'}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Occupancy Avg</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[5]?.value || '84%'}</div>
+                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[5]?.trend || '+3.5%'}
+                  </div>
                 </div>
               </div>
 
               <div className="fra-smart-tile-meta-grid">
                 <div className="fra-smart-tile-meta-item">
-                  <span>Mode</span>
-                  <strong style={{ color: '#38bdf8' }}>Cool Comfort ❄</strong>
+                  <span>POS Sync Latency</span>
+                  <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
                 </div>
                 <div className="fra-smart-tile-meta-item">
-                  <span>Airflow</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <div className="fra-signal-bars">
-                      <span className="fra-signal-bar bar-1 active"></span>
-                      <span className="fra-signal-bar bar-2 active"></span>
-                      <span className="fra-signal-bar bar-3 active"></span>
-                      <span className="fra-signal-bar bar-4"></span>
-                    </div>
-                    <strong style={{ color: '#38bdf8' }}>Silent 3/4</strong>
-                  </div>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Auto Turn-on</span>
-                  <strong style={{ color: '#cbd5e1' }}>10:30 AM</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Auto Turn-off</span>
-                  <strong style={{ color: '#cbd5e1' }}>01:30 AM</strong>
+                  <span>DCP KDM License</span>
+                  <strong style={{ color: '#34d399' }}>Active &bull; Validated</strong>
                 </div>
               </div>
             </div>
 
-            {/* Widget 2: Laser Projection & Dolby Atmos (Match to Reference Smart TV Widget) */}
+            {/* Tile 3: Facility & Screening Environment Controls */}
             <div className="fra-smart-tile">
               <div className="fra-smart-tile-header">
                 <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-tv" style={{ color: '#f59e0b' }}></i>
-                  <span>Christie 4K Laser &amp; Audio</span>
+                  <i className="fa-solid fa-sliders" style={{ color: '#38bdf8' }}></i>
+                  <span>Facility &amp; Screening Controls</span>
                 </div>
-                <div 
-                  className="fra-smart-switch" 
-                  style={{ background: projectionActive ? '#10b981' : '#475569' }}
-                  onClick={() => {
-                    setProjectionActive(!projectionActive);
-                    showToast(`Cinema Master Projection & Audio ${!projectionActive ? 'Online & Calibrated' : 'Set to Standby'}`);
-                  }}
-                  title="Toggle Master Projection System"
-                >
-                  <div className="fra-smart-switch-handle" style={{ right: projectionActive ? '3px' : '23px' }}></div>
-                </div>
-              </div>
-
-              {/* Source Quick Buttons (Netflix/Prime/HBO style from reference) */}
-              <div className="fra-source-pills">
-                <button type="button" className="fra-source-pill active" onClick={() => showToast('Switched to Christie 4K Laser Core')}>
-                  <i className="fa-solid fa-compact-disc"></i> 4K Laser
-                </button>
-                <button type="button" className="fra-source-pill active" onClick={() => showToast('Dolby Atmos 7.1 Line Active')}>
-                  <i className="fa-solid fa-volume-high"></i> Dolby 7.1
-                </button>
-                <button type="button" className="fra-source-pill" onClick={() => showToast('QSC Amplifiers Online')}>
-                  <i className="fa-solid fa-sliders"></i> QSC
-                </button>
-                <button type="button" className="fra-source-pill" onClick={() => showToast('Vista POS Sync Active')}>
-                  <i className="fa-solid fa-bolt"></i> Vista POS
-                </button>
-                <button type="button" className="fra-source-pill" onClick={() => showToast('Configure Custom A/V Matrix')}>
-                  <i className="fa-solid fa-plus"></i>
-                </button>
-              </div>
-
-              <div className="fra-smart-tile-meta-grid">
-                <div className="fra-smart-tile-meta-item">
-                  <span>Lamp Health</span>
-                  <strong style={{ color: '#34d399' }}>98% Optimal</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Screen Gain</span>
-                  <strong style={{ color: '#cbd5e1' }}>1.8 Silver</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Vista POS</span>
-                  <strong style={{ color: '#f59e0b' }}>28ms Sync</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>DCP KDM</span>
-                  <strong style={{ color: '#34d399' }}>Active &bull; Valid</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Widget 3: Live Blockbuster Screen Playing (Match to Reference Media Player Widget) */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-clapperboard" style={{ color: '#ec4899' }}></i>
-                  <span>Now Playing Feature</span>
-                </div>
-                <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.18)', color: '#34d399', padding: '2px 7px', borderRadius: '9999px', fontWeight: 800 }}>
-                  ON SCREEN
+                <span style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                  Calibrated
                 </span>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center' }}>
-                <div style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, #1e1b4b, #312e81)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#f59e0b',
-                  fontSize: '1.35rem',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
-                  flexShrink: 0
-                }}>
-                  <i className="fa-solid fa-film"></i>
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {shows[0]?.movie || 'Resident Evil (Hindi)'}
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                    {shows[0]?.screen || 'Screen 1 (Couple Recliner)'} &bull; {shows[0]?.time || '11:00 AM - 01:30 PM'}
-                  </div>
-                </div>
-              </div>
-
-              {/* Scrubber and Waveform */}
-              <div className="fra-scrub-container">
-                <div className="fra-scrub-track">
-                  <div className="fra-scrub-fill"></div>
-                </div>
-                <div className="fra-scrub-times">
-                  <span>01:14:22</span>
-                  <div className="fra-waveform">
-                    <span className="fra-wave-bar"></span>
-                    <span className="fra-wave-bar"></span>
-                    <span className="fra-wave-bar"></span>
-                    <span className="fra-wave-bar"></span>
-                    <span className="fra-wave-bar"></span>
-                  </div>
-                  <span>02:25:00</span>
-                </div>
-              </div>
-
-              {/* Media Controls */}
-              <div className="fra-media-controls">
-                <button type="button" className="fra-media-btn" title="Previous Show / Trailer" onClick={() => showToast('Rewound to pre-show trailer reel')}>
-                  <i className="fa-solid fa-backward-step"></i>
-                </button>
-                <button 
-                  type="button" 
-                  className="fra-media-btn play" 
-                  title={isPlayingDcp ? 'Pause Projection' : 'Resume Projection'}
-                  onClick={() => {
-                    setIsPlayingDcp(!isPlayingDcp);
-                    showToast(isPlayingDcp ? 'Auditorium Projection Paused' : 'Auditorium Projection Resumed');
-                  }}
-                >
-                  <i className={`fa-solid ${isPlayingDcp ? 'fa-pause' : 'fa-play'}`}></i>
-                </button>
-                <button type="button" className="fra-media-btn" title="Next Feature" onClick={() => showToast('Advancing to next scheduled feature')}>
-                  <i className="fa-solid fa-forward-step"></i>
-                </button>
-                <button type="button" className="fra-media-btn" title="Atmos Audio Level" onClick={() => showToast('Dolby Atmos Audio at Reference Level (7.0 SPL)')}>
-                  <i className="fa-solid fa-volume-high"></i>
-                </button>
-              </div>
-
-            </div>
-
-          </section>
-
-          {/* Secondary Smart Cockpit Row: Checklist, Hardware Health Rings & Ambience Automation */}
-          <section className="fra-smart-cockpit-grid-2">
-
-            {/* Widget 4: Cinema Daily SOP Checklist (Reminders Tile from Reference Image) */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-clipboard-check" style={{ color: '#f59e0b' }}></i>
-                  <span>Cinema Daily Checklist</span>
-                </div>
-                <span style={{ fontSize: '10px', background: 'rgba(245, 158, 11, 0.18)', color: '#fbbf24', padding: '2px 7px', borderRadius: '9999px', fontWeight: 800 }}>
-                  SOP ACTIVE
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.1rem 0' }}>
-                <div className="fra-sop-checklist" style={{ flex: 1, marginRight: '1rem' }}>
-                  {checklistItems.map((item) => (
-                    <div 
-                      key={item.id} 
-                      className={`fra-sop-item ${item.done ? 'done' : ''}`}
-                      onClick={() => {
-                        setChecklistItems(checklistItems.map(c => c.id === item.id ? { ...c, done: !c.done } : c));
-                        showToast(`Task ${item.done ? 'marked incomplete' : 'completed'}: ${item.text}`);
-                      }}
-                      title="Click to toggle completion"
-                    >
-                      <i className={`fa-solid ${item.done ? 'fa-circle-check' : 'fa-circle'}`} style={{ color: item.done ? '#10b981' : '#94a3b8', fontSize: '11px' }}></i>
-                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ textAlign: 'center', minWidth: '45px' }}>
-                  <div className="fra-sop-counter">{checklistItems.filter(c => !c.done).length}</div>
-                  <div style={{ fontSize: '9px', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>Pending</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Widget 5: Cinema Hardware Vitality Rings (Battery Rings from Reference Image) */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-circle-nodes" style={{ color: '#10b981' }}></i>
-                  <span>Cinema Hardware Vitality Rings</span>
-                </div>
-                <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.18)', color: '#34d399', padding: '2px 7px', borderRadius: '9999px', fontWeight: 800 }}>
-                  100% HEALTH
-                </span>
-              </div>
-
-              <div className="fra-health-rings-grid">
-                {/* Ring 1: Laser Engine */}
-                <div className="fra-health-ring-item" title="Laser Engine: 98% Optimal">
-                  <div className="fra-ring-svg-wrap">
-                    <svg className="fra-ring-svg" viewBox="0 0 52 52">
-                      <circle className="fra-ring-bg" cx="26" cy="26" r="22" />
-                      <circle className="fra-ring-fill" cx="26" cy="26" r="22" strokeDasharray="138" strokeDashoffset="2.7" />
-                    </svg>
-                    <i className="fa-solid fa-film fra-ring-center-icon" style={{ color: '#38bdf8' }}></i>
-                  </div>
-                  <span className="fra-ring-label">Laser 4K</span>
-                  <span className="fra-ring-pct">98%</span>
-                </div>
-
-                {/* Ring 2: Dolby Atmos */}
-                <div className="fra-health-ring-item" title="Dolby Atmos 7.1: 100% Optimal">
-                  <div className="fra-ring-svg-wrap">
-                    <svg className="fra-ring-svg" viewBox="0 0 52 52">
-                      <circle className="fra-ring-bg" cx="26" cy="26" r="22" />
-                      <circle className="fra-ring-fill" cx="26" cy="26" r="22" strokeDasharray="138" strokeDashoffset="0" />
-                    </svg>
-                    <i className="fa-solid fa-volume-high fra-ring-center-icon" style={{ color: '#10b981' }}></i>
-                  </div>
-                  <span className="fra-ring-label">Dolby 7.1</span>
-                  <span className="fra-ring-pct">100%</span>
-                </div>
-
-                {/* Ring 3: Vista POS */}
-                <div className="fra-health-ring-item" title="Vista POS ASMX: 99% Optimal">
-                  <div className="fra-ring-svg-wrap">
-                    <svg className="fra-ring-svg" viewBox="0 0 52 52">
-                      <circle className="fra-ring-bg" cx="26" cy="26" r="22" />
-                      <circle className="fra-ring-fill" cx="26" cy="26" r="22" strokeDasharray="138" strokeDashoffset="1.4" />
-                    </svg>
-                    <i className="fa-solid fa-server fra-ring-center-icon" style={{ color: '#f59e0b' }}></i>
-                  </div>
-                  <span className="fra-ring-label">Vista POS</span>
-                  <span className="fra-ring-pct">99%</span>
-                </div>
-
-                {/* Ring 4: HVAC VRV */}
-                <div className="fra-health-ring-item" title="HVAC VRV Chiller: 94% Optimal">
-                  <div className="fra-ring-svg-wrap">
-                    <svg className="fra-ring-svg" viewBox="0 0 52 52">
-                      <circle className="fra-ring-bg" cx="26" cy="26" r="22" />
-                      <circle className="fra-ring-fill" cx="26" cy="26" r="22" strokeDasharray="138" strokeDashoffset="8.3" />
-                    </svg>
-                    <i className="fa-solid fa-fan fra-ring-center-icon" style={{ color: '#38bdf8' }}></i>
-                  </div>
-                  <span className="fra-ring-label">VRV Chiller</span>
-                  <span className="fra-ring-pct">94%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Widget 6: Smart Ambience & Cinema Automation (Smart Light & Vacuum from Reference) */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-wand-magic-sparkles" style={{ color: '#a855f7' }}></i>
-                  <span>Cinema Automation</span>
-                </div>
-                <span style={{ fontSize: '10px', background: 'rgba(168, 85, 247, 0.18)', color: '#c084fc', padding: '2px 7px', borderRadius: '9999px', fontWeight: 800 }}>
-                  AUTOMATED
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem', marginTop: '0.15rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
                 {/* Ambience Lighting Switch */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem' }}>
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
                     <i className="fa-solid fa-lightbulb" style={{ color: ambientLightsOn ? '#f59e0b' : '#64748b', fontSize: '1rem' }}></i>
                     <div 
@@ -1500,19 +1289,19 @@ export default function FranchiseePortal() {
                       style={{ background: ambientLightsOn ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
                       onClick={() => {
                         setAmbientLightsOn(!ambientLightsOn);
-                        showToast(`Auditorium Ambience Sconces ${!ambientLightsOn ? 'Turned ON (Soft Gold)' : 'Dimmed for Showtime'}`);
+                        showToast(`Auditorium Sconces ${!ambientLightsOn ? 'set to Soft Gold (Ambient)' : 'dimmed for Showtime'}`);
                       }}
                       title="Toggle Ambience Lighting"
                     >
                       <div className="fra-smart-switch-handle" style={{ right: ambientLightsOn ? '3px' : '23px' }}></div>
                     </div>
                   </div>
-                  <div style={{ fontSize: '0.76rem', fontWeight: 700, color: '#ffffff' }}>Auditorium Light</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Auditorium Sconces</div>
                   <div style={{ fontSize: '10px', color: '#94a3b8' }}>{ambientLightsOn ? 'Soft Gold 35%' : 'Dimmed (0%)'}</div>
                 </div>
 
-                {/* Curtains / Screen Masking Switch */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem' }}>
+                {/* Scope Masking Curtains */}
+                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
                     <i className="fa-solid fa-dungeon" style={{ color: curtainsClosed ? '#38bdf8' : '#64748b', fontSize: '1rem' }}></i>
                     <div 
@@ -1520,15 +1309,26 @@ export default function FranchiseePortal() {
                       style={{ background: curtainsClosed ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
                       onClick={() => {
                         setCurtainsClosed(!curtainsClosed);
-                        showToast(`Screen Curtains & Side Masking ${!curtainsClosed ? 'Closed & Formatted' : 'Opened for Walk-in'}`);
+                        showToast(`Screen Side Masking ${!curtainsClosed ? 'locked to Scope 2.39:1' : 'opened for Walk-in'}`);
                       }}
-                      title="Toggle Curtains & Screen Masking"
+                      title="Toggle Screen Masking"
                     >
                       <div className="fra-smart-switch-handle" style={{ right: curtainsClosed ? '3px' : '23px' }}></div>
                     </div>
                   </div>
-                  <div style={{ fontSize: '0.76rem', fontWeight: 700, color: '#ffffff' }}>Curtain Masking</div>
-                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>{curtainsClosed ? 'Scope 2.39:1' : 'Open / 16:9'}</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Scope Masking</div>
+                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>{curtainsClosed ? 'Scope 2.39:1 Locked' : 'Open / 16:9'}</div>
+                </div>
+              </div>
+
+              <div className="fra-smart-tile-meta-grid">
+                <div className="fra-smart-tile-meta-item">
+                  <span>Auditorium VRV</span>
+                  <strong style={{ color: '#38bdf8' }}>{auditoriumTemp}&deg;C Daikin Norm</strong>
+                </div>
+                <div className="fra-smart-tile-meta-item">
+                  <span>Air Filtration</span>
+                  <strong style={{ color: '#34d399' }}>HEPA 99.8% Active</strong>
                 </div>
               </div>
             </div>
