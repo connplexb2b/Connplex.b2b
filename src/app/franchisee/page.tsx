@@ -389,7 +389,6 @@ export default function FranchiseePortal() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
   const [locationDropdownOpen, setLocationDropdownOpen] = useState<boolean>(false);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
   const [selectedLocationKey, setSelectedLocationKey] = useState<string>('ahilyanagar');
   const [toast, setToast] = useState<string | null>(null);
   const [apiDocsExpanded, setApiDocsExpanded] = useState<boolean>(false);
@@ -572,41 +571,41 @@ export default function FranchiseePortal() {
   // Metric Icon and Color Metadata
   const getMetricMeta = (label: string) => {
     const l = label.toLowerCase();
-    if (l.includes("today's revenue")) return { icon: 'fa-indian-rupee-sign', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
-    if (l.includes('weekly revenue')) return { icon: 'fa-chart-line', color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' };
-    if (l.includes('monthly revenue')) return { icon: 'fa-building-columns', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' };
-    if (l.includes('roi')) return { icon: 'fa-bullseye', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' };
-    if (l.includes('admissions')) return { icon: 'fa-ticket', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' };
-    if (l.includes('occupancy')) return { icon: 'fa-chart-pie', color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' };
-    if (l.includes('ticket price')) return { icon: 'fa-tag', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
-    if (l.includes('spend per head')) return { icon: 'fa-utensils', color: '#f97316', bg: 'rgba(249, 115, 22, 0.12)' };
-    if (l.includes('online bookings')) return { icon: 'fa-globe', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' };
-    if (l.includes('counter sales')) return { icon: 'fa-cash-register', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.12)' };
-    if (l.includes('food revenue')) return { icon: 'fa-burger', color: '#eab308', bg: 'rgba(234, 179, 8, 0.12)' };
-    if (l.includes('rating')) return { icon: 'fa-star', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' };
-    return { icon: 'fa-chart-simple', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.12)' };
+    if (l.includes("today's revenue")) return { icon: 'fa-indian-rupee-sign', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
+    if (l.includes('weekly revenue')) return { icon: 'fa-chart-line', color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' };
+    if (l.includes('monthly revenue')) return { icon: 'fa-building-columns', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' };
+    if (l.includes('roi')) return { icon: 'fa-bullseye', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' };
+    if (l.includes('admissions')) return { icon: 'fa-ticket', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.15)' };
+    if (l.includes('occupancy')) return { icon: 'fa-chart-pie', color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.15)' };
+    if (l.includes('ticket price')) return { icon: 'fa-tag', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
+    if (l.includes('spend per head')) return { icon: 'fa-utensils', color: '#f97316', bg: 'rgba(249, 115, 22, 0.15)' };
+    if (l.includes('online bookings')) return { icon: 'fa-globe', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' };
+    if (l.includes('counter sales')) return { icon: 'fa-cash-register', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.15)' };
+    if (l.includes('food revenue')) return { icon: 'fa-burger', color: '#eab308', bg: 'rgba(234, 179, 8, 0.15)' };
+    if (l.includes('rating')) return { icon: 'fa-star', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
+    return { icon: 'fa-chart-simple', color: '#94a3b8', bg: 'rgba(148, 163, 184, 0.15)' };
   };
 
   // Event category color
   const getEventTypeColor = (type: string) => {
     const t = type.toLowerCase();
-    if (t.includes('corporate')) return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.12)' };
-    if (t.includes('maintenance')) return { color: '#fb923c', bg: 'rgba(251, 146, 60, 0.12)' };
-    if (t.includes('compliance')) return { color: '#34d399', bg: 'rgba(16, 185, 129, 0.12)' };
-    if (t.includes('promotion') || t.includes('festival')) return { color: '#fbbf24', bg: 'rgba(245, 158, 11, 0.12)' };
-    if (t.includes('release') || t.includes('premiere')) return { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.12)' };
-    return { color: '#cbd5e1', bg: 'rgba(255, 255, 255, 0.08)' };
+    if (t.includes('corporate')) return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.18)' };
+    if (t.includes('maintenance')) return { color: '#fb923c', bg: 'rgba(251, 146, 60, 0.18)' };
+    if (t.includes('compliance')) return { color: '#34d399', bg: 'rgba(16, 185, 129, 0.18)' };
+    if (t.includes('promotion') || t.includes('festival')) return { color: '#fbbf24', bg: 'rgba(245, 158, 11, 0.18)' };
+    if (t.includes('release') || t.includes('premiere')) return { color: '#c084fc', bg: 'rgba(192, 132, 252, 0.18)' };
+    return { color: '#cbd5e1', bg: 'rgba(255, 255, 255, 0.1)' };
   };
 
   // News category tag color
   const getNewsTagColor = (tag: string) => {
     const t = tag.toUpperCase();
-    if (t.includes('VISTA') || t.includes('API')) return { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
-    if (t.includes('FINANCE') || t.includes('REVENUE')) return { color: '#10b981', bg: 'rgba(16, 185, 129, 0.15)' };
-    if (t.includes('AUDIT') || t.includes('POLICY')) return { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.15)' };
-    if (t.includes('COMPLIANCE')) return { color: '#a855f7', bg: 'rgba(168, 85, 247, 0.15)' };
-    if (t.includes('BOOKINGS') || t.includes('PREMIERE')) return { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.15)' };
-    return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.15)' };
+    if (t.includes('VISTA') || t.includes('API')) return { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.18)' };
+    if (t.includes('FINANCE') || t.includes('REVENUE')) return { color: '#10b981', bg: 'rgba(16, 185, 129, 0.18)' };
+    if (t.includes('AUDIT') || t.includes('POLICY')) return { color: '#38bdf8', bg: 'rgba(56, 189, 248, 0.18)' };
+    if (t.includes('COMPLIANCE')) return { color: '#a855f7', bg: 'rgba(168, 85, 247, 0.18)' };
+    if (t.includes('BOOKINGS') || t.includes('PREMIERE')) return { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.18)' };
+    return { color: '#60a5fa', bg: 'rgba(59, 130, 246, 0.18)' };
   };
 
   // Occupancy Gradient
@@ -619,7 +618,6 @@ export default function FranchiseePortal() {
   // Switch tabs & route to sub-modules
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
-    setIsMobileSidebarOpen(false);
 
     const slugMap: Record<string, string> = {
       'Dashboard': 'dashboard',
@@ -715,9 +713,9 @@ export default function FranchiseePortal() {
       <div className="fra-signin-container">
         <div className="fra-signin-card" style={{ textAlign: 'center', padding: '3.5rem 2.5rem' }}>
           <div className="fra-signin-logo-wrap">
-            <Image src="/logo.png" alt="Connplex Cinemas" width={170} height={46} priority style={{ height: 'auto' }} />
+            <Image src="/logo.png" alt="Connplex Cinemas" width={180} height={48} priority style={{ height: 'auto' }} />
             <span className="fra-signin-badge">
-              <i className="fa-solid fa-shield-halved"></i> Initializing Conncloud Secure Portal
+              <i className="fa-solid fa-shield-halved"></i> Initializing Conncloud Portal
             </span>
           </div>
           <div style={{ color: 'var(--fra-text-secondary)', margin: '2rem 0' }}>
@@ -729,11 +727,10 @@ export default function FranchiseePortal() {
     );
   }
 
-  // Render Sign-In Page (when not logged in)
+  // Render Sign-In Page (Spatial VisionOS Floating Card over Cinema Hall Background)
   if (!isAuthenticated) {
     return (
       <div className="fra-signin-container">
-        {/* Floating toast notification */}
         {toast && (
           <div className="fra-toast">
             <i className="fa-solid fa-circle-check"></i>
@@ -821,7 +818,7 @@ export default function FranchiseePortal() {
             </button>
           </form>
 
-          {/* Smart One-Click Demo Credentials Autofill */}
+          {/* Smart 1-Click Demo Credentials Autofill */}
           <div className="fra-quick-creds-container">
             <div className="fra-quick-creds-title">
               <span>One-Click Autofill Credentials</span>
@@ -830,7 +827,7 @@ export default function FranchiseePortal() {
             <div className="fra-quick-creds-grid">
               <button
                 type="button"
-                className="fra-quick-cred-btn gold"
+                className="fra-quick-cred-btn"
                 onClick={() => fillCredentials('ahilyanagar')}
               >
                 <span className="fra-quick-cred-name">
@@ -841,7 +838,7 @@ export default function FranchiseePortal() {
 
               <button
                 type="button"
-                className="fra-quick-cred-btn blue"
+                className="fra-quick-cred-btn"
                 onClick={() => fillCredentials('corporate')}
               >
                 <span className="fra-quick-cred-name">
@@ -861,7 +858,23 @@ export default function FranchiseePortal() {
     );
   }
 
-  // Render Franchisee Portal Dashboard (When authenticated)
+  // VisionOS Spatial Nav Items for Left Floating Capsule Dock
+  const dockNavItems = [
+    { name: 'Dashboard', icon: 'fa-house', label: 'Dashboard' },
+    { name: 'Analytics', icon: 'fa-chart-line', label: 'Analytics' },
+    { name: 'Finance', icon: 'fa-indian-rupee-sign', label: 'Finance' },
+    { name: 'Ticket Sales', icon: 'fa-ticket', label: 'Tickets' },
+    { name: 'Food & Beverage', icon: 'fa-burger', label: 'Food & Beverage' },
+    { name: 'Movies', icon: 'fa-film', label: 'Movies' },
+    { name: 'Operations', icon: 'fa-gears', label: 'Operations' },
+    { name: 'Staff', icon: 'fa-user-tie', label: 'Staff' },
+    { name: 'Marketing', icon: 'fa-bullhorn', label: 'Marketing' },
+    { name: 'Reports', icon: 'fa-file-invoice-dollar', label: 'Reports' },
+    { name: 'Support', icon: 'fa-circle-question', label: 'Support' },
+    { name: 'Settings', icon: 'fa-sliders', label: 'Settings' }
+  ];
+
+  // Render VisionOS Spatial Franchisee Portal (Cinema Hall Background + Floating Glass Panels)
   return (
     <div className="fra-portal-layout">
       {/* Toast Alert Feedback */}
@@ -872,194 +885,119 @@ export default function FranchiseePortal() {
         </div>
       )}
 
-      {/* Mobile Sidebar Overlay */}
-      <div 
-        className={`fra-sidebar-overlay ${isMobileSidebarOpen ? 'mobile-open' : ''}`}
-        onClick={() => setIsMobileSidebarOpen(false)}
-      />
-
-      {/* Left Sidebar Navigation */}
-      <aside className={`fra-sidebar ${isMobileSidebarOpen ? 'mobile-open' : ''}`}>
-        <div className="fra-sidebar-logo-container">
-          <Image src="/logo.png" alt="Connplex" width={140} height={38} priority style={{ height: 'auto' }} />
-          <span className="fra-sidebar-logo-sub">
-            <i className="fa-solid fa-layer-group"></i> Conncloud Suite 2.0
-          </span>
-        </div>
-
-        <div className="fra-sidebar-scroll">
-          {/* Operations Group */}
-          <div className="fra-sidebar-group">
-            <span className="fra-sidebar-group-title">Operations &amp; Revenue</span>
-            <ul className="fra-sidebar-nav-list">
-              {[
-                { name: 'Dashboard', icon: 'fa-table-columns' },
-                { name: 'Analytics', icon: 'fa-chart-line' },
-                { name: 'Finance', icon: 'fa-indian-rupee-sign' },
-                { name: 'Ticket Sales', icon: 'fa-ticket' },
-                { name: 'Food & Beverage', icon: 'fa-burger' },
-              ].map((item) => (
-                <li 
-                  key={item.name} 
-                  className={`fra-sidebar-nav-item ${activeTab === item.name ? 'active' : ''}`}
-                >
-                  <button onClick={() => handleNavClick(item.name)}>
-                    <i className={`fa-solid ${item.icon}`}></i>
-                    <span>{item.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Cinema Management Group */}
-          <div className="fra-sidebar-group">
-            <span className="fra-sidebar-group-title">Cinema Management</span>
-            <ul className="fra-sidebar-nav-list">
-              {[
-                { name: 'Movies', icon: 'fa-film' },
-                { name: 'Operations', icon: 'fa-gears' },
-                { name: 'Staff', icon: 'fa-user-tie' },
-                { name: 'Marketing', icon: 'fa-bullhorn' },
-              ].map((item) => (
-                <li 
-                  key={item.name} 
-                  className={`fra-sidebar-nav-item ${activeTab === item.name ? 'active' : ''}`}
-                >
-                  <button onClick={() => handleNavClick(item.name)}>
-                    <i className={`fa-solid ${item.icon}`}></i>
-                    <span>{item.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Governance & Support Group */}
-          <div className="fra-sidebar-group">
-            <span className="fra-sidebar-group-title">System &amp; Reports</span>
-            <ul className="fra-sidebar-nav-list">
-              {[
-                { name: 'Reports', icon: 'fa-file-invoice-dollar' },
-                { name: 'Documents', icon: 'fa-folder-open' },
-                { name: 'Support', icon: 'fa-circle-question' },
-                { name: 'Settings', icon: 'fa-sliders' }
-              ].map((item) => (
-                <li 
-                  key={item.name} 
-                  className={`fra-sidebar-nav-item ${activeTab === item.name ? 'active' : ''}`}
-                >
-                  <button onClick={() => handleNavClick(item.name)}>
-                    <i className={`fa-solid ${item.icon}`}></i>
-                    <span>{item.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Sidebar Footer Live Status */}
-        <div className="fra-sidebar-footer">
-          <div className="fra-sidebar-footer-info">
-            <span className="fra-status-dot"></span>
-            <span className="fra-sidebar-footer-text">Vista API &bull; POS Online</span>
-          </div>
-          <span style={{ fontSize: '10px', color: '#64748b', fontWeight: 'bold' }}>v2.6</span>
-        </div>
-      </aside>
-
-      {/* Main Container Area */}
-      <main className="fra-main-container">
-        
-        {/* Sticky Glass Topbar */}
-        <header className="fra-topbar">
-          <div className="fra-topbar-left">
-            <button 
-              className="fra-mobile-toggle-btn"
-              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-              aria-label="Toggle navigation drawer"
+      {/* 1. Left Floating Capsule Navigation Dock (Exact Reference Match) */}
+      <nav className="fra-floating-dock" aria-label="Quick Dock Navigation">
+        {dockNavItems.map((item) => {
+          const isActive = activeTab === item.name;
+          return (
+            <button
+              key={item.name}
+              type="button"
+              className={`fra-dock-btn ${isActive ? 'active' : ''}`}
+              onClick={() => handleNavClick(item.name)}
+              aria-label={item.label}
             >
-              <i className="fa-solid fa-bars"></i>
+              <i className={`fa-solid ${item.icon}`}></i>
+              <span className="fra-dock-tooltip">{item.label}</span>
             </button>
+          );
+        })}
+      </nav>
 
-            {/* Smart Search Bar */}
-            <div className="fra-search-container">
-              <i className="fa-solid fa-magnifying-glass"></i>
-              <input
-                type="text"
-                placeholder="Search movies, screens, events..."
-                className="fra-search-input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery ? (
-                <button 
-                  type="button" 
-                  className="fra-search-clear-btn" 
-                  onClick={() => setSearchQuery('')}
-                  title="Clear search"
-                >
-                  <i className="fa-solid fa-xmark"></i>
-                </button>
-              ) : (
-                <span className="fra-search-kbd">⌘K</span>
-              )}
+      {/* Main Viewport Container */}
+      <div className="fra-main-viewport">
+        
+        {/* 2. Top Floating Capsule Header (Exact Reference Match) */}
+        <header className="fra-floating-header">
+          {/* User Profile Pill */}
+          <div 
+            className="fra-header-user-pill" 
+            ref={dropdownRef} 
+            onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+          >
+            <div className="fra-header-avatar">
+              {currentUser?.initials || currentLocation.partnerInitials}
             </div>
+            <div className="fra-header-greeting">
+              <span className="fra-header-name">
+                Welcome, {currentUser?.name ? currentUser.name.split(' ')[0] : currentLocation.partnerName.split(' ')[0]}
+              </span>
+              <span className="fra-header-role">
+                {currentUser?.role || currentLocation.partnerRole}
+              </span>
+            </div>
+            <i className={`fa-solid ${profileDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ fontSize: '9px', color: 'var(--fra-text-muted)' }}></i>
+
+            {profileDropdownOpen && (
+              <div className="fra-dropdown-menu" style={{ position: 'absolute', top: 'calc(100% + 12px)', left: 0 }}>
+                <div style={{ padding: '0.4rem 0.6rem 0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '0.35rem' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                    {currentUser?.name || currentLocation.partnerName}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                    {currentLocation.fullName}
+                  </div>
+                </div>
+                <button className="fra-dropdown-item" onClick={() => handleActionClick('Profile settings')}>
+                  <i className="fa-solid fa-user-circle"></i> Profile Settings
+                </button>
+                <button className="fra-dropdown-item" onClick={() => handleActionClick('Cinema settings')}>
+                  <i className="fa-solid fa-building"></i> Cinema Property Specs
+                </button>
+                <button className="fra-dropdown-item danger" onClick={handleLogout}>
+                  <i className="fa-solid fa-sign-out-alt"></i> Log Out
+                </button>
+              </div>
+            )}
           </div>
 
-          <div className="fra-topbar-actions">
+          {/* Center Search Capsule with Glowing AI Orb */}
+          <div className="fra-header-search-capsule">
+            <div className="fra-search-orb" title="ConnCloud Spatial AI"></div>
+            <input
+              type="text"
+              placeholder="Search movies, screens, events, reports..."
+              className="fra-header-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery ? (
+              <button 
+                type="button" 
+                style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+                onClick={() => setSearchQuery('')}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            ) : (
+              <span className="fra-header-kbd">⌘K</span>
+            )}
+          </div>
+
+          {/* Right Header Controls */}
+          <div className="fra-header-right-actions">
             
-            {/* Cinema Location Switcher Pill */}
+            {/* Cinema Property Switcher Trigger */}
             <div className="relative" ref={locationDropdownRef} style={{ position: 'relative' }}>
               <button
                 type="button"
+                className="fra-header-pill-btn"
                 onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
-                className="fra-btn fra-btn-outline"
-                style={{ 
-                  padding: '0.45rem 0.85rem', 
-                  fontSize: '0.8rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.55rem',
-                  borderColor: selectedLocationKey === 'ahilyanagar' ? 'rgba(245, 158, 11, 0.45)' : 'rgba(255, 255, 255, 0.12)',
-                  background: selectedLocationKey === 'ahilyanagar' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255, 255, 255, 0.03)'
-                }}
               >
-                <i className="fa-solid fa-location-dot" style={{ color: selectedLocationKey === 'ahilyanagar' ? '#f59e0b' : '#38bdf8' }}></i>
-                <span style={{ fontWeight: 700, color: '#fff' }}>{currentLocation.name}</span>
-                {currentLocation.hasApiIntegration ? (
-                  <span style={{ fontSize: '9px', background: 'rgba(245, 158, 11, 0.25)', color: '#fbbf24', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                    VISTA SYNC
-                  </span>
-                ) : (
-                  <span style={{ fontSize: '9px', background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>
-                    ACTIVE
+                <i className="fa-solid fa-location-dot" style={{ color: '#f59e0b' }}></i>
+                <span>{currentLocation.name}</span>
+                {currentLocation.hasApiIntegration && (
+                  <span style={{ fontSize: '8px', background: 'rgba(245, 158, 11, 0.25)', color: '#fbbf24', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
+                    VISTA
                   </span>
                 )}
-                <i className={`fa-solid ${locationDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ fontSize: '9px', color: 'var(--fra-text-muted)' }}></i>
+                <i className="fa-solid fa-chevron-down" style={{ fontSize: '8px', color: '#94a3b8' }}></i>
               </button>
 
-              {/* Location Dropdown Card */}
               {locationDropdownOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  right: 0,
-                  background: '#0d131f',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '12px',
-                  padding: '0.5rem',
-                  minWidth: '260px',
-                  boxShadow: 'var(--fra-shadow-lg)',
-                  zIndex: 150,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4px',
-                  animation: 'slideDownMenu 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards'
-                }}>
-                  <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', padding: '6px 8px', fontWeight: 800, letterSpacing: '0.06em', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                    Select Cinema Property
+                <div className="fra-dropdown-menu" style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, minWidth: '240px' }}>
+                  <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', padding: '6px 8px', fontWeight: 800, borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    Switch Cinema Property
                   </div>
                   {Object.values(LOCATIONS).map((loc) => (
                     <button
@@ -1070,126 +1008,48 @@ export default function FranchiseePortal() {
                         setLocationDropdownOpen(false);
                         showToast(`Switched active cinema to ${loc.name}`);
                       }}
+                      className="fra-dropdown-item"
                       style={{
-                        textAlign: 'left',
-                        padding: '0.6rem 0.75rem',
-                        fontSize: '0.78rem',
-                        color: selectedLocationKey === loc.id ? '#ffffff' : '#cbd5e1',
                         background: selectedLocationKey === loc.id ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
-                        borderRadius: '8px',
-                        border: selectedLocationKey === loc.id ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid transparent',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        transition: 'all 0.15s ease'
+                        color: selectedLocationKey === loc.id ? '#ffffff' : '#cbd5e1'
                       }}
                     >
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <i className="fa-solid fa-film" style={{ fontSize: '11px', color: selectedLocationKey === loc.id ? '#f59e0b' : '#64748b' }}></i>
-                          <span style={{ fontWeight: selectedLocationKey === loc.id ? 700 : 500 }}>{loc.name}</span>
-                        </div>
-                        <span style={{ fontSize: '10px', color: '#64748b', paddingLeft: '1.2rem' }}>
-                          {loc.city}, {loc.state} &bull; {loc.totalScreens} Screens
-                        </span>
-                      </div>
-                      {loc.hasApiIntegration && (
-                        <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: 900 }}>
-                          VISTA
-                        </span>
-                      )}
+                      <i className="fa-solid fa-film" style={{ fontSize: '10px', color: selectedLocationKey === loc.id ? '#f59e0b' : '#64748b' }}></i>
+                      <span>{loc.name} ({loc.totalScreens} Screens)</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Launch ConnCloud SaaS Suite Link */}
+            {/* ConnCloud SaaS Suite Link */}
             <Link
               href={`/conncloud/dashboard?cinema=${currentLocation.cinemaId}`}
-              className="fra-btn fra-btn-outline"
-              style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}
+              className="fra-header-pill-btn"
+              title="Launch SaaS Suite"
             >
               <i className="fa-solid fa-cloud" style={{ color: '#60a5fa' }}></i>
-              <span>ConnCloud Suite</span>
+              <span>ConnCloud</span>
               <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: '9px', color: '#94a3b8' }}></i>
             </Link>
 
             {/* Notification Bell */}
-            <button className="fra-icon-btn" onClick={() => showToast('3 unread system & sync notifications pending.')} aria-label="Notifications">
+            <button 
+              type="button" 
+              className="fra-header-circle-btn" 
+              onClick={() => showToast('3 system notifications pending.')}
+              aria-label="Notifications"
+            >
               <i className="fa-solid fa-bell"></i>
               <span className="fra-badge">3</span>
             </button>
-
-            {/* Quick Inbox */}
-            <button className="fra-icon-btn" onClick={() => showToast('Inbox is synchronized. No urgent tickets.')} aria-label="Messages">
-              <i className="fa-solid fa-envelope"></i>
-            </button>
-
-            <div className="fra-topbar-divider"></div>
-
-            {/* User Profile Pill & Dropdown */}
-            <div className="fra-profile-dropdown-container" ref={dropdownRef}>
-              <button 
-                className="fra-profile-trigger"
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                aria-label="User profile menu"
-              >
-                <div 
-                  className="fra-avatar" 
-                  style={{ 
-                    background: (currentUser?.cinemaId === 'c5' || selectedLocationKey === 'ahilyanagar') 
-                      ? 'linear-gradient(135deg, #f59e0b, #d97706)' 
-                      : 'linear-gradient(135deg, #2563eb, #1d4ed8)' 
-                  }}
-                >
-                  {currentUser?.initials || currentLocation.partnerInitials}
-                </div>
-                <div className="fra-profile-info">
-                  <span className="fra-profile-name">
-                    {currentUser?.name || currentLocation.partnerName}
-                  </span>
-                  <span className="fra-profile-role">
-                    {currentUser?.role || currentLocation.partnerRole}
-                  </span>
-                </div>
-                <i className={`fa-solid ${profileDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-              </button>
-
-              {profileDropdownOpen && (
-                <div className="fra-dropdown-menu">
-                  <div style={{ padding: '0.4rem 0.6rem 0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '0.35rem' }}>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
-                      {currentUser?.name || currentLocation.partnerName}
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
-                      {currentLocation.fullName}
-                    </div>
-                  </div>
-                  <button className="fra-dropdown-item" onClick={() => handleActionClick('Profile settings')}>
-                    <i className="fa-solid fa-user-circle"></i> Profile Settings
-                  </button>
-                  <button className="fra-dropdown-item" onClick={() => handleActionClick('Cinema settings')}>
-                    <i className="fa-solid fa-building"></i> Cinema Property Specs
-                  </button>
-                  <button className="fra-dropdown-item" onClick={() => handleActionClick('Daily Revenue Dashboard')}>
-                    <i className="fa-solid fa-chart-line"></i> Revenue Dashboard
-                  </button>
-                  <button className="fra-dropdown-item danger" onClick={handleLogout}>
-                    <i className="fa-solid fa-sign-out-alt"></i> Log Out
-                  </button>
-                </div>
-              )}
-            </div>
-
           </div>
         </header>
 
-        {/* Dashboard Main Content */}
-        <div className="fra-dashboard-content">
+        {/* 3. Center Floating VisionOS Glass Window */}
+        <main className="fra-floating-window">
           
-          {/* Welcome Hero Banner */}
+          {/* Welcome Hero Banner Tile */}
           <section className="fra-welcome-banner">
             <div className="fra-banner-left">
               <span className="fra-live-indicator">
@@ -1198,7 +1058,7 @@ export default function FranchiseePortal() {
               </span>
               <h1>Welcome back, {currentUser?.name || currentLocation.partnerName}</h1>
               <p>
-                Here&apos;s real-time performance across your cinema for today &mdash; {todayFormatted || 'Wednesday, Sep 16, 2026'}.
+                Real-time performance across your cinema for today &mdash; {todayFormatted || 'Wednesday, Sep 16, 2026'}.
               </p>
             </div>
             
@@ -1237,7 +1097,7 @@ export default function FranchiseePortal() {
             </div>
           </section>
 
-          {/* Location Property Specs Bar */}
+          {/* Location Property Specs Strip */}
           <div className="fra-location-specs-strip">
             <div className="fra-spec-chip">
               <i className="fa-solid fa-film"></i>
@@ -1268,62 +1128,7 @@ export default function FranchiseePortal() {
             </div>
           </div>
 
-          {/* Quick Cinema Property Switcher Bar */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.65rem',
-            overflowX: 'auto',
-            padding: '0.35rem 0',
-            scrollbarWidth: 'none'
-          }}>
-            <span style={{ fontSize: '11px', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
-              Cinema Property:
-            </span>
-            {Object.values(LOCATIONS).map((loc) => {
-              const isSelected = selectedLocationKey === loc.id;
-              return (
-                <button
-                  key={loc.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedLocationKey(loc.id);
-                    showToast(`Viewing ${loc.name}`);
-                  }}
-                  style={{
-                    padding: '0.42rem 0.95rem',
-                    borderRadius: '24px',
-                    fontSize: '11px',
-                    fontWeight: isSelected ? 700 : 500,
-                    background: isSelected 
-                      ? (loc.id === 'ahilyanagar' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25))' : 'rgba(37, 99, 235, 0.25)')
-                      : 'rgba(255, 255, 255, 0.035)',
-                    color: isSelected ? '#ffffff' : '#94a3b8',
-                    border: isSelected 
-                      ? (loc.id === 'ahilyanagar' ? '1px solid rgba(245, 158, 11, 0.65)' : '1px solid rgba(37, 99, 235, 0.65)')
-                      : '1px solid rgba(255, 255, 255, 0.07)',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.45rem',
-                    boxShadow: isSelected ? (loc.id === 'ahilyanagar' ? '0 0 14px rgba(245, 158, 11, 0.2)' : '0 0 14px rgba(37, 99, 235, 0.2)') : 'none',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                  }}
-                >
-                  <i className="fa-solid fa-film" style={{ fontSize: '10px', color: isSelected ? (loc.id === 'ahilyanagar' ? '#f59e0b' : '#60a5fa') : '#64748b' }}></i>
-                  <span>{loc.name}</span>
-                  {loc.hasApiIntegration && (
-                    <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: 900 }}>
-                      VISTA
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* KPI Metrics Grid (12 Cards) */}
+          {/* KPI Metrics Grid (12 VisionOS Frosted Glass Tiles) */}
           <section className="fra-metrics-grid">
             {metrics.map((m, idx) => {
               const meta = getMetricMeta(m.label);
@@ -1360,19 +1165,18 @@ export default function FranchiseePortal() {
           {/* Ahilyanagar Specialized Views & Raw API Console */}
           {selectedLocationKey === 'ahilyanagar' && (
             <div className="space-y-4">
-              {/* Daily Revenue Dashboard (Fallback Component) */}
               <AhilyanagarFranchiseDashboard 
                 onNotification={showToast} 
                 defaultExpanded={false} 
               />
 
-              {/* Vista Raw POS ASMX API Integration & Sync Scripts Section */}
               <div style={{
-                background: 'rgba(15, 21, 33, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.09)',
-                borderRadius: '16px',
-                padding: '1.25rem 1.5rem',
-                boxShadow: 'var(--fra-shadow-sm)'
+                background: 'rgba(22, 30, 48, 0.65)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid var(--fra-glass-border)',
+                borderRadius: '24px',
+                padding: '1.25rem 1.65rem',
+                boxShadow: 'var(--fra-glass-shadow-sm)'
               }}>
                 <div style={{
                   display: 'flex',
@@ -1383,16 +1187,16 @@ export default function FranchiseePortal() {
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                     <div style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '10px',
-                      background: 'rgba(245, 158, 11, 0.15)',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '12px',
+                      background: 'rgba(245, 158, 11, 0.18)',
                       color: '#f59e0b',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '16px',
-                      boxShadow: '0 0 12px rgba(245, 158, 11, 0.2)'
+                      fontSize: '18px',
+                      boxShadow: '0 0 16px rgba(245, 158, 11, 0.25)'
                     }}>
                       <i className="fa-solid fa-server"></i>
                     </div>
@@ -1410,11 +1214,11 @@ export default function FranchiseePortal() {
                     type="button"
                     onClick={() => setApiDocsExpanded(!apiDocsExpanded)}
                     style={{
-                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 255, 255, 0.05)',
-                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(255, 255, 255, 0.12)',
+                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
                       color: apiDocsExpanded ? '#f59e0b' : '#e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
+                      padding: '8px 18px',
+                      borderRadius: '9999px',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -1454,7 +1258,7 @@ export default function FranchiseePortal() {
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   {searchQuery && (
-                    <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.1)', padding: '2px 8px', borderRadius: '4px' }}>
+                    <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '4px' }}>
                       Filtered by &quot;{searchQuery}&quot;
                     </span>
                   )}
@@ -1532,7 +1336,7 @@ export default function FranchiseePortal() {
                   <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>
                   Quick Actions
                 </h2>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>1-Click Operations</span>
+                <span style={{ fontSize: '11px', color: '#94a3b8' }}>1-Click Shortcuts</span>
               </div>
               <div className="fra-actions-grid">
                 {[
@@ -1561,7 +1365,7 @@ export default function FranchiseePortal() {
 
           </div>
 
-          {/* Bottom layout - Events, News, Marketing */}
+          {/* Bottom Grid - Events, News, Marketing */}
           <div className="fra-bottom-grid">
             
             {/* Calendar & Events */}
@@ -1677,7 +1481,7 @@ export default function FranchiseePortal() {
 
           {/* Support Center Section */}
           <section className="fra-support-section">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <h2 className="fra-section-title">
                 <i className="fa-solid fa-headset" style={{ color: '#10b981' }}></i>
                 Conncloud Partner Support Center
@@ -1708,25 +1512,44 @@ export default function FranchiseePortal() {
             </div>
           </section>
 
-        </div>
+        </main>
+      </div>
 
-        {/* Global Footer */}
-        <footer className="fra-footer">
-          <div className="fra-footer-text">
-            <span>Connplex Cinemas &copy; 2026. All rights reserved &bull; Franchise Management System</span>
-          </div>
-          <div className="fra-footer-links">
-            <span style={{ fontSize: '11px', color: '#64748b' }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block', marginRight: '5px' }}></span>
-              All Cinema POS &amp; API Nodes Operational
-            </span>
-            <a href="#support" onClick={(e) => { e.preventDefault(); handleActionClick('Support'); }}>Support Desk</a>
-            <a href="#docs" onClick={(e) => { e.preventDefault(); handleActionClick('Cinema settings'); }}>Property Specs</a>
-            <a href="#privacy" onClick={(e) => { e.preventDefault(); showToast('Security policy: Encrypted franchise portal.'); }}>Security Policy</a>
-          </div>
-        </footer>
+      {/* 4. Bottom Floating Capsule Location Dock (Exact Match to Reference Image's "Living Room / Bedroom" Pill Dock) */}
+      <nav className="fra-floating-bottom-dock" aria-label="Cinema Property Switcher Dock">
+        {Object.values(LOCATIONS).map((loc) => {
+          const isSelected = selectedLocationKey === loc.id;
+          return (
+            <button
+              key={loc.id}
+              type="button"
+              className={`fra-bottom-dock-pill ${isSelected ? 'active' : ''}`}
+              onClick={() => {
+                setSelectedLocationKey(loc.id);
+                showToast(`Switched active cinema to ${loc.name}`);
+              }}
+            >
+              <i className="fa-solid fa-film" style={{ fontSize: '10px' }}></i>
+              <span>{loc.name}</span>
+              {loc.hasApiIntegration && isSelected && (
+                <span style={{ fontSize: '8px', background: '#f59e0b', color: '#000', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, marginLeft: '2px' }}>
+                  VISTA
+                </span>
+              )}
+            </button>
+          );
+        })}
 
-      </main>
+        <button 
+          type="button" 
+          className="fra-bottom-dock-plus" 
+          title="All 6 Cinema Properties Active"
+          onClick={() => showToast('All 6 Connplex Cinema Properties are online and synchronized.')}
+        >
+          <i className="fa-solid fa-plus"></i>
+        </button>
+      </nav>
+
     </div>
   );
 }
