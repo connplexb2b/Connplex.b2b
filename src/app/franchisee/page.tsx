@@ -427,6 +427,24 @@ export default function FranchiseePortal() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Normalize URL tab slug to actual tab name
+  const normalizeTab = (raw: string | null): string | null => {
+    if (!raw) return null;
+    const lower = raw.trim().toLowerCase().replace(/[-_]/g, ' ');
+    if (lower === 'dashboard' || lower === 'home') return 'Dashboard';
+    if (lower === 'analytics' || lower === 'kpi' || lower === 'kpis') return 'Analytics';
+    if (lower === 'finance' || lower === 'revenue' || lower === 'ledger') return 'Finance';
+    if (lower === 'ticket sales' || lower === 'tickets' || lower === 'ticketing' || lower === 'box office') return 'Ticket Sales';
+    if (lower === 'food & beverage' || lower === 'f&b' || lower === 'fnb' || lower === 'food' || lower === 'concessions') return 'Food & Beverage';
+    if (lower === 'movies' || lower === 'shows' || lower === 'screening' || lower === 'schedule') return 'Movies';
+    if (lower === 'operations' || lower === 'ops' || lower === 'telemetry') return 'Operations';
+    if (lower === 'marketing' || lower === 'promo' || lower === 'campaigns') return 'Marketing';
+    if (lower === 'reports' || lower === 'mis' || lower === 'statements') return 'Reports';
+    if (lower === 'support' || lower === 'help' || lower === 'noc') return 'Support';
+    if (lower === 'settings' || lower === 'config' || lower === 'property' || lower === 'staff') return 'Settings';
+    return null;
+  };
+
   // Check login state and url parameters on mount
   useEffect(() => {
     setTodayFormatted(new Date().toLocaleDateString('en-US', {
@@ -460,8 +478,35 @@ export default function FranchiseePortal() {
           setSelectedLocationKey(loc.toLowerCase());
         }
       }
+
+      const initialTab = normalizeTab(params.get('tab'));
+      if (initialTab) {
+        setActiveTab(initialTab);
+        if (initialTab === 'Support') {
+          setActiveSupportTab('tickets');
+        }
+      }
     }
     setIsLoading(false);
+  }, []);
+
+  // Listen to browser Back/Forward popstate events for multi-page navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams(window.location.search);
+      const tabFromUrl = normalizeTab(params.get('tab'));
+      if (tabFromUrl) {
+        setActiveTab(tabFromUrl);
+        if (tabFromUrl === 'Support') {
+          setActiveSupportTab(prev => prev || 'tickets');
+        }
+      } else {
+        setActiveTab('Dashboard');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   // Close dropdown on click outside
@@ -645,42 +690,28 @@ export default function FranchiseePortal() {
     return 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
   };
 
-  // Switch tabs & smooth scroll in-place (Stay in VisionOS Glass Layout)
+  // Switch tabs & update URL query parameter (Multi-Page Navigation)
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
 
     if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      const tabSlug = tab.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-');
+      url.searchParams.set('tab', tabSlug);
+      window.history.pushState({}, '', url.toString());
+
       localStorage.setItem('franchisee_cinema', currentLocation.cinemaId);
       localStorage.setItem('franchisee_location', currentLocation.id);
       localStorage.setItem('cc_selected_cinema', currentLocation.cinemaId);
       const userToStore = currentUser || (currentLocation.cinemaId === 'c5' ? AHILYANAGAR_USER : DEFAULT_CORPORATE_USER);
       storeFranchiseeSession(userToStore);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const win = document.getElementById('fra-window-top');
+      if (win) win.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    const sectionMap: Record<string, { id: string; msg: string }> = {
-      'Dashboard': { id: 'fra-window-top', msg: `Viewing ${currentLocation.name} Executive Cockpit` },
-      'Analytics': { id: 'fra-analytics-section', msg: `Viewing ${currentLocation.name} Key Performance Indicators` },
-      'Finance': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Financial Revenue Ledgers` },
-      'Ticket Sales': { id: 'fra-operations-snapshot', msg: `Viewing ${currentLocation.name} Live Box Office & Ticket Sales` },
-      'Food & Beverage': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Concessions, F&B & SPH Analytics` },
-      'Movies': { id: 'fra-cockpit-section', msg: `Viewing ${currentLocation.name} Active Screens & Show Schedules` },
-      'Operations': { id: 'fra-cockpit-section', msg: `Viewing ${currentLocation.name} Screening Controls & Projection Specs` },
-      'Staff': { id: 'fra-specs-section', msg: `Viewing ${currentLocation.name} Cinema Specs & Franchise Partner Directory` },
-      'Marketing': { id: 'fra-marketing-section', msg: `Viewing ${currentLocation.name} Active Marketing Campaigns & Social Toolkits` },
-      'Reports': { id: 'fra-finance-section', msg: `Viewing ${currentLocation.name} Daily Box Office Reports & MIS` },
-      'Support': { id: 'fra-support-section', msg: `Viewing Priority Partner Support Center` },
-      'Settings': { id: 'fra-specs-section', msg: `Viewing ${currentLocation.name} Cinema Profile & Configuration` }
-    };
-
-    const target = sectionMap[tab] || { id: 'fra-window-top', msg: `Switched to ${tab}` };
-    showToast(target.msg);
-
-    setTimeout(() => {
-      const el = document.getElementById(target.id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 60);
+    showToast(`Switched to ${tab} page`);
     if (tab === 'Support') {
       setActiveSupportTab(prev => prev || 'tickets');
     }
@@ -730,106 +761,79 @@ export default function FranchiseePortal() {
     }, 800);
   };
 
-  // Quick action helper (Stay in VisionOS Glass Layout)
+  // Quick action helper (Switches to relevant multi-page view)
   const handleActionClick = (actionName: string) => {
     if (actionName === 'Ahilyanagar Revenue' || actionName === 'Daily Revenue Dashboard' || actionName === 'Ahilyanagar Daily Revenue') {
       setSelectedLocationKey('ahilyanagar');
-      showToast('Viewing Ahilyanagar Franchise Daily Revenue Dashboard.');
-      setTimeout(() => {
-        const el = document.getElementById('ahilyanagar-revenue-dashboard') || document.getElementById('fra-finance-section');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      handleNavClick('Finance');
       return;
     }
     if (actionName === 'Ahilyanagar API Sync' || actionName.includes('API Sync')) {
       setSelectedLocationKey('ahilyanagar');
       setApiDocsExpanded(true);
-      showToast('Loaded Ahilyanagar API Integration documentation.');
-      setTimeout(() => {
-        const el = document.getElementById('ahilyanagar-api-integration');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+      handleNavClick('Finance');
       return;
     }
     if (actionName === 'Download Daily Report' || actionName === 'Download Monthly Report') {
+      handleNavClick('Reports');
       showToast(`Generating ${actionName} for ${currentLocation.name}...`);
       setTimeout(() => {
         showToast(`Downloaded ${actionName.replace('Download ', '')} for ${currentLocation.name}.`);
-      }, 800);
+      }, 700);
       return;
     }
     if (actionName === 'View Live Screens') {
-      setActiveTab('Operations');
-      const el = document.getElementById('fra-cockpit-section') || document.getElementById('fra-operations-snapshot');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast(`Viewing Live Screens telemetry for ${currentLocation.name}.`);
+      handleNavClick('Movies');
       return;
     }
     if (actionName === 'Export Revenue') {
-      showToast(`Generating Revenue Ledger Export for ${currentLocation.name}...`);
-      setTimeout(() => {
-        showToast(`Revenue report exported successfully for ${currentLocation.name}.`);
-      }, 800);
+      handleNavClick('Reports');
+      showToast(`Revenue report exported successfully for ${currentLocation.name}.`);
       return;
     }
     if (actionName === 'Cinema Property Specs' || actionName === 'Manage Staff') {
-      setActiveTab('Settings');
-      const el = document.getElementById('fra-specs-section');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast(`Viewing Cinema specifications for ${currentLocation.name}.`);
+      handleNavClick('Settings');
       return;
     }
     if (actionName === 'Order Inventory') {
-      setActiveTab('Food & Beverage');
-      const el = document.getElementById('fra-finance-section') || document.getElementById('ahilyanagar-revenue-dashboard');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      showToast(`Concessions & F&B Inventory catalog loaded for ${currentLocation.name}.`);
+      handleNavClick('Food & Beverage');
       return;
     }
     if (actionName === 'Create Maintenance Ticket') {
+      handleNavClick('Support');
       setActiveSupportTab('tickets');
       setTicketCategory('Hardware / Projection');
       setTicketSubject('Auditorium Maintenance Request');
-      setTimeout(() => {
-        const el = document.getElementById('fra-support-section');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
-      showToast(`Opening Maintenance Request Ticket for ${currentLocation.name}.`);
       return;
     }
     if (actionName === 'Raise Ticket') {
-      setActiveSupportTab(prev => prev === 'tickets' ? null : 'tickets');
-      setTimeout(() => {
-        document.getElementById('fra-support-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
+      handleNavClick('Support');
+      setActiveSupportTab('tickets');
       return;
     }
     if (actionName === 'Live Chat') {
-      setActiveSupportTab(prev => prev === 'chat' ? null : 'chat');
-      setTimeout(() => {
-        document.getElementById('fra-support-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
+      handleNavClick('Support');
+      setActiveSupportTab('chat');
       return;
     }
     if (actionName === 'Knowledge Base') {
-      setActiveSupportTab(prev => prev === 'knowledge' ? null : 'knowledge');
-      setTimeout(() => {
-        document.getElementById('fra-support-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
+      handleNavClick('Support');
+      setActiveSupportTab('knowledge');
       return;
     }
     if (actionName === 'Training Videos') {
-      setActiveSupportTab(prev => prev === 'training' ? null : 'training');
-      setTimeout(() => {
-        document.getElementById('fra-support-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
+      handleNavClick('Support');
+      setActiveSupportTab('training');
       return;
     }
     if (actionName === 'Emergency Line') {
-      setActiveSupportTab(prev => prev === 'emergency' ? null : 'emergency');
-      setTimeout(() => {
-        document.getElementById('fra-support-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 60);
+      handleNavClick('Support');
+      setActiveSupportTab('emergency');
+      return;
+    }
+    if (actionName === 'Poster Library' || actionName === 'Social Toolkit') {
+      handleNavClick('Marketing');
+      showToast(`Opened ${actionName} toolkit`);
       return;
     }
     showToast(`Triggered: ${actionName}`);
@@ -1194,451 +1198,1168 @@ export default function FranchiseePortal() {
           </div>
         </header>
 
-        {/* 3. Center Floating VisionOS Glass Window */}
+        {/* 3. Center Floating VisionOS Glass Window (Multi-Page View Container) */}
         <main className="fra-floating-window" id="fra-window-top">
           
-          {/* Welcome Hero Banner Tile */}
-          <section className="fra-welcome-banner">
-            <div className="fra-banner-left">
-              <span className="fra-live-indicator">
-                <span className="fra-live-dot"></span>
-                <span>{currentLocation.name} &bull; Live Operations</span>
-              </span>
-              <h1>Welcome back, {currentUser?.name ? currentUser.name.split(' ')[0] : currentLocation.partnerName.split(' ')[0]}</h1>
-              <p>
-                Performance overview and box office summary for {todayFormatted || 'Wednesday, Nov 25, 2026'}.
-              </p>
-            </div>
-            
-            <div className="fra-banner-actions">
-              {selectedLocationKey === 'ahilyanagar' && (
-                <>
-                  <button 
-                    className="fra-btn fra-btn-primary"
-                    onClick={() => {
-                      const el = document.getElementById('ahilyanagar-revenue-dashboard');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    <i className="fa-solid fa-chart-line"></i> Daily Revenue Dashboard
-                  </button>
-                  <button 
-                    className="fra-btn fra-btn-outline"
-                    onClick={() => {
-                      setApiDocsExpanded(true);
-                      setTimeout(() => {
-                        const el = document.getElementById('ahilyanagar-api-integration');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
-                    }}
-                  >
-                    <i className="fa-solid fa-server"></i> API Sync Docs
-                  </button>
-                </>
-              )}
-              <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('Export Revenue')}>
-                <i className="fa-solid fa-download"></i> Export Revenue
-              </button>
-              <button className="fra-btn fra-btn-outline" onClick={() => handleActionClick('View Live Screens')}>
-                <i className="fa-solid fa-display"></i> View Live Screens
-              </button>
-            </div>
-          </section>
-
-          {/* Executive Cinema Operations Cockpit (Authentic Cinema Multi-Screen & POS Telemetry) */}
-          <section className="fra-smart-cockpit-grid" id="fra-cockpit-section">
-            
-            {/* Tile 1: Live Auditoriums & Screen Telemetry */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-film" style={{ color: '#f59e0b' }}></i>
-                  <span>Live Auditoriums &amp; Screening Status</span>
+          {/* ================================================================
+              VIEW 1: DASHBOARD (Executive Cockpit & Summary)
+             ================================================================ */}
+          {activeTab === 'Dashboard' && (
+            <div className="fra-page-view-container">
+              {/* Welcome Hero Banner Tile */}
+              <section className="fra-welcome-banner">
+                <div className="fra-banner-left">
+                  <span className="fra-live-indicator">
+                    <span className="fra-live-dot"></span>
+                    <span>{currentLocation.name} &bull; Live Operations</span>
+                  </span>
+                  <h1>Welcome back, {currentUser?.name ? currentUser.name.split(' ')[0] : currentLocation.partnerName.split(' ')[0]}</h1>
+                  <p>
+                    Performance overview and box office summary for {todayFormatted || 'Wednesday, Nov 25, 2026'}.
+                  </p>
                 </div>
-                <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  {currentLocation.totalScreens} Screens Active
-                </span>
+                
+                <div className="fra-banner-actions">
+                  {selectedLocationKey === 'ahilyanagar' && (
+                    <>
+                      <button 
+                        className="fra-btn fra-btn-primary"
+                        onClick={() => handleNavClick('Finance')}
+                      >
+                        <i className="fa-solid fa-chart-line"></i> Daily Revenue Dashboard
+                      </button>
+                      <button 
+                        className="fra-btn fra-btn-outline"
+                        onClick={() => {
+                          setApiDocsExpanded(true);
+                          handleNavClick('Finance');
+                        }}
+                      >
+                        <i className="fa-solid fa-server"></i> API Sync Docs
+                      </button>
+                    </>
+                  )}
+                  <button className="fra-btn fra-btn-outline" onClick={() => handleNavClick('Reports')}>
+                    <i className="fa-solid fa-download"></i> Export Revenue
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => handleNavClick('Movies')}>
+                    <i className="fa-solid fa-display"></i> View Live Screens
+                  </button>
+                </div>
+              </section>
+
+              {/* Executive Cinema Operations Cockpit (Authentic Cinema Multi-Screen & POS Telemetry) */}
+              <section className="fra-smart-cockpit-grid" id="fra-cockpit-section">
+                
+                {/* Tile 1: Live Auditoriums & Screen Telemetry */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-film" style={{ color: '#f59e0b' }}></i>
+                      <span>Live Auditoriums &amp; Screening Status</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {currentLocation.totalScreens} Screens Active
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    {[
+                      shows.find(s => s.screen.toLowerCase().includes('screen 1')) || shows[0],
+                      shows.find(s => s.screen.toLowerCase().includes('screen 2')) || shows[1]
+                    ].filter(Boolean).map((s, idx) => (
+                      <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem 0.85rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <i className="fa-solid fa-tv" style={{ fontSize: '11px', color: '#60a5fa' }}></i>
+                            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>{s.screen}</span>
+                          </div>
+                          <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+                            <i className="fa-regular fa-clock" style={{ marginRight: '3px' }}></i> {s.time}
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {s.movie}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '130px' }}>
+                            <div className="fra-progress-track" style={{ flex: 1, height: '6px' }}>
+                              <div 
+                                className="fra-progress-fill" 
+                                style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}
+                              ></div>
+                            </div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#34d399', whiteSpace: 'nowrap' }}>
+                              {s.occupancy}%
+                              {s.seatsBooked && s.totalSeats ? (
+                                <span style={{ fontSize: '10px', color: '#94a3b8', marginLeft: '3px', fontWeight: 500 }}>
+                                  ({s.seatsBooked}/{s.totalSeats})
+                                </span>
+                              ) : null}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Projection Core</span>
+                      <strong style={{ color: '#34d399' }}>Christie 4K Laser</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Sound Audio</span>
+                      <strong style={{ color: '#38bdf8' }}>Dolby Atmos 7.1</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile 2: Box Office Realtime Velocity & POS Telemetry */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-chart-line" style={{ color: '#10b981' }}></i>
+                      <span>Box Office &amp; POS Telemetry</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(245, 158, 11, 0.16)', color: '#fbbf24', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      {currentLocation.hasApiIntegration ? 'Cloud POS Live' : 'Cloud POS'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Today&apos;s Revenue</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[0]?.value || '₹1.02L'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[0]?.trend || '+8.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Admissions</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[4]?.value || '268'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[4]?.trend || '+7.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Spend Per Head</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[7]?.value || '₹110'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[7]?.trend || '+4.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Occupancy Avg</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[5]?.value || '84%'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[5]?.trend || '+3.5%'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>POS Sync Latency</span>
+                      <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>DCP KDM License</span>
+                      <strong style={{ color: '#34d399' }}>Active &bull; Validated</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tile 3: Facility & Screening Environment Controls */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-sliders" style={{ color: '#38bdf8' }}></i>
+                      <span>Facility &amp; Screening Controls</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      Calibrated
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <i className="fa-solid fa-lightbulb" style={{ color: ambientLightsOn ? '#f59e0b' : '#64748b', fontSize: '1rem' }}></i>
+                        <div 
+                          className="fra-smart-switch" 
+                          style={{ background: ambientLightsOn ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
+                          onClick={() => {
+                            setAmbientLightsOn(!ambientLightsOn);
+                            showToast(`Auditorium Sconces ${!ambientLightsOn ? 'set to Soft Gold (Ambient)' : 'dimmed for Showtime'}`);
+                          }}
+                          title="Toggle Ambience Lighting"
+                        >
+                          <div className="fra-smart-switch-handle" style={{ right: ambientLightsOn ? '3px' : '23px' }}></div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Auditorium Sconces</div>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>{ambientLightsOn ? 'Soft Gold 35%' : 'Dimmed (0%)'}</div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <i className="fa-solid fa-dungeon" style={{ color: curtainsClosed ? '#38bdf8' : '#64748b', fontSize: '1rem' }}></i>
+                        <div 
+                          className="fra-smart-switch" 
+                          style={{ background: curtainsClosed ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
+                          onClick={() => {
+                            setCurtainsClosed(!curtainsClosed);
+                            showToast(`Screen Side Masking ${!curtainsClosed ? 'locked to Scope 2.39:1' : 'opened for Walk-in'}`);
+                          }}
+                          title="Toggle Screen Masking"
+                        >
+                          <div className="fra-smart-switch-handle" style={{ right: curtainsClosed ? '3px' : '23px' }}></div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Scope Masking</div>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>{curtainsClosed ? 'Scope 2.39:1 Locked' : 'Open / 16:9'}</div>
+                    </div>
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Auditorium VRV</span>
+                      <strong style={{ color: '#38bdf8' }}>{auditoriumTemp}&deg;C Daikin Norm</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Air Filtration</span>
+                      <strong style={{ color: '#34d399' }}>HEPA 99.8% Active</strong>
+                    </div>
+                  </div>
+                </div>
+
+              </section>
+
+              {/* Location Property Specs Strip */}
+              <div className="fra-location-specs-strip" id="fra-specs-section">
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-film"></i>
+                  <span>{currentLocation.totalScreens} Luxury Auditoriums</span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-couch"></i>
+                  <span>{currentLocation.totalSeats} Total Premium Seats</span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-location-dot"></i>
+                  <span>{currentLocation.city}, {currentLocation.state}</span>
+                </div>
+                {currentLocation.hasApiIntegration ? (
+                  <div className="fra-spec-chip highlight">
+                    <i className="fa-solid fa-bolt"></i>
+                    <span>Live POS Synchronized (ASMX)</span>
+                  </div>
+                ) : (
+                  <div className="fra-spec-chip">
+                    <i className="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Enterprise Cloud POS Connected</span>
+                  </div>
+                )}
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-user-tie"></i>
+                  <span>Partner: {currentLocation.partnerName}</span>
+                </div>
               </div>
 
-              {/* Real Screen 1 and Screen 2 from Current Location */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                {[
-                  shows.find(s => s.screen.toLowerCase().includes('screen 1')) || shows[0],
-                  shows.find(s => s.screen.toLowerCase().includes('screen 2')) || shows[1]
-                ].filter(Boolean).map((s, idx) => (
-                  <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem 0.85rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                        <i className="fa-solid fa-tv" style={{ fontSize: '11px', color: '#60a5fa' }}></i>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>{s.screen}</span>
+              {/* Middle Layout - Live Snapshot & Quick Actions */}
+              <div className="fra-mid-grid">
+                
+                {/* Live Operations Snapshot */}
+                <section className="fra-section-card" id="fra-operations-snapshot">
+                  <div className="fra-section-header">
+                    <h2 className="fra-section-title">
+                      <i className="fa-solid fa-tower-broadcast" style={{ color: '#10b981' }}></i>
+                      Live Operations Snapshot
+                    </h2>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      {searchQuery && (
+                        <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '4px' }}>
+                          Filtered by &quot;{searchQuery}&quot;
+                        </span>
+                      )}
+                      <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
+                    </div>
+                  </div>
+
+                  <div className="fra-table-wrap">
+                    <table className="fra-table">
+                      <thead>
+                        <tr>
+                          <th>Auditorium</th>
+                          <th>Playing Now</th>
+                          <th>Time Slot</th>
+                          <th>Occupancy &amp; Seats</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredShows.length === 0 ? (
+                          <tr>
+                            <td colSpan={4} style={{ textAlign: 'center', color: 'var(--fra-text-muted)', padding: '2.5rem' }}>
+                              <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', display: 'block' }}></i>
+                              No active shows matching &quot;{searchQuery}&quot;.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredShows.map((s, idx) => (
+                            <tr key={idx}>
+                              <td className="fra-screen-name">
+                                <i className="fa-solid fa-tv" style={{ color: '#60a5fa', fontSize: '12px' }}></i>
+                                <span>{s.screen}</span>
+                              </td>
+                              <td className="fra-movie-title">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                                  <span>{s.movie}</span>
+                                </div>
+                              </td>
+                              <td className="fra-showtime">
+                                <i className="fa-regular fa-clock" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
+                                <span>{s.time}</span>
+                              </td>
+                              <td>
+                                <div className="fra-progress-container">
+                                  <div className="fra-progress-track">
+                                    <div 
+                                      className="fra-progress-fill" 
+                                      style={{ 
+                                        width: `${s.occupancy}%`,
+                                        background: getOccupancyGradient(s.occupancy)
+                                      }}
+                                    ></div>
+                                  </div>
+                                  <span className="fra-progress-percent">
+                                    {s.occupancy}%
+                                    {s.seatsBooked && s.totalSeats ? (
+                                      <span style={{ fontSize: '10px', color: 'var(--fra-text-secondary)', marginLeft: '4px', fontWeight: 500 }}>
+                                        ({s.seatsBooked}/{s.totalSeats})
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                {/* Quick Actions Shortcuts */}
+                <section className="fra-section-card">
+                  <div className="fra-section-header">
+                    <h2 className="fra-section-title">
+                      <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>
+                      Quick Actions
+                    </h2>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>1-Click Navigation</span>
+                  </div>
+                  <div className="fra-actions-grid">
+                    {[
+                      { label: "Ahilyanagar API Sync", icon: "fa-server", color: "#f59e0b" },
+                      { label: "Download Daily Report", icon: "fa-file-arrow-down", color: "#10b981" },
+                      { label: "Download Monthly Report", icon: "fa-file-invoice-dollar", color: "#3b82f6" },
+                      { label: "Create Maintenance Ticket", icon: "fa-wrench", color: "#ec4899" },
+                      { label: "View Live Screens", icon: "fa-display", color: "#06b6d4" },
+                      { label: "Export Revenue", icon: "fa-upload", color: "#f59e0b" },
+                      { label: "Cinema Property Specs", icon: "fa-building", color: "#8b5cf6" },
+                      { label: "Order Inventory", icon: "fa-boxes-stacked", color: "#f43f5e" }
+                    ].map((act, idx) => (
+                      <button 
+                        key={idx} 
+                        className="fra-action-item"
+                        onClick={() => handleActionClick(act.label)}
+                      >
+                        <div className="fra-action-icon" style={{ color: act.color }}>
+                          <i className={`fa-solid ${act.icon}`}></i>
+                        </div>
+                        <span className="fra-action-label">{act.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
+              </div>
+
+              {/* Bottom Grid - Events, News, Marketing Preview */}
+              <div className="fra-bottom-grid">
+                
+                {/* Calendar & Events */}
+                <section className="fra-section-card">
+                  <div className="fra-section-header">
+                    <h2 className="fra-section-title">
+                      <i className="fa-regular fa-calendar-check" style={{ color: '#f59e0b' }}></i>
+                      Calendar &amp; Events
+                    </h2>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Upcoming</span>
+                  </div>
+                  <div className="fra-list">
+                    {events.map((e, idx) => {
+                      const tagStyle = getEventTypeColor(e.type);
+                      return (
+                        <div key={idx} className="fra-event-item">
+                          <div className="fra-event-date-badge">
+                            <span className="fra-event-month">{e.month}</span>
+                            <span className="fra-event-day">{e.date}</span>
+                          </div>
+                          <div className="fra-event-details">
+                            <span className="fra-event-title">{e.title}</span>
+                            <span 
+                              className="fra-event-type" 
+                              style={{ 
+                                color: tagStyle.color, 
+                                background: tagStyle.bg,
+                                padding: '1px 6px',
+                                borderRadius: '4px',
+                                display: 'inline-block',
+                                alignSelf: 'flex-start'
+                              }}
+                            >
+                              {e.type}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* News & Announcements */}
+                <section className="fra-section-card">
+                  <div className="fra-section-header">
+                    <h2 className="fra-section-title">
+                      <i className="fa-solid fa-newspaper" style={{ color: '#38bdf8' }}></i>
+                      News &amp; Alerts
+                    </h2>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Network Feed</span>
+                  </div>
+                  <div className="fra-list">
+                    {newsList.map((n, idx) => {
+                      const tagStyle = getNewsTagColor(n.tag);
+                      return (
+                        <div key={idx} className="fra-news-item">
+                          <div className="fra-news-meta">
+                            <span 
+                              className="fra-news-tag"
+                              style={{ color: tagStyle.color, background: tagStyle.bg }}
+                            >
+                              {n.tag}
+                            </span>
+                            <span className="fra-news-time">
+                              <i className="fa-regular fa-clock mr-1" style={{ fontSize: '10px' }}></i> {n.time}
+                            </span>
+                          </div>
+                          <span className="fra-news-title" onClick={() => handleActionClick(n.title)}>
+                            {n.title}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                {/* Marketing & Promo Preview */}
+                <section className="fra-section-card" id="fra-marketing-section">
+                  <div className="fra-section-header">
+                    <h2 className="fra-section-title">
+                      <i className="fa-solid fa-bullhorn" style={{ color: '#ec4899' }}></i>
+                      Marketing &amp; Promo
+                    </h2>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Live Campaigns</span>
+                  </div>
+                  <div className="fra-list">
+                    {campaigns.map((c, idx) => (
+                      <div key={idx} className="fra-marketing-campaign">
+                        <div className="fra-campaign-info">
+                          <span className="fra-campaign-name">{c.name}</span>
+                          <span className="fra-campaign-metrics">
+                            Reach <strong>{c.reach}</strong> &bull; CTR <strong>{c.ctr}</strong>
+                          </span>
+                        </div>
+                        <span className={`fra-campaign-badge ${c.status.toLowerCase()}`}>
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.status === 'ACTIVE' ? '#10b981' : '#f59e0b', display: 'inline-block', marginRight: '4px' }}></span>
+                          {c.status}
+                        </span>
                       </div>
-                      <span style={{ fontSize: '10px', color: '#94a3b8' }}>
-                        <i className="fa-regular fa-clock" style={{ marginRight: '3px' }}></i> {s.time}
+                    ))}
+                  </div>
+                  <div className="fra-marketing-actions">
+                    <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleNavClick('Marketing')}>
+                      <i className="fa-regular fa-image mr-1"></i> Poster Library
+                    </button>
+                    <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleNavClick('Marketing')}>
+                      <i className="fa-solid fa-share-nodes mr-1"></i> Social Toolkit
+                    </button>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 2: ANALYTICS (KPI Metrics & Performance Deep-Dive)
+             ================================================================ */}
+          {activeTab === 'Analytics' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-chart-line"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Analytics</span>
+                    </div>
+                    <h1 className="fra-view-title">Executive Analytics &amp; Box Office KPIs</h1>
+                    <p className="fra-view-subtitle">Real-time admissions velocity, revenue breakdown, and seating occupancy metrics for {currentLocation.name}</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => handleNavClick('Finance')}>
+                    <i className="fa-solid fa-receipt mr-1"></i> Revenue Ledgers
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => handleNavClick('Reports')}>
+                    <i className="fa-solid fa-file-arrow-down mr-1"></i> Export Reports
+                  </button>
+                </div>
+              </div>
+
+              {/* 12 KPI Metrics Grid */}
+              <section className="fra-metrics-grid" id="fra-analytics-section">
+                {metrics.map((m, idx) => {
+                  const meta = getMetricMeta(m.label);
+                  return (
+                    <div key={idx} className="fra-metric-card">
+                      <div className="fra-metric-header">
+                        <div className="fra-metric-title-wrap">
+                          <div className="fra-metric-icon-box" style={{ color: meta.color, background: meta.bg }}>
+                            <i className={`fa-solid ${meta.icon}`}></i>
+                          </div>
+                          <span className="fra-metric-label">{m.label}</span>
+                        </div>
+                        {renderSparkline(m.sparkline, m.isUp, idx)}
+                      </div>
+                      <div className="fra-metric-value">{m.value}</div>
+                      <div className={`fra-metric-trend ${m.isUp ? 'up' : 'down'}`}>
+                        <i className={`fa-solid ${m.isUp ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}`}></i>
+                        <span>{m.trend} vs last period</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </section>
+
+              {/* Deep Dive Performance Breakdown Cards */}
+              <div className="fra-smart-cockpit-grid">
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-ticket" style={{ color: '#8b5cf6' }}></i>
+                      <span>Ticketing Velocity &amp; Distribution</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(139, 92, 246, 0.16)', color: '#c084fc', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      {metrics[4]?.value || '268'} Admissions
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>Online Bookings</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#60a5fa' }}>{metrics[8]?.value || '185'}</span>
+                        <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>(69%)</span>
+                      </div>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>Box Office Counter</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f59e0b' }}>{metrics[9]?.value || '83'}</span>
+                        <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>(31%)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Avg Ticket Price</span>
+                      <strong style={{ color: '#f59e0b' }}>{metrics[6]?.value || '₹240'}</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Spend Per Head</span>
+                      <strong style={{ color: '#34d399' }}>{metrics[7]?.value || '₹110'}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-chart-pie" style={{ color: '#06b6d4' }}></i>
+                      <span>Auditorium Occupancy Ratio</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(6, 182, 212, 0.16)', color: '#22d3ee', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      {metrics[5]?.value || '84%'} Avg Occupancy
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    {shows.slice(0, 2).map((s, idx) => (
+                      <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.65rem 0.85rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '11px' }}>
+                          <span style={{ color: '#fff', fontWeight: 700 }}>{s.screen}</span>
+                          <span style={{ color: '#34d399', fontWeight: 700 }}>{s.occupancy}%</span>
+                        </div>
+                        <div className="fra-progress-track" style={{ height: '6px' }}>
+                          <div className="fra-progress-fill" style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Capacity</span>
+                      <strong style={{ color: '#38bdf8' }}>{currentLocation.totalSeats} Seats</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Screens</span>
+                      <strong style={{ color: '#34d399' }}>{currentLocation.totalScreens} Active</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-burger" style={{ color: '#f59e0b' }}></i>
+                      <span>Concessions &amp; F&amp;B Contribution</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(245, 158, 11, 0.16)', color: '#fbbf24', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      {metrics[10]?.value || '₹29.5K'} F&amp;B
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>F&amp;B Attachment Rate</span>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#34d399' }}>62%</span>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 600 }}>Avg F&amp;B Order</span>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f59e0b' }}>₹185</span>
+                    </div>
+                  </div>
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Customer Rating</span>
+                      <strong style={{ color: '#f59e0b' }}>{metrics[11]?.value || '4.8★'}</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>FSSAI Status</span>
+                      <strong style={{ color: '#34d399' }}>Grade A+ Verified</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 3: FINANCE (Multi-Tenant Revenue Dashboards & API Sync)
+             ================================================================ */}
+          {activeTab === 'Finance' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-indian-rupee-sign"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Finance</span>
+                    </div>
+                    <h1 className="fra-view-title">Financial Revenue Ledgers &amp; Settlements</h1>
+                    <p className="fra-view-subtitle">Multi-tenant POS settlement engine, daily box office collection (DCR), and net distributor shares</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => handleNavClick('Reports')}>
+                    <i className="fa-solid fa-download mr-1"></i> Export Ledger CSV
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => showToast('POS financial records synchronized.')}>
+                    <i className="fa-solid fa-rotate mr-1"></i> Re-Sync POS
+                  </button>
+                </div>
+              </div>
+
+              {/* Multi-Tenant Connplex Franchise Revenue Dashboard */}
+              <div className="space-y-4" id="fra-finance-section">
+                <ConnplexFranchiseRevenueDashboard
+                  currentLocationKey={selectedLocationKey}
+                  userRole={currentUser?.role || 'partner'}
+                  onNotification={showToast}
+                />
+              </div>
+
+              {/* Ahilyanagar Specialized Views & Raw API Console */}
+              {selectedLocationKey === 'ahilyanagar' && (
+                <div className="space-y-4">
+                  <AhilyanagarFranchiseDashboard 
+                    onNotification={showToast} 
+                    defaultExpanded={true} 
+                  />
+
+                  <div style={{
+                    background: 'rgba(22, 30, 48, 0.65)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid var(--fra-glass-border)',
+                    borderRadius: '24px',
+                    padding: '1.25rem 1.65rem',
+                    boxShadow: 'var(--fra-glass-shadow-sm)'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '0.85rem'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '12px',
+                          background: 'rgba(245, 158, 11, 0.18)',
+                          color: '#f59e0b',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '18px',
+                          boxShadow: '0 0 16px rgba(245, 158, 11, 0.25)'
+                        }}>
+                          <i className="fa-solid fa-server"></i>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
+                            Live POS ASMX Raw WebService &amp; Sync Architecture
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#94a3b8' }}>
+                            Endpoint: <code>/api.asmx/GetDailyTicketAndFnbData</code> &bull; Cinema ID: <code>CL16</code> (or <code>CN01</code>)
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setApiDocsExpanded(!apiDocsExpanded)}
+                        style={{
+                          background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+                          border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
+                          color: apiDocsExpanded ? '#f59e0b' : '#e2e8f0',
+                          padding: '8px 18px',
+                          borderRadius: '9999px',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <i className={`fa-solid ${apiDocsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                        <span>{apiDocsExpanded ? 'Hide Raw Integration Docs' : 'View Raw API Docs & Sync Scripts'}</span>
+                      </button>
+                    </div>
+
+                    {apiDocsExpanded && (
+                      <div style={{ marginTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.25rem' }}>
+                        <AhilyanagarApiIntegration 
+                          key={`api-${apiDocsExpanded}`}
+                          onNotification={showToast} 
+                          defaultExpanded={true} 
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 4: TICKET SALES (Live Box Office & Admissions Velocity)
+             ================================================================ */}
+          {activeTab === 'Ticket Sales' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-ticket"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Ticket Sales</span>
+                    </div>
+                    <h1 className="fra-view-title">Live Ticket Sales &amp; Box Office Counter</h1>
+                    <p className="fra-view-subtitle">Real-time ticketing velocity, seating distribution, and box office counter transactions</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => handleNavClick('Movies')}>
+                    <i className="fa-solid fa-film mr-1"></i> Screen Schedules
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => handleNavClick('Reports')}>
+                    <i className="fa-solid fa-file-arrow-down mr-1"></i> Download Manifest
+                  </button>
+                </div>
+              </div>
+
+              {/* Ticketing Velocity Stats Strip */}
+              <div className="fra-location-specs-strip">
+                <div className="fra-spec-chip highlight">
+                  <i className="fa-solid fa-ticket"></i>
+                  <span>Admissions: <strong>{metrics[4]?.value || '268'} Patrons</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-tag"></i>
+                  <span>Avg Ticket Price: <strong>{metrics[6]?.value || '₹240'}</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-globe"></i>
+                  <span>Online Bookings: <strong>{metrics[8]?.value || '185'} (69%)</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-cash-register"></i>
+                  <span>Counter Sales: <strong>{metrics[9]?.value || '83'} (31%)</strong></span>
+                </div>
+              </div>
+
+              {/* Live Operations Snapshot Table */}
+              <section className="fra-section-card" id="fra-operations-snapshot">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-solid fa-tower-broadcast" style={{ color: '#10b981' }}></i>
+                    Live Operations Snapshot
+                  </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {searchQuery && (
+                      <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '4px' }}>
+                        Filtered by &quot;{searchQuery}&quot;
+                      </span>
+                    )}
+                    <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
+                  </div>
+                </div>
+
+                <div className="fra-table-wrap">
+                  <table className="fra-table">
+                    <thead>
+                      <tr>
+                        <th>Auditorium</th>
+                        <th>Playing Now</th>
+                        <th>Time Slot</th>
+                        <th>Occupancy &amp; Seats</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredShows.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: 'center', color: 'var(--fra-text-muted)', padding: '2.5rem' }}>
+                            <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', display: 'block' }}></i>
+                            No active shows matching &quot;{searchQuery}&quot;.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredShows.map((s, idx) => (
+                          <tr key={idx}>
+                            <td className="fra-screen-name">
+                              <i className="fa-solid fa-tv" style={{ color: '#60a5fa', fontSize: '12px' }}></i>
+                              <span>{s.screen}</span>
+                            </td>
+                            <td className="fra-movie-title">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                                <span>{s.movie}</span>
+                              </div>
+                            </td>
+                            <td className="fra-showtime">
+                              <i className="fa-regular fa-clock" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
+                              <span>{s.time}</span>
+                            </td>
+                            <td>
+                              <div className="fra-progress-container">
+                                <div className="fra-progress-track">
+                                  <div 
+                                    className="fra-progress-fill" 
+                                    style={{ 
+                                      width: `${s.occupancy}%`,
+                                      background: getOccupancyGradient(s.occupancy)
+                                    }}
+                                  ></div>
+                                </div>
+                                <span className="fra-progress-percent">
+                                  {s.occupancy}%
+                                  {s.seatsBooked && s.totalSeats ? (
+                                    <span style={{ fontSize: '10px', color: 'var(--fra-text-secondary)', marginLeft: '4px', fontWeight: 500 }}>
+                                      ({s.seatsBooked}/{s.totalSeats})
+                                    </span>
+                                  ) : null}
+                                </span>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 5: FOOD & BEVERAGE (Concessions, SPH & Inventory)
+             ================================================================ */}
+          {activeTab === 'Food & Beverage' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-burger"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Food &amp; Beverage</span>
+                    </div>
+                    <h1 className="fra-view-title">Concessions &amp; Food &amp; Beverage (F&amp;B) Analytics</h1>
+                    <p className="fra-view-subtitle">Lounge concessions, spend per head (SPH) optimization, and FSSAI inventory tracking</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => {
+                    showToast('Concessions restock order sent to central commissary.');
+                  }}>
+                    <i className="fa-solid fa-boxes-stacked mr-1"></i> Order Inventory
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => handleNavClick('Reports')}>
+                    <i className="fa-solid fa-file-invoice mr-1"></i> F&amp;B Tax Ledger
+                  </button>
+                </div>
+              </div>
+
+              {/* Concessions Metrics Strip */}
+              <div className="fra-location-specs-strip">
+                <div className="fra-spec-chip highlight">
+                  <i className="fa-solid fa-burger"></i>
+                  <span>Food Revenue: <strong>{metrics[10]?.value || '₹29.5K'}</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-utensils"></i>
+                  <span>Spend Per Head: <strong>{metrics[7]?.value || '₹110'}</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-cart-shopping"></i>
+                  <span>F&amp;B Conversion: <strong>62% Attached</strong></span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-receipt"></i>
+                  <span>Avg Ticket + F&amp;B: <strong>₹350 Combined</strong></span>
+                </div>
+              </div>
+
+              {/* Concessions Menu Items Grid */}
+              <div className="fra-section-card">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-solid fa-cookie-bite" style={{ color: '#f59e0b' }}></i>
+                    Concessions Lounge &amp; Food Service Items
+                  </h2>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>Live Commissary Inventory</span>
+                </div>
+
+                <div className="fra-fnb-menu-grid">
+                  {[
+                    { name: "Cretors Gold Caramel Popcorn", cat: "Snacks", price: "₹210", sales: "142 tubs", margin: "84%", stock: "Optimal" },
+                    { name: "Peri Peri Cheese Nachos", cat: "Warm Bites", price: "₹240", sales: "98 trays", margin: "78%", stock: "Optimal" },
+                    { name: "Artisan Cold Brew Coffee", cat: "Beverages", price: "₹180", sales: "64 cups", margin: "82%", stock: "Refill Soon" },
+                    { name: "Gourmet Slider Box (Veg/Non)", cat: "Lounge Meal", price: "₹320", sales: "45 orders", margin: "71%", stock: "Optimal" },
+                    { name: "Choco-Lava Tub Ice Cream", cat: "Dessert", price: "₹160", sales: "82 tubs", margin: "75%", stock: "Optimal" }
+                  ].map((item, idx) => (
+                    <div key={idx} className="fra-fnb-menu-card">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '10px', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>{item.cat}</span>
+                        <span style={{ fontSize: '10px', background: item.stock === 'Optimal' ? 'rgba(16, 185, 129, 0.16)' : 'rgba(245, 158, 11, 0.16)', color: item.stock === 'Optimal' ? '#34d399' : '#fbbf24', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                          {item.stock}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff' }}>{item.name}</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                        <span style={{ fontSize: '1rem', fontWeight: 800, color: '#f59e0b' }}>{item.price}</span>
+                        <span style={{ fontSize: '11px', color: '#94a3b8' }}>{item.sales} sold &bull; {item.margin} margin</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* FSSAI Food Hygiene & SOP Card */}
+              <div className="fra-smart-tile">
+                <div className="fra-smart-tile-header">
+                  <div className="fra-smart-tile-title">
+                    <i className="fa-solid fa-shield-halved" style={{ color: '#10b981' }}></i>
+                    <span>FSSAI Hygiene &amp; Concessions Quality Assurance</span>
+                  </div>
+                  <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                    Grade A+ Verified
+                  </span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Cretors Kettle Sanitization</div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#34d399', marginTop: '2px' }}>Daily Heat’n Kleen Done</div>
+                    <div style={{ fontSize: '10px', color: '#cbd5e1' }}>Signed off by duty manager</div>
+                  </div>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Chiller Temperature</div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#38bdf8', marginTop: '2px' }}>3.8°C (Norm 2°C - 5°C)</div>
+                    <div style={{ fontSize: '10px', color: '#cbd5e1' }}>Beverage &amp; Dairy chilling compliant</div>
+                  </div>
+                  <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Inventory FIFO Control</div>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#f59e0b', marginTop: '2px' }}>Zero Batch Expiries</div>
+                    <div style={{ fontSize: '10px', color: '#cbd5e1' }}>First-In First-Out rotation audited</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 6: MOVIES (Cinema Programming & Show Schedules)
+             ================================================================ */}
+          {activeTab === 'Movies' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-film"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Movies</span>
+                    </div>
+                    <h1 className="fra-view-title">Cinema Programming &amp; Screen Show Schedules</h1>
+                    <p className="fra-view-subtitle">Auditorium scheduling, Christie 4K laser projection specs, and DCI KDM license status</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => handleNavClick('Operations')}>
+                    <i className="fa-solid fa-sliders mr-1"></i> Screening Controls
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => showToast('DCI KDM license key ingested and verified for Screen 1 & 2.')}>
+                    <i className="fa-solid fa-key mr-1"></i> Ingest KDM
+                  </button>
+                </div>
+              </div>
+
+              {/* Screen Showcase Cards */}
+              <div className="fra-screens-showcase-grid">
+                {shows.map((s, idx) => (
+                  <div key={idx} className="fra-smart-tile" style={{ margin: 0 }}>
+                    <div className="fra-smart-tile-header">
+                      <div className="fra-smart-tile-title">
+                        <i className="fa-solid fa-display" style={{ color: '#60a5fa' }}></i>
+                        <span>{s.screen}</span>
+                      </div>
+                      <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                        Live Showtime
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {s.movie}
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '14px', padding: '1rem' }}>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.35rem' }}>{s.movie}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '11px', color: '#94a3b8', marginBottom: '0.85rem' }}>
+                        <span><i className="fa-regular fa-clock mr-1"></i> {s.time}</span>
+                        <span>&bull;</span>
+                        <span>Christie 4K Laser</span>
+                        <span>&bull;</span>
+                        <span>Dolby Atmos 7.1</span>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '130px' }}>
-                        <div className="fra-progress-track" style={{ flex: 1, height: '6px' }}>
-                          <div 
-                            className="fra-progress-fill" 
-                            style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}
-                          ></div>
-                        </div>
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#34d399', whiteSpace: 'nowrap' }}>
-                          {s.occupancy}%
-                          {s.seatsBooked && s.totalSeats ? (
-                            <span style={{ fontSize: '10px', color: '#94a3b8', marginLeft: '3px', fontWeight: 500 }}>
-                              ({s.seatsBooked}/{s.totalSeats})
-                            </span>
-                          ) : null}
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <span style={{ fontSize: '11px', color: '#cbd5e1', fontWeight: 600 }}>Auditorium Occupancy</span>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#34d399' }}>
+                          {s.occupancy}% {s.seatsBooked && s.totalSeats ? `(${s.seatsBooked}/${s.totalSeats} seats)` : ''}
                         </span>
+                      </div>
+                      <div className="fra-progress-track" style={{ height: '8px' }}>
+                        <div className="fra-progress-fill" style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}></div>
+                      </div>
+                    </div>
+
+                    <div className="fra-smart-tile-meta-grid">
+                      <div className="fra-smart-tile-meta-item">
+                        <span>Aspect Ratio</span>
+                        <strong style={{ color: '#f59e0b' }}>{idx === 0 ? 'Scope 2.39:1' : 'Flat 1.85:1'}</strong>
+                      </div>
+                      <div className="fra-smart-tile-meta-item">
+                        <span>DCI KDM License</span>
+                        <strong style={{ color: '#34d399' }}>Active &bull; Validated</strong>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="fra-smart-tile-meta-grid">
-                <div className="fra-smart-tile-meta-item">
-                  <span>Projection Core</span>
-                  <strong style={{ color: '#34d399' }}>Christie 4K Laser</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Sound Audio</span>
-                  <strong style={{ color: '#38bdf8' }}>Dolby Atmos 7.1</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Tile 2: Box Office Realtime Velocity & POS Telemetry */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-chart-line" style={{ color: '#10b981' }}></i>
-                  <span>Box Office &amp; POS Telemetry</span>
-                </div>
-                <span style={{ fontSize: '11px', background: 'rgba(245, 158, 11, 0.16)', color: '#fbbf24', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
-                  {currentLocation.hasApiIntegration ? 'Cloud POS Live' : 'Cloud POS'}
-                </span>
-              </div>
-
-              {/* 4-Stat Grid from Real Metrics */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Today&apos;s Revenue</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[0]?.value || '₹1.02L'}</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
-                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[0]?.trend || '+8.2%'}
-                  </div>
-                </div>
-
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Admissions</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[4]?.value || '268'}</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
-                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[4]?.trend || '+7.2%'}
-                  </div>
-                </div>
-
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Spend Per Head</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[7]?.value || '₹110'}</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
-                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[7]?.trend || '+4.2%'}
-                  </div>
-                </div>
-
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Occupancy Avg</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[5]?.value || '84%'}</div>
-                  <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
-                    <i className="fa-solid fa-arrow-trend-up"></i> {metrics[5]?.trend || '+3.5%'}
-                  </div>
-                </div>
-              </div>
-
-              <div className="fra-smart-tile-meta-grid">
-                <div className="fra-smart-tile-meta-item">
-                  <span>POS Sync Latency</span>
-                  <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>DCP KDM License</span>
-                  <strong style={{ color: '#34d399' }}>Active &bull; Validated</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Tile 3: Facility & Screening Environment Controls */}
-            <div className="fra-smart-tile">
-              <div className="fra-smart-tile-header">
-                <div className="fra-smart-tile-title">
-                  <i className="fa-solid fa-sliders" style={{ color: '#38bdf8' }}></i>
-                  <span>Facility &amp; Screening Controls</span>
-                </div>
-                <span style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
-                  Calibrated
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
-                {/* Ambience Lighting Switch */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                    <i className="fa-solid fa-lightbulb" style={{ color: ambientLightsOn ? '#f59e0b' : '#64748b', fontSize: '1rem' }}></i>
-                    <div 
-                      className="fra-smart-switch" 
-                      style={{ background: ambientLightsOn ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
-                      onClick={() => {
-                        setAmbientLightsOn(!ambientLightsOn);
-                        showToast(`Auditorium Sconces ${!ambientLightsOn ? 'set to Soft Gold (Ambient)' : 'dimmed for Showtime'}`);
-                      }}
-                      title="Toggle Ambience Lighting"
-                    >
-                      <div className="fra-smart-switch-handle" style={{ right: ambientLightsOn ? '3px' : '23px' }}></div>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Auditorium Sconces</div>
-                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>{ambientLightsOn ? 'Soft Gold 35%' : 'Dimmed (0%)'}</div>
-                </div>
-
-                {/* Scope Masking Curtains */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                    <i className="fa-solid fa-dungeon" style={{ color: curtainsClosed ? '#38bdf8' : '#64748b', fontSize: '1rem' }}></i>
-                    <div 
-                      className="fra-smart-switch" 
-                      style={{ background: curtainsClosed ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
-                      onClick={() => {
-                        setCurtainsClosed(!curtainsClosed);
-                        showToast(`Screen Side Masking ${!curtainsClosed ? 'locked to Scope 2.39:1' : 'opened for Walk-in'}`);
-                      }}
-                      title="Toggle Screen Masking"
-                    >
-                      <div className="fra-smart-switch-handle" style={{ right: curtainsClosed ? '3px' : '23px' }}></div>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Scope Masking</div>
-                  <div style={{ fontSize: '10px', color: '#94a3b8' }}>{curtainsClosed ? 'Scope 2.39:1 Locked' : 'Open / 16:9'}</div>
-                </div>
-              </div>
-
-              <div className="fra-smart-tile-meta-grid">
-                <div className="fra-smart-tile-meta-item">
-                  <span>Auditorium VRV</span>
-                  <strong style={{ color: '#38bdf8' }}>{auditoriumTemp}&deg;C Daikin Norm</strong>
-                </div>
-                <div className="fra-smart-tile-meta-item">
-                  <span>Air Filtration</span>
-                  <strong style={{ color: '#34d399' }}>HEPA 99.8% Active</strong>
-                </div>
-              </div>
-            </div>
-
-          </section>
-
-          {/* Location Property Specs Strip */}
-          <div className="fra-location-specs-strip" id="fra-specs-section">
-            <div className="fra-spec-chip">
-              <i className="fa-solid fa-film"></i>
-              <span>{currentLocation.totalScreens} Luxury Auditoriums</span>
-            </div>
-            <div className="fra-spec-chip">
-              <i className="fa-solid fa-couch"></i>
-              <span>{currentLocation.totalSeats} Total Premium Seats</span>
-            </div>
-            <div className="fra-spec-chip">
-              <i className="fa-solid fa-location-dot"></i>
-              <span>{currentLocation.city}, {currentLocation.state}</span>
-            </div>
-            {currentLocation.hasApiIntegration ? (
-              <div className="fra-spec-chip highlight">
-                <i className="fa-solid fa-bolt"></i>
-                <span>Live POS Synchronized (ASMX)</span>
-              </div>
-            ) : (
-              <div className="fra-spec-chip">
-                <i className="fa-solid fa-cloud-arrow-up"></i>
-                <span>Enterprise Cloud POS Connected</span>
-              </div>
-            )}
-            <div className="fra-spec-chip">
-              <i className="fa-solid fa-user-tie"></i>
-              <span>Partner: {currentLocation.partnerName}</span>
-            </div>
-          </div>
-
-          {/* KPI Metrics Grid (12 VisionOS Frosted Glass Tiles) */}
-          <section className="fra-metrics-grid" id="fra-analytics-section">
-            {metrics.map((m, idx) => {
-              const meta = getMetricMeta(m.label);
-              return (
-                <div key={idx} className="fra-metric-card">
-                  <div className="fra-metric-header">
-                    <div className="fra-metric-title-wrap">
-                      <div className="fra-metric-icon-box" style={{ color: meta.color, background: meta.bg }}>
-                        <i className={`fa-solid ${meta.icon}`}></i>
-                      </div>
-                      <span className="fra-metric-label">{m.label}</span>
-                    </div>
-                    {renderSparkline(m.sparkline, m.isUp, idx)}
-                  </div>
-                  <div className="fra-metric-value">{m.value}</div>
-                  <div className={`fra-metric-trend ${m.isUp ? 'up' : 'down'}`}>
-                    <i className={`fa-solid ${m.isUp ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}`}></i>
-                    <span>{m.trend} vs last period</span>
-                  </div>
-                </div>
-              );
-            })}
-          </section>
-
-          {/* Multi-Tenant Connplex Franchise Revenue Dashboard (Vista Integration Engine) */}
-          <div className="space-y-4" id="fra-finance-section">
-            <ConnplexFranchiseRevenueDashboard
-              currentLocationKey={selectedLocationKey}
-              userRole={currentUser?.role || 'partner'}
-              onNotification={showToast}
-            />
-          </div>
-
-          {/* Ahilyanagar Specialized Views & Raw API Console */}
-          {selectedLocationKey === 'ahilyanagar' && (
-            <div className="space-y-4">
-              <AhilyanagarFranchiseDashboard 
-                onNotification={showToast} 
-                defaultExpanded={false} 
-              />
-
-              <div style={{
-                background: 'rgba(22, 30, 48, 0.65)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid var(--fra-glass-border)',
-                borderRadius: '24px',
-                padding: '1.25rem 1.65rem',
-                boxShadow: 'var(--fra-glass-shadow-sm)'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '0.85rem'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                    <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '12px',
-                      background: 'rgba(245, 158, 11, 0.18)',
-                      color: '#f59e0b',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '18px',
-                      boxShadow: '0 0 16px rgba(245, 158, 11, 0.25)'
-                    }}>
-                      <i className="fa-solid fa-server"></i>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff' }}>
-                        Live POS ASMX Raw WebService &amp; Sync Architecture
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                        Endpoint: <code>/api.asmx/GetDailyTicketAndFnbData</code> &bull; Cinema ID: <code>CL16</code> (or <code>CN01</code>)
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setApiDocsExpanded(!apiDocsExpanded)}
-                    style={{
-                      background: apiDocsExpanded ? 'rgba(245, 158, 11, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                      border: apiDocsExpanded ? '1px solid rgba(245, 158, 11, 0.5)' : '1px solid rgba(255, 255, 255, 0.15)',
-                      color: apiDocsExpanded ? '#f59e0b' : '#e2e8f0',
-                      padding: '8px 18px',
-                      borderRadius: '9999px',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    <i className={`fa-solid ${apiDocsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-                    <span>{apiDocsExpanded ? 'Hide Raw Integration Docs' : 'View Raw API Docs & Sync Scripts'}</span>
-                  </button>
-                </div>
-
-                {apiDocsExpanded && (
-                  <div style={{ marginTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '1.25rem' }}>
-                    <AhilyanagarApiIntegration 
-                      key={`api-${apiDocsExpanded}`}
-                      onNotification={showToast} 
-                      defaultExpanded={true} 
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Middle Layout - Live Snapshot & Quick Actions */}
-          <div className="fra-mid-grid">
-            
-            {/* Live Operations Snapshot */}
-            <section className="fra-section-card" id="fra-operations-snapshot">
-              <div className="fra-section-header">
-                <h2 className="fra-section-title">
-                  <i className="fa-solid fa-tower-broadcast" style={{ color: '#10b981' }}></i>
-                  Live Operations Snapshot
-                </h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {searchQuery && (
-                    <span style={{ fontSize: '11px', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '2px 8px', borderRadius: '4px' }}>
-                      Filtered by &quot;{searchQuery}&quot;
-                    </span>
-                  )}
+              {/* Live Operations Snapshot Table */}
+              <section className="fra-section-card" id="fra-operations-snapshot">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-solid fa-list-check" style={{ color: '#10b981' }}></i>
+                    All Active Screenings &amp; Time Slots
+                  </h2>
                   <span className="fra-header-badge">{filteredShows.length} SHOWS ACTIVE</span>
                 </div>
-              </div>
 
-              <div className="fra-table-wrap">
-                <table className="fra-table">
-                  <thead>
-                    <tr>
-                      <th>Auditorium</th>
-                      <th>Playing Now</th>
-                      <th>Time Slot</th>
-                      <th>Occupancy &amp; Seats</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredShows.length === 0 ? (
+                <div className="fra-table-wrap">
+                  <table className="fra-table">
+                    <thead>
                       <tr>
-                        <td colSpan={4} style={{ textAlign: 'center', color: 'var(--fra-text-muted)', padding: '2.5rem' }}>
-                          <i className="fa-solid fa-magnifying-glass" style={{ fontSize: '1.5rem', marginBottom: '0.5rem', display: 'block' }}></i>
-                          No active shows matching &quot;{searchQuery}&quot;.
-                        </td>
+                        <th>Auditorium</th>
+                        <th>Playing Now</th>
+                        <th>Time Slot</th>
+                        <th>Occupancy &amp; Seats</th>
                       </tr>
-                    ) : (
-                      filteredShows.map((s, idx) => (
+                    </thead>
+                    <tbody>
+                      {filteredShows.map((s, idx) => (
                         <tr key={idx}>
                           <td className="fra-screen-name">
                             <i className="fa-solid fa-tv" style={{ color: '#60a5fa', fontSize: '12px' }}></i>
                             <span>{s.screen}</span>
                           </td>
                           <td className="fra-movie-title">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                              <span>{s.movie}</span>
-                            </div>
+                            <span>{s.movie}</span>
                           </td>
                           <td className="fra-showtime">
                             <i className="fa-regular fa-clock" style={{ fontSize: '11px', color: '#94a3b8' }}></i>
@@ -1647,13 +2368,7 @@ export default function FranchiseePortal() {
                           <td>
                             <div className="fra-progress-container">
                               <div className="fra-progress-track">
-                                <div 
-                                  className="fra-progress-fill" 
-                                  style={{ 
-                                    width: `${s.occupancy}%`,
-                                    background: getOccupancyGradient(s.occupancy)
-                                  }}
-                                ></div>
+                                <div className="fra-progress-fill" style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}></div>
                               </div>
                               <span className="fra-progress-percent">
                                 {s.occupancy}%
@@ -1666,806 +2381,1322 @@ export default function FranchiseePortal() {
                             </div>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          )}
 
-            {/* Quick Actions Shortcuts */}
-            <section className="fra-section-card">
-              <div className="fra-section-header">
-                <h2 className="fra-section-title">
-                  <i className="fa-solid fa-bolt" style={{ color: '#f59e0b' }}></i>
-                  Quick Actions
-                </h2>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>1-Click Shortcuts</span>
-              </div>
-              <div className="fra-actions-grid">
-                {[
-                  { label: "Ahilyanagar API Sync", icon: "fa-server", color: "#f59e0b" },
-                  { label: "Download Daily Report", icon: "fa-file-arrow-down", color: "#10b981" },
-                  { label: "Download Monthly Report", icon: "fa-file-invoice-dollar", color: "#3b82f6" },
-                  { label: "Create Maintenance Ticket", icon: "fa-wrench", color: "#ec4899" },
-                  { label: "View Live Screens", icon: "fa-display", color: "#06b6d4" },
-                  { label: "Export Revenue", icon: "fa-upload", color: "#f59e0b" },
-                  { label: "Cinema Property Specs", icon: "fa-building", color: "#8b5cf6" },
-                  { label: "Order Inventory", icon: "fa-boxes-stacked", color: "#f43f5e" }
-                ].map((act, idx) => (
-                  <button 
-                    key={idx} 
-                    className="fra-action-item"
-                    onClick={() => handleActionClick(act.label)}
-                  >
-                    <div className="fra-action-icon" style={{ color: act.color }}>
-                      <i className={`fa-solid ${act.icon}`}></i>
+          {/* ================================================================
+              VIEW 7: OPERATIONS (Facility Controls & Screening Systems)
+             ================================================================ */}
+          {activeTab === 'Operations' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-gears"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Operations</span>
                     </div>
-                    <span className="fra-action-label">{act.label}</span>
+                    <h1 className="fra-view-title">Auditorium Telemetry &amp; Facility Control Systems</h1>
+                    <p className="fra-view-subtitle">Live IoT cinema environmental controls, Christie projector diagnostics, and Daikin VRV HVAC</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => {
+                    handleNavClick('Support');
+                    setActiveSupportTab('tickets');
+                    setTicketCategory('Hardware / Projection');
+                    setTicketSubject('Auditorium Telemetry Check');
+                  }}>
+                    <i className="fa-solid fa-wrench mr-1"></i> Log Maintenance Ticket
                   </button>
-                ))}
+                  <button className="fra-btn fra-btn-outline" onClick={() => showToast('Dolby Atmos pink noise sound sweep executed. All channels normal.')}>
+                    <i className="fa-solid fa-volume-high mr-1"></i> Calibrate Audio
+                  </button>
+                </div>
               </div>
-            </section>
 
-          </div>
-
-          {/* Bottom Grid - Events, News, Marketing */}
-          <div className="fra-bottom-grid">
-            
-            {/* Calendar & Events */}
-            <section className="fra-section-card">
-              <div className="fra-section-header">
-                <h2 className="fra-section-title">
-                  <i className="fa-regular fa-calendar-check" style={{ color: '#f59e0b' }}></i>
-                  Calendar &amp; Events
-                </h2>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Upcoming</span>
-              </div>
-              <div className="fra-list">
-                {events.map((e, idx) => {
-                  const tagStyle = getEventTypeColor(e.type);
-                  return (
-                    <div key={idx} className="fra-event-item">
-                      <div className="fra-event-date-badge">
-                        <span className="fra-event-month">{e.month}</span>
-                        <span className="fra-event-day">{e.date}</span>
-                      </div>
-                      <div className="fra-event-details">
-                        <span className="fra-event-title">{e.title}</span>
-                        <span 
-                          className="fra-event-type" 
-                          style={{ 
-                            color: tagStyle.color, 
-                            background: tagStyle.bg,
-                            padding: '1px 6px',
-                            borderRadius: '4px',
-                            display: 'inline-block',
-                            alignSelf: 'flex-start'
-                          }}
-                        >
-                          {e.type}
-                        </span>
-                      </div>
+              {/* Cockpit Section (Tile 1, Tile 2, Tile 3) */}
+              <section className="fra-smart-cockpit-grid" id="fra-cockpit-section">
+                {/* Live Auditoriums & Screening Status */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-film" style={{ color: '#f59e0b' }}></i>
+                      <span>Live Auditoriums &amp; Screening Status</span>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* News & Announcements */}
-            <section className="fra-section-card">
-              <div className="fra-section-header">
-                <h2 className="fra-section-title">
-                  <i className="fa-solid fa-newspaper" style={{ color: '#38bdf8' }}></i>
-                  News &amp; Alerts
-                </h2>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Network Feed</span>
-              </div>
-              <div className="fra-list">
-                {newsList.map((n, idx) => {
-                  const tagStyle = getNewsTagColor(n.tag);
-                  return (
-                    <div key={idx} className="fra-news-item">
-                      <div className="fra-news-meta">
-                        <span 
-                          className="fra-news-tag"
-                          style={{ color: tagStyle.color, background: tagStyle.bg }}
-                        >
-                          {n.tag}
-                        </span>
-                        <span className="fra-news-time">
-                          <i className="fa-regular fa-clock mr-1" style={{ fontSize: '10px' }}></i> {n.time}
-                        </span>
-                      </div>
-                      <span className="fra-news-title" onClick={() => handleActionClick(n.title)}>
-                        {n.title}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Marketing & Campaigns */}
-            <section className="fra-section-card" id="fra-marketing-section">
-              <div className="fra-section-header">
-                <h2 className="fra-section-title">
-                  <i className="fa-solid fa-bullhorn" style={{ color: '#ec4899' }}></i>
-                  Marketing &amp; Promo
-                </h2>
-                <span style={{ fontSize: '11px', color: '#94a3b8' }}>Live Campaigns</span>
-              </div>
-              <div className="fra-list">
-                {campaigns.map((c, idx) => (
-                  <div key={idx} className="fra-marketing-campaign">
-                    <div className="fra-campaign-info">
-                      <span className="fra-campaign-name">{c.name}</span>
-                      <span className="fra-campaign-metrics">
-                        Reach <strong>{c.reach}</strong> &bull; CTR <strong>{c.ctr}</strong>
-                      </span>
-                    </div>
-                    <span className={`fra-campaign-badge ${c.status.toLowerCase()}`}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.status === 'ACTIVE' ? '#10b981' : '#f59e0b', display: 'inline-block', marginRight: '4px' }}></span>
-                      {c.status}
+                    <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {currentLocation.totalScreens} Screens Active
                     </span>
                   </div>
-                ))}
-              </div>
-              <div className="fra-marketing-actions">
-                <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleActionClick('Poster Library')}>
-                  <i className="fa-regular fa-image mr-1"></i> Poster Library
-                </button>
-                <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center' }} onClick={() => handleActionClick('Social Toolkit')}>
-                  <i className="fa-solid fa-share-nodes mr-1"></i> Social Toolkit
-                </button>
-              </div>
-            </section>
 
-          </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    {[
+                      shows.find(s => s.screen.toLowerCase().includes('screen 1')) || shows[0],
+                      shows.find(s => s.screen.toLowerCase().includes('screen 2')) || shows[1]
+                    ].filter(Boolean).map((s, idx) => (
+                      <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '0.65rem 0.85rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <i className="fa-solid fa-tv" style={{ fontSize: '11px', color: '#60a5fa' }}></i>
+                            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>{s.screen}</span>
+                          </div>
+                          <span style={{ fontSize: '10px', color: '#94a3b8' }}>
+                            <i className="fa-regular fa-clock" style={{ marginRight: '3px' }}></i> {s.time}
+                          </span>
+                        </div>
 
-          {/* Support Center Section */}
-          <section className="fra-support-section" id="fra-support-section">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <h2 className="fra-section-title">
-                <i className="fa-solid fa-headset" style={{ color: '#10b981' }}></i>
-                Partner Priority Support Center
-              </h2>
-              <span style={{ fontSize: '12px', color: '#94a3b8' }}>24/7 Priority Assistance for Cinema Franchise Owners</span>
-            </div>
-            
-            <div className="fra-support-grid">
-              {[
-                { id: 'tickets', title: "Raise Ticket", desc: "Technical or POS request", icon: "fa-ticket", color: "#3b82f6" },
-                { id: 'chat', title: "Live Chat", desc: "Chat with ops team", icon: "fa-comments", color: "#10b981" },
-                { id: 'knowledge', title: "Knowledge Base", desc: "120 Cinema SOP guides", icon: "fa-book-open", color: "#f59e0b" },
-                { id: 'training', title: "Training Videos", desc: "18 Cinema SOP modules", icon: "fa-video", color: "#8b5cf6" },
-                { id: 'emergency', title: "Emergency Line", desc: "Rapid response hotline", icon: "fa-phone-flip", color: "#ef4444" }
-              ].map((sup, idx) => {
-                const isActive = activeSupportTab === sup.id;
-                return (
-                  <div 
-                    key={idx} 
-                    className={`fra-support-item ${isActive ? 'active' : ''}`}
-                    onClick={() => handleActionClick(sup.title)}
-                  >
-                    <div className="fra-support-icon">
-                      <i className={`fa-solid ${sup.icon}`}></i>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem' }}>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#e2e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {s.movie}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '130px' }}>
+                            <div className="fra-progress-track" style={{ flex: 1, height: '6px' }}>
+                              <div 
+                                className="fra-progress-fill" 
+                                style={{ width: `${s.occupancy}%`, background: getOccupancyGradient(s.occupancy) }}
+                              ></div>
+                            </div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#34d399', whiteSpace: 'nowrap' }}>
+                              {s.occupancy}%
+                              {s.seatsBooked && s.totalSeats ? (
+                                <span style={{ fontSize: '10px', color: '#94a3b8', marginLeft: '3px', fontWeight: 500 }}>
+                                  ({s.seatsBooked}/{s.totalSeats})
+                                </span>
+                              ) : null}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Projection Core</span>
+                      <strong style={{ color: '#34d399' }}>Christie 4K Laser</strong>
                     </div>
-                    <span className="fra-support-title">{sup.title}</span>
-                    <span className="fra-support-desc">{sup.desc}</span>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Sound Audio</span>
+                      <strong style={{ color: '#38bdf8' }}>Dolby Atmos 7.1</strong>
+                    </div>
                   </div>
-                );
-              })}
+                </div>
+
+                {/* Box Office Realtime Velocity & POS Telemetry */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-chart-line" style={{ color: '#10b981' }}></i>
+                      <span>Box Office &amp; POS Telemetry</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(245, 158, 11, 0.16)', color: '#fbbf24', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      {currentLocation.hasApiIntegration ? 'Cloud POS Live' : 'Cloud POS'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Today&apos;s Revenue</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[0]?.value || '₹1.02L'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[0]?.trend || '+8.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Admissions</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[4]?.value || '268'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[4]?.trend || '+7.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Spend Per Head</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[7]?.value || '₹110'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[7]?.trend || '+4.2%'}
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.65rem 0.8rem' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 600 }}>Occupancy Avg</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', margin: '2px 0' }}>{metrics[5]?.value || '84%'}</div>
+                      <div style={{ fontSize: '10px', color: '#34d399', fontWeight: 700 }}>
+                        <i className="fa-solid fa-arrow-trend-up"></i> {metrics[5]?.trend || '+3.5%'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>POS Sync Latency</span>
+                      <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>DCP KDM License</span>
+                      <strong style={{ color: '#34d399' }}>Active &bull; Validated</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Facility & Screening Environment Controls */}
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-sliders" style={{ color: '#38bdf8' }}></i>
+                      <span>Facility &amp; Screening Controls</span>
+                    </div>
+                    <span style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '3px 8px', borderRadius: '9999px', fontWeight: 700 }}>
+                      Calibrated
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <i className="fa-solid fa-lightbulb" style={{ color: ambientLightsOn ? '#f59e0b' : '#64748b', fontSize: '1rem' }}></i>
+                        <div 
+                          className="fra-smart-switch" 
+                          style={{ background: ambientLightsOn ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
+                          onClick={() => {
+                            setAmbientLightsOn(!ambientLightsOn);
+                            showToast(`Auditorium Sconces ${!ambientLightsOn ? 'set to Soft Gold (Ambient)' : 'dimmed for Showtime'}`);
+                          }}
+                          title="Toggle Ambience Lighting"
+                        >
+                          <div className="fra-smart-switch-handle" style={{ right: ambientLightsOn ? '3px' : '23px' }}></div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Auditorium Sconces</div>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>{ambientLightsOn ? 'Soft Gold 35%' : 'Dimmed (0%)'}</div>
+                    </div>
+
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '0.7rem 0.8rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                        <i className="fa-solid fa-dungeon" style={{ color: curtainsClosed ? '#38bdf8' : '#64748b', fontSize: '1rem' }}></i>
+                        <div 
+                          className="fra-smart-switch" 
+                          style={{ background: curtainsClosed ? '#10b981' : '#475569', transform: 'scale(0.8)', transformOrigin: 'right center' }}
+                          onClick={() => {
+                            setCurtainsClosed(!curtainsClosed);
+                            showToast(`Screen Side Masking ${!curtainsClosed ? 'locked to Scope 2.39:1' : 'opened for Walk-in'}`);
+                          }}
+                          title="Toggle Screen Masking"
+                        >
+                          <div className="fra-smart-switch-handle" style={{ right: curtainsClosed ? '3px' : '23px' }}></div>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#ffffff' }}>Scope Masking</div>
+                      <div style={{ fontSize: '10px', color: '#94a3b8' }}>{curtainsClosed ? 'Scope 2.39:1 Locked' : 'Open / 16:9'}</div>
+                    </div>
+                  </div>
+
+                  <div className="fra-smart-tile-meta-grid">
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Auditorium VRV</span>
+                      <strong style={{ color: '#38bdf8' }}>{auditoriumTemp}&deg;C Daikin Norm</strong>
+                    </div>
+                    <div className="fra-smart-tile-meta-item">
+                      <span>Air Filtration</span>
+                      <strong style={{ color: '#34d399' }}>HEPA 99.8% Active</strong>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
+          )}
 
-            {/* Interactive Working Support Console */}
-            {activeSupportTab && (
-              <div className="fra-support-console" id="fra-support-console">
-                {/* Console Tab Switcher & Close */}
-                <div className="fra-support-tabs-bar">
-                  <div className="fra-support-nav-group">
-                    <button
-                      type="button"
-                      className={`fra-support-nav-pill ${activeSupportTab === 'tickets' ? 'active' : ''}`}
-                      onClick={() => setActiveSupportTab('tickets')}
-                    >
-                      <i className="fa-solid fa-ticket" style={{ color: activeSupportTab === 'tickets' ? '#0b0f19' : '#3b82f6' }}></i>
-                      <span>Raise Ticket</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`fra-support-nav-pill ${activeSupportTab === 'chat' ? 'active' : ''}`}
-                      onClick={() => setActiveSupportTab('chat')}
-                    >
-                      <i className="fa-solid fa-comments" style={{ color: activeSupportTab === 'chat' ? '#0b0f19' : '#10b981' }}></i>
-                      <span>Live Chat</span>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`fra-support-nav-pill ${activeSupportTab === 'knowledge' ? 'active' : ''}`}
-                      onClick={() => setActiveSupportTab('knowledge')}
-                    >
-                      <i className="fa-solid fa-book-open" style={{ color: activeSupportTab === 'knowledge' ? '#0b0f19' : '#f59e0b' }}></i>
-                      <span>Knowledge Base</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`fra-support-nav-pill ${activeSupportTab === 'training' ? 'active' : ''}`}
-                      onClick={() => setActiveSupportTab('training')}
-                    >
-                      <i className="fa-solid fa-video" style={{ color: activeSupportTab === 'training' ? '#0b0f19' : '#8b5cf6' }}></i>
-                      <span>Training Videos</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`fra-support-nav-pill ${activeSupportTab === 'emergency' ? 'active' : ''}`}
-                      onClick={() => setActiveSupportTab('emergency')}
-                    >
-                      <i className="fa-solid fa-phone-flip" style={{ color: activeSupportTab === 'emergency' ? '#0b0f19' : '#ef4444' }}></i>
-                      <span>Emergency Hotline</span>
-                    </button>
+          {/* ================================================================
+              VIEW 8: MARKETING (Campaigns, Social Toolkit & Calendar)
+             ================================================================ */}
+          {activeTab === 'Marketing' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-bullhorn"></i>
                   </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Marketing</span>
+                    </div>
+                    <h1 className="fra-view-title">Marketing Campaigns, Social Media &amp; Local Promotion</h1>
+                    <p className="fra-view-subtitle">Franchise promotional outreach, festive campaigns, and official Connplex digital toolkits</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => showToast('Opened Connplex 4K Poster Library')}>
+                    <i className="fa-regular fa-image mr-1"></i> Poster Library
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => showToast('Downloaded Social Media Reels & Carousel Toolkit')}>
+                    <i className="fa-solid fa-share-nodes mr-1"></i> Social Toolkit
+                  </button>
+                </div>
+              </div>
 
-                  <button
-                    type="button"
-                    className="fra-support-close-btn"
-                    onClick={() => setActiveSupportTab(null)}
-                    aria-label="Close Support Console"
-                  >
-                    <i className="fa-solid fa-xmark"></i>
-                    <span>Close</span>
+              {/* Marketing Campaigns Section */}
+              <section className="fra-section-card" id="fra-marketing-section">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-solid fa-bullhorn" style={{ color: '#ec4899' }}></i>
+                    Live Promotional Campaigns
+                  </h2>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>Active Franchisor &amp; Local Campaigns</span>
+                </div>
+
+                <div className="fra-list">
+                  {campaigns.map((c, idx) => (
+                    <div key={idx} className="fra-marketing-campaign">
+                      <div className="fra-campaign-info">
+                        <span className="fra-campaign-name">{c.name}</span>
+                        <span className="fra-campaign-metrics">
+                          Reach <strong>{c.reach}</strong> &bull; CTR <strong>{c.ctr}</strong>
+                        </span>
+                      </div>
+                      <span className={`fra-campaign-badge ${c.status.toLowerCase()}`}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.status === 'ACTIVE' ? '#10b981' : '#f59e0b', display: 'inline-block', marginRight: '4px' }}></span>
+                        {c.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Calendar & Events */}
+              <section className="fra-section-card">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-regular fa-calendar-check" style={{ color: '#f59e0b' }}></i>
+                    Calendar &amp; Upcoming Events
+                  </h2>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>Upcoming</span>
+                </div>
+                <div className="fra-list">
+                  {events.map((e, idx) => {
+                    const tagStyle = getEventTypeColor(e.type);
+                    return (
+                      <div key={idx} className="fra-event-item">
+                        <div className="fra-event-date-badge">
+                          <span className="fra-event-month">{e.month}</span>
+                          <span className="fra-event-day">{e.date}</span>
+                        </div>
+                        <div className="fra-event-details">
+                          <span className="fra-event-title">{e.title}</span>
+                          <span 
+                            className="fra-event-type" 
+                            style={{ 
+                              color: tagStyle.color, 
+                              background: tagStyle.bg,
+                              padding: '1px 6px',
+                              borderRadius: '4px',
+                              display: 'inline-block',
+                              alignSelf: 'flex-start'
+                            }}
+                          >
+                            {e.type}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 9: REPORTS (Statements, Daily DCR & Ledger Downloads)
+             ================================================================ */}
+          {activeTab === 'Reports' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-file-invoice-dollar"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Reports</span>
+                    </div>
+                    <h1 className="fra-view-title">Box Office Statements, Daily MIS &amp; Financial Reports</h1>
+                    <p className="fra-view-subtitle">Download audited Daily Collection Reports (DCR), monthly royalty reconciliations, and tax ledgers</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => {
+                    showToast(`Downloaded Today's Daily Box Office Collection (DCR) for ${currentLocation.name}.`);
+                  }}>
+                    <i className="fa-solid fa-file-pdf mr-1"></i> Download Today's DCR
+                  </button>
+                  <button className="fra-btn fra-btn-outline" onClick={() => {
+                    showToast(`Exported full financial ledger CSV for ${currentLocation.name}.`);
+                  }}>
+                    <i className="fa-solid fa-file-excel mr-1"></i> Export Ledger CSV
+                  </button>
+                </div>
+              </div>
+
+              {/* 4 Report Cards */}
+              <div className="fra-reports-download-grid">
+                <div className="fra-report-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.16)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
+                      <i className="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Daily Collection Report (DCR)</div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Screen-wise ticket &amp; admissions breakdown</div>
+                    </div>
+                  </div>
+                  <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center', fontSize: '11px', padding: '0.45rem' }} onClick={() => showToast(`Downloaded DCR PDF for ${currentLocation.name}`)}>
+                    <i className="fa-solid fa-download mr-1"></i> Download DCR (PDF)
                   </button>
                 </div>
 
-                {/* 1. TICKETS TAB */}
-                {activeSupportTab === 'tickets' && (
-                  <div className="fra-support-form-grid">
+                <div className="fra-report-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
+                      <i className="fa-solid fa-file-invoice"></i>
+                    </div>
                     <div>
-                      <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <i className="fa-solid fa-ticket" style={{ color: '#3b82f6' }}></i> Log New Operations Ticket
-                      </h3>
-                      <form onSubmit={handleTicketSubmit}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                          <div className="fra-support-field">
-                            <label>Issue Category</label>
-                            <select 
-                              className="fra-support-input"
-                              value={ticketCategory}
-                              onChange={(e) => setTicketCategory(e.target.value)}
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Monthly Royalty Statement</div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Franchise net settlement &amp; distributor share</div>
+                    </div>
+                  </div>
+                  <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center', fontSize: '11px', padding: '0.45rem' }} onClick={() => showToast(`Downloaded Monthly Royalty Statement for ${currentLocation.name}`)}>
+                    <i className="fa-solid fa-download mr-1"></i> Download Statement
+                  </button>
+                </div>
+
+                <div className="fra-report-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
+                      <i className="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Concessions F&amp;B Audit</div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Itemized F&amp;B GST invoices &amp; SPH audit</div>
+                    </div>
+                  </div>
+                  <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center', fontSize: '11px', padding: '0.45rem' }} onClick={() => showToast(`Downloaded Concessions Audit for ${currentLocation.name}`)}>
+                    <i className="fa-solid fa-download mr-1"></i> Download F&amp;B Audit
+                  </button>
+                </div>
+
+                <div className="fra-report-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(168, 85, 247, 0.16)', color: '#c084fc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem' }}>
+                      <i className="fa-solid fa-couch"></i>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Screen Occupancy &amp; Seats</div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>Luxury recliner capacity utilization</div>
+                    </div>
+                  </div>
+                  <button className="fra-btn fra-btn-outline" style={{ justifyContent: 'center', fontSize: '11px', padding: '0.45rem' }} onClick={() => showToast(`Downloaded Seat Utilization Ledger for ${currentLocation.name}`)}>
+                    <i className="fa-solid fa-download mr-1"></i> Download Utilization
+                  </button>
+                </div>
+              </div>
+
+              {/* Audited Daily Breakdown Table */}
+              <div className="fra-section-card">
+                <div className="fra-section-header">
+                  <h2 className="fra-section-title">
+                    <i className="fa-solid fa-clock-rotate-left" style={{ color: '#f59e0b' }}></i>
+                    Audited Daily Collection History (Last 7 Days)
+                  </h2>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>POS ASMX Verified</span>
+                </div>
+
+                <div className="fra-table-wrap">
+                  <table className="fra-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Admissions</th>
+                        <th>Gross Box Office</th>
+                        <th>Concessions F&amp;B</th>
+                        <th>Net Franchise Settlement</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { date: 'Nov 24, 2026', adm: '268', box: '₹1,02,400', fnb: '₹29,480', net: '₹98,240', status: 'Settled' },
+                        { date: 'Nov 23, 2026', adm: '312', box: '₹1,18,560', fnb: '₹34,320', net: '₹1,14,200', status: 'Settled' },
+                        { date: 'Nov 22, 2026', adm: '420', box: '₹1,59,600', fnb: '₹46,200', net: '₹1,53,800', status: 'Settled' },
+                        { date: 'Nov 21, 2026', adm: '445', box: '₹1,69,100', fnb: '₹48,950', net: '₹1,62,400', status: 'Settled' },
+                        { date: 'Nov 20, 2026', adm: '280', box: '₹1,06,400', fnb: '₹30,800', net: '₹1,02,100', status: 'Settled' }
+                      ].map((row, rIdx) => (
+                        <tr key={rIdx}>
+                          <td style={{ fontWeight: 700, color: '#ffffff' }}>{row.date}</td>
+                          <td>{row.adm}</td>
+                          <td style={{ fontWeight: 700, color: '#f59e0b' }}>{row.box}</td>
+                          <td style={{ color: '#38bdf8' }}>{row.fnb}</td>
+                          <td style={{ fontWeight: 700, color: '#34d399' }}>{row.net}</td>
+                          <td>
+                            <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
+                              {row.status}
+                            </span>
+                          </td>
+                          <td>
+                            <button 
+                              type="button" 
+                              className="fra-btn fra-btn-outline" 
+                              style={{ fontSize: '10px', padding: '3px 8px' }}
+                              onClick={() => showToast(`Downloaded invoice statement for ${row.date}`)}
                             >
-                              <option value="Hardware / Projection">Hardware / Christie Laser</option>
-                              <option value="Dolby Atmos Sound">Dolby Atmos 7.1 Audio</option>
-                              <option value="Cloud POS & Ticket Sync">Cloud POS &amp; Ticket Sync</option>
-                              <option value="Daikin VRV Climate">Daikin VRV Climate / HVAC</option>
-                              <option value="Concessions & F&B">Concessions &amp; F&amp;B Popcorn</option>
-                              <option value="Licensing & Compliance">Licensing &amp; Compliance</option>
-                            </select>
-                          </div>
+                              <i className="fa-solid fa-download"></i> PDF
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
 
-                          <div className="fra-support-field">
-                            <label>Auditorium / Screen</label>
-                            <select 
-                              className="fra-support-input"
-                              value={ticketScreen}
-                              onChange={(e) => setTicketScreen(e.target.value)}
-                            >
-                              <option value="Screen 1 (Couple Recliner)">Screen 1 (Couple Recliner)</option>
-                              <option value="Screen 2 (Gold Class)">Screen 2 (Gold Class)</option>
-                              <option value="Box Office POS Counter">Box Office POS Counter</option>
-                              <option value="Concession F&B Lounge">Concession F&amp;B Lounge</option>
-                              <option value="All Cinema Facilities">All Cinema Facilities</option>
-                            </select>
-                          </div>
-                        </div>
+          {/* ================================================================
+              VIEW 10: SUPPORT (Priority Partner NOC & Interactive Helpdesk)
+             ================================================================ */}
+          {activeTab === 'Support' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-headset"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Support</span>
+                    </div>
+                    <h1 className="fra-view-title">Partner Priority Support Center (24/7 Operations NOC)</h1>
+                    <p className="fra-view-subtitle">Dedicated technical assistance, POS sync support, SOP manuals, and direct emergency dispatch</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <a href="tel:18002666753" className="fra-btn fra-btn-primary" style={{ textDecoration: 'none' }} onClick={() => showToast('Calling National NOC: 1800 266 6753')}>
+                    <i className="fa-solid fa-phone mr-1"></i> Call 24/7 Hotline
+                  </a>
+                </div>
+              </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                          <div className="fra-support-field">
-                            <label>Priority SLA</label>
-                            <select 
-                              className="fra-support-input"
-                              value={ticketPriority}
-                              onChange={(e) => setTicketPriority(e.target.value)}
-                            >
-                              <option value="Low">Low (Informational • 48h SLA)</option>
-                              <option value="Medium">Medium (Standard • 24h SLA)</option>
-                              <option value="High">High (Elevated • 8h SLA)</option>
-                              <option value="Critical">Critical (Showtime Blocker • 2h SLA)</option>
-                            </select>
-                          </div>
+              {/* 5 Service Selector Cards */}
+              <div className="fra-support-grid">
+                {[
+                  { id: 'tickets', title: "Raise Ticket", desc: "Technical or POS request", icon: "fa-ticket", color: "#3b82f6" },
+                  { id: 'chat', title: "Live Chat", desc: "Chat with ops team", icon: "fa-comments", color: "#10b981" },
+                  { id: 'knowledge', title: "Knowledge Base", desc: "120 Cinema SOP guides", icon: "fa-book-open", color: "#f59e0b" },
+                  { id: 'training', title: "Training Videos", desc: "18 Cinema SOP modules", icon: "fa-video", color: "#8b5cf6" },
+                  { id: 'emergency', title: "Emergency Line", desc: "Rapid response hotline", icon: "fa-phone-flip", color: "#ef4444" }
+                ].map((sup, idx) => {
+                  const isActive = activeSupportTab === sup.id;
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`fra-support-item ${isActive ? 'active' : ''}`}
+                      onClick={() => setActiveSupportTab(sup.id as any)}
+                    >
+                      <div className="fra-support-icon">
+                        <i className={`fa-solid ${sup.icon}`}></i>
+                      </div>
+                      <span className="fra-support-title">{sup.title}</span>
+                      <span className="fra-support-desc">{sup.desc}</span>
+                    </div>
+                  );
+                })}
+              </div>
 
-                          <div className="fra-support-field">
-                            <label>Summary Subject</label>
-                            <input 
-                              type="text" 
-                              className="fra-support-input"
-                              placeholder="e.g. Screen 1 Laser Chiller Warning"
-                              value={ticketSubject}
-                              onChange={(e) => setTicketSubject(e.target.value)}
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className="fra-support-field">
-                          <label>Trouble Description &amp; Error Log</label>
-                          <textarea 
-                            className="fra-support-input"
-                            rows={3}
-                            placeholder="Provide specific error code, symptoms, or alarm readout..."
-                            value={ticketDesc}
-                            onChange={(e) => setTicketDesc(e.target.value)}
-                          />
-                        </div>
-
-                        <button 
-                          type="submit" 
-                          className="fra-btn fra-btn-primary" 
-                          style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}
-                        >
-                          <i className="fa-solid fa-paper-plane mr-1"></i> Submit Ticket to NOC Helpdesk
-                        </button>
-                      </form>
+              {/* Interactive Working Support Console */}
+              {activeSupportTab && (
+                <div className="fra-support-console" id="fra-support-console">
+                  {/* Console Tab Switcher & Close */}
+                  <div className="fra-support-tabs-bar">
+                    <div className="fra-support-nav-group">
+                      <button
+                        type="button"
+                        className={`fra-support-nav-pill ${activeSupportTab === 'tickets' ? 'active' : ''}`}
+                        onClick={() => setActiveSupportTab('tickets')}
+                      >
+                        <i className="fa-solid fa-ticket" style={{ color: activeSupportTab === 'tickets' ? '#0b0f19' : '#3b82f6' }}></i>
+                        <span>Raise Ticket</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`fra-support-nav-pill ${activeSupportTab === 'chat' ? 'active' : ''}`}
+                        onClick={() => setActiveSupportTab('chat')}
+                      >
+                        <i className="fa-solid fa-comments" style={{ color: activeSupportTab === 'chat' ? '#0b0f19' : '#10b981' }}></i>
+                        <span>Live Chat</span>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`fra-support-nav-pill ${activeSupportTab === 'knowledge' ? 'active' : ''}`}
+                        onClick={() => setActiveSupportTab('knowledge')}
+                      >
+                        <i className="fa-solid fa-book-open" style={{ color: activeSupportTab === 'knowledge' ? '#0b0f19' : '#f59e0b' }}></i>
+                        <span>Knowledge Base</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`fra-support-nav-pill ${activeSupportTab === 'training' ? 'active' : ''}`}
+                        onClick={() => setActiveSupportTab('training')}
+                      >
+                        <i className="fa-solid fa-video" style={{ color: activeSupportTab === 'training' ? '#0b0f19' : '#8b5cf6' }}></i>
+                        <span>Training Videos</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`fra-support-nav-pill ${activeSupportTab === 'emergency' ? 'active' : ''}`}
+                        onClick={() => setActiveSupportTab('emergency')}
+                      >
+                        <i className="fa-solid fa-phone-flip" style={{ color: activeSupportTab === 'emergency' ? '#0b0f19' : '#ef4444' }}></i>
+                        <span>Emergency Hotline</span>
+                      </button>
                     </div>
 
-                    <div>
-                      <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <i className="fa-solid fa-list-check" style={{ color: '#10b981' }}></i> Active Tickets ({supportTickets.length})
-                      </h3>
-                      <div style={{ maxHeight: '310px', overflowY: 'auto' }}>
-                        {supportTickets.map((t) => (
-                          <div key={t.id} className="fra-support-ticket-item">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                              <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff' }}>{t.subject}</span>
-                              <span style={{ 
-                                fontSize: '10px', 
-                                padding: '2px 8px', 
-                                borderRadius: '9999px', 
-                                fontWeight: 800,
-                                background: t.status === 'Resolved' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)',
-                                color: t.status === 'Resolved' ? '#34d399' : '#fbbf24'
-                              }}>
-                                {t.status}
-                              </span>
+                    <button
+                      type="button"
+                      className="fra-support-close-btn"
+                      onClick={() => setActiveSupportTab(null)}
+                      aria-label="Close Support Console"
+                    >
+                      <i className="fa-solid fa-xmark"></i>
+                      <span>Close</span>
+                    </button>
+                  </div>
+
+                  {/* 1. TICKETS TAB */}
+                  {activeSupportTab === 'tickets' && (
+                    <div className="fra-support-form-grid">
+                      <div>
+                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <i className="fa-solid fa-ticket" style={{ color: '#3b82f6' }}></i> Log New Operations Ticket
+                        </h3>
+                        <form onSubmit={handleTicketSubmit}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div className="fra-support-field">
+                              <label>Issue Category</label>
+                              <select 
+                                className="fra-support-input"
+                                value={ticketCategory}
+                                onChange={(e) => setTicketCategory(e.target.value)}
+                              >
+                                <option value="Hardware / Projection">Hardware / Christie Laser</option>
+                                <option value="Dolby Atmos Sound">Dolby Atmos 7.1 Audio</option>
+                                <option value="Cloud POS & Ticket Sync">Cloud POS &amp; Ticket Sync</option>
+                                <option value="Daikin VRV Climate">Daikin VRV Climate / HVAC</option>
+                                <option value="Concessions & F&B">Concessions &amp; F&amp;B Popcorn</option>
+                                <option value="Licensing & Compliance">Licensing &amp; Compliance</option>
+                              </select>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8' }}>
-                              <span>#{t.id} &bull; {t.category} ({t.screen})</span>
-                              <span>{t.date}</span>
+
+                            <div className="fra-support-field">
+                              <label>Auditorium / Screen</label>
+                              <select 
+                                className="fra-support-input"
+                                value={ticketScreen}
+                                onChange={(e) => setTicketScreen(e.target.value)}
+                              >
+                                <option value="Screen 1 (Couple Recliner)">Screen 1 (Couple Recliner)</option>
+                                <option value="Screen 2 (Gold Class)">Screen 2 (Gold Class)</option>
+                                <option value="Box Office POS Counter">Box Office POS Counter</option>
+                                <option value="Concession F&B Lounge">Concession F&amp;B Lounge</option>
+                                <option value="All Cinema Facilities">All Cinema Facilities</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div className="fra-support-field">
+                              <label>Priority SLA</label>
+                              <select 
+                                className="fra-support-input"
+                                value={ticketPriority}
+                                onChange={(e) => setTicketPriority(e.target.value)}
+                              >
+                                <option value="Low">Low (Informational • 48h SLA)</option>
+                                <option value="Medium">Medium (Standard • 24h SLA)</option>
+                                <option value="High">High (Elevated • 8h SLA)</option>
+                                <option value="Critical">Critical (Showtime Blocker • 2h SLA)</option>
+                              </select>
+                            </div>
+
+                            <div className="fra-support-field">
+                              <label>Summary Subject</label>
+                              <input 
+                                type="text" 
+                                className="fra-support-input"
+                                placeholder="e.g. Screen 1 Laser Chiller Warning"
+                                value={ticketSubject}
+                                onChange={(e) => setTicketSubject(e.target.value)}
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          <div className="fra-support-field">
+                            <label>Trouble Description &amp; Error Log</label>
+                            <textarea 
+                              className="fra-support-input"
+                              rows={3}
+                              placeholder="Provide specific error code, symptoms, or alarm readout..."
+                              value={ticketDesc}
+                              onChange={(e) => setTicketDesc(e.target.value)}
+                            />
+                          </div>
+
+                          <button 
+                            type="submit" 
+                            className="fra-btn fra-btn-primary" 
+                            style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}
+                          >
+                            <i className="fa-solid fa-paper-plane mr-1"></i> Submit Ticket to NOC Helpdesk
+                          </button>
+                        </form>
+                      </div>
+
+                      <div>
+                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <i className="fa-solid fa-list-check" style={{ color: '#10b981' }}></i> Active Tickets ({supportTickets.length})
+                        </h3>
+                        <div style={{ maxHeight: '310px', overflowY: 'auto' }}>
+                          {supportTickets.map((t) => (
+                            <div key={t.id} className="fra-support-ticket-item">
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                                <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff' }}>{t.subject}</span>
+                                <span style={{ 
+                                  fontSize: '10px', 
+                                  padding: '2px 8px', 
+                                  borderRadius: '9999px', 
+                                  fontWeight: 800,
+                                  background: t.status === 'Resolved' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)',
+                                  color: t.status === 'Resolved' ? '#34d399' : '#fbbf24'
+                                }}>
+                                  {t.status}
+                                </span>
+                              </div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8' }}>
+                                <span>#{t.id} &bull; {t.category} ({t.screen})</span>
+                                <span>{t.date}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2. LIVE CHAT TAB */}
+                  {activeSupportTab === 'chat' && (
+                    <div className="fra-chat-container">
+                      <div className="fra-chat-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
+                          <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff' }}>
+                            Connplex Operations NOC Desk &bull; {currentLocation.name}
+                          </span>
+                        </div>
+                        <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+                          <i className="fa-solid fa-bolt" style={{ color: '#f59e0b', marginRight: '4px' }}></i> 2-Min Live SLA
+                        </span>
+                      </div>
+
+                      <div className="fra-chat-messages">
+                        {chatMessages.map((msg, idx) => (
+                          <div key={idx} className={`fra-chat-bubble ${msg.sender}`}>
+                            <div>{msg.text}</div>
+                            <div style={{ fontSize: '9px', opacity: 0.6, marginTop: '3px', textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
+                              {msg.time}
                             </div>
                           </div>
                         ))}
                       </div>
-                    </div>
-                  </div>
-                )}
 
-                {/* 2. LIVE CHAT TAB */}
-                {activeSupportTab === 'chat' && (
-                  <div className="fra-chat-container">
-                    <div className="fra-chat-header">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
-                        <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#ffffff' }}>
-                          Connplex Operations NOC Desk &bull; {currentLocation.name}
-                        </span>
+                      {/* Quick inquiry suggestion pills */}
+                      <div className="fra-chat-chips">
+                        {[
+                          "POS ASMX live sync status",
+                          "Screen 1 Christie Laser lamp health report",
+                          "Dolby Atmos audio calibration check",
+                          "Urgent F&B Concession inventory refill"
+                        ].map((chip, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            className="fra-chat-chip-btn"
+                            onClick={() => setChatInput(chip)}
+                          >
+                            {chip}
+                          </button>
+                        ))}
                       </div>
-                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                        <i className="fa-solid fa-bolt" style={{ color: '#f59e0b', marginRight: '4px' }}></i> 2-Min Live SLA
-                      </span>
-                    </div>
 
-                    <div className="fra-chat-messages">
-                      {chatMessages.map((msg, idx) => (
-                        <div key={idx} className={`fra-chat-bubble ${msg.sender}`}>
-                          <div>{msg.text}</div>
-                          <div style={{ fontSize: '9px', opacity: 0.6, marginTop: '3px', textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
-                            {msg.time}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Quick inquiry suggestion pills */}
-                    <div className="fra-chat-chips">
-                      {[
-                        "POS ASMX live sync status",
-                        "Screen 1 Christie Laser lamp health report",
-                        "Dolby Atmos audio calibration check",
-                        "Urgent F&B Concession inventory refill"
-                      ].map((chip, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          className="fra-chat-chip-btn"
-                          onClick={() => setChatInput(chip)}
-                        >
-                          {chip}
-                        </button>
-                      ))}
-                    </div>
-
-                    <form onSubmit={handleSendChatMessage} className="fra-chat-input-bar">
-                      <input 
-                        type="text" 
-                        className="fra-support-input"
-                        placeholder="Type message to operations desk..."
-                        value={chatInput}
-                        onChange={(e) => setChatInput(e.target.value)}
-                        style={{ margin: 0 }}
-                      />
-                      <button 
-                        type="submit" 
-                        className="fra-btn fra-btn-primary" 
-                        style={{ padding: '0.65rem 1.25rem', whiteSpace: 'nowrap' }}
-                      >
-                        <i className="fa-solid fa-paper-plane mr-1"></i> Send
-                      </button>
-                    </form>
-                  </div>
-                )}
-
-                {/* 3. KNOWLEDGE BASE TAB */}
-                {activeSupportTab === 'knowledge' && (
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
-                      <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                          Cinema Standard Operating Procedures (SOPs)
-                        </h3>
-                        <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0' }}>
-                          120 verified operational manuals, maintenance SOPs, and troubleshooting guides
-                        </p>
-                      </div>
-                      <div style={{ minWidth: '240px' }}>
+                      <form onSubmit={handleSendChatMessage} className="fra-chat-input-bar">
                         <input 
                           type="text" 
-                          className="fra-support-input" 
-                          placeholder="Search SOP guides (e.g. Laser, Dolby, POS)..."
-                          value={knowledgeSearch}
-                          onChange={(e) => setKnowledgeSearch(e.target.value)}
+                          className="fra-support-input"
+                          placeholder="Type message to operations desk..."
+                          value={chatInput}
+                          onChange={(e) => setChatInput(e.target.value)}
+                          style={{ margin: 0 }}
                         />
-                      </div>
+                        <button 
+                          type="submit" 
+                          className="fra-btn fra-btn-primary" 
+                          style={{ padding: '0.65rem 1.25rem', whiteSpace: 'nowrap' }}
+                        >
+                          <i className="fa-solid fa-paper-plane mr-1"></i> Send
+                        </button>
+                      </form>
                     </div>
+                  )}
 
-                    <div className="fra-kb-grid">
-                      {[
-                        { 
-                          id: 'sop-1',
-                          title: 'Christie 4K Laser Projection Cold Bootup & Chiller Calibration',
-                          cat: 'Projection & Optical',
-                          time: '12 min read',
-                          steps: [
-                            'Turn on the liquid chiller unit 15 minutes before projector laser activation to stabilize coolant temperature at 21°C ± 1°C.',
-                            'Verify laser optical module interlocks are secure and DCI security tamper switch is closed.',
-                            'Execute CP4430-RGB self-test diagnostic via Christie IMB touch panel.',
-                            'Confirm Screen 1 anamorphic scope lens returns to 2.39:1 zero-offset position.'
-                          ]
-                        },
-                        { 
-                          id: 'sop-2',
-                          title: 'Dolby Atmos 7.1 Speaker Channel Pink Noise Diagnostic Protocol',
-                          cat: 'Sound & Audio',
-                          time: '8 min read',
-                          steps: [
-                            'Switch Dolby CP950 cinema processor to Calibration Mode (Pin: 8821).',
-                            'Generate calibrated -20dBFS band-limited pink noise across all 8 discrete audio channels.',
-                            'Verify sound pressure level reads 85 dBC at reference listening position (Row E Center Recliner).',
-                            'Check subwoofer LFE bass management cut-off frequency is locked at 80 Hz.'
-                          ]
-                        },
-                        { 
-                          id: 'sop-3',
-                          title: 'Box Office POS Standalone Offline Fallback Procedure',
-                          cat: 'Ticketing Systems',
-                          time: '6 min read',
-                          steps: [
-                            'If internet WAN drops, terminal displays yellow "Offline Mode" indicator.',
-                            'Terminal automatically continues issuing tickets using pre-cached seating block numbers.',
-                            'Do not power cycle the POS terminal while offline transactions are queued in local SQLite cache.',
-                            'Upon WAN restoration, terminal auto-synchronizes batch transactions into ASMX backend within 60 seconds.'
-                          ]
-                        },
-                        { 
-                          id: 'sop-4',
-                          title: 'Concession Popcorn Degreasing & Food Safety Sanitization',
-                          cat: 'F&B Concessions',
-                          time: '10 min read',
-                          steps: [
-                            'Allow Cretors kettle to cool down to 50°C before cleaning.',
-                            'Use food-grade Heat’n Kleen degreaser solution; do not submerge kettle in water.',
-                            'Wipe warmer base tray and dump unpopped corn kernels into waste disposal bin.',
-                            'Verify FSSAI daily temperature log sheet is signed by duty concession manager.'
-                          ]
-                        },
-                        { 
-                          id: 'sop-5',
-                          title: 'Auditorium Emergency Evacuation & Smoke Cutoff Protocol',
-                          cat: 'Life Safety',
-                          time: '15 min read',
-                          steps: [
-                            'Fire alarm system automatically triggers projector laser cutoff and brings auditorium house sconces to 100% white illumination.',
-                            'Daikin VRV HVAC system immediately trips smoke extraction damper into purge mode.',
-                            'Duty floor ushers guide patrons through illuminated emergency exit doors on screen left/right.',
-                            'Report auditorium clearance to local fire control officer via hotline 101/112.'
-                          ]
-                        },
-                        { 
-                          id: 'sop-6',
-                          title: 'Maharashtra Cinematograph License & Fire NOC Annual Registers',
-                          cat: 'Compliance',
-                          time: '7 min read',
-                          steps: [
-                            'Keep physical DM license, Electrical Inspector safety certificate, and CFO Fire NOC in manager station.',
-                            'Ensure 2kg ABC dry chemical fire extinguishers at both projection ports undergo monthly gauge checks.',
-                            'Maintain entertainment tax register and state GST invoice serial logs for annual district audit.'
-                          ]
-                        }
-                      ].filter(s => s.title.toLowerCase().includes(knowledgeSearch.toLowerCase()) || s.cat.toLowerCase().includes(knowledgeSearch.toLowerCase()))
-                      .map((sop) => {
-                        const isExpanded = expandedSopId === sop.id;
-                        return (
-                          <div 
-                            key={sop.id} 
-                            className="fra-kb-card"
-                            onClick={() => setExpandedSopId(isExpanded ? null : sop.id)}
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
-                              <div>
-                                <span style={{ fontSize: '10px', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
-                                  {sop.cat} &bull; {sop.time}
-                                </span>
-                                <h4 style={{ fontSize: '0.86rem', fontWeight: 700, color: '#ffffff', margin: '4px 0 6px' }}>
-                                  {sop.title}
-                                </h4>
-                              </div>
-                              <i className={`fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}></i>
-                            </div>
+                  {/* 3. KNOWLEDGE BASE TAB */}
+                  {activeSupportTab === 'knowledge' && (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                        <div>
+                          <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                            Cinema Standard Operating Procedures (SOPs)
+                          </h3>
+                          <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0' }}>
+                            120 verified operational manuals, maintenance SOPs, and troubleshooting guides
+                          </p>
+                        </div>
+                        <div style={{ minWidth: '240px' }}>
+                          <input 
+                            type="text" 
+                            className="fra-support-input" 
+                            placeholder="Search SOP guides (e.g. Laser, Dolby, POS)..."
+                            value={knowledgeSearch}
+                            onChange={(e) => setKnowledgeSearch(e.target.value)}
+                          />
+                        </div>
+                      </div>
 
-                            {isExpanded && (
-                              <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                                <div style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: 1.6 }}>
-                                  <ol style={{ paddingLeft: '1.2rem', margin: 0 }}>
-                                    {sop.steps.map((st, sIdx) => (
-                                      <li key={sIdx} style={{ marginBottom: '4px' }}>{st}</li>
-                                    ))}
-                                  </ol>
+                      <div className="fra-kb-grid">
+                        {[
+                          { 
+                            id: 'sop-1',
+                            title: 'Christie 4K Laser Projection Cold Bootup & Chiller Calibration',
+                            cat: 'Projection & Optical',
+                            time: '12 min read',
+                            steps: [
+                              'Turn on the liquid chiller unit 15 minutes before projector laser activation to stabilize coolant temperature at 21°C ± 1°C.',
+                              'Verify laser optical module interlocks are secure and DCI security tamper switch is closed.',
+                              'Execute CP4430-RGB self-test diagnostic via Christie IMB touch panel.',
+                              'Confirm Screen 1 anamorphic scope lens returns to 2.39:1 zero-offset position.'
+                            ]
+                          },
+                          { 
+                            id: 'sop-2',
+                            title: 'Dolby Atmos 7.1 Speaker Channel Pink Noise Diagnostic Protocol',
+                            cat: 'Sound & Audio',
+                            time: '8 min read',
+                            steps: [
+                              'Switch Dolby CP950 cinema processor to Calibration Mode (Pin: 8821).',
+                              'Generate calibrated -20dBFS band-limited pink noise across all 8 discrete audio channels.',
+                              'Verify sound pressure level reads 85 dBC at reference listening position (Row E Center Recliner).',
+                              'Check subwoofer LFE bass management cut-off frequency is locked at 80 Hz.'
+                            ]
+                          },
+                          { 
+                            id: 'sop-3',
+                            title: 'Box Office POS Standalone Offline Fallback Procedure',
+                            cat: 'Ticketing Systems',
+                            time: '6 min read',
+                            steps: [
+                              'If internet WAN drops, terminal displays yellow "Offline Mode" indicator.',
+                              'Terminal automatically continues issuing tickets using pre-cached seating block numbers.',
+                              'Do not power cycle the POS terminal while offline transactions are queued in local SQLite cache.',
+                              'Upon WAN restoration, terminal auto-synchronizes batch transactions into ASMX backend within 60 seconds.'
+                            ]
+                          },
+                          { 
+                            id: 'sop-4',
+                            title: 'Concession Popcorn Degreasing & Food Safety Sanitization',
+                            cat: 'F&B Concessions',
+                            time: '10 min read',
+                            steps: [
+                              'Allow Cretors kettle to cool down to 50°C before cleaning.',
+                              'Use food-grade Heat’n Kleen degreaser solution; do not submerge kettle in water.',
+                              'Wipe warmer base tray and dump unpopped corn kernels into waste disposal bin.',
+                              'Verify FSSAI daily temperature log sheet is signed by duty concession manager.'
+                            ]
+                          },
+                          { 
+                            id: 'sop-5',
+                            title: 'Auditorium Emergency Evacuation & Smoke Cutoff Protocol',
+                            cat: 'Life Safety',
+                            time: '15 min read',
+                            steps: [
+                              'Fire alarm system automatically triggers projector laser cutoff and brings auditorium house sconces to 100% white illumination.',
+                              'Daikin VRV HVAC system immediately trips smoke extraction damper into purge mode.',
+                              'Duty floor ushers guide patrons through illuminated emergency exit doors on screen left/right.',
+                              'Report auditorium clearance to local fire control officer via hotline 101/112.'
+                            ]
+                          },
+                          { 
+                            id: 'sop-6',
+                            title: 'Maharashtra Cinematograph License & Fire NOC Annual Registers',
+                            cat: 'Compliance',
+                            time: '7 min read',
+                            steps: [
+                              'Keep physical DM license, Electrical Inspector safety certificate, and CFO Fire NOC in manager station.',
+                              'Ensure 2kg ABC dry chemical fire extinguishers at both projection ports undergo monthly gauge checks.',
+                              'Maintain entertainment tax register and state GST invoice serial logs for annual district audit.'
+                            ]
+                          }
+                        ].filter(s => s.title.toLowerCase().includes(knowledgeSearch.toLowerCase()) || s.cat.toLowerCase().includes(knowledgeSearch.toLowerCase()))
+                        .map((sop) => {
+                          const isExpanded = expandedSopId === sop.id;
+                          return (
+                            <div 
+                              key={sop.id} 
+                              className="fra-kb-card"
+                              onClick={() => setExpandedSopId(isExpanded ? null : sop.id)}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                                <div>
+                                  <span style={{ fontSize: '10px', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>
+                                    {sop.cat} &bull; {sop.time}
+                                  </span>
+                                  <h4 style={{ fontSize: '0.86rem', fontWeight: 700, color: '#ffffff', margin: '4px 0 6px' }}>
+                                    {sop.title}
+                                  </h4>
                                 </div>
+                                <i className={`fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-down'}`} style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}></i>
                               </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
 
-                {/* 4. TRAINING VIDEOS TAB */}
-                {activeSupportTab === 'training' && (
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                      <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
-                          Connplex Cinema Training &amp; Video Learning Modules
-                        </h3>
-                        <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0' }}>
-                          Interactive certification videos for cinema operations, projection, ticketing &amp; hospitality
-                        </p>
-                      </div>
-                      <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 10px', borderRadius: '9999px', fontWeight: 800 }}>
-                        <i className="fa-solid fa-graduation-cap mr-1"></i> 100% Franchise Compliance Score
-                      </span>
-                    </div>
-
-                    {activeTrainingModule && (
-                      <div style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: '18px', padding: '1.25rem', marginBottom: '1.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                          <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#f59e0b' }}>
-                            <i className="fa-solid fa-play-circle mr-1"></i> Now Playing: {activeTrainingModule}
-                          </span>
-                          <button 
-                            type="button" 
-                            style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '12px' }}
-                            onClick={() => setActiveTrainingModule(null)}
-                          >
-                            <i className="fa-solid fa-xmark"></i> Close Player
-                          </button>
-                        </div>
-                        <div style={{ height: '140px', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                          <i className="fa-solid fa-circle-play" style={{ fontSize: '2.5rem', color: '#f59e0b' }}></i>
-                          <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Stream Ready &bull; High-Definition 1080p Cinema SOP Stream</span>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="fra-training-grid">
-                      {[
-                        { title: 'Digital Box Office POS Management & Rapid Ticketing', duration: '45 mins', score: '98%', status: 'Completed', icon: 'fa-ticket' },
-                        { title: 'Christie 4K Laser Bootup & KDM License Ingestion', duration: '35 mins', score: '100%', status: 'Completed', icon: 'fa-film' },
-                        { title: 'Dolby Atmos 7.1 Acoustic Calibration & Audio Routing', duration: '50 mins', score: 'Pending', status: 'In Progress', icon: 'fa-volume-high' },
-                        { title: 'FSSAI Food Hygiene, Concessions Sanitation & FIFO', duration: '40 mins', score: '95%', status: 'Completed', icon: 'fa-burger' }
-                      ].map((mod, idx) => (
-                        <div key={idx} className="fra-training-card">
-                          <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                              <span style={{ 
-                                fontSize: '10px', 
-                                padding: '2px 8px', 
-                                borderRadius: '9999px', 
-                                fontWeight: 800,
-                                background: mod.status === 'Completed' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)',
-                                color: mod.status === 'Completed' ? '#34d399' : '#fbbf24'
-                              }}>
-                                {mod.status} &bull; Score: {mod.score}
-                              </span>
-                              <span style={{ fontSize: '11px', color: '#94a3b8' }}>
-                                <i className="fa-regular fa-clock mr-1"></i> {mod.duration}
-                              </span>
+                              {isExpanded && (
+                                <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                  <div style={{ fontSize: '11px', color: '#cbd5e1', lineHeight: 1.6 }}>
+                                    <ol style={{ paddingLeft: '1.2rem', margin: 0 }}>
+                                      {sop.steps.map((st, sIdx) => (
+                                        <li key={sIdx} style={{ marginBottom: '4px' }}>{st}</li>
+                                      ))}
+                                    </ol>
+                                  </div>
+                                </div>
+                              )}
                             </div>
-                            <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
-                              {mod.title}
-                            </h4>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 4. TRAINING VIDEOS TAB */}
+                  {activeSupportTab === 'training' && (
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <div>
+                          <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>
+                            Connplex Cinema Training &amp; Video Learning Modules
+                          </h3>
+                          <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0' }}>
+                            Interactive certification videos for cinema operations, projection, ticketing &amp; hospitality
+                          </p>
+                        </div>
+                        <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '3px 10px', borderRadius: '9999px', fontWeight: 800 }}>
+                          <i className="fa-solid fa-graduation-cap mr-1"></i> 100% Franchise Compliance Score
+                        </span>
+                      </div>
+
+                      {activeTrainingModule && (
+                        <div style={{ background: 'rgba(0, 0, 0, 0.45)', border: '1px solid rgba(245, 158, 11, 0.4)', borderRadius: '18px', padding: '1.25rem', marginBottom: '1.25rem' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                            <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#f59e0b' }}>
+                              <i className="fa-solid fa-play-circle mr-1"></i> Now Playing: {activeTrainingModule}
+                            </span>
+                            <button 
+                              type="button" 
+                              style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '12px' }}
+                              onClick={() => setActiveTrainingModule(null)}
+                            >
+                              <i className="fa-solid fa-xmark"></i> Close Player
+                            </button>
                           </div>
-
-                          <button
-                            type="button"
-                            className="fra-btn fra-btn-outline"
-                            style={{ justifyContent: 'center', fontSize: '12px', padding: '0.5rem' }}
-                            onClick={() => {
-                              setActiveTrainingModule(mod.title);
-                              showToast(`Loaded SOP Video Module: ${mod.title}`);
-                            }}
-                          >
-                            <i className="fa-solid fa-play mr-1"></i> Watch SOP Video Module
-                          </button>
+                          <div style={{ height: '140px', background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                            <i className="fa-solid fa-circle-play" style={{ fontSize: '2.5rem', color: '#f59e0b' }}></i>
+                            <span style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Stream Ready &bull; High-Definition 1080p Cinema SOP Stream</span>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      )}
 
-                {/* 5. EMERGENCY LINE TAB */}
-                {activeSupportTab === 'emergency' && (
+                      <div className="fra-training-grid">
+                        {[
+                          { title: 'Digital Box Office POS Management & Rapid Ticketing', duration: '45 mins', score: '98%', status: 'Completed', icon: 'fa-ticket' },
+                          { title: 'Christie 4K Laser Bootup & KDM License Ingestion', duration: '35 mins', score: '100%', status: 'Completed', icon: 'fa-film' },
+                          { title: 'Dolby Atmos 7.1 Acoustic Calibration & Audio Routing', duration: '50 mins', score: 'Pending', status: 'In Progress', icon: 'fa-volume-high' },
+                          { title: 'FSSAI Food Hygiene, Concessions Sanitation & FIFO', duration: '40 mins', score: '95%', status: 'Completed', icon: 'fa-burger' }
+                        ].map((mod, idx) => (
+                          <div key={idx} className="fra-training-card">
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                <span style={{ 
+                                  fontSize: '10px', 
+                                  padding: '2px 8px', 
+                                  borderRadius: '9999px', 
+                                  fontWeight: 800,
+                                  background: mod.status === 'Completed' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(245, 158, 11, 0.18)',
+                                  color: mod.status === 'Completed' ? '#34d399' : '#fbbf24'
+                                }}>
+                                  {mod.status} &bull; Score: {mod.score}
+                                </span>
+                                <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+                                  <i className="fa-regular fa-clock mr-1"></i> {mod.duration}
+                                </span>
+                              </div>
+                              <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                                {mod.title}
+                              </h4>
+                            </div>
+
+                            <button
+                              type="button"
+                              className="fra-btn fra-btn-outline"
+                              style={{ justifyContent: 'center', fontSize: '12px', padding: '0.5rem' }}
+                              onClick={() => {
+                                setActiveTrainingModule(mod.title);
+                                showToast(`Loaded SOP Video Module: ${mod.title}`);
+                              }}
+                            >
+                              <i className="fa-solid fa-play mr-1"></i> Watch SOP Video Module
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. EMERGENCY LINE TAB */}
+                  {activeSupportTab === 'emergency' && (
+                    <div>
+                      <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#ef4444', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
+                          <i className="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#fca5a5' }}>
+                            Connplex 24/7 Rapid Response Emergency Protocol
+                          </div>
+                          <div style={{ fontSize: '11px', color: '#cbd5e1' }}>
+                            Immediate dispatch hotlines for cinema screen blackouts, sound outages, POS interruptions, and medical/fire incidents.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="fra-emergency-grid">
+                        <div className="fra-emergency-card">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '10px', color: '#ef4444', fontWeight: 800, textTransform: 'uppercase' }}>Toll-Free 24/7 Hotline</span>
+                            <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Active NOC</span>
+                          </div>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>National NOC Operations Desk</div>
+                          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>1800 266 6753</div>
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+                            <a 
+                              href="tel:18002666753" 
+                              className="fra-btn fra-btn-primary" 
+                              style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
+                              onClick={() => showToast('Calling National NOC Operations Desk: 1800 266 6753')}
+                            >
+                              <i className="fa-solid fa-phone mr-1"></i> Call Now
+                            </a>
+                            <button 
+                              type="button" 
+                              className="fra-btn fra-btn-outline" 
+                              style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
+                              onClick={() => {
+                                navigator?.clipboard?.writeText('18002666753');
+                                showToast('Copied 1800 266 6753 to clipboard!');
+                              }}
+                            >
+                              <i className="fa-regular fa-copy"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="fra-emergency-card">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '10px', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>Hardware / Laser NOC</span>
+                            <span style={{ fontSize: '10px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Christie / Dolby</span>
+                          </div>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>Projection &amp; Sound Escalation</div>
+                          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 22 4589 1199</div>
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+                            <a 
+                              href="tel:+912245891199" 
+                              className="fra-btn fra-btn-primary" 
+                              style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
+                              onClick={() => showToast('Calling Projection Escalation Desk: +91 22 4589 1199')}
+                            >
+                              <i className="fa-solid fa-phone mr-1"></i> Call Now
+                            </a>
+                            <button 
+                              type="button" 
+                              className="fra-btn fra-btn-outline" 
+                              style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
+                              onClick={() => {
+                                navigator?.clipboard?.writeText('+912245891199');
+                                showToast('Copied +91 22 4589 1199 to clipboard!');
+                              }}
+                            >
+                              <i className="fa-regular fa-copy"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="fra-emergency-card">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '10px', color: '#60a5fa', fontWeight: 800, textTransform: 'uppercase' }}>Database NOC</span>
+                            <span style={{ fontSize: '10px', background: 'rgba(168, 85, 247, 0.16)', color: '#c084fc', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>On-Call Engineer</span>
+                          </div>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>POS Server &amp; Database Desk</div>
+                          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 98200 87654</div>
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+                            <a 
+                              href="tel:+919820087654" 
+                              className="fra-btn fra-btn-primary" 
+                              style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
+                              onClick={() => showToast('Calling POS Server Engineering: +91 98200 87654')}
+                            >
+                              <i className="fa-solid fa-phone mr-1"></i> Call Now
+                            </a>
+                            <button 
+                              type="button" 
+                              className="fra-btn fra-btn-outline" 
+                              style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
+                              onClick={() => {
+                                navigator?.clipboard?.writeText('+919820087654');
+                                showToast('Copied +91 98200 87654 to clipboard!');
+                              }}
+                            >
+                              <i className="fa-regular fa-copy"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="fra-emergency-card">
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '10px', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>Regional Leadership</span>
+                            <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Maharashtra</span>
+                          </div>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>Regional Operations Director</div>
+                          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 98220 12345</div>
+                          <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+                            <a 
+                              href="tel:+919822012345" 
+                              className="fra-btn fra-btn-primary" 
+                              style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
+                              onClick={() => showToast('Calling Regional Director: +91 98220 12345')}
+                            >
+                              <i className="fa-solid fa-phone mr-1"></i> Call Now
+                            </a>
+                            <button 
+                              type="button" 
+                              className="fra-btn fra-btn-outline" 
+                              style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
+                              onClick={() => {
+                                navigator?.clipboard?.writeText('+919822012345');
+                                showToast('Copied +91 98220 12345 to clipboard!');
+                              }}
+                            >
+                              <i className="fa-regular fa-copy"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW 11: SETTINGS (Property Architecture, Profile & Ambience)
+             ================================================================ */}
+          {activeTab === 'Settings' && (
+            <div className="fra-page-view-container">
+              {/* Page Header */}
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-sliders"></i>
+                  </div>
                   <div>
-                    <div style={{ background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                      <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#ef4444', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
-                        <i className="fa-solid fa-triangle-exclamation"></i>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#fca5a5' }}>
-                          Connplex 24/7 Rapid Response Emergency Protocol
-                        </div>
-                        <div style={{ fontSize: '11px', color: '#cbd5e1' }}>
-                          Immediate dispatch hotlines for cinema screen blackouts, sound outages, POS interruptions, and medical/fire incidents.
-                        </div>
-                      </div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Settings</span>
                     </div>
+                    <h1 className="fra-view-title">Cinema Property Configuration &amp; Partner Profile</h1>
+                    <p className="fra-view-subtitle">Franchise partner credentials, auditorium architectural specs, and lighting mode preferences</p>
+                  </div>
+                </div>
+                <div className="fra-view-header-actions">
+                  <button className="fra-btn fra-btn-primary" onClick={() => showToast('Cinema configuration saved successfully.')}>
+                    <i className="fa-solid fa-floppy-disk mr-1"></i> Save Preferences
+                  </button>
+                </div>
+              </div>
 
-                    <div className="fra-emergency-grid">
-                      <div className="fra-emergency-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '10px', color: '#ef4444', fontWeight: 800, textTransform: 'uppercase' }}>Toll-Free 24/7 Hotline</span>
-                          <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Active NOC</span>
-                        </div>
-                        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>National NOC Operations Desk</div>
-                        <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>1800 266 6753</div>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
-                          <a 
-                            href="tel:18002666753" 
-                            className="fra-btn fra-btn-primary" 
-                            style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
-                            onClick={() => showToast('Calling National NOC Operations Desk: 1800 266 6753')}
-                          >
-                            <i className="fa-solid fa-phone mr-1"></i> Call Now
-                          </a>
-                          <button 
-                            type="button" 
-                            className="fra-btn fra-btn-outline" 
-                            style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
-                            onClick={() => {
-                              navigator?.clipboard?.writeText('18002666753');
-                              showToast('Copied 1800 266 6753 to clipboard!');
-                            }}
-                          >
-                            <i className="fa-regular fa-copy"></i>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="fra-emergency-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '10px', color: '#f59e0b', fontWeight: 800, textTransform: 'uppercase' }}>Hardware / Laser NOC</span>
-                          <span style={{ fontSize: '10px', background: 'rgba(56, 189, 248, 0.16)', color: '#38bdf8', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Christie / Dolby</span>
-                        </div>
-                        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>Projection &amp; Sound Escalation</div>
-                        <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 22 4589 1199</div>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
-                          <a 
-                            href="tel:+912245891199" 
-                            className="fra-btn fra-btn-primary" 
-                            style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
-                            onClick={() => showToast('Calling Projection Escalation Desk: +91 22 4589 1199')}
-                          >
-                            <i className="fa-solid fa-phone mr-1"></i> Call Now
-                          </a>
-                          <button 
-                            type="button" 
-                            className="fra-btn fra-btn-outline" 
-                            style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
-                            onClick={() => {
-                              navigator?.clipboard?.writeText('+912245891199');
-                              showToast('Copied +91 22 4589 1199 to clipboard!');
-                            }}
-                          >
-                            <i className="fa-regular fa-copy"></i>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="fra-emergency-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '10px', color: '#60a5fa', fontWeight: 800, textTransform: 'uppercase' }}>Database NOC</span>
-                          <span style={{ fontSize: '10px', background: 'rgba(168, 85, 247, 0.16)', color: '#c084fc', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>On-Call Engineer</span>
-                        </div>
-                        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>POS Server &amp; Database Desk</div>
-                        <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 98200 87654</div>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
-                          <a 
-                            href="tel:+919820087654" 
-                            className="fra-btn fra-btn-primary" 
-                            style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
-                            onClick={() => showToast('Calling POS Server Engineering: +91 98200 87654')}
-                          >
-                            <i className="fa-solid fa-phone mr-1"></i> Call Now
-                          </a>
-                          <button 
-                            type="button" 
-                            className="fra-btn fra-btn-outline" 
-                            style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
-                            onClick={() => {
-                              navigator?.clipboard?.writeText('+919820087654');
-                              showToast('Copied +91 98200 87654 to clipboard!');
-                            }}
-                          >
-                            <i className="fa-regular fa-copy"></i>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="fra-emergency-card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <span style={{ fontSize: '10px', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>Regional Leadership</span>
-                          <span style={{ fontSize: '10px', background: 'rgba(16, 185, 129, 0.16)', color: '#34d399', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>Maharashtra</span>
-                        </div>
-                        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>Regional Operations Director</div>
-                        <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b', fontFamily: 'monospace' }}>+91 98220 12345</div>
-                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
-                          <a 
-                            href="tel:+919822012345" 
-                            className="fra-btn fra-btn-primary" 
-                            style={{ flex: 1, justifyContent: 'center', fontSize: '11px', padding: '0.45rem', textDecoration: 'none' }}
-                            onClick={() => showToast('Calling Regional Director: +91 98220 12345')}
-                          >
-                            <i className="fa-solid fa-phone mr-1"></i> Call Now
-                          </a>
-                          <button 
-                            type="button" 
-                            className="fra-btn fra-btn-outline" 
-                            style={{ fontSize: '11px', padding: '0.45rem 0.75rem' }}
-                            onClick={() => {
-                              navigator?.clipboard?.writeText('+919822012345');
-                              showToast('Copied +91 98220 12345 to clipboard!');
-                            }}
-                          >
-                            <i className="fa-regular fa-copy"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              {/* Specs Strip */}
+              <div className="fra-location-specs-strip" id="fra-specs-section">
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-film"></i>
+                  <span>{currentLocation.totalScreens} Luxury Auditoriums</span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-couch"></i>
+                  <span>{currentLocation.totalSeats} Total Premium Seats</span>
+                </div>
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-location-dot"></i>
+                  <span>{currentLocation.city}, {currentLocation.state}</span>
+                </div>
+                {currentLocation.hasApiIntegration ? (
+                  <div className="fra-spec-chip highlight">
+                    <i className="fa-solid fa-bolt"></i>
+                    <span>Live POS Synchronized (ASMX)</span>
+                  </div>
+                ) : (
+                  <div className="fra-spec-chip">
+                    <i className="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Enterprise Cloud POS Connected</span>
                   </div>
                 )}
+                <div className="fra-spec-chip">
+                  <i className="fa-solid fa-user-tie"></i>
+                  <span>Partner: {currentLocation.partnerName}</span>
+                </div>
               </div>
-            )}
-          </section>
+
+              {/* Architecture & Hardware Grid */}
+              <div className="fra-smart-cockpit-grid">
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-building" style={{ color: '#f59e0b' }}></i>
+                      <span>Property Architecture &amp; Auditoriums</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Cinema Name</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>{currentLocation.fullName}</span>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Location &amp; District</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>{currentLocation.city}, {currentLocation.state}</span>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Screens &amp; Seating</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>{currentLocation.totalScreens} Screens &bull; {currentLocation.totalSeats} Luxury Seats</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-user-shield" style={{ color: '#10b981' }}></i>
+                      <span>Franchise Partner Profile</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Partner Name</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#fff' }}>{currentUser?.name || currentLocation.partnerName}</span>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Role Level</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#f59e0b' }}>{currentUser?.role || currentLocation.partnerRole}</span>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>POS Certification</span>
+                      <span style={{ fontSize: '0.84rem', fontWeight: 700, color: '#34d399' }}>Cloud POS Certified</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="fra-smart-tile">
+                  <div className="fra-smart-tile-header">
+                    <div className="fra-smart-tile-title">
+                      <i className="fa-solid fa-palette" style={{ color: '#38bdf8' }}></i>
+                      <span>Ambience &amp; Portal Theme</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Warm Gold Cinema Ambience</span>
+                      <button
+                        type="button"
+                        className={`fra-theme-pill-btn ${ambienceTheme === 'ambient' ? 'active' : ''}`}
+                        onClick={() => {
+                          setAmbienceTheme('ambient');
+                          showToast('Ambience Mode: Warm Gold Cinema Lighting');
+                        }}
+                        style={{ padding: '4px 12px' }}
+                      >
+                        Light
+                      </button>
+                    </div>
+                    <div style={{ background: 'rgba(255, 255, 255, 0.04)', borderRadius: '12px', padding: '0.75rem 0.9rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Dark Showtime Mode</span>
+                      <button
+                        type="button"
+                        className={`fra-theme-pill-btn ${ambienceTheme === 'cinema' ? 'active' : ''}`}
+                        onClick={() => {
+                          setAmbienceTheme('cinema');
+                          showToast('Cinema Mode: Dark Auditorium Showtime Lighting');
+                        }}
+                        style={{ padding: '4px 12px' }}
+                      >
+                        Dark
+                      </button>
+                    </div>
+                    <button 
+                      type="button" 
+                      className="fra-btn fra-btn-outline" 
+                      style={{ justifyContent: 'center', borderColor: '#ef4444', color: '#f87171', marginTop: '0.5rem' }}
+                      onClick={handleLogout}
+                    >
+                      <i className="fa-solid fa-sign-out-alt mr-1"></i> Sign Out of Franchise Portal
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
         </main>
       </div>

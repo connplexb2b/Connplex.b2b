@@ -8,28 +8,45 @@ interface TicketSalesViewProps {
   initialSubSection?: string;
 }
 
+export type TicketSalesSubSection = 
+  | 'sales' 
+  | 'online' 
+  | 'counter' 
+  | 'kiosk' 
+  | 'seat-map' 
+  | 'discounts' 
+  | 'refunds' 
+  | 'complimentary' 
+  | 'payment-methods';
+
 export default function TicketSalesView({
   selectedCinemaId,
   selectedDateRange,
   triggerNotification,
   initialSubSection
 }: TicketSalesViewProps) {
-  const resolveSubSection = (sec?: string): 'sales' | 'seat-map' | 'discounts' | 'refunds' => {
+  const resolveSubSection = (sec?: string): TicketSalesSubSection => {
     if (!sec) return 'sales';
     const s = sec.toLowerCase();
+    if (s.includes('online')) return 'online';
+    if (s.includes('counter') || s.includes('box')) return 'counter';
+    if (s.includes('kiosk')) return 'kiosk';
     if (s.includes('seat') || s.includes('map')) return 'seat-map';
     if (s.includes('discount') || s.includes('campaign')) return 'discounts';
     if (s.includes('refund') || s.includes('cancel')) return 'refunds';
+    if (s.includes('comp') || s.includes('pass')) return 'complimentary';
+    if (s.includes('pay') || s.includes('method') || s.includes('upi')) return 'payment-methods';
     return 'sales';
   };
 
-  const [subSection, setSubSection] = useState<'sales' | 'seat-map' | 'discounts' | 'refunds'>(() => resolveSubSection(initialSubSection));
+  const [subSection, setSubSection] = useState<TicketSalesSubSection>(() => resolveSubSection(initialSubSection));
 
   React.useEffect(() => {
     if (initialSubSection) {
       setSubSection(resolveSubSection(initialSubSection));
     }
   }, [initialSubSection]);
+
   const [channelFilter, setChannelFilter] = useState<'all' | 'Online' | 'Counter' | 'Kiosk'>('all');
 
   const isAhilyanagar = selectedCinemaId === 'c5';
@@ -39,7 +56,7 @@ export default function TicketSalesView({
 
   const [selectedScreenId, setSelectedScreenId] = useState<string>(screens[0]?.screenId || 's20');
 
-  // Pull sample tickets filtered by cinema and channel, sorted latest first (for ledger rows)
+  // Pull sample tickets filtered by cinema and channel
   const rawTickets = ConnCloudStore.getTickets().filter(t => {
     if (!t) return false;
     const channelMatch = channelFilter === 'all' || t.channel === channelFilter;
@@ -150,6 +167,19 @@ export default function TicketSalesView({
     }
   };
 
+  // Sub section tabs definition
+  const subSectionTabs: { id: TicketSalesSubSection; label: string; icon: string }[] = [
+    { id: 'sales', label: 'All Bookings Ledger', icon: 'fa-list-check' },
+    { id: 'online', label: 'Online Sales', icon: 'fa-globe' },
+    { id: 'counter', label: 'Counter Sales', icon: 'fa-cash-register' },
+    { id: 'kiosk', label: 'Kiosk Sales', icon: 'fa-tablet-screen-button' },
+    { id: 'seat-map', label: 'Show & Seat Map', icon: 'fa-chair' },
+    { id: 'discounts', label: 'Discounts & Promos', icon: 'fa-tag' },
+    { id: 'refunds', label: 'Refunds & Cancellations', icon: 'fa-rotate-left' },
+    { id: 'complimentary', label: 'Complimentary Tickets', icon: 'fa-gift' },
+    { id: 'payment-methods', label: 'Payment Methods', icon: 'fa-credit-card' }
+  ];
+
   return (
     <div className="space-y-6">
       {/* Vista API Integration Telemetry Header (Ahilyanagar) */}
@@ -228,69 +258,39 @@ export default function TicketSalesView({
         </div>
       </div>
 
-      {/* View Navigation Header */}
+      {/* Navigation Sub-Tabs */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
-        <button
-          onClick={() => setSubSection('sales')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${
-            subSection === 'sales'
-              ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <i className="fa-solid fa-list-check mr-1.5"></i>
-          Bookings Transactions Ledger
-        </button>
-        <button
-          onClick={() => setSubSection('seat-map')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${
-            subSection === 'seat-map' 
-              ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <i className="fa-solid fa-chair mr-1.5"></i>
-          Visual Seat Map
-        </button>
-        <button
-          onClick={() => setSubSection('discounts')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${
-            subSection === 'discounts' 
-              ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <i className="fa-solid fa-tag mr-1.5"></i>
-          Discounts &amp; Campaigns Impact
-        </button>
-        <button
-          onClick={() => setSubSection('refunds')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${
-            subSection === 'refunds' 
-              ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <i className="fa-solid fa-rotate-left mr-1.5"></i>
-          Refunds &amp; Cancellations
-        </button>
+        {subSectionTabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setSubSection(tab.id)}
+            className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              subSection === tab.id 
+                ? 'bg-blue-600 text-white shadow shadow-blue-600/10' 
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <i className={`fa-solid ${tab.icon} text-[11px]`}></i>
+            <span>{tab.label}</span>
+          </button>
+        ))}
       </section>
 
-      {/* 1. SALES LEDGER */}
-      {subSection === 'sales' && (
+      {/* 1. SALES LEDGER & FILTERED CHANNEL VIEWS */}
+      {(subSection === 'sales' || subSection === 'online' || subSection === 'counter' || subSection === 'kiosk') && (
         <div className="cc-card">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-200">
-                  Ticket Bookings Ledger
+                  {subSection === 'online' ? 'Online Channel Sales' : (subSection === 'counter' ? 'Counter POS Sales' : (subSection === 'kiosk' ? 'Self-Service Kiosk Sales' : 'Ticket Bookings Ledger'))}
                 </h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
                   {totalTicketsSold.toLocaleString('en-IN')} Total Tickets Sold
                 </span>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Displaying latest audited transaction receipts ({Math.min(tickets.length, 25)} of {totalTicketsSold.toLocaleString('en-IN')}) for {cinemaName}.
+                Displaying audited transaction receipts with booking ID, cashier, screen, and payment breakdown for {cinemaName}.
               </p>
             </div>
             
@@ -298,8 +298,9 @@ export default function TicketSalesView({
               <span className="text-xs text-gray-400">Filter Channel:</span>
               <select 
                 className="cc-input py-1 text-xs"
-                value={channelFilter}
+                value={subSection === 'online' ? 'Online' : (subSection === 'counter' ? 'Counter' : (subSection === 'kiosk' ? 'Kiosk' : channelFilter))}
                 onChange={(e) => setChannelFilter(e.target.value as any)}
+                disabled={subSection !== 'sales'}
               >
                 <option value="all">All Channels</option>
                 <option value="Online">Online Web / App</option>
@@ -319,48 +320,58 @@ export default function TicketSalesView({
                   <th className="pb-3">Screen</th>
                   <th className="pb-3">Seat</th>
                   <th className="pb-3">Channel</th>
+                  <th className="pb-3">Cashier / Source</th>
                   <th className="pb-3">Payment</th>
                   <th className="pb-3 text-right">Amount</th>
                   <th className="pb-3 text-center">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {tickets.slice(0, 25).map((t) => {
-                  const m = ConnCloudStore.getMovies().find(mov => mov.movieId === t.movieId);
-                  const scr = ConnCloudStore.getScreens().find(s => s.screenId === t.screenId);
-                  return (
-                    <tr key={t.bookingId} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="py-3 font-semibold text-gray-300 font-mono">{t.bookingId}</td>
-                      <td className="py-3 text-gray-400">{t.date}</td>
-                      <td className="py-3 font-semibold text-white">{m?.title}</td>
-                      <td className="py-3 text-amber-300 font-medium">{scr?.name || 'Screen'}</td>
-                      <td className="py-3 font-mono font-bold text-gray-200">{t.seat}</td>
-                      <td className="py-3 font-medium text-gray-300">{t.channel}</td>
-                      <td className="py-3 text-gray-400">{t.payment}</td>
-                      <td className="py-3 text-right font-bold text-emerald-400">{formatCurrency(t.price)}</td>
-                      <td className="py-3 text-center">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          t.status === 'Confirmed' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
-                        }`}>
-                          {t.status}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {tickets
+                  .filter(t => {
+                    if (subSection === 'online') return t.channel === 'Online';
+                    if (subSection === 'counter') return t.channel === 'Counter';
+                    if (subSection === 'kiosk') return t.channel === 'Kiosk';
+                    return true;
+                  })
+                  .slice(0, 25).map((t, idx) => {
+                    const m = ConnCloudStore.getMovies().find(mov => mov.movieId === t.movieId);
+                    const scr = ConnCloudStore.getScreens().find(s => s.screenId === t.screenId);
+                    const cashier = t.channel === 'Online' ? 'Web Booking API' : (t.channel === 'Kiosk' ? 'Lobby Kiosk #01' : (isAhilyanagar ? 'Ramesh Kadam (POS 1)' : 'Deepak Patel (POS 2)'));
+                    return (
+                      <tr key={t.bookingId || idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                        <td className="py-3 font-semibold text-gray-300 font-mono">{t.bookingId}</td>
+                        <td className="py-3 text-gray-400">{t.date}</td>
+                        <td className="py-3 font-semibold text-white">{m?.title || 'Resident Evil'}</td>
+                        <td className="py-3 text-amber-300 font-medium">{scr?.name || 'Screen 1'}</td>
+                        <td className="py-3 font-mono font-bold text-gray-200">{t.seat}</td>
+                        <td className="py-3 font-medium text-gray-300">{t.channel}</td>
+                        <td className="py-3 text-gray-400 text-[11px]">{cashier}</td>
+                        <td className="py-3 text-gray-400">{t.payment}</td>
+                        <td className="py-3 text-right font-bold text-emerald-400">{formatCurrency(t.price)}</td>
+                        <td className="py-3 text-center">
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            t.status === 'Confirmed' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'
+                          }`}>
+                            {t.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
         </div>
       )}
 
-      {/* 2. SEAT MAP */}
+      {/* 2. SHOW & SEAT MAP */}
       {subSection === 'seat-map' && (
         <div className="cc-card flex flex-col items-center">
           <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
-                Interactive Seating Arrangement • {cinemaName}
+                Show &amp; Auditorium Seat Arrangement • {cinemaName}
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
                 {isCoupleScreen 
@@ -441,7 +452,7 @@ export default function TicketSalesView({
       {/* 3. DISCOUNTS */}
       {subSection === 'discounts' && (
         <div className="cc-card">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Active Coupon Campaigns</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Active Coupon &amp; Promotional Discounts</h3>
           <div className="space-y-4">
             {[
               ...(isAhilyanagar ? [
@@ -466,37 +477,160 @@ export default function TicketSalesView({
         </div>
       )}
 
-      {/* 4. REFUNDS */}
+      {/* 4. REFUNDS & CANCELLATIONS */}
       {subSection === 'refunds' && (
         <div className="cc-card">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Refund Requests Pending</h3>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">Refunds &amp; Cancellations Log</h3>
+              <p className="text-xs text-gray-500">Processed refund requests, cancellations, and cashier authorization status</p>
+            </div>
+            <span className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+              SLA: 24h Payout
+            </span>
+          </div>
+
           <div className="space-y-4">
             {(isAhilyanagar ? [
-              { id: 'ref_ah1', booking: 'bk_ah_8012', customer: 'Sachin Thorat', amount: 560, reason: 'Duplicate UPI checkout on Screen 1 Couple Recliner', date: '2026-08-30' },
-              { id: 'ref_ah2', booking: 'bk_ah_8044', customer: 'Snehal Jagtap', amount: 480, reason: 'Show rescheduling requested by patron', date: '2026-08-28' }
+              { id: 'ref_ah1', booking: 'bk_ah_8012', customer: 'Sachin Thorat', cashier: 'Ramesh Kadam', amount: 560, reason: 'Duplicate UPI checkout on Screen 1 Couple Recliner', date: '2026-08-30', status: 'Pending Approval' },
+              { id: 'ref_ah2', booking: 'bk_ah_8044', customer: 'Snehal Jagtap', cashier: 'Online Gateway', amount: 480, reason: 'Show rescheduling requested by patron', date: '2026-08-28', status: 'Approved' }
             ] : [
-              { id: 'ref_1', booking: 'bk_2083', customer: 'Amit Sharma', amount: 880, reason: 'Accidental double checkout online payment', date: '2026-08-30' },
-              { id: 'ref_2', booking: 'bk_1952', customer: 'Sita Verma', amount: 440, reason: 'Show rescheduled by operations team', date: '2026-08-29' }
+              { id: 'ref_1', booking: 'bk_2083', customer: 'Amit Sharma', cashier: 'Deepak Patel', amount: 880, reason: 'Accidental double checkout online payment', date: '2026-08-30', status: 'Pending Approval' },
+              { id: 'ref_2', booking: 'bk_1952', customer: 'Sita Verma', cashier: 'Nisha Singh', amount: 440, reason: 'Show rescheduled by operations team', date: '2026-08-29', status: 'Approved' }
             ]).map((req) => (
-              <div key={req.id} className="p-4 rounded bg-black/20 border border-white/5 flex justify-between items-center text-xs">
+              <div key={req.id} className="p-4 rounded bg-black/20 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-white text-sm">{req.customer}</span>
                     <span className="text-[10px] text-gray-400 font-mono">Booking: {req.booking}</span>
+                    <span className="text-[10px] text-amber-400">Cashier: {req.cashier}</span>
                   </div>
-                  <p className="text-gray-400 mt-1.5">Reason: {req.reason}</p>
+                  <p className="text-gray-400 mt-1.5">Reason: {req.reason} • Date: {req.date}</p>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="font-bold text-red-400">{formatCurrency(req.amount)}</span>
-                  <button 
-                    onClick={() => triggerNotification(`Refund of ${formatCurrency(req.amount)} approved for ${req.customer}`)}
-                    className="cc-btn cc-btn-outline px-3 py-1 text-[10px] border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
-                  >
-                    Approve Refund
-                  </button>
+                <div className="flex items-center gap-4 self-end sm:self-auto">
+                  <span className="font-bold text-red-400 text-sm">{formatCurrency(req.amount)}</span>
+                  {req.status === 'Pending Approval' ? (
+                    <button 
+                      onClick={() => triggerNotification(`Refund of ${formatCurrency(req.amount)} approved for ${req.customer}`)}
+                      className="cc-btn cc-btn-outline px-3 py-1 text-[11px] border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                    >
+                      Approve Refund
+                    </button>
+                  ) : (
+                    <span className="px-2.5 py-1 rounded font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 text-xs">
+                      {req.status}
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 5. COMPLIMENTARY TICKETS */}
+      {subSection === 'complimentary' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="cc-card">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Total Comps Issued</span>
+              <div className="text-3xl font-extrabold text-purple-400">{isAhilyanagar ? '24 Passes' : '110 Passes'}</div>
+              <div className="text-xs text-gray-400 mt-2">Within monthly authorized 2% allocation quota</div>
+            </div>
+            <div className="cc-card">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Corporate &amp; VIP Passes</span>
+              <div className="text-3xl font-extrabold text-white">{isAhilyanagar ? '16' : '72'}</div>
+              <div className="text-xs text-gray-400 mt-2">Franchise owner &amp; media partners</div>
+            </div>
+            <div className="cc-card">
+              <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Distributor Quota</span>
+              <div className="text-3xl font-extrabold text-blue-400">{isAhilyanagar ? '8' : '38'}</div>
+              <div className="text-xs text-gray-400 mt-2">Statutory producer audit passes</div>
+            </div>
+          </div>
+
+          <div className="cc-card">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Complimentary Ticket Allocation Register</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-white/10 text-gray-400">
+                    <th className="py-2.5 font-semibold">Pass ID</th>
+                    <th className="py-2.5 font-semibold">Recipient / Category</th>
+                    <th className="py-2.5 font-semibold">Movie Title</th>
+                    <th className="py-2.5 font-semibold">Screen</th>
+                    <th className="py-2.5 font-semibold">Seats</th>
+                    <th className="py-2.5 font-semibold">Authorized By</th>
+                    <th className="py-2.5 text-center font-semibold">Tax Compliance</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {[
+                    { id: 'CMP_01', recipient: 'District Collector Office Escort', movie: 'Resident Evil (Hindi)', screen: 'Screen 1', seat: 'A1-2 (Couple)', authorizer: isAhilyanagar ? 'Vikram Shinde' : 'Rakesh Patel', tax: 'GST Paid by Franchise' },
+                    { id: 'CMP_02', recipient: 'Maharashtra Fire & Safety Inspection Team', movie: 'Vibe (Hindi)', screen: 'Screen 2', seat: 'C10, C11', authorizer: isAhilyanagar ? 'Vikram Shinde' : 'Corporate HQ', tax: 'GST Paid by Franchise' },
+                    { id: 'CMP_03', recipient: 'Sony Pictures Regional Distributor Lead', movie: 'Resident Evil (Hindi)', screen: 'Screen 1', seat: 'B1-2 (Couple)', authorizer: 'Corporate Dist. Head', tax: 'Exempt' }
+                  ].map(c => (
+                    <tr key={c.id} className="hover:bg-white/5 transition-colors">
+                      <td className="py-3 font-mono font-bold text-purple-400">{c.id}</td>
+                      <td className="py-3 font-semibold text-white">{c.recipient}</td>
+                      <td className="py-3 text-gray-300">{c.movie}</td>
+                      <td className="py-3 text-amber-300">{c.screen}</td>
+                      <td className="py-3 font-mono text-gray-200">{c.seat}</td>
+                      <td className="py-3 text-gray-400">{c.authorizer}</td>
+                      <td className="py-3 text-center">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                          {c.tax}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. PAYMENT METHODS BREAKDOWN */}
+      {subSection === 'payment-methods' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[
+              { method: 'UPI (GPay / PhonePe / Paytm)', share: '62.4%', amount: Math.round(totalRevenue * 0.624), icon: 'fa-qrcode', color: 'text-emerald-400' },
+              { method: 'Credit & Debit Cards', share: '24.2%', amount: Math.round(totalRevenue * 0.242), icon: 'fa-credit-card', color: 'text-blue-400' },
+              { method: 'Box Office Cash Counter', share: '9.8%', amount: Math.round(totalRevenue * 0.098), icon: 'fa-money-bill-1', color: 'text-[#f5b041]' },
+              { method: 'Connplex Cinema Wallet', share: '3.6%', amount: Math.round(totalRevenue * 0.036), icon: 'fa-wallet', color: 'text-purple-400' }
+            ].map(m => (
+              <div key={m.method} className="cc-card">
+                <div className="flex justify-between items-start mb-2">
+                  <i className={`fa-solid ${m.icon} text-lg ${m.color}`}></i>
+                  <span className="text-xs font-mono font-bold text-gray-400">{m.share}</span>
+                </div>
+                <h4 className="font-semibold text-white text-xs mb-1">{m.method}</h4>
+                <div className="text-lg font-extrabold text-white">{formatCurrency(m.amount)}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="cc-card">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4">Payment Gateway &amp; Reconciliation Settlement Status</h3>
+            <div className="space-y-3">
+              {[
+                { gateway: 'Razorpay UPI & Smart Payment Gateway', transactions: '1,840 txs', settlement: 'T+1 Settled (Daily Inward)', status: 'Active • Healthy', fee: '1.2%' },
+                { gateway: 'PineLabs Android POS Smart Terminal (Box Office)', transactions: '420 txs', settlement: 'Direct Current Account Ingest', status: 'Active • Healthy', fee: '0.9%' },
+                { gateway: 'Paytm Movie Ticketing Direct Settlement', transactions: '650 txs', settlement: 'Weekly Automated Wire Transfer', status: 'Active • Reconciled', fee: '1.5%' }
+              ].map((p, idx) => (
+                <div key={idx} className="p-3 bg-black/20 rounded border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <h4 className="font-bold text-white text-sm">{p.gateway}</h4>
+                    <span className="text-gray-400 text-[11px]">{p.transactions} • Settlement: <strong>{p.settlement}</strong> • MDR Fee: {p.fee}</span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 text-xs self-start sm:self-auto">
+                    {p.status}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

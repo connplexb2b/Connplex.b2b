@@ -431,15 +431,74 @@ export default function DashboardView({
             </div>
           </div>
           
-          {/* Quick Actions grid */}
+          {/* Quick Actions grid - Complete 7 Actions per Excel Document */}
           <div className="mt-6 pt-4 border-t border-white/5">
-            <h4 className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-3">Quick Actions</h4>
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={() => onNavigate('/conncloud/operations/maintenance')} className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors">
-                <i className="fa-solid fa-screwdriver-wrench text-blue-400"></i> Create Ticket
+            <h4 className="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-3">Quick Operational Actions</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              <button 
+                onClick={() => {
+                  triggerNotification('Generating Daily Revenue DCR Report...');
+                  onNavigate('/conncloud/reports');
+                }} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-file-pdf text-red-400"></i>
+                <span className="truncate">Daily Report</span>
               </button>
-              <button onClick={() => onNavigate('/conncloud/finance/expenses')} className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors">
-                <i className="fa-solid fa-file-invoice-dollar text-[#f5b041]"></i> Add Expense
+              <button 
+                onClick={() => {
+                  triggerNotification('Preparing Monthly Consolidated Statement...');
+                  onNavigate('/conncloud/reports');
+                }} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-file-excel text-emerald-400"></i>
+                <span className="truncate">Monthly Report</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('/conncloud/operations/maintenance')} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-screwdriver-wrench text-blue-400"></i>
+                <span className="truncate">Maintenance Ticket</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('/conncloud/operations/screens')} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-tv text-purple-400"></i>
+                <span className="truncate">Live Screens</span>
+              </button>
+              <button 
+                onClick={() => {
+                  triggerNotification('Exporting Revenue Ledger CSV...');
+                  onNavigate('/conncloud/analytics/revenue');
+                }} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-file-csv text-blue-400"></i>
+                <span className="truncate">Export Revenue</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('/conncloud/staff')} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-users text-cyan-400"></i>
+                <span className="truncate">Manage Staff</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('/conncloud/fnb/purchase-orders')} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-boxes-stacked text-[#f5b041]"></i>
+                <span className="truncate">Order Inventory</span>
+              </button>
+              <button 
+                onClick={() => onNavigate('/conncloud/finance/expenses')} 
+                className="p-2.5 rounded bg-black/20 hover:bg-[#1f2937] border border-white/5 text-[11px] font-semibold flex items-center gap-2 transition-colors text-left"
+              >
+                <i className="fa-solid fa-file-invoice-dollar text-amber-300"></i>
+                <span className="truncate">Add Expense</span>
               </button>
             </div>
           </div>

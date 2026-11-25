@@ -2175,3 +2175,159 @@
     font-size: 0.75rem;
   }
 }
+
+/* ==========================================================================
+   Multi-Page VisionOS View Containers & Page Headers
+   ========================================================================== */
+
+.fra-page-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+  animation: fraViewFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fraViewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fra-view-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 1.35rem 1.85rem;
+  box-shadow: var(--fra-glass-highlight-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.fra-view-page-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+}
+
+.fra-view-page-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.45rem;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+  flex-shrink: 0;
+}
+
+.fra-view-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.fra-view-breadcrumb i {
+  font-size: 8px;
+  color: #64748b;
+}
+
+.fra-view-breadcrumb-active {
+  color: #f59e0b;
+}
+
+.fra-view-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.fra-view-subtitle {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+.fra-view-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.fra-reports-download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.fra-report-card {
+  background: var(--fra-glass-card);
+  backdrop-filter: var(--fra-blur-card);
+  -webkit-backdrop-filter: var(--fra-blur-card);
+  border: 1px solid var(--fra-glass-border-subtle);
+  border-radius: 20px;
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: all 0.25s ease;
+  box-shadow: var(--fra-shadow-card);
+}
+
+.fra-report-card:hover {
+  background: var(--fra-glass-card-hover);
+  border-color: rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+.fra-fnb-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.15rem;
+}
+
+.fra-fnb-menu-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all 0.2s ease;
+}
+
+.fra-fnb-menu-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.fra-screens-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.35rem;
+}
+
