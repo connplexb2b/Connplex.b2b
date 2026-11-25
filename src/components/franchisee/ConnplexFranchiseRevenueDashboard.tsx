@@ -234,7 +234,7 @@ export default function ConnplexFranchiseRevenueDashboard({
               borderRadius: '6px',
               letterSpacing: '0.05em'
             }}>
-              VISTA .NET CERTIFIED
+              CLOUD POS CERTIFIED
             </span>
             <span style={{
               background: 'rgba(16, 185, 129, 0.15)',
@@ -260,7 +260,7 @@ export default function ConnplexFranchiseRevenueDashboard({
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#9ca3af' }}>
             {isCorporateView
               ? 'Multi-tenant aggregation, ranking, and server-side reconciliation'
-              : `${activeFranchise.city}, ${activeFranchise.state} • Vista Cinema ID: ${activeFranchise.vistaCinemaId} • Partner: ${activeFranchise.partnerName}`}
+              : `${activeFranchise.city}, ${activeFranchise.state} • Cinema Code: ${activeFranchise.vistaCinemaId} • Partner: ${activeFranchise.partnerName}`}
           </p>
         </div>
 
@@ -335,7 +335,7 @@ export default function ConnplexFranchiseRevenueDashboard({
             }}
           >
             <RefreshCw size={14} className={isLoading || isTriggeringSync ? 'animate-spin' : ''} />
-            {isTriggeringSync ? 'Syncing Vista...' : isCorporateView ? 'Trigger Live Sync' : 'Refresh'}
+            {isTriggeringSync ? 'Syncing POS...' : isCorporateView ? 'Trigger Live Sync' : 'Refresh'}
           </button>
         </div>
       </div>
@@ -928,7 +928,7 @@ export default function ConnplexFranchiseRevenueDashboard({
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)', color: '#9ca3af', textAlign: 'left' }}>
                   <th style={{ padding: '0.75rem' }}>Franchise Property</th>
-                  <th style={{ padding: '0.75rem' }}>Vista ID</th>
+                  <th style={{ padding: '0.75rem' }}>Cinema Code</th>
                   <th style={{ padding: '0.75rem' }}>City</th>
                   <th style={{ padding: '0.75rem' }}>Gross Revenue</th>
                   <th style={{ padding: '0.75rem' }}>Box Office</th>
@@ -987,7 +987,7 @@ export default function ConnplexFranchiseRevenueDashboard({
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Clock size={13} color="#9ca3af" />
           <span>
-            Last synchronized from Vista .NET ASMX:{' '}
+            Last synchronized from Cloud POS ASMX:{' '}
             <strong style={{ color: '#d1d5db' }}>
               {summaryData?.lastSyncedAt ? new Date(summaryData.lastSyncedAt).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' }) + ' IST' : 'Just now'}
             </strong>

@@ -286,7 +286,7 @@ export default function AhilyanagarFranchiseDashboard({
             </span>
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${isLiveConnection ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${isLiveConnection ? 'bg-emerald-400 animate-pulse' : 'bg-blue-400'}`}></span>
-              {isLiveConnection ? 'Live Vista POS Sync Active' : 'Audited MTD Stored Procedure Data'}
+              {isLiveConnection ? 'Live POS Sync Active' : 'Audited MTD Stored Procedure Data'}
             </span>
           </div>
           <h2 className="text-xl md:text-2xl font-bold text-white mt-1.5 flex items-center gap-2">
@@ -503,7 +503,7 @@ export default function AhilyanagarFranchiseDashboard({
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               <span>Daily Revenue Performance (Stacked Box Office vs F&amp;B)</span>
             </h3>
-            <p className="text-xs text-gray-400">Day-by-day auditable telemetry generated from Vista POS</p>
+            <p className="text-xs text-gray-400">Day-by-day auditable telemetry generated from Cinema POS</p>
           </div>
           
           <div className="flex items-center gap-4 text-xs">

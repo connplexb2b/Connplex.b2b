@@ -362,7 +362,7 @@ Replace ${serverHost} with the actual server IP or domain where this Vista WebSe
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Daily Vista Sync Service
+                Daily POS Sync Service
               </span>
             </div>
             <h2 className="text-xl font-bold text-white mt-1 tracking-tight flex items-center gap-2">
