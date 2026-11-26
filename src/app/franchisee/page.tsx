@@ -438,6 +438,93 @@ export default function FranchiseePortal() {
   // Training Videos State
   const [activeTrainingModule, setActiveTrainingModule] = useState<string | null>(null);
 
+  // Live Backend State for Ahilyanagar Dashboard (Replaces static demo metrics & screens)
+  const [liveAhilyanagarMetrics, setLiveAhilyanagarMetrics] = useState<Metric[] | null>(null);
+  const [liveAhilyanagarScreens, setLiveAhilyanagarScreens] = useState<ScreenShow[] | null>(null);
+  const [liveSyncLatencyMs, setLiveSyncLatencyMs] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (selectedLocationKey !== 'ahilyanagar') return;
+    let cancelled = false;
+
+    const formatInrShort = (val: number) => {
+      if (!val || isNaN(val)) return '₹0';
+      if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)}Cr`;
+      if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
+      if (val >= 1000) return `₹${(val / 1000).toFixed(1)}K`;
+      return `₹${Math.round(val).toLocaleString('en-IN')}`;
+    };
+
+    const loadAhilyanagarLive = async () => {
+      const t0 = performance.now();
+      const todayStr = new Date().toISOString().split('T')[0];
+      try {
+        const [summaryRes, moviesRes] = await Promise.all([
+          fetch('/api/v1/franchise-dashboard/summary?franchiseCode=FR-CL16').then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch(`/api/conncloud/movies-overview?cinemaId=c5&fromDate=${todayStr}&toDate=${todayStr}`).then(r => r.ok ? r.json() : null).catch(() => null),
+        ]);
+        if (cancelled) return;
+        setLiveSyncLatencyMs(Math.max(1, Math.round(performance.now() - t0)));
+
+        // Map live POS show sessions into dashboard ScreenShow cards
+        if (moviesRes?.success && Array.isArray(moviesRes.liveSessions) && moviesRes.liveSessions.length > 0) {
+          const mappedScreens: ScreenShow[] = moviesRes.liveSessions.map((s: any) => ({
+            screen: s.screenName || (s.screenNumber === 2 ? 'Screen 2 (Couple Lounge)' : 'Screen 1 (Gold Class)'),
+            movie: s.filmTitle || s.movieTitle || 'Live Show',
+            time: s.endTime ? `${s.showTime} - ${s.endTime}` : (s.showTime || '--:--'),
+            occupancy: Number(s.occupancyPercent) || 0,
+            seatsBooked: Number(s.seatsSold) || 0,
+            totalSeats: Number(s.capacity) || 60,
+          }));
+          setLiveAhilyanagarScreens(mappedScreens);
+        }
+
+        // Map live KPI metrics from franchise-dashboard summary + movies-overview fallback
+        const k = summaryRes?.data?.kpis;
+        const mtd = summaryRes?.data?.mtd;
+        const ch = summaryRes?.data?.channels;
+        const mk = moviesRes?.kpis;
+
+        const todayRev = (k?.totalGrossRevenue && k.totalGrossRevenue > 0) ? k.totalGrossRevenue : (mk?.totalCinemaBoxOffice || 0);
+        const admissions = (k?.ticketsSold && k.ticketsSold > 0) ? k.ticketsSold : (mk?.totalAdmissions || 0);
+        const occupancy = (k?.occupancyPercentage && k.occupancyPercentage > 0) ? k.occupancyPercentage : (mk?.avgSeatOccupancy || 0);
+        const atp = (k?.averageTicketPrice && k.averageTicketPrice > 0)
+          ? k.averageTicketPrice
+          : (admissions > 0 ? Math.round(todayRev / admissions) : 0);
+        const sph = k?.spendPerHead || 0;
+        const fnbRev = k?.fnbRevenue || 0;
+        const mtdRev = mtd?.totalGrossRevenue || todayRev;
+        const dod = typeof k?.dayOnDayGrowthPercent === 'number' ? `${k.dayOnDayGrowthPercent >= 0 ? '+' : ''}${k.dayOnDayGrowthPercent}%` : 'Live';
+        const isDodUp = k?.isGrowthPositive !== false;
+
+        if (summaryRes?.data || moviesRes?.success) {
+          const base = LOCATIONS.ahilyanagar.metrics;
+          const onlineRev = (ch?.bookMyShowRevenue || 0) + (ch?.websiteRevenue || 0);
+          const counterRev = ch?.counterRevenue || 0;
+          setLiveAhilyanagarMetrics([
+            { ...base[0], value: formatInrShort(todayRev), trend: dod, isUp: isDodUp },
+            base[1],
+            { ...base[2], value: formatInrShort(mtdRev) },
+            base[3],
+            { ...base[4], value: admissions.toLocaleString('en-IN'), trend: dod, isUp: isDodUp },
+            { ...base[5], value: `${occupancy}%` },
+            { ...base[6], value: `₹${Math.round(atp)}` },
+            { ...base[7], value: `₹${Math.round(sph)}` },
+            { ...base[8], value: onlineRev > 0 ? formatInrShort(onlineRev) : base[8].value },
+            { ...base[9], value: counterRev > 0 ? formatInrShort(counterRev) : base[9].value },
+            { ...base[10], value: fnbRev > 0 ? formatInrShort(fnbRev) : base[10].value },
+            base[11],
+          ]);
+        }
+      } catch (err) {
+        console.error('Failed to load live Ahilyanagar dashboard:', err);
+      }
+    };
+
+    loadAhilyanagarLive();
+    return () => { cancelled = true; };
+  }, [selectedLocationKey]);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const locationDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -604,8 +691,12 @@ export default function FranchiseePortal() {
   };
 
   const currentLocation = LOCATIONS[selectedLocationKey] || LOCATIONS['ahilyanagar'];
-  const metrics: Metric[] = currentLocation.metrics;
-  const shows: ScreenShow[] = currentLocation.screens;
+  const metrics: Metric[] = selectedLocationKey === 'ahilyanagar' && liveAhilyanagarMetrics
+    ? liveAhilyanagarMetrics
+    : currentLocation.metrics;
+  const shows: ScreenShow[] = selectedLocationKey === 'ahilyanagar' && liveAhilyanagarScreens
+    ? liveAhilyanagarScreens
+    : currentLocation.screens;
   const events: EventItem[] = currentLocation.events;
   const newsList: NewsItem[] = currentLocation.newsList;
   const campaigns: CampaignItem[] = currentLocation.campaigns;
@@ -1446,7 +1537,11 @@ export default function FranchiseePortal() {
                   <div className="fra-smart-tile-meta-grid">
                     <div className="fra-smart-tile-meta-item">
                       <span>POS Sync Latency</span>
-                      <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
+                      <strong style={{ color: '#f59e0b' }}>
+                        {selectedLocationKey === 'ahilyanagar' && liveSyncLatencyMs !== null
+                          ? `${liveSyncLatencyMs}ms (Live API)`
+                          : '28ms (ASMX Active)'}
+                      </strong>
                     </div>
                     <div className="fra-smart-tile-meta-item">
                       <span>DCP KDM License</span>
@@ -2669,7 +2764,11 @@ export default function FranchiseePortal() {
                   <div className="fra-smart-tile-meta-grid">
                     <div className="fra-smart-tile-meta-item">
                       <span>POS Sync Latency</span>
-                      <strong style={{ color: '#f59e0b' }}>28ms (ASMX Active)</strong>
+                      <strong style={{ color: '#f59e0b' }}>
+                        {selectedLocationKey === 'ahilyanagar' && liveSyncLatencyMs !== null
+                          ? `${liveSyncLatencyMs}ms (Live API)`
+                          : '28ms (ASMX Active)'}
+                      </strong>
                     </div>
                     <div className="fra-smart-tile-meta-item">
                       <span>DCP KDM License</span>
