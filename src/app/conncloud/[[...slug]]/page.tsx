@@ -241,7 +241,7 @@ export default function ConnCloudPage() {
     { name: 'Training & Orientation', icon: 'fa-graduation-cap', route: '/conncloud/training' },
     { name: 'Operations', icon: 'fa-gears', route: '/conncloud/operations', badge: '3' },
     { name: 'Marketing', icon: 'fa-bullhorn', route: '/conncloud/marketing' },
-    { name: 'My Offers', icon: 'fa-tags', route: '/conncloud/offers' },
+    { name: 'Offers', icon: 'fa-tags', route: '/conncloud/offers' },
     { name: 'Reports', icon: 'fa-file-invoice-dollar', route: '/conncloud/reports' },
     { name: 'MIS', icon: 'fa-chart-pie', route: '/conncloud/mis' },
     { name: 'Documents', icon: 'fa-folder-open', route: '/conncloud/documents' },
@@ -361,7 +361,7 @@ export default function ConnCloudPage() {
       if (p === 'fnb') return 'Food & Beverage';
       if (p === 'merchandise') return 'Merchandise & Store';
       if (p === 'training') return 'Training & Orientation';
-      if (p === 'offers') return 'My Offers';
+      if (p === 'offers') return 'Offers';
       if (p === 'license') return 'License';
       if (p === 'data-extract') return 'Data Extraction Matrix';
       return p.charAt(0).toUpperCase() + p.slice(1);

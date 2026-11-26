@@ -824,6 +824,10 @@ export default function FranchiseePortal() {
       handleNavClick('Food & Beverage');
       return;
     }
+    if (actionName === 'Offers' || actionName === 'My Offers') {
+      handleNavClick('Offers');
+      return;
+    }
     if (actionName === 'Create Maintenance Ticket') {
       handleNavClick('Support');
       setActiveSupportTab('tickets');
@@ -1028,7 +1032,7 @@ export default function FranchiseePortal() {
     { name: 'Operations', icon: 'fa-gears', label: 'Operations' },
     { name: 'Training', icon: 'fa-graduation-cap', label: 'Training & SOPs' },
     { name: 'Marketing', icon: 'fa-bullhorn', label: 'Marketing' },
-    { name: 'Offers', icon: 'fa-tags', label: 'My Offers' },
+    { name: 'Offers', icon: 'fa-tags', label: 'Offers' },
     { name: 'Reports', icon: 'fa-file-invoice-dollar', label: 'Reports' },
     { name: 'MIS', icon: 'fa-chart-pie', label: 'MIS' },
     { name: 'Documents', icon: 'fa-folder-open', label: 'Documents' },
@@ -1649,7 +1653,8 @@ export default function FranchiseePortal() {
                       { label: "View Live Screens", icon: "fa-display", color: "#06b6d4" },
                       { label: "Export Revenue", icon: "fa-upload", color: "#f59e0b" },
                       { label: "Cinema Property Specs", icon: "fa-building", color: "#8b5cf6" },
-                      { label: "Order Inventory", icon: "fa-boxes-stacked", color: "#f43f5e" }
+                      { label: "Order Inventory", icon: "fa-boxes-stacked", color: "#f43f5e" },
+                      { label: "Offers", icon: "fa-tags", color: "#f59e0b" }
                     ].map((act, idx) => (
                       <button 
                         key={idx} 
@@ -3923,7 +3928,7 @@ export default function FranchiseePortal() {
                     <div className="fra-view-breadcrumb">
                       <span>{currentLocation.name}</span>
                       <i className="fa-solid fa-chevron-right"></i>
-                      <span className="fra-view-breadcrumb-active">My Offers</span>
+                      <span className="fra-view-breadcrumb-active">Offers</span>
                     </div>
                     <h1 className="fra-view-title">Promotional Offers, Bank Discounts &amp; Coupon Codes</h1>
                     <p className="fra-view-subtitle">BOGO weekend cinema specials, card discount schemes, student passes, and festive ticket bundles</p>

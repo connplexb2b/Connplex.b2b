@@ -5,31 +5,31 @@
    ========================================================================== */
 
 :root {
-  /* Cinema Hall Ambient Scene */
-  --fra-bg-cinema: url('/auditorium_new.jpg');
-  --fra-overlay-ambient: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
-                         linear-gradient(180deg, rgba(8, 11, 20, 0.62) 0%, rgba(4, 6, 12, 0.76) 100%);
+  /* Clean Studio Canvas Background - Background Image Removed for Pure Glass Contrast */
+  --fra-bg-cinema: none;
+  --fra-bg-canvas: #ffffff;
+  --fra-overlay-ambient: radial-gradient(circle at 50% 10%, #ffffff 0%, #f8fafc 60%, #f1f5f9 100%);
 
-  /* Apple VisionOS Liquid Glass Tokens */
-  --fra-glass-window: rgba(13, 18, 30, 0.68);
-  --fra-glass-header: rgba(16, 22, 36, 0.72);
-  --fra-glass-dock: rgba(14, 20, 32, 0.75);
-  --fra-glass-card: rgba(22, 30, 48, 0.6);
-  --fra-glass-card-hover: rgba(30, 40, 64, 0.78);
-  --fra-glass-tile: rgba(255, 255, 255, 0.045);
-  --fra-glass-input: rgba(10, 14, 24, 0.55);
+  /* Apple VisionOS Liquid Glass Tokens - High-Refraction Translucency on White */
+  --fra-glass-window: rgba(14, 20, 32, 0.78);
+  --fra-glass-header: rgba(16, 22, 36, 0.82);
+  --fra-glass-dock: rgba(14, 20, 32, 0.82);
+  --fra-glass-card: rgba(22, 30, 48, 0.65);
+  --fra-glass-card-hover: rgba(30, 40, 64, 0.80);
+  --fra-glass-tile: rgba(255, 255, 255, 0.06);
+  --fra-glass-input: rgba(10, 14, 24, 0.65);
 
-  /* Specular Rim Highlights & Borders */
-  --fra-glass-border: rgba(255, 255, 255, 0.18);
-  --fra-glass-border-subtle: rgba(255, 255, 255, 0.08);
-  --fra-glass-border-active: rgba(245, 158, 11, 0.65);
-  --fra-glass-highlight: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
-  --fra-glass-highlight-subtle: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  /* Specular Rim Highlights & Borders for Crisp Glass Distinction on White */
+  --fra-glass-border: rgba(255, 255, 255, 0.26);
+  --fra-glass-border-subtle: rgba(255, 255, 255, 0.14);
+  --fra-glass-border-active: rgba(245, 158, 11, 0.75);
+  --fra-glass-highlight: inset 0 1px 1px 0 rgba(255, 255, 255, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --fra-glass-highlight-subtle: inset 0 1px 0 rgba(255, 255, 255, 0.28);
 
-  /* Shadows */
-  --fra-shadow-window: 0 35px 80px -20px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.12);
-  --fra-shadow-dock: 0 20px 45px -10px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.15);
-  --fra-shadow-card: 0 12px 30px -8px rgba(0, 0, 0, 0.45);
+  /* Ambient Glass Drop Shadows on White Surface */
+  --fra-shadow-window: 0 30px 70px -15px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --fra-shadow-dock: 0 20px 45px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --fra-shadow-card: 0 12px 30px -8px rgba(0, 0, 0, 0.35);
 
   /* Blurs */
   --fra-blur-heavy: blur(36px) saturate(190%) brightness(105%);
@@ -60,8 +60,8 @@
 .fra-signin-container {
   min-height: 100vh;
   width: 100%;
-  background: var(--fra-overlay-ambient), var(--fra-bg-cinema) no-repeat center center fixed;
-  background-size: cover;
+  background: var(--fra-overlay-ambient);
+  background-color: #ffffff;
   color: var(--fra-text-primary);
   font-family: var(--fra-font-sans);
   -webkit-font-smoothing: antialiased;
