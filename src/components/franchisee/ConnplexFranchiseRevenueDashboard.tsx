@@ -72,6 +72,8 @@ export default function ConnplexFranchiseRevenueDashboard({
   const [activeTab, setActiveTab] = useState<'overview' | 'channels' | 'fnb' | 'movies' | 'daily' | 'corporate'>('overview');
   const [searchCinemaTerm, setSearchCinemaTerm] = useState<string>('');
   const [sortCinemaField, setSortCinemaField] = useState<'revenue' | 'occupancy' | 'sph'>('revenue');
+  const [hoveredChannelIdx, setHoveredChannelIdx] = useState<number | null>(null);
+  const [selectedChannelIdx, setSelectedChannelIdx] = useState<number | null>(null);
 
   // Detect Corporate Admin vs Franchise Partner
   useEffect(() => {
@@ -731,7 +733,7 @@ export default function ConnplexFranchiseRevenueDashboard({
             ))}
           </div>
 
-          {/* Visual Channel Pie Chart */}
+          {/* Visual Interactive Callout Pie Chart */}
           {(() => {
             const activeChannels = (channelsData?.channels && channelsData.channels.length > 0
               ? channelsData.channels
@@ -743,16 +745,26 @@ export default function ConnplexFranchiseRevenueDashboard({
             ).filter((ch: any) => (ch.sharePercentage || 0) > 0 || (ch.revenue || 0) > 0);
 
             const totalShare = activeChannels.reduce((sum: number, ch: any) => sum + (Number(ch.sharePercentage) || 0), 0) || 100;
-            const cx = 90;
-            const cy = 90;
-            const r = 74;
+            const totalBoxOffice = activeChannels.reduce((sum: number, ch: any) => sum + (Number(ch.revenue) || 0), 0);
+            const cx = 320;
+            const cy = 155;
+            const r = 104;
             let cumulativeAngle = -Math.PI / 2;
 
-            const slices = activeChannels.map((ch: any) => {
+            const formatCompactInr = (val: number) => {
+              if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
+              if (val >= 1000) return `₹${(val / 1000).toFixed(1)}K`;
+              return `₹${val.toLocaleString('en-IN')}`;
+            };
+
+            const activeIdx = hoveredChannelIdx !== null ? hoveredChannelIdx : selectedChannelIdx;
+
+            const slices = activeChannels.map((ch: any, idx: number) => {
               const pct = (Number(ch.sharePercentage) || 0) / totalShare;
               const angle = pct * Math.PI * 2;
               const startAngle = cumulativeAngle;
               const endAngle = cumulativeAngle + angle;
+              const midAngle = (startAngle + endAngle) / 2;
               cumulativeAngle = endAngle;
 
               const x1 = cx + r * Math.cos(startAngle);
@@ -765,43 +777,237 @@ export default function ConnplexFranchiseRevenueDashboard({
                 ? `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.01} ${cy - r} Z`
                 : `M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
 
-              return { ...ch, d };
+              const isActive = activeIdx === idx;
+              const explodeDist = isActive ? 10 : 0;
+              const dx = explodeDist * Math.cos(midAngle);
+              const dy = explodeDist * Math.sin(midAngle);
+
+              // Inside slice text position
+              const labelDist = pct >= 0.22 ? r * 0.56 : r * 0.64;
+              const innerX = cx + labelDist * Math.cos(midAngle);
+              const innerY = cy + labelDist * Math.sin(midAngle);
+
+              // Leader line & callout pill coordinates
+              const isRight = Math.cos(midAngle) >= 0;
+              const p1x = cx + (r + 2) * Math.cos(midAngle);
+              const p1y = cy + (r + 2) * Math.sin(midAngle);
+              const p2x = cx + (r + 22) * Math.cos(midAngle);
+              const p2y = cy + (r + 22) * Math.sin(midAngle);
+              const p3x = isRight ? p2x + 28 : p2x - 28;
+              const pillW = 158;
+              const pillH = 26;
+              const pillX = isRight ? p3x : p3x - pillW;
+              const pillY = p2y - pillH / 2;
+
+              const shortTitle = ch.name.includes('Physical Counter')
+                ? 'Physical Counter'
+                : ch.name.includes('Website')
+                  ? 'Connplex Web & App'
+                  : ch.name;
+
+              return {
+                ...ch,
+                idx,
+                d,
+                dx,
+                dy,
+                isActive,
+                innerX,
+                innerY,
+                p1x,
+                p1y,
+                p2x,
+                p2y,
+                p3x,
+                pillX,
+                pillY,
+                pillW,
+                pillH,
+                shortTitle,
+              };
             });
 
+            const activeSlice = activeIdx !== null ? slices[activeIdx] : null;
+
             return (
-              <div style={{ marginTop: '1.5rem', background: '#172033', borderRadius: '12px', padding: '1.25rem', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div style={{ fontSize: '13px', color: '#e5e7eb', fontWeight: 700, marginBottom: '1rem' }}>
-                  Attribution Share of Total Box Office
+              <div style={{ marginTop: '1.5rem', background: '#172033', borderRadius: '14px', padding: '1.25rem', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div>
+                    <div style={{ fontSize: '14px', color: '#ffffff', fontWeight: 700 }}>
+                      Attribution Share of Total Box Office
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#9ca3af', marginTop: '2px' }}>
+                      Click or hover any slice or label to inspect full channel revenue &amp; share
+                    </div>
+                  </div>
+                  {selectedChannelIdx !== null && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedChannelIdx(null)}
+                      style={{
+                        background: 'rgba(255,255,255,0.08)',
+                        border: '1px solid rgba(255,255,255,0.16)',
+                        color: '#e5e7eb',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        padding: '4px 10px',
+                        borderRadius: '9999px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Clear Selection
+                    </button>
+                  )}
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '2rem' }}>
-                  <svg viewBox="0 0 180 180" style={{ width: '170px', height: '170px', flexShrink: 0 }}>
-                    {slices.map((sl: any, idx: number) => (
-                      <path
-                        key={idx}
-                        d={sl.d}
-                        fill={sl.color || '#3b82f6'}
-                        stroke="#172033"
-                        strokeWidth="2"
-                        style={{ cursor: 'pointer', transition: 'opacity 0.2s' }}
+
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', overflowX: 'auto' }}>
+                  <svg viewBox="0 0 640 310" style={{ width: '100%', maxWidth: '720px', height: 'auto', minWidth: '480px', overflow: 'visible' }}>
+                    {slices.map((sl: any) => (
+                      <g
+                        key={sl.idx}
+                        onMouseEnter={() => setHoveredChannelIdx(sl.idx)}
+                        onMouseLeave={() => setHoveredChannelIdx(null)}
+                        onClick={() => setSelectedChannelIdx(selectedChannelIdx === sl.idx ? null : sl.idx)}
+                        style={{
+                          cursor: 'pointer',
+                          transform: `translate(${sl.dx.toFixed(1)}px, ${sl.dy.toFixed(1)}px)`,
+                          transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+                        }}
                       >
-                        <title>{`${sl.name}: ${sl.sharePercentage}% (₹${(sl.revenue || 0).toLocaleString('en-IN')})`}</title>
-                      </path>
+                        <path
+                          d={sl.d}
+                          fill={sl.color || '#3b82f6'}
+                          stroke={sl.isActive ? '#ffffff' : '#172033'}
+                          strokeWidth={sl.isActive ? '2.5' : '2'}
+                          opacity={activeIdx !== null && !sl.isActive ? 0.72 : 1}
+                        />
+                        <text
+                          x={sl.innerX}
+                          y={sl.innerY - 4}
+                          textAnchor="middle"
+                          fill="#ffffff"
+                          fontSize="12"
+                          fontWeight="800"
+                          style={{ pointerEvents: 'none', textShadow: '0 1px 4px rgba(0,0,0,0.65)' }}
+                        >
+                          {formatCompactInr(sl.revenue || 0)}
+                        </text>
+                        <text
+                          x={sl.innerX}
+                          y={sl.innerY + 12}
+                          textAnchor="middle"
+                          fill="rgba(255,255,255,0.9)"
+                          fontSize="10.5"
+                          fontWeight="700"
+                          style={{ pointerEvents: 'none', textShadow: '0 1px 4px rgba(0,0,0,0.65)' }}
+                        >
+                          ({sl.sharePercentage}%)
+                        </text>
+
+                        {/* Leader Line & Callout Label Pill */}
+                        <polyline
+                          points={`${sl.p1x.toFixed(1)},${sl.p1y.toFixed(1)} ${sl.p2x.toFixed(1)},${sl.p2y.toFixed(1)} ${sl.p3x.toFixed(1)},${sl.p2y.toFixed(1)}`}
+                          fill="none"
+                          stroke={sl.color}
+                          strokeWidth={sl.isActive ? '2' : '1.4'}
+                          opacity="0.9"
+                        />
+                        <rect
+                          x={sl.pillX}
+                          y={sl.pillY}
+                          width={sl.pillW}
+                          height={sl.pillH}
+                          rx="6"
+                          fill={sl.isActive ? '#1e293b' : '#0f172a'}
+                          stroke={sl.color}
+                          strokeWidth={sl.isActive ? '1.8' : '1.1'}
+                        />
+                        <text
+                          x={sl.pillX + sl.pillW / 2}
+                          y={sl.pillY + 16.5}
+                          textAnchor="middle"
+                          fill="#f8fafc"
+                          fontSize="10.5"
+                          fontWeight="600"
+                        >
+                          {`${sl.shortTitle} (${sl.sharePercentage}%)`}
+                        </text>
+                      </g>
                     ))}
                   </svg>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, minWidth: '220px' }}>
-                    {activeChannels.map((ch: any, idx: number) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ width: '10px', height: '10px', background: ch.color, borderRadius: '50%', flexShrink: 0 }} />
-                          <span style={{ fontSize: '12px', color: '#e5e7eb', fontWeight: 600 }}>{ch.name}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <span style={{ fontSize: '12px', color: '#9ca3af' }}>₹{(ch.revenue || 0).toLocaleString('en-IN')}</span>
-                          <span style={{ fontSize: '12px', color: ch.color, fontWeight: 700, minWidth: '42px', textAlign: 'right' }}>{ch.sharePercentage}%</span>
-                        </div>
+
+                  {/* Floating Detail Callout Tooltip on Hover or Click */}
+                  {activeSlice && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '-6px',
+                        right: '4px',
+                        background: 'rgba(10, 14, 24, 0.96)',
+                        border: `1px solid ${activeSlice.color}`,
+                        borderRadius: '10px',
+                        padding: '0.6rem 0.85rem',
+                        boxShadow: '0 14px 32px rgba(0,0,0,0.55)',
+                        minWidth: '195px',
+                        pointerEvents: 'none',
+                        zIndex: 10
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: activeSlice.color }} />
+                        <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#ffffff' }}>{activeSlice.name}</span>
                       </div>
-                    ))}
-                  </div>
+                      <div style={{ fontSize: '11.5px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+                        <span>Revenue:</span>
+                        <strong style={{ color: '#ffffff' }}>₹{(activeSlice.revenue || 0).toLocaleString('en-IN')}</strong>
+                      </div>
+                      <div style={{ fontSize: '11.5px', color: '#cbd5e1', display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+                        <span>Box Office Share:</span>
+                        <strong style={{ color: activeSlice.color }}>{activeSlice.sharePercentage}%</strong>
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Total Pool:</span>
+                        <span>₹{totalBoxOffice.toLocaleString('en-IN')}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Clickable Summary Legend Strip */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.65rem', marginTop: '0.75rem' }}>
+                  {activeChannels.map((ch: any, idx: number) => {
+                    const isSel = activeIdx === idx;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onMouseEnter={() => setHoveredChannelIdx(idx)}
+                        onMouseLeave={() => setHoveredChannelIdx(null)}
+                        onClick={() => setSelectedChannelIdx(selectedChannelIdx === idx ? null : idx)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '0.55rem 0.85rem',
+                          background: isSel ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.03)',
+                          border: isSel ? `1px solid ${ch.color}` : '1px solid rgba(255,255,255,0.06)',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'all 0.18s ease'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                          <span style={{ width: '10px', height: '10px', background: ch.color, borderRadius: '50%', flexShrink: 0 }} />
+                          <span style={{ fontSize: '12px', color: '#e5e7eb', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.name}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0, marginLeft: '8px' }}>
+                          <span style={{ fontSize: '12px', color: '#9ca3af' }}>₹{(ch.revenue || 0).toLocaleString('en-IN')}</span>
+                          <span style={{ fontSize: '12px', color: ch.color, fontWeight: 700 }}>{ch.sharePercentage}%</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );
