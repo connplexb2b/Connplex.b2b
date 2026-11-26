@@ -7,6 +7,17 @@ import './franchisee.css';
 import AhilyanagarApiIntegration from '../../components/conncloud/AhilyanagarApiIntegration';
 import AhilyanagarFranchiseDashboard from '../../components/conncloud/AhilyanagarFranchiseDashboard';
 import ConnplexFranchiseRevenueDashboard from '../../components/franchisee/ConnplexFranchiseRevenueDashboard';
+import DataExtractionMatrix from '../../components/conncloud/DataExtractionMatrix';
+import GroupBookingView from '../../components/conncloud/views/GroupBookingView';
+import MerchandiseView from '../../components/conncloud/views/MerchandiseView';
+import StaffView from '../../components/conncloud/views/StaffView';
+import TrainingView from '../../components/conncloud/views/TrainingView';
+import OffersView from '../../components/conncloud/views/OffersView';
+import MISView from '../../components/conncloud/views/MISView';
+import DocumentsView from '../../components/conncloud/views/DocumentsView';
+import LicenseView from '../../components/conncloud/views/LicenseView';
+import NotificationsView from '../../components/conncloud/views/NotificationsView';
+import CalendarView from '../../components/conncloud/views/CalendarView';
 import {
   verifyFranchiseeCredentials,
   storeFranchiseeSession,
@@ -392,6 +403,7 @@ export default function FranchiseePortal() {
   const [toast, setToast] = useState<string | null>(null);
   const [apiDocsExpanded, setApiDocsExpanded] = useState<boolean>(false);
   const [todayFormatted, setTodayFormatted] = useState<string>('');
+  const [showAllModulesModal, setShowAllModulesModal] = useState<boolean>(false);
 
   // Cinema Facility & Operations State
   const [auditoriumTemp, setAuditoriumTemp] = useState<number>(21);
@@ -435,13 +447,24 @@ export default function FranchiseePortal() {
     if (lower === 'analytics' || lower === 'kpi' || lower === 'kpis') return 'Analytics';
     if (lower === 'finance' || lower === 'revenue' || lower === 'ledger') return 'Finance';
     if (lower === 'ticket sales' || lower === 'tickets' || lower === 'ticketing' || lower === 'box office') return 'Ticket Sales';
+    if (lower === 'group booking' || lower === 'group bookings' || lower === 'groups') return 'Group Booking';
     if (lower === 'food & beverage' || lower === 'f&b' || lower === 'fnb' || lower === 'food' || lower === 'concessions') return 'Food & Beverage';
+    if (lower === 'merchandise' || lower === 'store' || lower === 'merch') return 'Merchandise';
     if (lower === 'movies' || lower === 'shows' || lower === 'screening' || lower === 'schedule') return 'Movies';
     if (lower === 'operations' || lower === 'ops' || lower === 'telemetry') return 'Operations';
+    if (lower === 'staff' || lower === 'employees' || lower === 'hr' || lower === 'roster') return 'Staff';
+    if (lower === 'training' || lower === 'orientation' || lower === 'sops' || lower === 'sop') return 'Training';
     if (lower === 'marketing' || lower === 'promo' || lower === 'campaigns') return 'Marketing';
-    if (lower === 'reports' || lower === 'mis' || lower === 'statements') return 'Reports';
+    if (lower === 'offers' || lower === 'my offers' || lower === 'promotions' || lower === 'discounts') return 'Offers';
+    if (lower === 'reports' || lower === 'statements') return 'Reports';
+    if (lower === 'mis' || lower === 'bi' || lower === 'intelligence') return 'MIS';
+    if (lower === 'documents' || lower === 'docs' || lower === 'agreements' || lower === 'policies') return 'Documents';
+    if (lower === 'license' || lower === 'licenses' || lower === 'compliance') return 'License';
+    if (lower === 'notifications' || lower === 'alerts') return 'Notifications';
+    if (lower === 'calendar' || lower === 'schedule' || lower === 'events') return 'Calendar';
+    if (lower === 'data extract' || lower === 'extraction' || lower === 'matrix' || lower === 'data extraction matrix') return 'Data Extraction Matrix';
     if (lower === 'support' || lower === 'help' || lower === 'noc') return 'Support';
-    if (lower === 'settings' || lower === 'config' || lower === 'property' || lower === 'staff') return 'Settings';
+    if (lower === 'settings' || lower === 'config' || lower === 'property') return 'Settings';
     return null;
   };
 
@@ -990,17 +1013,28 @@ export default function FranchiseePortal() {
     );
   }
 
-  // VisionOS Spatial Nav Items for Left Floating Capsule Dock
+  // VisionOS Spatial Nav Items for Left Floating Capsule Dock (All 22 Modules)
   const dockNavItems = [
     { name: 'Dashboard', icon: 'fa-house', label: 'Dashboard' },
     { name: 'Analytics', icon: 'fa-chart-line', label: 'Analytics' },
     { name: 'Finance', icon: 'fa-indian-rupee-sign', label: 'Finance' },
-    { name: 'Ticket Sales', icon: 'fa-ticket', label: 'Tickets' },
-    { name: 'Food & Beverage', icon: 'fa-burger', label: 'Food & Beverage' },
     { name: 'Movies', icon: 'fa-film', label: 'Movies' },
+    { name: 'Ticket Sales', icon: 'fa-ticket', label: 'Ticket Sales' },
+    { name: 'Group Booking', icon: 'fa-users', label: 'Group Booking' },
+    { name: 'Food & Beverage', icon: 'fa-burger', label: 'Food & Beverage' },
+    { name: 'Merchandise', icon: 'fa-store', label: 'Merchandise' },
     { name: 'Operations', icon: 'fa-gears', label: 'Operations' },
+    { name: 'Staff', icon: 'fa-user-tie', label: 'Staff' },
+    { name: 'Training', icon: 'fa-graduation-cap', label: 'Training & SOPs' },
     { name: 'Marketing', icon: 'fa-bullhorn', label: 'Marketing' },
+    { name: 'Offers', icon: 'fa-tags', label: 'My Offers' },
     { name: 'Reports', icon: 'fa-file-invoice-dollar', label: 'Reports' },
+    { name: 'MIS', icon: 'fa-chart-pie', label: 'MIS' },
+    { name: 'Documents', icon: 'fa-folder-open', label: 'Documents' },
+    { name: 'License', icon: 'fa-certificate', label: 'License' },
+    { name: 'Notifications', icon: 'fa-bell', label: 'Notifications' },
+    { name: 'Calendar', icon: 'fa-calendar-days', label: 'Calendar' },
+    { name: 'Data Extraction Matrix', icon: 'fa-database', label: 'Data Extraction' },
     { name: 'Support', icon: 'fa-circle-question', label: 'Support' },
     { name: 'Settings', icon: 'fa-sliders', label: 'Settings' }
   ];
@@ -1037,11 +1071,12 @@ export default function FranchiseePortal() {
         <button
           type="button"
           className="fra-dock-btn"
-          onClick={() => showToast('All 11 Franchise Modules Active')}
-          title="More modules"
-          aria-label="More modules"
+          onClick={() => setShowAllModulesModal(true)}
+          title="All 22 Cinema Modules"
+          aria-label="All 22 Cinema Modules"
         >
-          <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.85rem' }}></i>
+          <i className="fa-solid fa-table-cells" style={{ fontSize: '0.88rem' }}></i>
+          <span className="fra-dock-tooltip">All 22 Modules</span>
         </button>
       </nav>
 
@@ -1112,6 +1147,47 @@ export default function FranchiseePortal() {
               </button>
             ) : (
               <span className="fra-header-kbd">⌘K</span>
+            )}
+
+            {searchQuery.trim().length > 0 && (
+              <div 
+                className="fra-dropdown-menu" 
+                style={{ 
+                  position: 'absolute', 
+                  top: 'calc(100% + 10px)', 
+                  left: 0, 
+                  right: 0, 
+                  minWidth: '320px', 
+                  maxHeight: '340px', 
+                  overflowY: 'auto',
+                  zIndex: 1000
+                }}
+              >
+                <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', padding: '6px 10px', fontWeight: 800, borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  Matching Modules &amp; Pages
+                </div>
+                {dockNavItems
+                  .filter(i => i.label.toLowerCase().includes(searchQuery.toLowerCase()) || i.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                  .map(item => (
+                    <button
+                      key={item.name}
+                      type="button"
+                      className="fra-dropdown-item"
+                      onClick={() => {
+                        handleNavClick(item.name);
+                        setSearchQuery('');
+                      }}
+                    >
+                      <i className={`fa-solid ${item.icon}`} style={{ color: '#f59e0b', width: '18px' }}></i>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                {dockNavItems.filter(i => i.label.toLowerCase().includes(searchQuery.toLowerCase()) || i.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                  <div style={{ padding: '0.75rem', fontSize: '0.75rem', color: '#94a3b8', textAlign: 'center' }}>
+                    No matching modules found for &ldquo;{searchQuery}&rdquo;
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -3698,8 +3774,424 @@ export default function FranchiseePortal() {
             </div>
           )}
 
+          {/* ================================================================
+              VIEW: GROUP BOOKING & BULK SHOWS
+             ================================================================ */}
+          {activeTab === 'Group Booking' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-users"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Group Booking</span>
+                    </div>
+                    <h1 className="fra-view-title">Group Bookings, VIP Packages &amp; Corporate Screenings</h1>
+                    <p className="fra-view-subtitle">Bulk ticket quotes, private auditorium charters, school packages, and birthday screenings</p>
+                  </div>
+                </div>
+              </div>
+              <GroupBookingView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: MERCHANDISE / CINEMA RETAIL STORE
+             ================================================================ */}
+          {activeTab === 'Merchandise' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-store"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Merchandise</span>
+                    </div>
+                    <h1 className="fra-view-title">Cinema Merchandise &amp; Memorabilia Retail Store</h1>
+                    <p className="fra-view-subtitle">Official film posters, superhero collectibles, branded popcorn tubs, and retail apparel</p>
+                  </div>
+                </div>
+              </div>
+              <MerchandiseView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: STAFF & ROSTER MANAGEMENT
+             ================================================================ */}
+          {activeTab === 'Staff' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-user-tie"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Staff Management</span>
+                    </div>
+                    <h1 className="fra-view-title">Cinema Staff Roster, Shifts &amp; Team Productivity</h1>
+                    <p className="fra-view-subtitle">Duty manager shifts, box office cashiers, ushers, projectionists, and leave approvals</p>
+                  </div>
+                </div>
+              </div>
+              <StaffView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: TRAINING & SOPS ACADEMY
+             ================================================================ */}
+          {activeTab === 'Training' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-graduation-cap"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Training &amp; SOPs</span>
+                    </div>
+                    <h1 className="fra-view-title">Franchise Staff Training Academy &amp; Standard Operating Procedures</h1>
+                    <p className="fra-view-subtitle">Certified video training modules, projection room protocols, guest safety drills, and cinema hygiene</p>
+                  </div>
+                </div>
+              </div>
+              <TrainingView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: OFFERS & PROMOTIONS
+             ================================================================ */}
+          {activeTab === 'Offers' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-tags"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">My Offers</span>
+                    </div>
+                    <h1 className="fra-view-title">Promotional Offers, Bank Discounts &amp; Coupon Codes</h1>
+                    <p className="fra-view-subtitle">BOGO weekend cinema specials, card discount schemes, student passes, and festive ticket bundles</p>
+                  </div>
+                </div>
+              </div>
+              <OffersView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: MIS & EXECUTIVE BI INTELLIGENCE
+             ================================================================ */}
+          {activeTab === 'MIS' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-chart-pie"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">MIS</span>
+                    </div>
+                    <h1 className="fra-view-title">Executive Management Information System (MIS)</h1>
+                    <p className="fra-view-subtitle">Strategic multi-screen variance analysis, consolidated collections, target benchmarking, and KPI analytics</p>
+                  </div>
+                </div>
+              </div>
+              <MISView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: DOCUMENTS & LEGAL REPOSITORY
+             ================================================================ */}
+          {activeTab === 'Documents' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-folder-open"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Documents</span>
+                    </div>
+                    <h1 className="fra-view-title">Cinema Legal Agreements, Corporate Policies &amp; Documents</h1>
+                    <p className="fra-view-subtitle">Franchise agreement copies, FSSAI certificates, distributor royalty terms, and statutory audit records</p>
+                  </div>
+                </div>
+              </div>
+              <DocumentsView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: LICENSE & STATUTORY COMPLIANCE
+             ================================================================ */}
+          {activeTab === 'License' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-certificate"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">License</span>
+                    </div>
+                    <h1 className="fra-view-title">Statutory Cinema Licenses &amp; Regulatory Compliances</h1>
+                    <p className="fra-view-subtitle">District Magistrate Cinema license, Fire NOC, Health license, Electrical inspections, and PPL/IPRS clearance</p>
+                  </div>
+                </div>
+              </div>
+              <LicenseView 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: NOTIFICATIONS & CRITICAL ALERTS
+             ================================================================ */}
+          {activeTab === 'Notifications' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-bell"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Notifications</span>
+                    </div>
+                    <h1 className="fra-view-title">Live System Notifications &amp; Escalation Alerts</h1>
+                    <p className="fra-view-subtitle">Real-time alerts for projection errors, inventory stock triggers, offline screens, and SLA deadlines</p>
+                  </div>
+                </div>
+              </div>
+              <NotificationsView 
+                onNavigate={(r) => {
+                  const cleaned = r.replace('/conncloud/', '').replace(/[-_]/g, ' ');
+                  const resolved = normalizeTab(cleaned) || 'Dashboard';
+                  handleNavClick(resolved);
+                }} 
+                triggerNotification={showToast} 
+              />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: CALENDAR & SHOWTIME SCHEDULES
+             ================================================================ */}
+          {activeTab === 'Calendar' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-calendar-days"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Calendar</span>
+                    </div>
+                    <h1 className="fra-view-title">Cinema Operations Calendar &amp; Showtime Milestones</h1>
+                    <p className="fra-view-subtitle">Upcoming film release premieres, maintenance schedules, corporate reviews, and marketing deadlines</p>
+                  </div>
+                </div>
+              </div>
+              <CalendarView selectedCinemaId={currentLocation.cinemaId} />
+            </div>
+          )}
+
+          {/* ================================================================
+              VIEW: DATA EXTRACTION MATRIX
+             ================================================================ */}
+          {activeTab === 'Data Extraction Matrix' && (
+            <div className="fra-page-view-container">
+              <div className="fra-view-page-header">
+                <div className="fra-view-page-title-wrap">
+                  <div className="fra-view-page-icon">
+                    <i className="fa-solid fa-database"></i>
+                  </div>
+                  <div>
+                    <div className="fra-view-breadcrumb">
+                      <span>{currentLocation.name}</span>
+                      <i className="fa-solid fa-chevron-right"></i>
+                      <span className="fra-view-breadcrumb-active">Data Extraction</span>
+                    </div>
+                    <h1 className="fra-view-title">21-Source Data Extraction Matrix &amp; Schema Inspector</h1>
+                    <p className="fra-view-subtitle">Automated verification of POS database tables, collections, sync timestamps, and audit schemas</p>
+                  </div>
+                </div>
+              </div>
+              <DataExtractionMatrix 
+                selectedCinemaId={currentLocation.cinemaId} 
+                selectedDateRange="Today" 
+                onNotification={showToast} 
+              />
+            </div>
+          )}
+
         </main>
       </div>
+
+      {/* 3. All 22 Cinema Modules Overview Modal */}
+      {showAllModulesModal && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.78)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem'
+          }}
+          onClick={() => setShowAllModulesModal(false)}
+        >
+          <div 
+            style={{
+              background: 'linear-gradient(145deg, rgba(17, 24, 39, 0.95), rgba(11, 15, 25, 0.98))',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '24px',
+              maxWidth: '960px',
+              width: '100%',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              padding: '2rem',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <i className="fa-solid fa-table-cells" style={{ color: '#f59e0b' }}></i>
+                  All 22 Cinema Modules
+                </h2>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' }}>
+                  Unified Operations &amp; Franchise Suite for {currentLocation.name}
+                </p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowAllModulesModal(false)}
+                style={{ background: 'rgba(255, 255, 255, 0.08)', border: 'none', color: '#cbd5e1', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '0.85rem' }}>
+              {dockNavItems.map((item) => {
+                const isActive = activeTab === item.name;
+                return (
+                  <button
+                    key={item.name}
+                    type="button"
+                    onClick={() => {
+                      handleNavClick(item.name);
+                      setShowAllModulesModal(false);
+                    }}
+                    style={{
+                      background: isActive ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.15))' : 'rgba(255, 255, 255, 0.03)',
+                      border: isActive ? '1px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.06)',
+                      borderRadius: '16px',
+                      padding: '1rem',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.6rem',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <div style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      background: isActive ? '#f59e0b' : 'rgba(255, 255, 255, 0.06)',
+                      color: isActive ? '#0b0f19' : '#cbd5e1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1rem'
+                    }}>
+                      <i className={`fa-solid ${item.icon}`}></i>
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#ffffff' }}>{item.label}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>Open {item.name} module</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 4. Bottom Floating Capsule Location Dock (Exact Match to Reference Image's "Living Room / Bedroom" Pill Dock) */}
       <nav className="fra-floating-bottom-dock" aria-label="Cinema Property Switcher Dock">

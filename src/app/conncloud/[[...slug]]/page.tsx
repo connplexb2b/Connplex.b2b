@@ -603,11 +603,6 @@ export default function ConnCloudPage() {
               >
                 <i className="fa-solid fa-building text-blue-400"></i>
                 <span>{selectedCinema === 'all' ? 'All Cinemas' : (ConnCloudStore.getCinemas().find(c => c?.cinemaId === selectedCinema)?.name || 'Ahilyanagar')}</span>
-                {selectedCinema === 'c5' && (
-                  <span className="px-1 py-0.2 rounded text-[8px] font-black bg-amber-500/20 text-amber-300">
-                    API
-                  </span>
-                )}
                 <i className="fa-solid fa-chevron-down text-[10px] text-gray-500"></i>
               </button>
               {cinemaSelectOpen && (
@@ -635,11 +630,6 @@ export default function ConnCloudPage() {
                       className="p-2 text-left rounded hover:bg-white/5 text-xs text-gray-300 hover:text-white flex items-center justify-between"
                     >
                       <span>{c.name}</span>
-                      {c.cinemaId === 'c5' && (
-                        <span className="px-1.5 py-0.5 rounded text-[8px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                          VISTA API
-                        </span>
-                      )}
                     </button>
                   ))}
                 </div>

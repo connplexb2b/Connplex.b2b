@@ -162,6 +162,7 @@
   flex: 1;
   max-width: 500px;
   height: 42px;
+  position: relative;
   background: rgba(255, 255, 255, 0.065);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 9999px;
@@ -375,24 +376,33 @@
   left: 1.15rem;
   top: 50%;
   transform: translateY(-50%);
+  max-height: calc(100vh - 3.5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   background: var(--fra-glass-dock);
   backdrop-filter: var(--fra-blur-dock);
   -webkit-backdrop-filter: var(--fra-blur-dock);
   border: 1px solid var(--fra-glass-border);
   box-shadow: var(--fra-shadow-dock), var(--fra-glass-highlight);
   border-radius: 9999px;
-  padding: 0.85rem 0.45rem;
+  padding: 0.75rem 0.45rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.45rem;
   z-index: 130;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.fra-floating-dock::-webkit-scrollbar {
+  display: none;
+}
+
 .fra-dock-btn {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
   border-radius: 50%;
   background: transparent;
   border: none;

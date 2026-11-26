@@ -126,18 +126,27 @@ export default function MoviesView({
   const isAhilyanagar = selectedCinemaId === 'c5' || selectedCinemaId === 'CN01' || selectedCinemaId === 'all';
   const cinemaName = isAhilyanagar ? 'Connplex Ahilyanagar (Kohinoor)' : 'Selected Cinema';
 
-  // Date range mapping
+  // Dynamic Date range mapping
   const { fromDate, toDate } = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const d = new Date();
     if (selectedDateRange === 'Today') {
-      return { fromDate: '2026-11-18', toDate: '2026-11-18' };
+      return { fromDate: today, toDate: today };
     }
     if (selectedDateRange === 'Yesterday') {
-      return { fromDate: '2026-11-17', toDate: '2026-11-17' };
+      const y = new Date(d);
+      y.setDate(y.getDate() - 1);
+      const yStr = y.toISOString().split('T')[0];
+      return { fromDate: yStr, toDate: yStr };
     }
     if (selectedDateRange === 'Last 7 Days') {
-      return { fromDate: '2026-11-11', toDate: '2026-11-18' };
+      const d7 = new Date(d);
+      d7.setDate(d7.getDate() - 7);
+      return { fromDate: d7.toISOString().split('T')[0], toDate: today };
     }
-    return { fromDate: '2026-11-01', toDate: '2026-11-18' };
+    const d30 = new Date(d);
+    d30.setDate(1);
+    return { fromDate: d30.toISOString().split('T')[0], toDate: today };
   }, [selectedDateRange]);
 
   // Fetch Movies Overview & Live Vista Data

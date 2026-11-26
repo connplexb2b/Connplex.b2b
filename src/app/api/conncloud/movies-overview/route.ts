@@ -73,10 +73,11 @@ export async function OPTIONS() {
 
 export async function GET(req: NextRequest) {
   try {
+    const todayStr = new Date().toISOString().split('T')[0];
     const { searchParams } = new URL(req.url);
     const cinemaId = searchParams.get('cinemaId') || 'c5';
     const fromDate = searchParams.get('fromDate') || '2026-11-01';
-    const toDate = searchParams.get('toDate') || '2026-11-18';
+    const toDate = searchParams.get('toDate') || todayStr;
 
     // 1. Query Films in Screening with Performance from Vista
     const filmsSql = `
@@ -107,7 +108,7 @@ export async function GET(req: NextRequest) {
       WHERE CAST(s.Session_dtmBusinessDate AS DATE) BETWEEN '${fromDate}' AND '${toDate}'
     `;
 
-    // 3. Query Today's Live Sessions & Screens from Vista
+    // 3. Query Today's Live Sessions & Screens from Vista (Screen_bytNum column)
     const liveSessionsSql = `
       SELECT 
         s.Session_lngSessionId,
@@ -115,7 +116,7 @@ export async function GET(req: NextRequest) {
         f.Film_strTitle,
         f.Film_strCensor,
         f.Film_intDuration,
-        s.Screen_byteNum,
+        s.Screen_bytNum as Screen_byteNum,
         CONVERT(VARCHAR(5), s.Session_dtmRealShow, 108) as ShowTime,
         CONVERT(VARCHAR(10), CAST(s.Session_dtmBusinessDate AS DATE), 120) as BusinessDate,
         s.Session_intSeatsSold,
@@ -124,7 +125,7 @@ export async function GET(req: NextRequest) {
       FROM tblSession s WITH (NOLOCK)
       INNER JOIN tblFilm f WITH (NOLOCK) ON s.Film_strCode = f.Film_strCode
       WHERE CAST(s.Session_dtmBusinessDate AS DATE) = '${toDate}'
-      ORDER BY s.Screen_byteNum ASC, s.Session_dtmRealShow ASC
+      ORDER BY s.Screen_bytNum ASC, s.Session_dtmRealShow ASC
     `;
 
     const [filmsXml, ticketXml, sessionsXml] = await Promise.all([
@@ -133,20 +134,20 @@ export async function GET(req: NextRequest) {
       queryVistaDCEngine(liveSessionsSql).catch(() => ''),
     ]);
 
-    const filmRows = parseDiffgramTables(filmsXml);
+    let filmRows = parseDiffgramTables(filmsXml);
     const ticketRows = parseDiffgramTables(ticketXml);
     let sessionRows = parseDiffgramTables(sessionsXml);
 
     // If today has 0 direct rows, pull the most recent active show date
     if (sessionRows.length === 0) {
       const fallbackRecentSql = `
-        SELECT TOP 20
+        SELECT TOP 30
           s.Session_lngSessionId,
           s.Film_strCode,
           f.Film_strTitle,
           f.Film_strCensor,
           f.Film_intDuration,
-          s.Screen_byteNum,
+          s.Screen_bytNum as Screen_byteNum,
           CONVERT(VARCHAR(5), s.Session_dtmRealShow, 108) as ShowTime,
           CONVERT(VARCHAR(10), CAST(s.Session_dtmBusinessDate AS DATE), 120) as BusinessDate,
           s.Session_intSeatsSold,
@@ -154,11 +155,32 @@ export async function GET(req: NextRequest) {
           (s.Session_intSeatsSold + s.Session_intSeatsAvail) as Capacity
         FROM tblSession s WITH (NOLOCK)
         INNER JOIN tblFilm f WITH (NOLOCK) ON s.Film_strCode = f.Film_strCode
-        WHERE CAST(s.Session_dtmBusinessDate AS DATE) BETWEEN '${fromDate}' AND '${toDate}'
-        ORDER BY s.Session_dtmBusinessDate DESC, s.Screen_byteNum ASC, s.Session_dtmRealShow ASC
+        ORDER BY s.Session_dtmBusinessDate DESC, s.Screen_bytNum ASC, s.Session_dtmRealShow ASC
       `;
       const fallbackXml = await queryVistaDCEngine(fallbackRecentSql).catch(() => '');
       sessionRows = parseDiffgramTables(fallbackXml);
+    }
+
+    // If films query returned 0 rows, pull all top active films from tblSession
+    if (filmRows.length === 0) {
+      const fallbackFilmsSql = `
+        SELECT TOP 20
+          f.Film_strCode,
+          f.Film_strTitle,
+          f.Film_strCensor,
+          f.Film_intDuration,
+          f.Film_strDescription,
+          f.Film_strShortDesc,
+          COUNT(s.Session_lngSessionId) as ShowsCount,
+          SUM(s.Session_intSeatsSold) as Admits,
+          SUM(s.Session_intSeatsSold + s.Session_intSeatsAvail) as Capacity
+        FROM tblSession s WITH (NOLOCK)
+        INNER JOIN tblFilm f WITH (NOLOCK) ON s.Film_strCode = f.Film_strCode
+        GROUP BY f.Film_strCode, f.Film_strTitle, f.Film_strCensor, f.Film_intDuration, f.Film_strDescription, f.Film_strShortDesc
+        ORDER BY ShowsCount DESC
+      `;
+      const fallbackFilmsXml = await queryVistaDCEngine(fallbackFilmsSql).catch(() => '');
+      filmRows = parseDiffgramTables(fallbackFilmsXml);
     }
 
     // Process Films Catalog
