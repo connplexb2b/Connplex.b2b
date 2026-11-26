@@ -30,8 +30,20 @@
 .conncloud-body {
   background-color: var(--cc-bg);
   color: var(--cc-text);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', var(--font-outfit), 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
+}
+
+.conncloud-body h1,
+.conncloud-body h2,
+.conncloud-body h3,
+.conncloud-body h4 {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.025em;
 }
 
 /* Custom scrollbars */

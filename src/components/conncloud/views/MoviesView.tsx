@@ -165,7 +165,7 @@ export default function MoviesView({
           setKpiData(data.kpis);
         }
         if (showToast) {
-          triggerNotification(`Synced ${data.movies?.length || 0} movies & ${data.liveSessions?.length || 0} sessions from Vista POS.`);
+          triggerNotification(`Synced ${data.movies?.length || 0} movies & ${data.liveSessions?.length || 0} sessions from Live POS.`);
         }
       } else {
         triggerNotification(`Notice: ${data.error || 'Loaded verified dataset'}`);
@@ -248,7 +248,7 @@ export default function MoviesView({
 
   return (
     <div className="space-y-6">
-      {/* Vista API Live Telemetry Header */}
+      {/* Live Telemetry Header */}
       <div className="bg-gradient-to-r from-amber-500/15 via-[#131c2e] to-transparent border border-amber-500/30 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-black/40">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-base shrink-0">
@@ -256,7 +256,7 @@ export default function MoviesView({
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-white text-sm">Vista Box Office Live Sync: Ahilyanagar (Kohinoor)</span>
+              <span className="font-bold text-white text-sm">Box Office Live Sync: Ahilyanagar (Kohinoor)</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 LIVE SQL CONNECTED
@@ -269,7 +269,7 @@ export default function MoviesView({
               </span>
             </div>
             <p className="text-gray-400 text-xs mt-0.5">
-              Real-time session occupancy, seat bookings, and box office ticket sync active from Vista POS Database.
+              Real-time session occupancy, seat bookings, and box office ticket sync active from Live POS Database.
             </p>
           </div>
         </div>
@@ -304,7 +304,7 @@ export default function MoviesView({
             <i className="fa-solid fa-clapperboard text-[11px]"></i>
             <span>Movie Catalog &amp; Live Status</span>
             <span className="text-[9px] px-1 py-0.2 rounded font-mono bg-white/10 text-white">
-              Vista Calc
+              POS Synced
             </span>
           </button>
 
@@ -319,7 +319,7 @@ export default function MoviesView({
             <i className="fa-solid fa-clock text-[11px]"></i>
             <span>Today's Live Sessions</span>
             <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              {liveSessions.length} Live [Vista]
+              {liveSessions.length} Live Shows
             </span>
           </button>
 
@@ -369,7 +369,7 @@ export default function MoviesView({
           <div className="flex justify-between items-start mb-1">
             <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Films in Screening</span>
             <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">
-              Calculation: Vista
+              Calculation: POS
             </span>
           </div>
           <div className="text-2xl font-extrabold text-white flex items-center gap-1.5">
@@ -384,7 +384,7 @@ export default function MoviesView({
           <div className="flex justify-between items-start mb-1">
             <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Today's Live Screens</span>
             <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold uppercase">
-              Vista POS
+              Live POS
             </span>
           </div>
           <div className="text-2xl font-extrabold text-blue-400 flex items-center gap-1.5">
@@ -401,7 +401,7 @@ export default function MoviesView({
           <div className="flex justify-between items-start mb-1">
             <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Total Cinema Box Office</span>
             <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">
-              Vista POS
+              Live POS
             </span>
           </div>
           <div className="text-2xl font-extrabold text-amber-300">
@@ -415,7 +415,7 @@ export default function MoviesView({
           <div className="flex justify-between items-start mb-1">
             <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Avg Seat Occupancy</span>
             <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold uppercase">
-              Calculation: Vista
+              Calculation: POS
             </span>
           </div>
           <div className="text-2xl font-extrabold text-purple-300">
@@ -578,11 +578,11 @@ export default function MoviesView({
                   Live Show Schedule: Real-Time Session Occupancy &amp; Collections
                 </h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  {liveSessions.length} Active Shows [Vista]
+                  {liveSessions.length} Active Shows [Live POS]
                 </span>
               </div>
               <p className="text-xs text-gray-400 mt-0.5">
-                Displays the Real-time session occupancy, seat bookings, and gross collections synced from Vista POS Box Office feed.
+                Displays the Real-time session occupancy, seat bookings, and gross collections synced from Live POS Box Office feed.
               </p>
             </div>
 
@@ -599,7 +599,7 @@ export default function MoviesView({
                 className="cc-btn cc-btn-outline text-xs px-3 py-1.5 flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-arrows-rotate text-amber-400"></i>
-                <span>Sync Vista POS</span>
+                <span>Sync Live POS</span>
               </button>
             </div>
           </div>
@@ -658,7 +658,7 @@ export default function MoviesView({
 
                     <div className="flex justify-between items-center text-[10px] pt-1">
                       <span className="text-gray-400">
-                        Status: <strong className="text-gray-200">Vista Feed Synced</strong>
+                        Status: <strong className="text-gray-200">Live POS Synced</strong>
                       </span>
                       <span className="text-emerald-400 font-bold">
                         Gross Collection: {formatExactINR(sh.grossCollection)}
@@ -717,7 +717,7 @@ export default function MoviesView({
             <div className="cc-card">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Movie Admissions</span>
               <div className="text-2xl font-black text-white">{selectedMovie.admissions.toLocaleString('en-IN')}</div>
-              <div className="text-xs text-gray-500 mt-2">Cumulative ticket admissions in {cinemaName} (Vista Synced)</div>
+              <div className="text-xs text-gray-500 mt-2">Cumulative ticket admissions in {cinemaName} (Live Synced)</div>
             </div>
             <div className="cc-card">
               <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Total Movie Gross</span>

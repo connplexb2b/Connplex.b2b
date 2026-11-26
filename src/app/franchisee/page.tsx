@@ -10,7 +10,7 @@ import ConnplexFranchiseRevenueDashboard from '../../components/franchisee/Connp
 import DataExtractionMatrix from '../../components/conncloud/DataExtractionMatrix';
 import GroupBookingView from '../../components/conncloud/views/GroupBookingView';
 import MerchandiseView from '../../components/conncloud/views/MerchandiseView';
-import StaffView from '../../components/conncloud/views/StaffView';
+import MoviesView from '../../components/conncloud/views/MoviesView';
 import TrainingView from '../../components/conncloud/views/TrainingView';
 import OffersView from '../../components/conncloud/views/OffersView';
 import MISView from '../../components/conncloud/views/MISView';
@@ -104,14 +104,16 @@ const LOCATIONS: Record<string, LocationConfig> = {
     partnerInitials: 'VS',
     hasApiIntegration: true,
     screens: [
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Resident Evil (Hindi)', time: '11:00 AM - 01:30 PM', occupancy: 85, seatsBooked: 17, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Vibe (Hindi)', time: '02:30 PM - 05:10 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Mirzapur : The Movie (Hindi)', time: '06:00 PM - 08:45 PM', occupancy: 95, seatsBooked: 19, totalSeats: 20 },
-      { screen: 'Screen 1 (Couple Recliner)', movie: 'Resident Evil (Hindi)', time: '09:15 PM - 11:45 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Daayra (Hindi)', time: '11:30 AM - 02:00 PM', occupancy: 78, seatsBooked: 47, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Manjar (Marathi)', time: '03:00 PM - 05:35 PM', occupancy: 82, seatsBooked: 49, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'The Paradise (Hindi)', time: '06:30 PM - 09:10 PM', occupancy: 88, seatsBooked: 53, totalSeats: 60 },
-      { screen: 'Screen 2 (Gold Class)', movie: 'Avengers Endgame : Encore', time: '09:45 PM - 12:15 AM', occupancy: 75, seatsBooked: 45, totalSeats: 60 }
+      { screen: 'Screen 1 (Couple Recliner)', movie: '3D Ramayana (Hindi)', time: '07:15 AM - 10:30 AM', occupancy: 55, seatsBooked: 11, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: '3D Ramayana (Hindi)', time: '11:00 AM - 02:15 PM', occupancy: 85, seatsBooked: 17, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: '3D Ramayana (Hindi)', time: '02:45 PM - 06:00 PM', occupancy: 90, seatsBooked: 18, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: '3D Ramayana (Hindi)', time: '06:30 PM - 09:45 PM', occupancy: 95, seatsBooked: 19, totalSeats: 20 },
+      { screen: 'Screen 1 (Couple Recliner)', movie: '3D Ramayana (Hindi)', time: '10:15 PM - 01:30 AM', occupancy: 75, seatsBooked: 15, totalSeats: 20 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Ramayana (Hindi)', time: '08:00 AM - 11:15 AM', occupancy: 68, seatsBooked: 41, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Ramayana (Hindi)', time: '12:00 PM - 03:15 PM', occupancy: 78, seatsBooked: 47, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'O.M Operation Mole (Hindi)', time: '03:45 PM - 06:45 PM', occupancy: 65, seatsBooked: 39, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Ramayana (Hindi)', time: '07:15 PM - 10:30 PM', occupancy: 88, seatsBooked: 53, totalSeats: 60 },
+      { screen: 'Screen 2 (Gold Class)', movie: 'Ramayana (Hindi)', time: '11:00 PM - 02:15 AM', occupancy: 60, seatsBooked: 36, totalSeats: 60 }
     ],
     metrics: [
       { label: "Today's Revenue", value: "₹1.02L", trend: "+8.2%", isUp: true, sparkline: [65, 72, 68, 85, 92, 98, 102] },
@@ -452,7 +454,7 @@ export default function FranchiseePortal() {
     if (lower === 'merchandise' || lower === 'store' || lower === 'merch') return 'Merchandise';
     if (lower === 'movies' || lower === 'shows' || lower === 'screening' || lower === 'schedule') return 'Movies';
     if (lower === 'operations' || lower === 'ops' || lower === 'telemetry') return 'Operations';
-    if (lower === 'staff' || lower === 'employees' || lower === 'hr' || lower === 'roster') return 'Staff';
+    if (lower === 'staff' || lower === 'employees' || lower === 'hr' || lower === 'roster') return 'Settings';
     if (lower === 'training' || lower === 'orientation' || lower === 'sops' || lower === 'sop') return 'Training';
     if (lower === 'marketing' || lower === 'promo' || lower === 'campaigns') return 'Marketing';
     if (lower === 'offers' || lower === 'my offers' || lower === 'promotions' || lower === 'discounts') return 'Offers';
@@ -1024,7 +1026,6 @@ export default function FranchiseePortal() {
     { name: 'Food & Beverage', icon: 'fa-burger', label: 'Food & Beverage' },
     { name: 'Merchandise', icon: 'fa-store', label: 'Merchandise' },
     { name: 'Operations', icon: 'fa-gears', label: 'Operations' },
-    { name: 'Staff', icon: 'fa-user-tie', label: 'Staff' },
     { name: 'Training', icon: 'fa-graduation-cap', label: 'Training & SOPs' },
     { name: 'Marketing', icon: 'fa-bullhorn', label: 'Marketing' },
     { name: 'Offers', icon: 'fa-tags', label: 'My Offers' },
@@ -1072,11 +1073,11 @@ export default function FranchiseePortal() {
           type="button"
           className="fra-dock-btn"
           onClick={() => setShowAllModulesModal(true)}
-          title="All 22 Cinema Modules"
-          aria-label="All 22 Cinema Modules"
+          title="All 21 Cinema Modules"
+          aria-label="All 21 Cinema Modules"
         >
           <i className="fa-solid fa-table-cells" style={{ fontSize: '0.88rem' }}></i>
-          <span className="fra-dock-tooltip">All 22 Modules</span>
+          <span className="fra-dock-tooltip">All 21 Modules</span>
         </button>
       </nav>
 
@@ -1778,6 +1779,43 @@ export default function FranchiseePortal() {
                   </div>
                 </section>
 
+                {/* Conncloud Partner Support Center (Direct Working NOC Desk) */}
+                <section className="fra-support-section" style={{ gridColumn: '1 / -1', marginTop: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <h2 className="fra-section-title" style={{ margin: 0 }}>
+                      <i className="fa-solid fa-headset" style={{ color: '#10b981' }}></i>
+                      Conncloud Partner Support Center
+                    </h2>
+                    <span style={{ fontSize: '12px', color: '#94a3b8' }}>24/7 Priority Assistance for Cinema Franchise Owners</span>
+                  </div>
+                  
+                  <div className="fra-support-grid">
+                    {[
+                      { id: 'tickets', title: "Raise Ticket", desc: "Technical or POS request", icon: "fa-ticket", color: "#3b82f6" },
+                      { id: 'chat', title: "Live Chat", desc: "Chat with ops team", icon: "fa-comments", color: "#10b981" },
+                      { id: 'knowledge', title: "Knowledge Base", desc: "120 Cinema SOP guides", icon: "fa-book-open", color: "#f59e0b" },
+                      { id: 'training', title: "Training Videos", desc: "18 Staff training modules", icon: "fa-video", color: "#8b5cf6" },
+                      { id: 'emergency', title: "Emergency Line", desc: "Rapid response hotline", icon: "fa-phone-flip", color: "#ef4444" }
+                    ].map((sup, idx) => (
+                      <div 
+                        key={idx} 
+                        className="fra-support-item"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          handleNavClick('Support');
+                          setActiveSupportTab(sup.id as any);
+                        }}
+                      >
+                        <div className="fra-support-icon">
+                          <i className={`fa-solid ${sup.icon}`}></i>
+                        </div>
+                        <span className="fra-support-title">{sup.title}</span>
+                        <span className="fra-support-desc">{sup.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
               </div>
             </div>
           )}
@@ -2356,6 +2394,15 @@ export default function FranchiseePortal() {
                     <i className="fa-solid fa-key mr-1"></i> Ingest KDM
                   </button>
                 </div>
+              </div>
+
+              {/* Complete Live Movie Catalog & Allocation System */}
+              <div style={{ marginBottom: '2rem' }}>
+                <MoviesView 
+                  selectedCinemaId={currentLocation.cinemaId} 
+                  selectedDateRange="Today" 
+                  triggerNotification={showToast} 
+                />
               </div>
 
               {/* Screen Showcase Cards */}
@@ -3832,34 +3879,6 @@ export default function FranchiseePortal() {
             </div>
           )}
 
-          {/* ================================================================
-              VIEW: STAFF & ROSTER MANAGEMENT
-             ================================================================ */}
-          {activeTab === 'Staff' && (
-            <div className="fra-page-view-container">
-              <div className="fra-view-page-header">
-                <div className="fra-view-page-title-wrap">
-                  <div className="fra-view-page-icon">
-                    <i className="fa-solid fa-user-tie"></i>
-                  </div>
-                  <div>
-                    <div className="fra-view-breadcrumb">
-                      <span>{currentLocation.name}</span>
-                      <i className="fa-solid fa-chevron-right"></i>
-                      <span className="fra-view-breadcrumb-active">Staff Management</span>
-                    </div>
-                    <h1 className="fra-view-title">Cinema Staff Roster, Shifts &amp; Team Productivity</h1>
-                    <p className="fra-view-subtitle">Duty manager shifts, box office cashiers, ushers, projectionists, and leave approvals</p>
-                  </div>
-                </div>
-              </div>
-              <StaffView 
-                selectedCinemaId={currentLocation.cinemaId} 
-                selectedDateRange="Today" 
-                triggerNotification={showToast} 
-              />
-            </div>
-          )}
 
           {/* ================================================================
               VIEW: TRAINING & SOPS ACADEMY
@@ -4129,7 +4148,7 @@ export default function FranchiseePortal() {
               <div>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                   <i className="fa-solid fa-table-cells" style={{ color: '#f59e0b' }}></i>
-                  All 22 Cinema Modules
+                  All 21 Cinema Modules
                 </h2>
                 <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' }}>
                   Unified Operations &amp; Franchise Suite for {currentLocation.name}

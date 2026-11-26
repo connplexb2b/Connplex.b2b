@@ -162,7 +162,7 @@ export default function DashboardView({
               className="text-xs text-[#f5b041] hover:underline flex items-center gap-1.5 font-semibold"
             >
               <i className="fa-solid fa-code"></i>
-              <span>{showAhilyanagarSync ? 'Hide Vista Raw API Integration Specs' : 'View Vista Raw API Integration & Code Snippets'}</span>
+              <span>{showAhilyanagarSync ? 'Hide Raw API Integration Specs' : 'View Raw API Integration & Code Snippets'}</span>
             </button>
             {showAhilyanagarSync && (
               <div className="mt-3">

@@ -76,7 +76,7 @@ export default function MISView({
             </span>
             <div>
               <span className="font-bold text-amber-300 uppercase tracking-wider text-[11px] block">
-                Vista Financial ERP & MIS Ingest Live • Connplex Ahilyanagar
+                Financial ERP &amp; MIS Ingest Live • Connplex Ahilyanagar
               </span>
               <span className="text-gray-300 text-[11px]">
                 Audited MTD Gross Turnover: ₹33.50L (Box Office ₹23.95L • Concessions ₹8.85L • Ancillary ₹0.70L) • 2 Screens, 80 Seats Capacity • Operating EBITDA: 34.8%
@@ -84,7 +84,7 @@ export default function MISView({
             </div>
           </div>
           <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-amber-400 bg-amber-950/60 px-2.5 py-1 rounded border border-amber-500/30">
-            <span>VISTA BI SYNCED</span>
+            <span>LIVE BI SYNCED</span>
             <span>•</span>
             <span>+7.2% VS BUDGET</span>
           </div>

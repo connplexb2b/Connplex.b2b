@@ -79,7 +79,7 @@ export default function CalendarView({ selectedCinemaId = 'all' }: CalendarViewP
             </div>
             {isAhilyanagar && (
               <span className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                <i className="fa-solid fa-clock-rotate-left mr-1.5"></i> VISTA SYNC SCHEDULED
+                <i className="fa-solid fa-clock-rotate-left mr-1.5"></i> LIVE POS SYNC SCHEDULED
               </span>
             )}
           </div>

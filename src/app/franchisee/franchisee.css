@@ -44,7 +44,9 @@
   --fra-green: #10b981;
   --fra-red: #ef4444;
 
-  /* Typography */
+  /* Modern High-End Typography */
+  --fra-font-sans: 'Plus Jakarta Sans', 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fra-font-heading: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --fra-text-primary: #ffffff;
   --fra-text-secondary: #cbd5e1;
   --fra-text-muted: #94a3b8;
@@ -61,7 +63,11 @@
   background: var(--fra-overlay-ambient), var(--fra-bg-cinema) no-repeat center center fixed;
   background-size: cover;
   color: var(--fra-text-primary);
-  font-family: var(--font-montserrat), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--fra-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
   position: relative;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -541,10 +547,11 @@
 }
 
 .fra-welcome-banner h1 {
+  font-family: var(--fra-font-heading);
   font-size: 1.85rem;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.2;
 }
 
@@ -645,12 +652,14 @@
 }
 
 .fra-smart-tile-title {
+  font-family: var(--fra-font-heading);
   display: flex;
   align-items: center;
   gap: 0.55rem;
   font-size: 0.85rem;
   font-weight: 700;
   color: #ffffff;
+  letter-spacing: -0.015em;
 }
 
 /* Smart Interactive Switch (Direct Match to Reference Image) */
@@ -945,13 +954,14 @@
 }
 
 .fra-metric-value {
-  font-family: var(--font-montserrat), sans-serif;
+  font-family: var(--fra-font-heading);
   font-size: 1.65rem;
   font-weight: 800;
   color: #fff;
   margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.1;
+  font-variant-numeric: tabular-nums;
 }
 
 .fra-metric-trend {
@@ -1019,12 +1029,14 @@
 }
 
 .fra-section-title {
+  font-family: var(--fra-font-heading);
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  letter-spacing: -0.02em;
 }
 
 .fra-header-badge {
@@ -2267,11 +2279,12 @@
 }
 
 .fra-view-title {
+  font-family: var(--fra-font-heading);
   font-size: 1.35rem;
   font-weight: 800;
   color: #ffffff;
   margin: 0;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.025em;
 }
 
 .fra-view-subtitle {

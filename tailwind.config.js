@@ -20,9 +20,10 @@ module.exports = {
         'text-secondary': '#b0b0b0',
       },
       fontFamily: {
-        outfit: ['var(--font-outfit)', 'sans-serif'],
-        montserrat: ['var(--font-montserrat)', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sans: ["'Plus Jakarta Sans'", 'var(--font-outfit)', 'Inter', 'sans-serif'],
+        outfit: ['var(--font-outfit)', "'Plus Jakarta Sans'", 'sans-serif'],
+        montserrat: ["'Plus Jakarta Sans'", 'var(--font-outfit)', 'Inter', 'sans-serif'],
+        inter: ['Inter', "'Plus Jakarta Sans'", 'sans-serif'],
       },
     },
   },

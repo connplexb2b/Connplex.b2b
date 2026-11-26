@@ -191,7 +191,7 @@ export default function TicketSalesView({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white text-sm">Vista Box Office &amp; POS Sync: Ahilyanagar</span>
+                <span className="font-bold text-white text-sm">Box Office &amp; POS Live Sync: Ahilyanagar</span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   CONNECTED
@@ -201,14 +201,14 @@ export default function TicketSalesView({
                 </span>
               </div>
               <p className="text-gray-400 text-xs mt-0.5">
-                Ticket transactions and real-time seat inventory are synchronized from on-premise Vista Box Office (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
+                Ticket transactions and real-time seat inventory are synchronized from on-premise Box Office (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[11px] text-gray-400">POS Channel: <strong className="text-white">Active</strong></span>
             <button 
-              onClick={() => triggerNotification('Re-fetching live ticket ledger from Vista WebService...')}
+              onClick={() => triggerNotification('Re-fetching live ticket ledger from POS WebService...')}
               className="cc-btn cc-btn-outline text-xs px-3 py-1 flex items-center gap-1.5"
             >
               <i className="fa-solid fa-arrows-rotate text-amber-400"></i>

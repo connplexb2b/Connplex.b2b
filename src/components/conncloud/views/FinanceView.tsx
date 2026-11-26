@@ -179,14 +179,14 @@ export default function FinanceView({
           setExpensesList(data.expenses);
         }
         if (showToast) {
-          triggerNotification(`Financial Ledger synchronized with Vista POS (${data.revenueLedger?.length || 0} business days).`);
+          triggerNotification(`Financial Ledger synchronized with Live POS (${data.revenueLedger?.length || 0} business days).`);
         }
       } else {
         triggerNotification(`Finance sync notice: ${data.error || 'Using verified cache'}`);
       }
     } catch (err: any) {
       console.error('Failed to load finance overview:', err);
-      triggerNotification('Could not reach Vista POS directly. Retrying in background...');
+      triggerNotification('Could not reach Live POS directly. Retrying in background...');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -452,7 +452,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-bold text-white text-sm">Vista Financial Ledger Sync: Ahilyanagar (Kohinoor)</span>
+              <span className="font-bold text-white text-sm">Financial Ledger Live Sync: Ahilyanagar (Kohinoor)</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 LIVE SQL ENGINE
@@ -465,7 +465,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
               </span>
             </div>
             <p className="text-gray-400 text-xs mt-0.5">
-              Live Vista POS SQL Server (<code className="text-amber-300 text-[11px]">tblSession</code>, <code className="text-amber-300 text-[11px]">tblTrans_Ticket</code>, <code className="text-amber-300 text-[11px]">tblTrans_Inventory</code>) + MongoDB <code className="text-emerald-300 text-[11px]">franchise_expenses</code>.
+              Live POS SQL Server (<code className="text-amber-300 text-[11px]">tblSession</code>, <code className="text-amber-300 text-[11px]">tblTrans_Ticket</code>, <code className="text-amber-300 text-[11px]">tblTrans_Inventory</code>) + MongoDB <code className="text-emerald-300 text-[11px]">franchise_expenses</code>.
             </p>
           </div>
         </div>
@@ -489,12 +489,12 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
       {/* Sub Tabs covering all 12 Excel Finance Components */}
       <section className="flex flex-wrap gap-1 bg-[#111827] border border-white/5 p-2 rounded-xl">
         {[
-          { id: 'overview', label: 'Financial Overview', icon: 'fa-chart-pie', source: 'Vista + Franchisee' },
+          { id: 'overview', label: 'Financial Overview', icon: 'fa-chart-pie', source: 'POS + Franchisee' },
           { id: 'ledger', label: 'Invoices & Revenue Ledger', icon: 'fa-table-list', source: 'Franchisee Login' },
           { id: 'expenses', label: 'Expenses Manager', icon: 'fa-receipt', source: 'Franchisee Login' },
-          { id: 'gst-royalty', label: 'GST & Royalty Reports', icon: 'fa-scale-balanced', source: 'Vista' },
+          { id: 'gst-royalty', label: 'GST & Royalty Reports', icon: 'fa-scale-balanced', source: 'Live POS' },
           { id: 'pnl-budget', label: 'P&L / Budget Limits', icon: 'fa-calculator', source: 'Admin Login' },
-          { id: 'reconciliation', label: 'Bank Reconciliation', icon: 'fa-building-columns', source: 'Vista Calc' }
+          { id: 'reconciliation', label: 'Bank Reconciliation', icon: 'fa-building-columns', source: 'POS Calc' }
         ].map((sec) => (
           <button
             key={sec.id}
@@ -524,7 +524,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
             <div className="cc-card border-l-4 border-l-blue-500 bg-gradient-to-br from-blue-500/10 to-transparent">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Gross Collections</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-semibold">Vista POS</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-semibold">Live POS</span>
               </div>
               <span className="text-2xl font-extrabold text-white block">{formatCurrency(kpis.grossCollections)}</span>
               <span className="text-[11px] text-gray-400 mt-1 block">
@@ -546,7 +546,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
             <div className="cc-card border-l-4 border-l-amber-500 bg-gradient-to-br from-amber-500/10 to-transparent">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">GST Pool Collected</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Vista (18% + 5%)</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Standard (18% + 5%)</span>
               </div>
               <span className="text-2xl font-extrabold text-amber-300 block">{formatCurrency(kpis.gstPoolCollected)}</span>
               <span className="text-[11px] text-gray-400 mt-1 block">
@@ -557,7 +557,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
             <div className="cc-card border-l-4 border-l-emerald-500 bg-gradient-to-br from-emerald-500/10 to-transparent">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Operating Net Profit</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Calculation: Vista</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">Calculation: Direct POS</span>
               </div>
               <span className="text-2xl font-extrabold text-emerald-400 block">{formatCurrency(kpis.operatingNetProfit)}</span>
               <span className="text-[11px] text-gray-400 mt-1 block">
@@ -576,7 +576,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
                   </h3>
                   <span className="text-[10px] text-gray-500">Ticket sales revenue & Food & Beverages POS</span>
                 </div>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">Calculation: Vista</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold">Calculation: Direct POS</span>
               </div>
 
               <div className="space-y-4">
@@ -707,7 +707,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
                 </span>
               </div>
               <p className="text-xs text-gray-400 mt-0.5">
-                Full session-level box office collections and café concession receipts recorded in Vista SQL Server.
+                Full session-level box office collections and café concession receipts recorded in POS SQL Server.
               </p>
             </div>
 
@@ -759,7 +759,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
                 {filteredLedger.length === 0 ? (
                   <tr>
                     <td colSpan={10} className="py-8 text-center text-gray-500">
-                      {isLoading ? 'Querying Vista POS database...' : 'No daily collection records found.'}
+                      {isLoading ? 'Querying POS database...' : 'No daily collection records found.'}
                     </td>
                   </tr>
                 ) : (
@@ -1194,17 +1194,17 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
                   <i className="fa-solid fa-building-columns text-emerald-400"></i> Automated Bank Reconciliation
                 </h3>
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase">
-                  Calculation: Vista
+                  Calculation: Direct POS
                 </span>
               </div>
               <p className="text-xs text-gray-400 mt-0.5">
-                Match Vista POS shift settlement totals against bank deposit credits and payment gateway payouts.
+                Match POS shift settlement totals against bank deposit credits and payment gateway payouts.
               </p>
             </div>
 
             <div className="space-y-3">
               {[
-                { id: 'rec_ah1', date: '2026-11-18', externalDesc: 'Razorpay UPI Web Settlements AH_18NOV', systemDesc: 'Ahilyanagar Vista online ticket booking batch #18', amount: 84200, mismatch: false },
+                { id: 'rec_ah1', date: '2026-11-18', externalDesc: 'Razorpay UPI Web Settlements AH_18NOV', systemDesc: 'Ahilyanagar online ticket booking batch #18', amount: 84200, mismatch: false },
                 { id: 'rec_ah2', date: '2026-11-17', externalDesc: 'HDFC Cash Deposit - Kohinoor Counter Box Office', systemDesc: 'Ahilyanagar counter ticket & snack collection cycle #17', amount: 112500, mismatch: false },
                 { id: 'rec_ah3', date: '2026-11-16', externalDesc: 'BookMyShow Weekly Settlement BMS_AH_908', systemDesc: 'BookMyShow online gateway settlement Nov 9 - Nov 15', amount: 345000, mismatch: true }
               ].map((item) => {
@@ -1222,7 +1222,7 @@ Net Goods and Services Tax Payable to Government: ${formatExactINR(Math.max(0, k
                         )}
                       </div>
                       <div className="text-xs text-gray-400">Bank Entry: <span className="text-gray-300 font-semibold">{item.externalDesc}</span></div>
-                      <div className="text-xs text-gray-400">Vista POS Ledger: <span className="text-gray-300 font-semibold">{item.systemDesc}</span></div>
+                      <div className="text-xs text-gray-400">POS Ledger: <span className="text-gray-300 font-semibold">{item.systemDesc}</span></div>
                     </div>
 
                     <div className="flex items-center gap-4 justify-between w-full sm:w-auto">

@@ -166,7 +166,7 @@ export default function ConnplexFranchiseRevenueDashboard({
       });
       const resJson = await resp.json();
       if (resJson.status === 200) {
-        if (onNotification) onNotification('Vista Sync cycle completed successfully!');
+        if (onNotification) onNotification('POS Sync cycle completed successfully!');
         await loadDashboardData();
       } else {
         if (onNotification) onNotification(`Sync Notice: ${resJson.message}`);
@@ -641,7 +641,7 @@ export default function ConnplexFranchiseRevenueDashboard({
                 Connplex Verified Non-Additive Accounting Standard
               </div>
               <div style={{ fontSize: '12px', color: '#d1d5db', marginTop: '3px', lineHeight: 1.5 }}>
-                BookMyShow and Connplex Website bookings commit directly into Vista's database (<code>tblTrans</code>).
+                BookMyShow and Connplex Website bookings commit directly into on-premise database (<code>tblTrans</code>).
                 Therefore, <strong>BookMyShow and Website revenues are channel slices of the Box Office total, NOT additions to it</strong>.
                 Formula: <code>Counter = Box Office - (BookMyShow + Website + Other)</code>. Zero double-counting guaranteed.
               </div>

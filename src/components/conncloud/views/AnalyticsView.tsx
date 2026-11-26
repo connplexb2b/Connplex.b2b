@@ -217,7 +217,7 @@ export default function AnalyticsView({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white text-sm">Vista Cinema Cloud Live Sync: Ahilyanagar</span>
+                <span className="font-bold text-white text-sm">Cinema Cloud Live Sync: Ahilyanagar</span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   CONNECTED
@@ -227,18 +227,18 @@ export default function AnalyticsView({
                 </span>
               </div>
               <p className="text-gray-400 text-xs mt-0.5">
-                Ticket and F&amp;B analytics are synchronized with your on-premise Vista POS / Box Office endpoint (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
+                Ticket and F&amp;B analytics are synchronized with your on-premise POS / Box Office endpoint (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[11px] text-gray-400">Last Synced: <strong className="text-white">Today 06:00 AM</strong></span>
             <button 
-              onClick={() => triggerNotification('Triggered live re-fetch from Vista API for Ahilyanagar.')}
+              onClick={() => triggerNotification('Triggered live re-fetch from POS API for Ahilyanagar.')}
               className="cc-btn cc-btn-outline text-xs px-3 py-1 flex items-center gap-1.5"
             >
               <i className="fa-solid fa-arrows-rotate text-amber-400"></i>
-              <span>Re-sync Vista Data</span>
+              <span>Re-sync POS Data</span>
             </button>
           </div>
         </div>
@@ -280,7 +280,7 @@ export default function AnalyticsView({
               <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1">Gross Revenue</span>
               <div className="text-2xl font-extrabold text-white">{formatCurrency(totalRev)}</div>
               <div className="text-xs text-gray-400 mt-2">
-                {isAhilyanagar ? 'Cumulative ticket & F&B collections (Vista Synced)' : 'Cumulative ticket & F&B collections'}
+                {isAhilyanagar ? 'Cumulative ticket & F&B collections (Live Synced)' : 'Cumulative ticket & F&B collections'}
               </div>
             </div>
             <div className="cc-card">

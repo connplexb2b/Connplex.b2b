@@ -381,16 +381,19 @@ const INITIAL_SCREENS: Screen[] = [
 ];
 
 const INITIAL_MOVIES: Movie[] = [
-  { movieId: 'm1', title: 'Resident Evil (Hindi)', language: 'Hindi', genre: 'Action / Horror / Sci-Fi', duration: 94, certification: 'A', releaseDate: '2026-09-11', poster: '🎬', trailer: 'https://youtube.com', cast: ['Milla Jovovich', 'Hindi Dubbing Ensemble'] },
-  { movieId: 'm2', title: 'Resident Evil (English)', language: 'English', genre: 'Action / Horror / Sci-Fi', duration: 94, certification: 'A', releaseDate: '2026-09-11', poster: '🎬', trailer: 'https://youtube.com', cast: ['Milla Jovovich', 'Michelle Rodriguez'] },
-  { movieId: 'm3', title: 'Vibe (Hindi)', language: 'Hindi', genre: 'Action / Comedy', duration: 146, certification: 'A', releaseDate: '2026-09-11', poster: '⚡', trailer: 'https://youtube.com', cast: ['Siddhant Chaturvedi', 'Wamiqa Gabbi'] },
-  { movieId: 'm4', title: 'Daayra (Hindi)', language: 'Hindi', genre: 'Crime / Drama / Thriller', duration: 143, certification: 'A', releaseDate: '2026-09-11', poster: '🕶️', trailer: 'https://youtube.com', cast: ['Jaideep Ahlawat', 'Tillotama Shome'] },
-  { movieId: 'm5', title: 'Mirzapur : The Movie (Hindi)', language: 'Hindi', genre: 'Action / Crime / Thriller', duration: 197, certification: 'A', releaseDate: '2026-08-28', poster: '🔫', trailer: 'https://youtube.com', cast: ['Pankaj Tripathi', 'Ali Fazal', 'Divyenndu'] },
-  { movieId: 'm6', title: 'Manjar (Marathi)', language: 'Marathi', genre: 'Comedy / Family / Romantic', duration: 133, certification: 'UA', releaseDate: '2026-09-12', poster: '🎭', trailer: 'https://youtube.com', cast: ['Swapnil Joshi', 'Prarthana Behere'] },
-  { movieId: 'm7', title: 'Hanuman Ansh (Hindi)', language: 'Hindi', genre: 'Devotional / Drama', duration: 150, certification: 'U', releaseDate: '2026-08-15', poster: '🙏', trailer: 'https://youtube.com', cast: ['Teja Sajja', 'Amritha Aiyer'] },
-  { movieId: 'm8', title: 'The Paradise (Hindi)', language: 'Hindi', genre: 'Action / Adventure / Drama', duration: 174, certification: 'A', releaseDate: '2026-09-18', poster: '🏝️', trailer: 'https://youtube.com', cast: ['Dulquer Salmaan', 'Mrunal Thakur'] },
-  { movieId: 'm9', title: 'Case No.99 (Marathi)', language: 'Marathi', genre: 'Crime / Drama / Thriller', duration: 114, certification: 'UA', releaseDate: '2026-09-12', poster: '🔍', trailer: 'https://youtube.com', cast: ['Subodh Bhave', 'Mukta Barve'] },
-  { movieId: 'm10', title: 'Avengers Endgame : Encore (Re-Release)', language: 'English / Hindi', genre: 'Action / Adventure / Fantasy', duration: 190, certification: 'UA', releaseDate: '2026-09-18', poster: '💥', trailer: 'https://youtube.com', cast: ['Robert Downey Jr.', 'Chris Evans', 'Chris Hemsworth'] }
+  { movieId: 'HO00001438', title: '3D Ramayana (Hindi)', language: 'Hindi', genre: 'Mythological / Epic', duration: 195, certification: 'U', releaseDate: '2026-11-01', poster: '🕶️', trailer: 'https://youtube.com', cast: ['Ranbir Kapoor', 'Sai Pallavi', 'Yash', 'Sunny Deol'] },
+  { movieId: 'HO00001434', title: 'Ramayana (Hindi)', language: 'Hindi', genre: 'Mythological / Epic', duration: 195, certification: 'U', releaseDate: '2026-11-01', poster: '🎬', trailer: 'https://youtube.com', cast: ['Ranbir Kapoor', 'Sai Pallavi', 'Yash', 'Sunny Deol'] },
+  { movieId: 'HO00001401', title: 'Rajini: The Jailer 2 (Hindi)', language: 'Hindi', genre: 'Action / Thriller', duration: 168, certification: 'UA', releaseDate: '2026-11-08', poster: '⚡', trailer: 'https://youtube.com', cast: ['Rajinikanth', 'Mohanlal', 'Shiva Rajkumar'] },
+  { movieId: 'HO00001467', title: 'Aadi Anant (Marathi)', language: 'Marathi', genre: 'Drama / Family', duration: 142, certification: 'UA', releaseDate: '2026-11-15', poster: '🎭', trailer: 'https://youtube.com', cast: ['Subodh Bhave', 'Mukta Barve'] },
+  { movieId: 'HO00001482', title: 'O.M Operation Mole (Hindi)', language: 'Hindi', genre: 'Spy Action / Thriller', duration: 154, certification: 'UA', releaseDate: '2026-11-15', poster: '🕵️', trailer: 'https://youtube.com', cast: ['Vidyut Jammwal', 'Arjun Rampal'] },
+  { movieId: 'HO00001489', title: 'Bandhu (Marathi)', language: 'Marathi', genre: 'Emotional Drama', duration: 138, certification: 'UA', releaseDate: '2026-11-18', poster: '🤝', trailer: 'https://youtube.com', cast: ['Amey Wagh', 'Lalit Prabhakar'] },
+  { movieId: 'HO00001390', title: 'Prahaar (Hindi)', language: 'Hindi', genre: 'Action / Patriotic', duration: 150, certification: 'UA', releaseDate: '2026-11-05', poster: '🎖️', trailer: 'https://youtube.com', cast: ['Nana Patekar', 'Madhuri Dixit'] },
+  { movieId: 'HO00001417', title: 'Udta Teer (Hindi)', language: 'Hindi', genre: 'Comedy / Drama', duration: 132, certification: 'UA', releaseDate: '2026-11-10', poster: '🎯', trailer: 'https://youtube.com', cast: ['Ayushmann Khurrana', 'Sanya Malhotra'] },
+  { movieId: 'HO00001366', title: 'Drishyam : The Conclusion (Hindi)', language: 'Hindi', genre: 'Crime / Mystery / Thriller', duration: 160, certification: 'UA', releaseDate: '2026-10-25', poster: '🔍', trailer: 'https://youtube.com', cast: ['Ajay Devgn', 'Tabu', 'Akshaye Khanna'] },
+  { movieId: 'HO00001261', title: 'Hanuman Ansh (Hindi)', language: 'Hindi', genre: 'Devotional / Adventure', duration: 148, certification: 'U', releaseDate: '2026-10-18', poster: '🙏', trailer: 'https://youtube.com', cast: ['Teja Sajja', 'Amritha Aiyer'] },
+  { movieId: 'HO00001475', title: 'Maitreyaa (Marathi)', language: 'Marathi', genre: 'Drama / Romance', duration: 161, certification: 'UA', releaseDate: '2026-11-18', poster: '❤️', trailer: 'https://youtube.com', cast: ['Prarthana Behere', 'Addinath Kothare'] },
+  { movieId: 'HO00001455', title: 'Aadarsha Kutumbam House No. 47 (Telugu)', language: 'Telugu', genre: 'Drama / Suspense', duration: 149, certification: 'UA', releaseDate: '2026-11-12', poster: '🏡', trailer: 'https://youtube.com', cast: ['Nani', 'Sai Pallavi'] },
+  { movieId: 'HO00001476', title: 'Jijai (Marathi)', language: 'Marathi', genre: 'Historical / Biography', duration: 97, certification: 'A', releaseDate: '2026-11-18', poster: '👑', trailer: 'https://youtube.com', cast: ['Prajakta Mali', 'Chinmay Mandlekar'] }
 ];
 
 // Helper to generate a range of dates
@@ -967,7 +970,7 @@ export class ConnCloudStore {
     if (this.isInitialized) return;
 
     // Invalidate outdated browser cache if version changed
-    const STORE_VERSION = 'v7_quota_safe_ahilyanagar_1mb';
+    const STORE_VERSION = 'v8_live_movies_ramayana';
     const currentVer = localStorage.getItem('cc_store_version');
     if (currentVer !== STORE_VERSION) {
       // Clear all cached cc_ collections to guarantee clean schema & synchronized datasets

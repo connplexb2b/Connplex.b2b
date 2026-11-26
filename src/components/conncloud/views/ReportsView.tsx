@@ -185,25 +185,25 @@ export default function ReportsView({
             </div>
           </div>
           <div className="flex items-center gap-2 self-start md:self-auto font-mono text-[11px] text-blue-400 bg-blue-950/60 px-2.5 py-1 rounded border border-blue-500/30">
-            <span>VISTA LIVE AUDITED</span>
+            <span>LIVE POS AUDITED</span>
           </div>
         </div>
       )}
 
-      {/* Special Vista API Raw Extract Card for Ahilyanagar */}
+      {/* Special API Raw Extract Card for Ahilyanagar */}
       {isAhilyanagar && (
         <div className="cc-card border-amber-500/30 bg-gradient-to-br from-amber-950/20 via-black/40 to-black/20">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  Direct Vista Server Endpoint
+                  Direct Server Endpoint
                 </span>
                 <span className="text-emerald-400 text-xs font-bold font-mono">
                   <i className="fa-solid fa-circle-check mr-1"></i>200 OK
                 </span>
               </div>
-              <h4 className="font-bold text-white text-base mt-1">Vista Raw Box Office &amp; F&amp;B Daily Ingest Feed</h4>
+              <h4 className="font-bold text-white text-base mt-1">Raw Box Office &amp; F&amp;B Daily Ingest Feed</h4>
               <p className="text-xs text-gray-400 font-mono">
                 GET /api.asmx/GetDailyTicketAndFnbData?CinemaID=Ahilyanagar&amp;Date={new Date().toISOString().split('T')[0]}
               </p>
@@ -217,13 +217,13 @@ export default function ReportsView({
                 onClick={() => handleVistaExtract('JSON')}
                 className="cc-btn cc-btn-accent text-xs py-2 px-3 flex items-center gap-1.5"
               >
-                <i className="fa-solid fa-file-code"></i> Export Vista JSON
+                <i className="fa-solid fa-file-code"></i> Export POS JSON
               </button>
               <button
                 onClick={() => handleVistaExtract('XML')}
                 className="cc-btn cc-btn-outline text-xs py-2 px-3 flex items-center gap-1.5 border-amber-500/40 text-amber-300 hover:bg-amber-500/10"
               >
-                <i className="fa-solid fa-file-lines"></i> Export Vista XML
+                <i className="fa-solid fa-file-lines"></i> Export POS XML
               </button>
               <button
                 onClick={() => handleVistaExtract('CSV')}

@@ -200,7 +200,7 @@ export default function FnBView({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-white text-sm">Vista Concessions Live Sync: Ahilyanagar</span>
+                <span className="font-bold text-white text-sm">Concessions Live Sync: Ahilyanagar</span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   CONNECTED
@@ -210,14 +210,14 @@ export default function FnBView({
                 </span>
               </div>
               <p className="text-gray-400 text-xs mt-0.5">
-                Food &amp; Beverage sales, POS snack orders, and gourmet concessions synchronized with Vista WebService (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
+                Food &amp; Beverage sales, POS snack orders, and gourmet concessions synchronized with on-premise WebService (<code className="text-amber-300 text-[11px]">/api.asmx/GetDailyTicketAndFnbData</code>).
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[11px] text-gray-400">POS Menu Sync: <strong className="text-white">Active</strong></span>
             <button 
-              onClick={() => triggerNotification('Re-syncing F&B menu and sales from Vista API...')}
+              onClick={() => triggerNotification('Re-syncing F&B menu and sales from POS API...')}
               className="cc-btn cc-btn-outline text-xs px-3 py-1 flex items-center gap-1.5"
             >
               <i className="fa-solid fa-arrows-rotate text-amber-400"></i>
