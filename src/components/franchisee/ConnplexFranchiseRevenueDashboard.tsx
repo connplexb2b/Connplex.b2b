@@ -547,30 +547,86 @@ export default function ConnplexFranchiseRevenueDashboard({
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-end', height: '180px', gap: '8px', paddingTop: '10px' }}>
-              {dailyRecords.slice(-14).map((r, i) => {
-                const maxVal = 600000;
-                const hPct = Math.min(100, Math.max(10, Math.round((r.totalGrossRevenue / maxVal) * 100)));
+            {(() => {
+              const slice = dailyRecords.slice(-14);
+              if (slice.length === 0) {
                 return (
-                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
-                    <div
-                      title={`${r.businessDate}: ₹${(r.totalGrossRevenue / 1000).toFixed(1)}K (Tickets: ₹${(r.ticketRevenue / 1000).toFixed(1)}K, F&B: ₹${(r.fnbRevenue / 1000).toFixed(1)}K)`}
-                      style={{
-                        width: '100%',
-                        height: `${hPct}%`,
-                        background: 'linear-gradient(180deg, #f59e0b, #d97706)',
-                        borderRadius: '4px 4px 0 0',
-                        cursor: 'pointer',
-                        transition: 'opacity 0.2s',
-                      }}
-                    />
-                    <span style={{ fontSize: '9px', color: '#6b7280', marginTop: '6px', whiteSpace: 'nowrap' }}>
-                      {r.businessDate.slice(8)}
-                    </span>
+                  <div style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', fontSize: '12px' }}>
+                    No daily revenue records available.
                   </div>
                 );
-              })}
-            </div>
+              }
+              const W = 560;
+              const H = 152;
+              const padX = 16;
+              const padY = 14;
+              const maxVal = Math.max(100000, ...slice.map((r) => r.totalGrossRevenue || 0));
+              const stepX = slice.length > 1 ? (W - padX * 2) / (slice.length - 1) : 0;
+              const pts = slice.map((r, i) => {
+                const x = slice.length > 1 ? padX + i * stepX : W / 2;
+                const ratio = (r.totalGrossRevenue || 0) / maxVal;
+                const y = H - padY - ratio * (H - padY * 2);
+                return { x, y, r };
+              });
+              const linePath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+              const areaPath = pts.length > 1
+                ? `${linePath} L ${pts[pts.length - 1].x.toFixed(1)} ${(H - padY).toFixed(1)} L ${pts[0].x.toFixed(1)} ${(H - padY).toFixed(1)} Z`
+                : '';
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', height: '180px', justifyContent: 'space-between' }}>
+                  <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '154px', overflow: 'visible' }} preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="dailyGrossLineArea" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.34" />
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                      </linearGradient>
+                    </defs>
+                    {[0.25, 0.5, 0.75, 1].map((g, gi) => {
+                      const gy = H - padY - g * (H - padY * 2);
+                      return (
+                        <line
+                          key={gi}
+                          x1={padX}
+                          y1={gy}
+                          x2={W - padX}
+                          y2={gy}
+                          stroke="rgba(255,255,255,0.06)"
+                          strokeDasharray="4 4"
+                          strokeWidth="1"
+                        />
+                      );
+                    })}
+                    {areaPath && <path d={areaPath} fill="url(#dailyGrossLineArea)" />}
+                    {linePath && (
+                      <path
+                        d={linePath}
+                        fill="none"
+                        stroke="#f59e0b"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+                    {pts.map((p, i) => (
+                      <g key={i} style={{ cursor: 'pointer' }}>
+                        <circle cx={p.x} cy={p.y} r="4.5" fill="#121927" stroke="#f59e0b" strokeWidth="2.2" />
+                        <circle cx={p.x} cy={p.y} r="10" fill="transparent">
+                          <title>{`${p.r.businessDate}: ₹${(p.r.totalGrossRevenue / 1000).toFixed(1)}K (Tickets: ₹${(p.r.ticketRevenue / 1000).toFixed(1)}K, F&B: ₹${(p.r.fnbRevenue / 1000).toFixed(1)}K)`}</title>
+                        </circle>
+                      </g>
+                    ))}
+                  </svg>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
+                    {slice.map((r, i) => (
+                      <span key={i} style={{ fontSize: '9px', color: '#6b7280', whiteSpace: 'nowrap', textAlign: 'center', minWidth: '14px' }}>
+                        {r.businessDate.slice(8)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Hourly Admissions & Show Flow */}
@@ -675,20 +731,81 @@ export default function ConnplexFranchiseRevenueDashboard({
             ))}
           </div>
 
-          {/* Visual Channel Stacked Bar */}
-          <div style={{ marginTop: '1.5rem' }}>
-            <div style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>Attribution Share of Total Box Office:</div>
-            <div style={{ height: '20px', width: '100%', display: 'flex', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{ width: '48%', background: '#e11d48' }} title="BookMyShow: 48%" />
-              <div style={{ width: '36%', background: '#3b82f6' }} title="Physical Counter: 36%" />
-              <div style={{ width: '16%', background: '#10b981' }} title="Website: 16%" />
-            </div>
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '8px', fontSize: '11px', color: '#9ca3af' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', background: '#e11d48', borderRadius: '2px' }} /> BMS (48%)</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', background: '#3b82f6', borderRadius: '2px' }} /> Counter (36%)</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '8px', height: '8px', background: '#10b981', borderRadius: '2px' }} /> Web/App (16%)</span>
-            </div>
-          </div>
+          {/* Visual Channel Pie Chart */}
+          {(() => {
+            const activeChannels = (channelsData?.channels && channelsData.channels.length > 0
+              ? channelsData.channels
+              : [
+                  { name: 'BookMyShow', revenue: 56640, sharePercentage: 48.0, color: '#e11d48' },
+                  { name: 'Physical Counter (Walk-in)', revenue: 42480, sharePercentage: 36.0, color: '#3b82f6' },
+                  { name: 'Connplex Website & App', revenue: 18880, sharePercentage: 16.0, color: '#10b981' },
+                ]
+            ).filter((ch: any) => (ch.sharePercentage || 0) > 0 || (ch.revenue || 0) > 0);
+
+            const totalShare = activeChannels.reduce((sum: number, ch: any) => sum + (Number(ch.sharePercentage) || 0), 0) || 100;
+            const cx = 90;
+            const cy = 90;
+            const r = 74;
+            let cumulativeAngle = -Math.PI / 2;
+
+            const slices = activeChannels.map((ch: any) => {
+              const pct = (Number(ch.sharePercentage) || 0) / totalShare;
+              const angle = pct * Math.PI * 2;
+              const startAngle = cumulativeAngle;
+              const endAngle = cumulativeAngle + angle;
+              cumulativeAngle = endAngle;
+
+              const x1 = cx + r * Math.cos(startAngle);
+              const y1 = cy + r * Math.sin(startAngle);
+              const x2 = cx + r * Math.cos(endAngle);
+              const y2 = cy + r * Math.sin(endAngle);
+              const largeArcFlag = angle > Math.PI ? 1 : 0;
+
+              const d = pct >= 0.999
+                ? `M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.01} ${cy - r} Z`
+                : `M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+
+              return { ...ch, d };
+            });
+
+            return (
+              <div style={{ marginTop: '1.5rem', background: '#172033', borderRadius: '12px', padding: '1.25rem', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: '13px', color: '#e5e7eb', fontWeight: 700, marginBottom: '1rem' }}>
+                  Attribution Share of Total Box Office
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '2rem' }}>
+                  <svg viewBox="0 0 180 180" style={{ width: '170px', height: '170px', flexShrink: 0 }}>
+                    {slices.map((sl: any, idx: number) => (
+                      <path
+                        key={idx}
+                        d={sl.d}
+                        fill={sl.color || '#3b82f6'}
+                        stroke="#172033"
+                        strokeWidth="2"
+                        style={{ cursor: 'pointer', transition: 'opacity 0.2s' }}
+                      >
+                        <title>{`${sl.name}: ${sl.sharePercentage}% (₹${(sl.revenue || 0).toLocaleString('en-IN')})`}</title>
+                      </path>
+                    ))}
+                  </svg>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', flex: 1, minWidth: '220px' }}>
+                    {activeChannels.map((ch: any, idx: number) => (
+                      <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0.75rem', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ width: '10px', height: '10px', background: ch.color, borderRadius: '50%', flexShrink: 0 }} />
+                          <span style={{ fontSize: '12px', color: '#e5e7eb', fontWeight: 600 }}>{ch.name}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <span style={{ fontSize: '12px', color: '#9ca3af' }}>₹{(ch.revenue || 0).toLocaleString('en-IN')}</span>
+                          <span style={{ fontSize: '12px', color: ch.color, fontWeight: 700, minWidth: '42px', textAlign: 'right' }}>{ch.sharePercentage}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       )}
 
