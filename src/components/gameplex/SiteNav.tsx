@@ -74,12 +74,12 @@ export function SiteNav() {
         {/* Center Wordmark Logo */}
         <Link
           href={getHref("/")}
-          className="group flex shrink-0 items-center justify-center px-8"
+          className="group flex items-center justify-center px-4 lg:px-6"
         >
           <img
             src="/assets/gameplex/gameplex-logo.png"
             alt="GamePlex by Connplex"
-            className="h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+            className="h-7 w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
             onError={(e) => {
               // Graceful fallback if logo fails
               e.currentTarget.style.display = "none";
@@ -121,7 +121,7 @@ export function SiteNav() {
           <img
             src="/assets/gameplex/gameplex-logo.png"
             alt="GamePlex by Connplex"
-            className="h-12 w-auto object-contain"
+            className="h-6 w-auto max-w-[180px] object-contain"
             onError={(e) => {
               e.currentTarget.style.display = "none";
               const fallback = document.getElementById("nav-mobile-logo-fallback");
