@@ -22,9 +22,11 @@ export function SiteFooter() {
           {/* Column 1: Brand Blurb */}
           <div className="space-y-6">
             <Link href={getHref("/")} className="inline-block">
-              <span className="text-2xl font-bold tracking-[0.15em] text-white uppercase font-cinzel">
-                GAME<span className="text-gold-gradient font-semibold">PLEX</span>
-              </span>
+              <img
+                src="/assets/gameplex/gameplex-logo.png"
+                alt="GamePlex by Connplex"
+                className="h-7 w-auto object-contain"
+              />
             </Link>
             <p className="text-sm leading-relaxed max-w-sm text-muted-foreground">
               A premium entertainment franchise concept by Connplex. Redefining modern socialize-and-play venues with cinema-grade hospitality, cutting-edge technology, and luxury gaming environments.
